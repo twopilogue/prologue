@@ -21,8 +21,7 @@ public class SwaggerConfig {
                 .select()
                 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.ant("/api/**"))
-                .build()
-                ;
+                .build();
     }
     @Bean
     UiConfiguration uiConfig() {
