@@ -1,18 +1,21 @@
 package com.b208.prologue.api.service;
 
-import com.b208.prologue.api.response.github.AccessToken;
+import com.b208.prologue.api.request.request.AuthAccessTokenRequest;
+import com.b208.prologue.api.response.github.AuthAccessTokenRespense;
 import com.b208.prologue.api.response.github.UserInfo;
 import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -26,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService{
 
-    private final WebClient webClient;
+    private final RestTemplate restTemplate ;
 
     private static String clientId;
     private static String clientSecret;
@@ -47,46 +50,25 @@ public class AuthServiceImpl implements AuthService{
     }
 
     @Override
-    public Mono<AccessToken> getAccessToken(String code) {
+    public String getAccessToken(String code) {
 
-        HttpClient httpClient = HttpClient.create()
-                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000)
-                .responseTimeout(Duration.ofMillis(5000))
-                .doOnConnected(conn ->
-                        conn.addHandlerLast(new ReadTimeoutHandler(5000, TimeUnit.MILLISECONDS))
-                                .addHandlerLast(new WriteTimeoutHandler(5000, TimeUnit.MILLISECONDS)));
+        AuthAccessTokenRequest requestBody = new AuthAccessTokenRequest(clientId, clientSecret, code);
 
-        WebClient client = WebClient.builder()
-                .baseUrl("https://github.com")
-                .defaultUriVariables(Collections.singletonMap("url", "https://github.com"))
-                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .clientConnector(new ReactorClientHttpConnector(httpClient))
-                .build();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        HttpEntity<String> entity = new HttpEntity<String>(requestBody.toString(), headers);
 
-
-        MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
-        formData.add("client_id", clientId);
-        formData.add("client_secret", clientSecret);
-        formData.add("code", code);
-
-        return client.post()
-                .uri("/login/oauth/access_token")
-                .body(BodyInserters.fromFormData(formData))
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-//                .onStatus(HttpStatus::is4xxClientError, subscribeError(request, NotAppropriateRequestException.class))
-                .bodyToMono(AccessToken.class);
+        return restTemplate.postForObject(
+                "https://github.com/login/oauth/access_token",
+                entity,
+                AuthAccessTokenRespense.class
+        ).getAccessToken();
     }
 
     @Override
-    public Mono<UserInfo> getUserInfo() {
-        return webClient.get()
-                .uri("/user")
-//                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-//                .onStatus(HttpStatus::is4xxClientError, subscribeError(request, NotAppropriateRequestException.class))
-                .bodyToMono(UserInfo.class);
-//                .toEntity(Employee.class);
+    public Mono<UserInfo> getUserInfo(String accessToken) {
+        return null;
     }
 
 

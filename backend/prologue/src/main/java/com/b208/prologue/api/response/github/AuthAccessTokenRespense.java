@@ -7,7 +7,7 @@ import lombok.*;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AccessToken {
+public class AuthAccessTokenRespense {
     @JsonProperty("access_token")
     String accessToken;
     @JsonProperty("scope")
