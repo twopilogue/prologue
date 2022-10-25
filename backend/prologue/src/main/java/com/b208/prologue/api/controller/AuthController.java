@@ -3,7 +3,7 @@ package com.b208.prologue.api.controller;
 import com.b208.prologue.api.response.AuthUriResponse;
 import com.b208.prologue.api.response.BaseResponseBody;
 import com.b208.prologue.api.response.UserInfoResponse;
-import com.b208.prologue.api.response.github.AccessToken;
+import com.b208.prologue.api.response.github.UserInfo;
 import com.b208.prologue.api.service.AuthService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -39,10 +39,10 @@ public class AuthController {
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
     public ResponseEntity<? extends BaseResponseBody> login(@RequestParam String code){
-        Mono<AccessToken> accessToken = authService.getAccessToken(code);
+        String accessToken = authService.getAccessToken(code);
         //암호
-//        Mono<UserInfo> userInfo = authService.getUserInfo();
-        return ResponseEntity.status(200).body(UserInfoResponse.of(accessToken.block().getAccessToken(), 200, "GitHub 사용자 정보 조회에 성공하였습니다."));
+//        Mono<UserInfo> userInfo = authService.getUserInfo(accessToken);
+        return ResponseEntity.status(200).body(UserInfoResponse.of(accessToken, null,200, "GitHub 사용자 정보 조회에 성공하였습니다."));
     }
 
 }
