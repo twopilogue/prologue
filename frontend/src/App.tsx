@@ -4,9 +4,16 @@ import "./App.css";
 
 function App() {
   return (
-    <div className="App">
+    <div>
       <Routes>
-        <Route path="/" element={<></>} />
+        <Route
+          path="/"
+          element={
+            <>
+              <p>page</p>
+            </>
+          }
+        />
       </Routes>
     </div>
   );
