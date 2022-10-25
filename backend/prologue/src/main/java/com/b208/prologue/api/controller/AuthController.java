@@ -3,7 +3,7 @@ package com.b208.prologue.api.controller;
 import com.b208.prologue.api.response.AuthUriResponse;
 import com.b208.prologue.api.response.BaseResponseBody;
 import com.b208.prologue.api.response.UserInfoResponse;
-import com.b208.prologue.api.response.github.UserInfo;
+import com.b208.prologue.api.response.github.AuthUserInfoResponse;
 import com.b208.prologue.api.service.AuthService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -11,7 +11,6 @@ import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Mono;
 
 @CrossOrigin("*")
 @RestController
@@ -41,8 +40,8 @@ public class AuthController {
     public ResponseEntity<? extends BaseResponseBody> login(@RequestParam String code){
         String accessToken = authService.getAccessToken(code);
         //암호
-//        Mono<UserInfo> userInfo = authService.getUserInfo(accessToken);
-        return ResponseEntity.status(200).body(UserInfoResponse.of(accessToken, null,200, "GitHub 사용자 정보 조회에 성공하였습니다."));
+        AuthUserInfoResponse userInfo = authService.getUserInfo(accessToken);
+        return ResponseEntity.status(200).body(UserInfoResponse.of(accessToken, userInfo,200, "GitHub 사용자 정보 조회에 성공하였습니다."));
     }
 
 }

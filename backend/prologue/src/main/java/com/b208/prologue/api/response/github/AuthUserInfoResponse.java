@@ -1,17 +1,20 @@
 package com.b208.prologue.api.response.github;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-@Data
-@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserInfo {
+@ToString
+@Getter
+public class AuthUserInfoResponse {
     @JsonProperty("login")
-    private String githubId;
+    String login;
     @JsonProperty("avatar_url")
-    private String githubImage;
+    String avatarUrl;
     @JsonProperty("name")
-    private String githubName;
+    String name;
 }
