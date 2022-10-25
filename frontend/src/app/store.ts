@@ -11,6 +11,8 @@ const rootReducer = combineReducers({
   posts: postReducer,
 });
 
-export default rootReducer;
+export const store = configureStore({
+  reducer: rootReducer,
+});
 
 export type rootState = ReturnType<typeof rootReducer>;
