@@ -23,12 +23,12 @@ public class UserInfoResponse extends BaseResponseBody{
     @ApiModelProperty(name = "GitHub 연동을 위한 uri")
     String githubImage;
 
-    public static UserInfoResponse of(String token, Integer statusCode, String message) {
+    public static UserInfoResponse of(String token, UserInfo userInfo,Integer statusCode, String message) {
         UserInfoResponse res = new UserInfoResponse();
         res.setToken(token);
-//        res.setGithubId(userInfo.getLogin());
-//        res.setGithubName(userInfo.getName());
-//        res.setGithubImage(userInfo.getAvatar_url());
+//        res.setGithubId(userInfo.getGithubId());
+//        res.setGithubName(userInfo.getGithubName());
+//        res.setGithubImage(userInfo.getGithubImage());
         res.setStatusCode(statusCode);
         res.setMessage(message);
         return res;
