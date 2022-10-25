@@ -46,11 +46,11 @@ public class AuthServiceImpl implements AuthService{
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        HttpEntity<String> entity = new HttpEntity<String>(requestBody.toString(), headers);
+        HttpEntity<String> request = new HttpEntity<String>(requestBody.toString(), headers);
 
         return restTemplate.postForObject(
                 "https://github.com/login/oauth/access_token",
-                entity,
+                request,
                 AuthAccessTokenRespense.class
         ).getAccessToken();
     }
