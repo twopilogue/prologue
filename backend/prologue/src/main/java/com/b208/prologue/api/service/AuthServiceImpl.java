@@ -1,7 +1,7 @@
 package com.b208.prologue.api.service;
 
 import com.b208.prologue.api.request.request.AuthAccessTokenRequest;
-import com.b208.prologue.api.response.github.AuthAccessTokenRespense;
+import com.b208.prologue.api.response.github.AuthAccessTokenResponse;
 import com.b208.prologue.api.response.github.AuthUserInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -51,7 +51,7 @@ public class AuthServiceImpl implements AuthService{
         return restTemplate.postForObject(
                 "https://github.com/login/oauth/access_token",
                 request,
-                AuthAccessTokenRespense.class
+                AuthAccessTokenResponse.class
         ).getAccessToken();
     }
 
