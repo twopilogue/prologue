@@ -1,6 +1,6 @@
 import React from "react";
 import Button from "../components/Button";
-import CheckIcon from "@mui/icons-material/Check";
+import Check from "@material-ui/icons/Check";
 
 function SamplePage() {
   return (
@@ -9,7 +9,7 @@ function SamplePage() {
       <Button
         label="Button"
         color="blue"
-        icon={<CheckIcon />}
+        icon={<Check />}
         onClick={() => console.log("클릭함")}
       />
       &nbsp;&nbsp;&nbsp;&nbsp;
