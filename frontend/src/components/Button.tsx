@@ -1,7 +1,6 @@
 import React from "react";
 import palette from "./styles/colorPalette";
-// import Button from "@mui/material/Button";
-import { Button } from "@material-ui/core";
+import Button from "@mui/material/Button";
 
 interface Props {
   label: string;
