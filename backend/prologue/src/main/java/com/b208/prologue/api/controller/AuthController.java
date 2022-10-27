@@ -28,7 +28,7 @@ public class AuthController {
             @ApiResponse(code = 200, message = "GitHub 연동 uri 조회 성공", response = AuthUriResponse.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
-    public ResponseEntity<? extends BaseResponseBody> getUri(){
+    public ResponseEntity<? extends BaseResponseBody> getUri() {
         String uri = authService.getUri();
         return ResponseEntity.status(200).body(AuthUriResponse.of(uri, 200, "GitHub 연동 uri 조회에 성공하였습니다."));
     }
@@ -39,12 +39,12 @@ public class AuthController {
             @ApiResponse(code = 200, message = "GitHub 사용자 정보 조회 성공", response = UserInfoResponse.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
-    public ResponseEntity<? extends BaseResponseBody> login(@RequestParam String code){
+    public ResponseEntity<? extends BaseResponseBody> login(@RequestParam String code) {
         String accessToken = authService.getAccessToken(code).block().getAccessToken();
         try {
             String encodedAccessToken = base64Converter.encryptAES256(accessToken);
             AuthUserInfoResponse userInfo = authService.getUserInfo(accessToken).block();
-            return ResponseEntity.status(200).body(UserInfoResponse.of(encodedAccessToken, userInfo,200, "GitHub 사용자 정보 조회에 성공하였습니다."));
+            return ResponseEntity.status(200).body(UserInfoResponse.of(encodedAccessToken, userInfo, 200, "GitHub 사용자 정보 조회에 성공하였습니다."));
         } catch (Exception e) {
             e.printStackTrace();
         }
