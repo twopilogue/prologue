@@ -5,6 +5,7 @@ import com.b208.prologue.api.response.BaseResponseBody;
 import com.b208.prologue.api.response.UserInfoResponse;
 import com.b208.prologue.api.response.github.AuthUserInfoResponse;
 import com.b208.prologue.api.service.AuthService;
+import com.b208.prologue.common.Base64Converter;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final AuthService authService;
+    private final Base64Converter base64Converter;
 
     @GetMapping("/uri")
     @ApiOperation(value = "GitHub 연동 uri 조회", notes = "GitHub 연동하기위한 uri를 조회한다.")
@@ -39,9 +41,14 @@ public class AuthController {
     })
     public ResponseEntity<? extends BaseResponseBody> login(@RequestParam String code){
         String accessToken = authService.getAccessToken(code).block().getAccessToken();
-        //암호
-        AuthUserInfoResponse userInfo = authService.getUserInfo(accessToken).block();
-        return ResponseEntity.status(200).body(UserInfoResponse.of(accessToken, userInfo,200, "GitHub 사용자 정보 조회에 성공하였습니다."));
+        try {
+            String encodedAccessToken = base64Converter.encryptAES256(accessToken);
+            AuthUserInfoResponse userInfo = authService.getUserInfo(accessToken).block();
+            return ResponseEntity.status(200).body(UserInfoResponse.of(encodedAccessToken, userInfo,200, "GitHub 사용자 정보 조회에 성공하였습니다."));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.status(400).body(BaseResponseBody.of(400, "GitHub 사용자 정보 조회에 실패하였습니다."));
     }
 
 }
