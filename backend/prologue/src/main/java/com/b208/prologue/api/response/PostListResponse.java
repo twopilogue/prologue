@@ -14,4 +14,6 @@ public class PostListResponse extends BaseResponseBody {
 
     @ApiModelProperty(name = "게시글 리스트")
     List<String> contents;
+
+//    public static PostListResponse()
 }
