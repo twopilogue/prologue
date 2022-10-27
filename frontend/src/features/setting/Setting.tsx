@@ -1,32 +1,64 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 // import GridLayout from "react-grid-layout";
 import { Responsive, WidthProvider } from "react-grid-layout";
 import * as ReactDOMServer from "react-dom/server";
 import Post from "features/post/Post";
-import { selectLayout } from "slices/settingSlice";
+import {
+  layoutConfig,
+  layoutListConfig,
+  selectLayoutList,
+  setLayoutList,
+} from "../../slices/settingSlice";
 import { useAppSelector } from "app/hooks";
 import styles from "./Setting.module.css";
+import { useDispatch } from "react-redux";
 
-const ResponsiveGridLayout = WidthProvider(Responsive);
 const Setting = () => {
-  const layout = [
-    { i: "blue-eyes-dragon", x: 0, y: 0, w: 1, h: 1 },
-    { i: "dark-magician", x: 1, y: 0, w: 1, h: 1 },
-    { i: "kuriboh", x: 2, y: 0, w: 1, h: 1 },
-  ];
+  const [defaultLayout, setDefaultLayout] = useState<layoutConfig[]>([
+    { i: "a", x: 1, y: 0, w: 1, h: 2 },
+    { i: "b", x: 2, y: 0, w: 1, h: 2 },
+    { i: "c", x: 4, y: 0, w: 1, h: 2 },
+  ]);
+  const [savedLayout, setSavedLayout] = useState<layoutConfig[]>([]);
+
+  const ResponsiveGridLayout = WidthProvider(Responsive);
+  const dispatch = useDispatch();
 
   const getLayouts = () => {
-    const savedLayouts = sessionStorage.getItem("grid-layout");
-    return savedLayouts ? JSON.parse(savedLayouts) : { lg: layout };
-  };
-
-  const handleLayoutChange = (layout: any) => {
-    sessionStorage.setItem("grid-layout", JSON.stringify(layout));
+    const savedLayouts = localStorage.getItem("grid-layout");
+    // const savedLayoutList = useAppSelector(selectLayoutList);
+    console.log("세션: ", savedLayouts);
+    console.log(savedLayouts ? "true" : "false");
+    return savedLayouts ? JSON.parse(savedLayouts) : { lg: defaultLayout };
+    // return savedLayoutList ? savedLayoutList : { lg: defaultLayout };
   };
 
   const saveLayout = () => {
-    console.log(layout);
-    alert("BUTTON");
+    dispatch(setLayoutList(defaultLayout));
+
+    // console.log("슬라이스", savedLayoutList);
+    console.log("변경 위치", defaultLayout);
+  };
+
+  const handleLayoutChange = (layouts: any) => {
+    // for문 돌려서 저장해야 할듯
+    const tmpLayoutList: layoutConfig[] = [];
+    const layoutLength = layouts.length;
+    for (let item = 0; item < layoutLength; item++) {
+      const layout: layoutConfig = {
+        i: layouts[item].i,
+        x: layouts[item].x,
+        y: layouts[item].y,
+        w: layouts[item].w,
+        h: layouts[item].h,
+      };
+      tmpLayoutList.push(layout);
+    }
+    console.log(tmpLayoutList);
+    console.log("what");
+    setSavedLayout(tmpLayoutList);
+
+    // localStorage.setItem("grid-layout", JSON.stringify(layouts));
   };
 
   return (

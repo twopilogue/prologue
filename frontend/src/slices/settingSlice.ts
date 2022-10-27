@@ -1,37 +1,33 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { rootState } from "../app/store";
 
-interface layoutConfig {
-  layout: {
-    i: string;
-    x: number;
-    y: number;
-    w: number;
-    h: number;
-  };
+export interface layoutConfig {
+  i: string;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
 }
 
-const initialState: layoutConfig = {
-  layout: {
-    i: "",
-    x: 0,
-    y: 0,
-    w: 0,
-    h: 0,
-  },
+export interface layoutListConfig {
+  layoutList: layoutConfig[];
+}
+
+const initialState: layoutListConfig = {
+  layoutList: [],
 };
 
 const settingSlice = createSlice({
   name: "setting",
   initialState,
   reducers: {
-    setLayout: (state, { payload }) => {
-      state.layout = payload;
+    setLayoutList: (state, { payload }) => {
+      state.layoutList = payload;
     },
   },
 });
 
-export const { setLayout } = settingSlice.actions;
+export const { setLayoutList } = settingSlice.actions;
 
-export const selectLayout = (state: rootState) => state.setting.layout;
+export const selectLayoutList = (state: rootState) => state.setting.layoutList;
 export default settingSlice.reducer;
