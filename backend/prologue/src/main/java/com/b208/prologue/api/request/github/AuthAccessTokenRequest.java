@@ -1,4 +1,4 @@
-package com.b208.prologue.api.request.request;
+package com.b208.prologue.api.request.github;
 
 import lombok.AllArgsConstructor;
 
