@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api/posts")
 @RequiredArgsConstructor
@@ -25,9 +26,12 @@ public class PostController {
             @ApiResponse(code = 200, message = "목록 조회 성공", response = PostListResponse.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
-    public ResponseEntity<? extends BaseResponseBody> getPost(@RequestParam String accessToken, @RequestParam String githubId, @RequestParam String repoName, @RequestParam String path){
+    public ResponseEntity<? extends BaseResponseBody> getPost(@RequestParam String accessToken, @RequestParam String githubId, @RequestParam String repoName){
 
-        List<String> result = postService.getList();
+        System.out.println(accessToken);
+        System.out.println(githubId);
+        System.out.println(repoName);
+        List<String> result = postService.getList(accessToken, githubId, repoName);
 
         return ResponseEntity.status(200).body(PostListResponse.of(200, "게시물 목록 조회 성공"));
     }

@@ -1,10 +1,13 @@
 package com.b208.prologue.common;
 
+import org.springframework.stereotype.Component;
+
 import java.io.UnsupportedEncodingException;
 import java.util.Base64;
 import java.util.Base64.Decoder;
 import java.util.Base64.Encoder;
 
+@Component
 public class Base64Converter {
 
     public String encode(String target) throws UnsupportedEncodingException {

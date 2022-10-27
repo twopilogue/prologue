@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface PostService {
 
-    List<String> getList();
+    List<String> getList(String accessToken, String gitId, String repoName);
 }
