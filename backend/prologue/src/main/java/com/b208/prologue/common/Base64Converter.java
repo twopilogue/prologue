@@ -1,45 +1,18 @@
 package com.b208.prologue.common;
 
-<<<<<<< HEAD
-import org.springframework.stereotype.Component;
-
-import java.io.UnsupportedEncodingException;
-import java.util.Base64;
-import java.util.Base64.Decoder;
-import java.util.Base64.Encoder;
-
-@Component
-public class Base64Converter {
-
-    public String encode(String target) throws UnsupportedEncodingException {
-
-        byte[] targetBytes = target.getBytes("UTF-8");
-
-        Encoder encoder = Base64.getEncoder();
-        String encodedString = encoder.encodeToString(targetBytes);
-
-        System.out.println(encodedString);
-
-        return encodedString;
-    }
-
-    public String decode(String target) throws UnsupportedEncodingException {
-
-        Decoder decoder = Base64.getDecoder();
-        String decodedString = new String(decoder.decode(target), "UTF-8");
-
-        System.out.println(decodedString);
-
-        return decodedString;
-=======
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Base64Utils;
 
+import java.io.UnsupportedEncodingException;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.Base64;
+import java.util.Base64.Decoder;
+import java.util.Base64.Encoder;
+
 
 @Component
 @RequiredArgsConstructor
@@ -79,6 +52,23 @@ public class Base64Converter {
         byte[] decodedBytes = Base64.getDecoder().decode(cipherText);
         byte[] decrypted = cipher.doFinal(decodedBytes);
         return new String(decrypted, "UTF-8");
->>>>>>> a1760a4689afb5c2a84f2d1567f41ca6d7cf5eba
+    }
+
+    public String encode(String target) throws UnsupportedEncodingException {
+
+        byte[] targetBytes = target.getBytes("UTF-8");
+
+        Encoder encoder = Base64.getEncoder();
+        String encodedString = encoder.encodeToString(targetBytes);
+
+        return encodedString;
+    }
+
+    public String decode(String target) throws UnsupportedEncodingException {
+
+        Decoder decoder = Base64.getDecoder();
+        String decodedString = new String(decoder.decode(target), "UTF-8");
+
+        return decodedString;
     }
 }

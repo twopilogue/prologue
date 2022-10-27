@@ -1,63 +1,72 @@
 package com.b208.prologue.api.service;
 
 import com.b208.prologue.api.response.github.PostGetListResponse;
+import com.b208.prologue.api.response.github.PostgetResponse;
 import com.b208.prologue.common.Base64Converter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
-import java.util.Arrays;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 @Service
 @RequiredArgsConstructor
 public class PostServiceImpl implements  PostService{
 
+    private final WebClient webClient;
     private final Base64Converter base64Converter;
-    private final RestTemplate restTemplate;
-
-    static List<String> result;
 
     @Override
     public List<String> getList(String accessToken, String gitId, String repoName) {
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(accessToken);
-        HttpEntity<Void> request = new HttpEntity<>(headers);
+        List<String> result = new ArrayList<>();
 
-        PostGetListResponse[] list = restTemplate.exchange("https://api.github.com/repos/" + gitId + "/" + repoName + "/contents/post",
-                HttpMethod.GET,
-                request,
-                PostGetListResponse[].class
-                ).getBody();
-        System.out.println(list[0].toString());
+        String url = "/repos/" + gitId + "/" + repoName + "/contents/";
+
+        PostGetListResponse[] list =  webClient.get()
+                .uri(url + "post")
+                .headers(h -> h.setBearerAuth(accessToken))
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(PostGetListResponse[].class).block();
+
+        for (int i = 0; i < list.length; i++){
+            result.add(setItem(url, accessToken, list[i].getPath()));
+
+        }
 
         return result;
     }
 
-//    @Override
-//    public List<String> getList(String accessToken, String gitId, String repoName) {
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setBearerAuth(accessToken);
-//        HttpEntity<Void> request = new HttpEntity<>(headers);
-//
-//        PostGetListResponse list = restTemplate.exchange("https://api.github.com/repos/" + gitId + "/" + repoName + "/contents/post",
-//                HttpMethod.GET,
-//                request,
-//                PostGetListResponse.class
-//        ).getBody();
-//        System.out.println("hello");
-//        System.out.println(list.getResult());
-//
-//        return result;
-//    }
+    public String setItem(String url, String accessToken, String path) {
+        PostgetResponse item =  webClient.get()
+                .uri(url + path)
+                .headers(h -> h.setBearerAuth(accessToken))
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(PostgetResponse.class).block();
 
-//    public String setItem() {
-//
-//    }
+        StringTokenizer st = new StringTokenizer(item.getContent(),"\n");
+        StringBuilder sb = new StringBuilder();
+
+        int val = st.countTokens();
+
+        for(int i = 0; i < val; i++){
+            sb.append(st.nextToken());
+        }
+
+        String Line = "";
+        try {
+            Line = base64Converter.decode(sb.toString());
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        return Line;
+    }
 }
