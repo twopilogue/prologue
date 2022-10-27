@@ -1,10 +1,10 @@
-const HOST = process.env.REACT_APP_API_BASE_URL + '/api/';
+const HOST = process.env.REACT_APP_API_BASE_URL + "/api/";
 
-const AUTH = 'auth';
-const BLOG = 'blog';
-const POSTS = 'posts';
-const DASH = 'dashBoard';
-const SETTING = 'setting';
+const AUTH = "auth";
+const BLOG = "blog";
+const POSTS = "posts";
+const DASH = "dashBoard";
+const SETTING = "setting";
 
 interface apiInterface {
   setting: {
@@ -14,7 +14,7 @@ interface apiInterface {
 
 const api: apiInterface = {
   setting: {
-    getCategory: () => HOST + SETTING + '/category',
+    getCategory: () => HOST + SETTING + "/category",
   },
 };
 

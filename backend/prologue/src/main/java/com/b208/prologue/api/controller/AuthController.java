@@ -38,9 +38,9 @@ public class AuthController {
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
     public ResponseEntity<? extends BaseResponseBody> login(@RequestParam String code){
-        String accessToken = authService.getAccessToken(code);
+        String accessToken = authService.getAccessToken(code).block().getAccessToken();
         //암호
-        AuthUserInfoResponse userInfo = authService.getUserInfo(accessToken);
+        AuthUserInfoResponse userInfo = authService.getUserInfo(accessToken).block();
         return ResponseEntity.status(200).body(UserInfoResponse.of(accessToken, userInfo,200, "GitHub 사용자 정보 조회에 성공하였습니다."));
     }
 
