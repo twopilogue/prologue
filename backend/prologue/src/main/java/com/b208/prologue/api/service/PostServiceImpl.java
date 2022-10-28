@@ -1,6 +1,7 @@
 package com.b208.prologue.api.service;
 
 import com.b208.prologue.api.response.github.PostGetListResponse;
+import com.b208.prologue.api.response.github.GetRepoContentResponse;
 import com.b208.prologue.api.response.github.PostgetResponse;
 import com.b208.prologue.common.Base64Converter;
 import lombok.RequiredArgsConstructor;
@@ -68,4 +69,24 @@ public class PostServiceImpl implements  PostService {
 
         return Line;
     }
+
+    public GetRepoContentResponse getDetailPost(String encodedAccessToken, String githubId, String directory) throws Exception {
+        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
+        return getDetailContent(accessToken, githubId, "content/blog/"+directory+"/index.md");
+    }
+
+    public GetRepoContentResponse getDetailContent(String accessToken, String githubId, String path) throws Exception{
+        GetRepoContentResponse postResponse = webClient.get()
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/"+path)
+                .headers(h -> h.setBearerAuth(accessToken))
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(GetRepoContentResponse.class).block();
+
+        String tmp =  postResponse.getContent().replace("\n","");
+        postResponse.setContent(base64Converter.decode(tmp));
+
+        return postResponse;
+    }
+
 }
