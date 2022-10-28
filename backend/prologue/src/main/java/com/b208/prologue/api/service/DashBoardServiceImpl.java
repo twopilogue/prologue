@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -19,9 +21,12 @@ public class DashBoardServiceImpl implements DashBoardService {
     private final PostServiceImpl postService;
 
     @Override
-    public List<String> getList(String accessToken, String gitId) {
+    public Map<String, List<String>> getList(String accessToken, String gitId) {
 
-        List<String> result = new ArrayList<>();
+        Map<String, List<String>> result = new HashMap<>();
+        List<String> content = new ArrayList<>();
+        List<String> directory = new ArrayList<>();
+        List<String> count = new ArrayList<>();
 
         String url = "/repos/" + gitId + "/" + gitId + ".github.io" + "/contents/";
 
@@ -34,26 +39,16 @@ public class DashBoardServiceImpl implements DashBoardService {
 
         for (int i = list.length-1; i > list.length-6; i--){
             if(i < 0) break;
-            result.add(postService.setItem(url, accessToken, list[i].getPath()));
+            content.add(postService.setItem(url, accessToken, list[i].getPath()));
+            directory.add(list[i].getName());
         }
 
+        String cnt = list.length + "";
+        count.add(cnt);
+        result.put("content", content);
+        result.put("directory", directory);
+        result.put("postCount", count);
         return result;
-    }
-
-    @Override
-    public int getListCount(String accessToken, String gitId) {
-        List<String> result = new ArrayList<>();
-
-        String url = "/repos/" + gitId + "/" + gitId + ".github.io" + "/contents/";
-
-        PostGetListResponse[] list =  webClient.get()
-                .uri(url + "content/blog")
-                .headers(h -> h.setBearerAuth(accessToken))
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToMono(PostGetListResponse[].class).block();
-
-        return list.length;
     }
 
 }
