@@ -45,14 +45,14 @@ public class Base64Converter {
 
         byte[] encrypted = cipher.doFinal(text.getBytes("UTF-8"));
 
-        return URLEncoder.encode(Base64.getEncoder().encodeToString(encrypted), "UTF-8");
+        return Base64.getUrlEncoder().encodeToString(encrypted);
     }
 
     public String decryptAES256(String cipherText) throws Exception {
         Cipher cipher = Cipher.getInstance(alg);
         cipher.init(Cipher.DECRYPT_MODE, keySpec, ivParamSpec);
 
-        byte[] decodedBytes = Base64.getDecoder().decode(cipherText);
+        byte[] decodedBytes = Base64.getUrlDecoder().decode(cipherText);
         byte[] decrypted = cipher.doFinal(decodedBytes);
         return new String(decrypted, "UTF-8");
     }
