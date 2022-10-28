@@ -1,6 +1,6 @@
 package com.b208.prologue.api.service;
 
-import com.b208.prologue.api.request.CreateRepositoryRequest;
+import com.b208.prologue.api.request.github.CreateRepositoryRequest;
 import com.b208.prologue.common.Base64Converter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
