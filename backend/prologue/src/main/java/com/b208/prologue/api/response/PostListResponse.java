@@ -6,18 +6,19 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
 @ApiModel("PostListResponse")
 public class PostListResponse extends BaseResponseBody {
 
-    @ApiModelProperty(name = "게시글 리스트")
-    List<String> contents;
+    @ApiModelProperty(name = "게시글,디렉토리 리스트")
+    Map<String, List<String>> result;
 
-    public static PostListResponse of(List<String> contents,Integer statusCode, String message){
+    public static PostListResponse of(Map<String, List<String>> result,Integer statusCode, String message){
         PostListResponse res = new PostListResponse();
-        res.setContents(contents);
+        res.setResult(result);
         res.setStatusCode(statusCode);
         res.setMessage(message);
         return res;
