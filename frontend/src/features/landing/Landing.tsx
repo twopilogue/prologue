@@ -1,5 +1,7 @@
-const Post = () => {
+import React from "react";
+
+const Landing = () => {
   return <div></div>;
 };
 
-export default Post;
+export default Landing;
