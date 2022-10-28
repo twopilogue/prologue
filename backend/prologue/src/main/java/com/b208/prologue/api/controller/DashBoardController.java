@@ -1,7 +1,6 @@
 package com.b208.prologue.api.controller;
 
 import com.b208.prologue.api.response.BaseResponseBody;
-import com.b208.prologue.api.response.PostDashboardResponse;
 import com.b208.prologue.api.response.PostListResponse;
 import com.b208.prologue.api.service.DashBoardService;
 import io.swagger.annotations.ApiOperation;
