@@ -26,6 +26,7 @@ public class DashBoardServiceImpl implements DashBoardService {
         Map<String, List<String>> result = new HashMap<>();
         List<String> content = new ArrayList<>();
         List<String> directory = new ArrayList<>();
+        List<String> count = new ArrayList<>();
 
         String url = "/repos/" + gitId + "/" + gitId + ".github.io" + "/contents/";
 
@@ -42,25 +43,12 @@ public class DashBoardServiceImpl implements DashBoardService {
             directory.add(list[i].getName());
         }
 
+        String cnt = list.length + "";
+        count.add(cnt);
         result.put("content", content);
         result.put("directory", directory);
+        result.put("postCount", count);
         return result;
-    }
-
-    @Override
-    public int getListCount(String accessToken, String gitId) {
-        List<String> result = new ArrayList<>();
-
-        String url = "/repos/" + gitId + "/" + gitId + ".github.io" + "/contents/";
-
-        PostGetListResponse[] list =  webClient.get()
-                .uri(url + "content/blog")
-                .headers(h -> h.setBearerAuth(accessToken))
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToMono(PostGetListResponse[].class).block();
-
-        return list.length;
     }
 
 }

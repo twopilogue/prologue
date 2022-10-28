@@ -5,5 +5,4 @@ import java.util.Map;
 
 public interface DashBoardService {
     Map<String, List<String>> getList(String accessToken, String gitId);
-    int getListCount(String accessToken, String gitId);
 }
