@@ -4,7 +4,7 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 
-interface TabPanelProps {
+export interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
   value: number;
@@ -20,7 +20,7 @@ interface StyledTabProps {
   label: string;
 }
 
-function TabPanel(props: TabPanelProps) {
+export const TabPanel = (props: TabPanelProps) => {
   const { children, value, index, ...other } = props;
 
   return (
@@ -38,7 +38,7 @@ function TabPanel(props: TabPanelProps) {
       )}
     </div>
   );
-}
+};
 
 const StyledTab = styled((props: StyledTabProps) => (
   <Tab disableRipple {...props} />
