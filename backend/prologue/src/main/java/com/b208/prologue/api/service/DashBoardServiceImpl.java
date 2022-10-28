@@ -15,7 +15,7 @@ import java.util.StringTokenizer;
 
 @Service
 @RequiredArgsConstructor
-public class PostServiceImpl implements  PostService {
+public class DashBoardServiceImpl implements DashBoardService {
 
     private final WebClient webClient;
     private final Base64Converter base64Converter;
@@ -34,9 +34,9 @@ public class PostServiceImpl implements  PostService {
                 .retrieve()
                 .bodyToMono(PostGetListResponse[].class).block();
 
-        for (int i = 0; i < list.length; i++){
+        for (int i = list.length-1; i > list.length-6; i--){
+            if(i < 0) break;
             result.add(setItem(url, accessToken, list[i].getPath()));
-
         }
 
         return result;
@@ -44,7 +44,7 @@ public class PostServiceImpl implements  PostService {
 
     public String setItem(String url, String accessToken, String path) {
         PostgetResponse item =  webClient.get()
-                .uri(url + path)
+                .uri(url + path + "/index.md")
                 .headers(h -> h.setBearerAuth(accessToken))
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
