@@ -36,7 +36,7 @@ public class DashBoardController {
     @GetMapping("/count")
     @ApiOperation(value = "게시물 수 조회", notes = "전체 게시물 수 확인을 위한 Git 통신")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "목록 조회 성공", response = PostListResponse.class),
+            @ApiResponse(code = 200, message = "게시물 수 조회 성공", response = PostCountResponse.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
     public ResponseEntity<? extends BaseResponseBody> getPostCount(@RequestParam String accessToken, @RequestParam String githubId){
