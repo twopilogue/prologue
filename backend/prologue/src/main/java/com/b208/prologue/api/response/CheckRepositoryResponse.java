@@ -10,7 +10,7 @@ import lombok.Setter;
 @ApiModel("CheckRepositoryResponse")
 public class CheckRepositoryResponse extends BaseResponseBody {
 
-    @ApiModelProperty(name = "GitHub 연동을 위한 uri")
+    @ApiModelProperty(name = "깃허브 블로그 레포지토리 조회 결과")
     boolean checkRepository;
 
     public static CheckRepositoryResponse of(boolean checkRepository, Integer statusCode, String message) {
