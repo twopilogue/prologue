@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URLDecoder;
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin("*")
 @RestController
@@ -31,7 +32,7 @@ public class PostsController {
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
     public ResponseEntity<? extends BaseResponseBody> getPost(@RequestParam String accessToken, @RequestParam String githubId){
-        List<String> result = postService.getList(accessToken, githubId);
+        Map<String, List<String>> result = postService.getList(accessToken, githubId);
 
         return ResponseEntity.status(200).body(PostListResponse.of(result,200, "게시물 목록 조회 성공"));
     }

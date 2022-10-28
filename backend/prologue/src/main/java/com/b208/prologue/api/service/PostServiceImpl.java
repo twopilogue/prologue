@@ -13,10 +13,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.io.UnsupportedEncodingException;
+import java.util.*;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
 
 @Service
 @RequiredArgsConstructor
@@ -26,9 +24,11 @@ public class PostServiceImpl implements PostService {
     private final Base64Converter base64Converter;
 
     @Override
-    public List<String> getList(String accessToken, String gitId) {
+    public Map<String,List<String>> getList(String accessToken, String gitId) {
 
-        List<String> result = new ArrayList<>();
+        Map<String, List<String>> result = new HashMap<>();
+        List<String> content = new ArrayList<>();
+        List<String> directory = new ArrayList<>();
 
         String url = "/repos/" + gitId + "/" + gitId + ".github.io" + "/contents/";
 
@@ -40,10 +40,12 @@ public class PostServiceImpl implements PostService {
                 .bodyToMono(PostGetListResponse[].class).block();
 
         for (int i = 0; i < list.length; i++){
-            result.add(setItem(url, accessToken, list[i].getPath()));
-
+            content.add(setItem(url, accessToken, list[i].getPath()));
+            directory.add(list[i].getName());
         }
 
+        result.put("content", content);
+        result.put("directory", directory);
         return result;
     }
 
