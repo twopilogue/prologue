@@ -29,6 +29,7 @@ public class BlogController {
         blogService.createRepository(accessToken, githubId);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "레포지토리 생성을 완료했습니다."));
     }
+
     @DeleteMapping("/repo")
     @ApiOperation(value = "블로그 레포지토리 삭제", notes = "블로그 개설을 위한 기존 레포지토리를 삭제한다.")
     @ApiResponses({
