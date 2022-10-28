@@ -25,8 +25,20 @@ public class BlogController {
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
     public ResponseEntity<? extends BaseResponseBody> createRepository(@RequestParam @ApiParam(value = "accessToken", required = true) String accessToken,
-                                                                       @RequestParam @ApiParam(value = "사용자 깃허브 아이디", required = true) String githubId){
+                                                                       @RequestParam @ApiParam(value = "사용자 깃허브 아이디", required = true) String githubId) throws Exception {
         blogService.createRepository(accessToken, githubId);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "레포지토리 생성을 완료했습니다."));
+    }
+
+    @DeleteMapping("/repo")
+    @ApiOperation(value = "블로그 레포지토리 삭제", notes = "블로그 개설을 위한 기존 레포지토리를 삭제한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "레포지토리 삭제 성공", response = BaseResponseBody.class),
+            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<? extends BaseResponseBody> deleteRepository(@RequestParam @ApiParam(value = "accessToken", required = true) String accessToken,
+                                                                       @RequestParam @ApiParam(value = "사용자 깃허브 아이디", required = true) String githubId) throws Exception {
+        blogService.deleteRepository(accessToken, githubId);
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "레포지토리 삭제를 완료했습니다."));
     }
 }
