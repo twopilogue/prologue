@@ -4,9 +4,9 @@ import { Layouts } from "react-grid-layout";
 
 const initialState: Layouts = {
   layoutList: [
-    { i: "a", x: 1, y: 0, w: 1, h: 2 },
-    { i: "b", x: 2, y: 0, w: 1, h: 2 },
-    { i: "c", x: 4, y: 0, w: 1, h: 2 },
+    { i: "a", x: 0, y: 0, w: 1, h: 2, static: true },
+    { i: "b", x: 1, y: 0, w: 1, h: 2 },
+    { i: "c", x: 2, y: 0, w: 1, h: 2 },
   ],
 };
 

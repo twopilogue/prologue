@@ -8,65 +8,51 @@ import styles from "./Setting.module.css";
 import { useDispatch } from "react-redux";
 
 const Setting = () => {
-  const [savedLayout, setSavedLayout] = useState<Layout[]>([]);
-
   const ResponsiveGridLayout = WidthProvider(Responsive);
+  const savedLayoutList: Layout[] = useAppSelector(selectLayoutList);
   const dispatch = useDispatch();
-  // const savedLayoutList: Layouts = useAppSelector(selectLayoutList);
-  const savedLayoutList: Layouts = {
-    layoutList: [
-      { i: "a", x: 1, y: 0, w: 1, h: 2 },
-      { i: "b", x: 2, y: 0, w: 1, h: 2 },
-      { i: "c", x: 4, y: 0, w: 1, h: 2 },
-    ],
-  };
 
-  // const getLayouts = () => {
-  //   // const savedLayouts = localStorage.getItem("grid-layout");
-  //   console.log(savedLayoutList ? "true" : "false");
-  //   console.log("슬라이스", savedLayoutList);
-  //   return savedLayoutList;
-  // };
+  const saveLayouts = () => {
+    const tmpLayoutList: Layout[] = [];
+    const layout = sessionStorage.getItem("grid-layout");
+    const layoutJson = JSON.parse(layout);
 
-  const saveLayouts = (layouts: any) => {
-    // for문 돌려서 저장해야 할듯
-    const tmpLayoutList = [];
-    const layoutLength = layouts.length;
-    console.log(layoutLength);
+    const layoutLength = layoutJson.length;
     for (let item = 0; item < layoutLength; item++) {
       const layout: Layout = {
-        i: layouts[item].i,
-        x: layouts[item].x,
-        y: layouts[item].y,
-        w: layouts[item].w,
-        h: layouts[item].h,
+        i: layoutJson[item].i,
+        x: layoutJson[item].x,
+        y: layoutJson[item].y,
+        w: layoutJson[item].w,
+        h: layoutJson[item].h,
+        static: layoutJson[item].static,
       };
       tmpLayoutList.push(layout);
     }
-    console.log(tmpLayoutList);
-    console.log("what");
-    setSavedLayout(tmpLayoutList);
-    console.log(savedLayout);
+    dispatch(setLayoutList(tmpLayoutList));
+  };
 
-    // localStorage.setItem("grid-layout", JSON.stringify(layouts));
+  const handleLayoutChange = (layouts: any) => {
+    sessionStorage.setItem("grid-layout", JSON.stringify(layouts));
   };
 
   return (
     <>
       <ResponsiveGridLayout
-        layouts={savedLayoutList}
+        layouts={{ lg: savedLayoutList }}
         breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
         cols={{ lg: 5, md: 4, sm: 3, xs: 2, xxs: 1 }}
         rowHeight={30}
         width={1000}
+        onLayoutChange={handleLayoutChange}
       >
-        <div className={styles.box1} key="blue-eyes-dragon">
+        <div className={styles.box1} key="a">
           Blue Eyes Dragon
         </div>
-        <div className={styles.box2} key="dark-magician">
+        <div className={styles.box2} key="b">
           Dark Magician
         </div>
-        <div className={styles.box3} key="kuriboh">
+        <div className={styles.box3} key="c">
           Kuriboh
         </div>
       </ResponsiveGridLayout>
