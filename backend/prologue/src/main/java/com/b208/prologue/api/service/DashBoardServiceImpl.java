@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -19,9 +21,11 @@ public class DashBoardServiceImpl implements DashBoardService {
     private final PostServiceImpl postService;
 
     @Override
-    public List<String> getList(String accessToken, String gitId) {
+    public Map<String, List<String>> getList(String accessToken, String gitId) {
 
-        List<String> result = new ArrayList<>();
+        Map<String, List<String>> result = new HashMap<>();
+        List<String> content = new ArrayList<>();
+        List<String> directory = new ArrayList<>();
 
         String url = "/repos/" + gitId + "/" + gitId + ".github.io" + "/contents/";
 
@@ -34,9 +38,12 @@ public class DashBoardServiceImpl implements DashBoardService {
 
         for (int i = list.length-1; i > list.length-6; i--){
             if(i < 0) break;
-            result.add(postService.setItem(url, accessToken, list[i].getPath()));
+            content.add(postService.setItem(url, accessToken, list[i].getPath()));
+            directory.add(list[i].getName());
         }
 
+        result.put("content", content);
+        result.put("directory", directory);
         return result;
     }
 
