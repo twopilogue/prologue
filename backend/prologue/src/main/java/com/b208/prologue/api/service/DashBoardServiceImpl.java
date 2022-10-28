@@ -40,4 +40,20 @@ public class DashBoardServiceImpl implements DashBoardService {
         return result;
     }
 
+    @Override
+    public int getListCount(String accessToken, String gitId) {
+        List<String> result = new ArrayList<>();
+
+        String url = "/repos/" + gitId + "/" + gitId + ".github.io" + "/contents/";
+
+        PostGetListResponse[] list =  webClient.get()
+                .uri(url + "content/blog")
+                .headers(h -> h.setBearerAuth(accessToken))
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(PostGetListResponse[].class).block();
+
+        return list.length;
+    }
+
 }
