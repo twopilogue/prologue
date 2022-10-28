@@ -1,5 +1,7 @@
 package com.b208.prologue.api.service;
 
+import com.b208.prologue.api.request.github.CreateContentRequest;
+import com.b208.prologue.api.request.github.CreateRepositoryRequest;
 import com.b208.prologue.api.response.github.PostGetListResponse;
 import com.b208.prologue.api.response.github.GetRepoContentResponse;
 import com.b208.prologue.api.response.github.PostgetResponse;
@@ -8,15 +10,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.io.UnsupportedEncodingException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
 @Service
 @RequiredArgsConstructor
-public class PostServiceImpl implements  PostService {
+public class PostServiceImpl implements PostService {
 
     private final WebClient webClient;
     private final Base64Converter base64Converter;
@@ -68,6 +72,28 @@ public class PostServiceImpl implements  PostService {
         }
 
         return Line;
+    }
+
+    public void insertDetailPost(String encodedAccessToken, String githubId, String content) throws Exception{
+        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
+
+        Long nowDate = System.currentTimeMillis();
+        Timestamp timeStamp = new Timestamp(nowDate);
+        String directory = String.valueOf(timeStamp.getTime());
+
+        CreateContentRequest createContentRequest = new CreateContentRequest(
+                "add: 새게시글 작성", base64Converter.encode(content)
+        );
+
+        webClient.put()
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/content/blog/"+directory+"/index.md")
+                .headers(h -> h.setBearerAuth(accessToken))
+                .body(Mono.just(createContentRequest), CreateContentRequest.class)
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+
     }
 
     public GetRepoContentResponse getDetailPost(String encodedAccessToken, String githubId, String directory) throws Exception {
