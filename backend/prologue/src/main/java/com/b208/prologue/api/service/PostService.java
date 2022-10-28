@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface PostService {
 
-    List<String> getList(String accessToken, String gitId, String repoName);
+    List<String> getList(String accessToken, String gitId);
     GetRepoContentResponse getDetailPost(String encodedAccessToken, String githubId, String directory) throws Exception;
     GetRepoContentResponse getDetailContent(String accessToken, String githubId, String path) throws Exception;
 }
