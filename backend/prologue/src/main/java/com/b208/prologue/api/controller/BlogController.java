@@ -46,7 +46,7 @@ public class BlogController {
     @GetMapping("/list")
     @ApiOperation(value = "블로그 레포지토리 조회", notes = "블로그 개설을 위한 기존 레포지토리를 조회 한다.")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "블로그 레포지토리 조회 성공", response = BaseResponseBody.class),
+            @ApiResponse(code = 200, message = "블로그 레포지토리 조회 성공", response = CheckRepositoryResponse.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
     public ResponseEntity<? extends CheckRepositoryResponse> checkUserRepository(@RequestParam @ApiParam(value = "accessToken", required = true) String accessToken,
