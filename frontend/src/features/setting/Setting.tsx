@@ -6,11 +6,13 @@ import { selectLayoutList, setLayoutList } from "../../slices/settingSlice";
 import { useAppSelector } from "app/hooks";
 import styles from "./Setting.module.css";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Setting = () => {
   const ResponsiveGridLayout = WidthProvider(Responsive);
   const savedLayoutList: Layout[] = useAppSelector(selectLayoutList);
   const dispatch = useDispatch();
+  const navigator = useNavigate();
 
   const saveLayouts = () => {
     const tmpLayoutList: Layout[] = [];
@@ -30,6 +32,7 @@ const Setting = () => {
       tmpLayoutList.push(layout);
     }
     dispatch(setLayoutList(tmpLayoutList));
+    navigator("/layout");
   };
 
   const handleLayoutChange = (layouts: any) => {
