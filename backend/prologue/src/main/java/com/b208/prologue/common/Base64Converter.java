@@ -3,11 +3,16 @@ package com.b208.prologue.common;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Base64Utils;
 
+import java.io.UnsupportedEncodingException;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.Base64;
+import java.util.Base64.Decoder;
+import java.util.Base64.Encoder;
+
 
 @Component
 @RequiredArgsConstructor
@@ -47,5 +52,23 @@ public class Base64Converter {
         byte[] decodedBytes = Base64.getDecoder().decode(cipherText);
         byte[] decrypted = cipher.doFinal(decodedBytes);
         return new String(decrypted, "UTF-8");
+    }
+
+    public String encode(String target) throws UnsupportedEncodingException {
+
+        byte[] targetBytes = target.getBytes("UTF-8");
+
+        Encoder encoder = Base64.getEncoder();
+        String encodedString = encoder.encodeToString(targetBytes);
+
+        return encodedString;
+    }
+
+    public String decode(String target) throws UnsupportedEncodingException {
+
+        Decoder decoder = Base64.getDecoder();
+        String decodedString = new String(decoder.decode(target), "UTF-8");
+
+        return decodedString;
     }
 }
