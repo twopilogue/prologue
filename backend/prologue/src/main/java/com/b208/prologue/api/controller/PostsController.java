@@ -1,5 +1,6 @@
 package com.b208.prologue.api.controller;
 
+import com.b208.prologue.api.request.WriteDetailPostRequest;
 import com.b208.prologue.api.response.BaseResponseBody;
 import com.b208.prologue.api.response.DetailPostResponse;
 import com.b208.prologue.api.response.PostListResponse;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URLDecoder;
 import java.util.List;
 import java.util.Map;
 
@@ -50,6 +52,24 @@ public class PostsController {
             return ResponseEntity.status(200).body(DetailPostResponse.of(getRepoContentResponse,200, "게시글 상세 조회에 성공하였습니다."));
         } catch (Exception e) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "게시글 상세 조회에 실패하였습니다."));
+        }
+    }
+
+    @PostMapping("")
+    @ApiOperation(value = "GitHub 게시글 작성", notes = "GitHub 블로그 게시글을 작성한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "게시글 작성 성공", response = BaseResponseBody.class),
+            @ApiResponse(code = 400, message = "게시글 작성 실패", response = BaseResponseBody.class),
+            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<? extends BaseResponseBody> writeDetailPost(@RequestBody WriteDetailPostRequest writeDetailPostRequest) {
+
+        try {
+            postService.insertDetailPost(writeDetailPostRequest.getAccessToken(),writeDetailPostRequest.getGithubId(),writeDetailPostRequest.getContent());
+            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "게시글 작성에 성공하였습니다."));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "게시글 작성에 실패하였습니다."));
         }
     }
 }
