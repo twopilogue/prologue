@@ -9,6 +9,7 @@ import java.io.UnsupportedEncodingException;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.net.URLEncoder;
 import java.util.Base64;
 import java.util.Base64.Decoder;
 import java.util.Base64.Encoder;
@@ -38,11 +39,13 @@ public class Base64Converter {
     }
 
     public String encryptAES256(String text) throws Exception {
+        
         Cipher cipher = Cipher.getInstance(alg);
         cipher.init(Cipher.ENCRYPT_MODE, keySpec, ivParamSpec);
 
         byte[] encrypted = cipher.doFinal(text.getBytes("UTF-8"));
-        return Base64.getEncoder().encodeToString(encrypted);
+
+        return URLEncoder.encode(Base64.getEncoder().encodeToString(encrypted), "UTF-8");
     }
 
     public String decryptAES256(String cipherText) throws Exception {
