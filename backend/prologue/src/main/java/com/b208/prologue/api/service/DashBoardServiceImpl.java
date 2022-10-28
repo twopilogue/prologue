@@ -19,16 +19,17 @@ public class DashBoardServiceImpl implements DashBoardService {
 
     private final WebClient webClient;
     private final Base64Converter base64Converter;
+    private final PostServiceImpl postService;
 
     @Override
-    public List<String> getList(String accessToken, String gitId, String repoName) {
+    public List<String> getList(String accessToken, String gitId) {
 
         List<String> result = new ArrayList<>();
 
-        String url = "/repos/" + gitId + "/" + repoName + "/contents/";
+        String url = "/repos/" + gitId + "/" + gitId + ".github.io" + "/contents/";
 
         PostGetListResponse[] list =  webClient.get()
-                .uri(url + "post")
+                .uri(url + "content/blog")
                 .headers(h -> h.setBearerAuth(accessToken))
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
@@ -36,36 +37,11 @@ public class DashBoardServiceImpl implements DashBoardService {
 
         for (int i = list.length-1; i > list.length-6; i--){
             if(i < 0) break;
-            result.add(setItem(url, accessToken, list[i].getPath()));
+            result.add(postService.setItem(url, accessToken, list[i].getPath()));
+            System.out.println(list[i].getPath());
         }
 
         return result;
     }
 
-    public String setItem(String url, String accessToken, String path) {
-        PostgetResponse item =  webClient.get()
-                .uri(url + path + "/index.md")
-                .headers(h -> h.setBearerAuth(accessToken))
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToMono(PostgetResponse.class).block();
-
-        StringTokenizer st = new StringTokenizer(item.getContent(),"\n");
-        StringBuilder sb = new StringBuilder();
-
-        int val = st.countTokens();
-
-        for(int i = 0; i < val; i++){
-            sb.append(st.nextToken());
-        }
-
-        String Line = "";
-        try {
-            Line = base64Converter.decode(sb.toString());
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-        return Line;
-    }
 }
