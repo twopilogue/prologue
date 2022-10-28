@@ -1,6 +1,7 @@
 package com.b208.prologue.api.controller;
 
 import com.b208.prologue.api.response.BaseResponseBody;
+import com.b208.prologue.api.response.PostCountResponse;
 import com.b208.prologue.api.response.PostListResponse;
 import com.b208.prologue.api.service.DashBoardService;
 import io.swagger.annotations.ApiOperation;
@@ -30,5 +31,17 @@ public class DashBoardController {
         List<String> result = dashBoardService.getList(accessToken, githubId);
 
         return ResponseEntity.status(200).body(PostListResponse.of(result, 200, "게시물 목록 조회 성공"));
+    }
+
+    @GetMapping("/count")
+    @ApiOperation(value = "게시물 수 조회", notes = "전체 게시물 수 확인을 위한 Git 통신")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "게시물 수 조회 성공", response = PostCountResponse.class),
+            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<? extends BaseResponseBody> getPostCount(@RequestParam String accessToken, @RequestParam String githubId){
+        int result = dashBoardService.getListCount(accessToken, githubId);
+
+        return ResponseEntity.status(200).body(PostCountResponse.of(result, 200, "게시물 수 조회 성공"));
     }
 }
