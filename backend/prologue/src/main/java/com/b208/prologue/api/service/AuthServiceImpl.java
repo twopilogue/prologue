@@ -1,24 +1,30 @@
 package com.b208.prologue.api.service;
 
-import com.b208.prologue.api.request.request.AuthAccessTokenRequest;
+import com.b208.prologue.api.request.github.AuthAccessTokenRequest;
 import com.b208.prologue.api.response.github.AuthAccessTokenResponse;
 import com.b208.prologue.api.response.github.AuthUserInfoResponse;
+import io.netty.channel.ChannelOption;
+import io.netty.handler.timeout.ReadTimeoutHandler;
+import io.netty.handler.timeout.WriteTimeoutHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
+import reactor.netty.http.client.HttpClient;
 
+import java.time.Duration;
 import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService{
 
-    private final RestTemplate restTemplate ;
+    private final WebClient webClient;
 
     private static String clientId;
     private static String clientSecret;
@@ -39,35 +45,40 @@ public class AuthServiceImpl implements AuthService{
     }
 
     @Override
-    public String getAccessToken(String code) {
+    public Mono<AuthAccessTokenResponse> getAccessToken(String code) {
+
+        HttpClient httpClient = HttpClient.create()
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000)
+                .responseTimeout(Duration.ofMillis(5000))
+                .doOnConnected(conn ->
+                        conn.addHandlerLast(new ReadTimeoutHandler(5000, TimeUnit.MILLISECONDS))
+                                .addHandlerLast(new WriteTimeoutHandler(5000, TimeUnit.MILLISECONDS)));
+
+        WebClient client = WebClient.builder()
+                .baseUrl("https://github.com")
+                .defaultUriVariables(Collections.singletonMap("url", "https://github.com"))
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .clientConnector(new ReactorClientHttpConnector(httpClient))
+                .build();
 
         AuthAccessTokenRequest requestBody = new AuthAccessTokenRequest(clientId, clientSecret, code);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        HttpEntity<String> request = new HttpEntity<String>(requestBody.toString(), headers);
-
-        return restTemplate.postForObject(
-                "https://github.com/login/oauth/access_token",
-                request,
-                AuthAccessTokenResponse.class
-        ).getAccessToken();
+        return client.post()
+                .uri("/login/oauth/access_token")
+                .body(Mono.just(requestBody),AuthAccessTokenRequest.class)
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(AuthAccessTokenResponse.class);
     }
 
     @Override
-    public AuthUserInfoResponse getUserInfo(String accessToken) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(accessToken);
-        HttpEntity<Void> request = new HttpEntity<>(headers);
-
-        return restTemplate.exchange(
-                "https://api.github.com/user",
-                HttpMethod.GET,
-                request,
-                AuthUserInfoResponse.class
-        ).getBody();
+    public Mono<AuthUserInfoResponse> getUserInfo(String accessToken) {
+        return webClient.get()
+                .uri("/user")
+                .headers(h -> h.setBearerAuth(accessToken))
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(AuthUserInfoResponse.class);
     }
-
 
 }
