@@ -1,17 +1,14 @@
 package com.b208.prologue.api.service;
 
 import com.b208.prologue.api.response.github.PostGetListResponse;
-import com.b208.prologue.api.response.github.PostgetResponse;
 import com.b208.prologue.common.Base64Converter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringTokenizer;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +35,6 @@ public class DashBoardServiceImpl implements DashBoardService {
         for (int i = list.length-1; i > list.length-6; i--){
             if(i < 0) break;
             result.add(postService.setItem(url, accessToken, list[i].getPath()));
-            System.out.println(list[i].getPath());
         }
 
         return result;
