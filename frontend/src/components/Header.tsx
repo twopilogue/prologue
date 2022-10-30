@@ -1,5 +1,5 @@
 import React from "react";
-import Button from "@mui/material/Button";
+import { NavLink } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import { LightMode, DarkMode } from "@mui/icons-material";
 import {
@@ -10,9 +10,10 @@ import {
   MenuItem,
   Stack,
   Typography,
+  Button,
 } from "@mui/material";
 import GitHubIcon from "@mui/icons-material/GitHub";
-import styles from "./header.module.css";
+import styles from "./css/Header.module.css";
 import palette from "./styles/colorPalette";
 
 interface HeaderProps {
@@ -55,6 +56,11 @@ function Header({ user, onLogin }: HeaderProps) {
     setAnchorElUser(null);
   };
 
+  const activeStyle = {
+    background: "grey",
+    color: "white",
+  };
+
   return (
     <header>
       <div
@@ -65,12 +71,19 @@ function Header({ user, onLogin }: HeaderProps) {
         }}
       >
         <div>
-          <img
-            width="32"
-            height="32"
-            src="https://user-images.githubusercontent.com/83412032/198398260-5da6df5d-7abd-4228-a9e7-471360e16000.png"
-          />
-          <h1>Prologue</h1>
+          <NavLink
+            to="/"
+            style={{
+              color: "black",
+            }}
+          >
+            <img
+              width="32"
+              height="32"
+              src="https://user-images.githubusercontent.com/83412032/198398260-5da6df5d-7abd-4228-a9e7-471360e16000.png"
+            />
+            <h1>Prologue</h1>
+          </NavLink>
         </div>
 
         <Stack direction="row" spacing={2} style={{ alignItems: "center" }}>
