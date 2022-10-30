@@ -4,6 +4,7 @@ import "./App.css";
 import SamplePage from "./pages/SamplePage";
 import Setting from "features/setting/Setting";
 import SettingLayout from "features/setting/SettingLayout";
+import PostList from "pages/PostListPage";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path="/sample" element={<SamplePage />} />
         <Route path="/setting" element={<Setting />} />
         <Route path="/layout" element={<SettingLayout />} />
+        <Route path="/post" element={<PostList />} />
       </Routes>
     </div>
   );
