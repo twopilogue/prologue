@@ -23,7 +23,6 @@ const SideMenu = () => {
         flexGrow: 1,
         bgcolor: "background.paper",
         display: "flex",
-        height: 224,
       }}
     >
       <Tabs
@@ -34,18 +33,14 @@ const SideMenu = () => {
         aria-label="Vertical tabs example"
         sx={{ borderRight: 1, borderColor: "divider" }}
       >
-        <Tab label="Item One" {...a11yProps(0)} />
-        <Tab label="Item Two" {...a11yProps(1)} />
-        <Tab label="Item Three" {...a11yProps(2)} />
+        <Tab label="레이아웃 선택" {...a11yProps(0)} />
+        <Tab label="세부 레이아웃 설정" {...a11yProps(1)} />
       </Tabs>
       <TabPanel value={value} index={0}>
         Item One
       </TabPanel>
       <TabPanel value={value} index={1}>
         Item Two
-      </TabPanel>
-      <TabPanel value={value} index={2}>
-        Item Three
       </TabPanel>
     </Box>
   );

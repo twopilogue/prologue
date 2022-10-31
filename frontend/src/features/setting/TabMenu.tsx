@@ -90,8 +90,8 @@ const TabMenu = () => {
           onChange={handleChange}
           aria-label="styled tabs example"
         >
-          <StyledTab label="Workflows" />
-          <StyledTab label="Datasets" />
+          <StyledTab label="블로그 설정" />
+          <StyledTab label="레이아웃 설정" />
         </StyledTabs>
       </Box>
       <TabPanel value={value} index={0}>
