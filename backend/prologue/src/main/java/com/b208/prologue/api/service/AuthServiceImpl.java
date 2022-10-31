@@ -1,5 +1,6 @@
 package com.b208.prologue.api.service;
 
+import com.b208.prologue.api.request.github.AuthAccessTokenRequest;
 import com.b208.prologue.api.response.github.AuthAccessTokenResponse;
 import com.b208.prologue.api.response.github.AuthUserInfoResponse;
 import io.netty.channel.ChannelOption;
@@ -11,9 +12,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
@@ -43,7 +41,7 @@ public class AuthServiceImpl implements AuthService{
 
     @Override
     public String getUri() {
-        return "https://github.com/login/oauth/authorize?client_id="+clientId+"&scope=repo";
+        return "https://github.com/login/oauth/authorize?client_id="+clientId+"&scope=repo delete_repo";
     }
 
     @Override
@@ -63,15 +61,11 @@ public class AuthServiceImpl implements AuthService{
                 .clientConnector(new ReactorClientHttpConnector(httpClient))
                 .build();
 
-
-        MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
-        formData.add("client_id", clientId);
-        formData.add("client_secret", clientSecret);
-        formData.add("code", code);
+        AuthAccessTokenRequest requestBody = new AuthAccessTokenRequest(clientId, clientSecret, code);
 
         return client.post()
                 .uri("/login/oauth/access_token")
-                .body(BodyInserters.fromFormData(formData))
+                .body(Mono.just(requestBody),AuthAccessTokenRequest.class)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToMono(AuthAccessTokenResponse.class);
