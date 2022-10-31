@@ -60,7 +60,6 @@ function SamplePage() {
             style={{ textAlign: "center", maxWidth: "500px", padding: "20px" }}
           >
             <h3>Text &nbsp;&nbsp;&nbsp;&nbsp;</h3>
-            <Text name="Hello" color="red" />
             &nbsp;&nbsp;&nbsp;&nbsp;
             <Text />
             <hr />
