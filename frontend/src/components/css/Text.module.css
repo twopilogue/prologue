@@ -1,0 +1,53 @@
+.caption {
+  font-size: 1rem;
+  font-family: "Pretendard-Regular";
+  font-weight: 100;
+}
+
+.text {
+  font-size: 1.125rem;
+  font-family: "Pretendard-Regular";
+  font-weight: 200;
+}
+
+.groupTitle {
+  font-size: 1.25rem;
+  font-family: "Pretendard-Regular";
+  font-weight: 200;
+}
+
+.groupTitleBold {
+  font-size: 1.25rem;
+  font-family: "Pretendard-Regular";
+  font-weight: 600;
+}
+
+.textTitle {
+  font-size: 1.5rem;
+  font-family: "Pretendard-Regular";
+  font-weight: 400;
+}
+
+.pageTitle {
+  font-size: 2rem;
+  font-family: "Pretendard-Regular";
+  font-weight: 400;
+}
+
+.pageTitleBold {
+  font-size: 2rem;
+  font-family: "Pretendard-Regular";
+  font-weight: 600;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-family: "Pretendard-Regular";
+  font-weight: 400;
+}
+
+.titleBold {
+  font-size: 2.5rem;
+  font-family: "Pretendard-Regular";
+  font-weight: 600;
+}
