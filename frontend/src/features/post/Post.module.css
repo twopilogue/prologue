@@ -1,0 +1,28 @@
+.tabButtonGroup {
+  display: flex;
+}
+
+.tabButton input[type="radio"] {
+  display: none;
+}
+
+.tabButton label {
+  display: block;
+  width: 10rem;
+  height: 4rem;
+  border-radius: 30px 30px 0px 0px;
+  text-align: center;
+  line-height: 4rem;
+  background-color: #ffffff;
+}
+
+.tabButton input[type="radio"]:checked + label {
+  background-color: #d6e5f3;
+  font-weight: 600;
+}
+
+.tabList {
+  width: 75rem;
+  height: 42rem;
+  background-color: #d6e5f3;
+}
