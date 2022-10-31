@@ -13,7 +13,7 @@ interface Props {
 
 export const ButtonStyled = ({ label, color, width, icon, ...rest }: Props) => {
   const style = {
-    background: color === "blue" ? palette.blue_4 : palette.sky_1,
+    background: color === "blue" ? palette.blue_5 : palette.sky_1,
     color: color === "blue" ? palette.white : palette.black,
     borderRadius: "10px",
     padding: "0.5rem 1.5rem",
