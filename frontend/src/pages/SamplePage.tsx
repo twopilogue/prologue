@@ -137,13 +137,15 @@ function SamplePage() {
             )}
             <hr />
           </div>
-          {/* <div>
+          <div>
             <h3> &nbsp;&nbsp;&nbsp;&nbsp;Header - 로그인 전</h3>
             <Header />
             <h3> &nbsp;&nbsp;&nbsp;&nbsp;Header - 로그인 후</h3>
-            <Header user="user" />
+            <Header user="yeonsu-k" />
             <br /> <br />
-          </div> */}
+            <br /> <br />
+            <br /> <br />
+          </div>
         </div>
       </Stack>
     </div>
