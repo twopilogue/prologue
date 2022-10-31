@@ -11,8 +11,10 @@ import {
   Stack,
   Typography,
   Button,
+  Link,
 } from "@mui/material";
 import GitHubIcon from "@mui/icons-material/GitHub";
+import LogoutIcon from "@mui/icons-material/Logout";
 import styles from "./css/Header.module.css";
 import palette from "./styles/colorPalette";
 
@@ -39,8 +41,6 @@ const AvatarStyled = styled(Avatar)(() => ({
   height: "30px",
 }));
 
-const settings = ["내 정보", "Logout"];
-
 function Header({ user, onLogin }: HeaderProps) {
   const [backgroudMode, setBackgroudMode] = React.useState(true);
 
@@ -48,17 +48,21 @@ function Header({ user, onLogin }: HeaderProps) {
     null,
   );
 
+  const userMenu = [
+    {
+      name: "github",
+      path: `https://github.com/${user}`,
+      icon: <GitHubIcon />,
+    },
+    { name: "Logout", path: "/prologue", icon: <LogoutIcon /> },
+  ];
+
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
-  };
-
-  const activeStyle = {
-    background: "grey",
-    color: "white",
   };
 
   return (
@@ -74,7 +78,7 @@ function Header({ user, onLogin }: HeaderProps) {
           <NavLink
             to="/"
             style={{
-              color: "black",
+              color: backgroudMode ? "black" : "white",
             }}
           >
             <img
@@ -94,6 +98,25 @@ function Header({ user, onLogin }: HeaderProps) {
               <DarkMode onClick={() => setBackgroudMode(!backgroudMode)} />
             )}
           </IconButton>
+          <NavLink
+            to="/post"
+            style={{
+              color: backgroudMode ? "black" : "white",
+              textDecoration: "none",
+            }}
+          >
+            게시글 관리
+          </NavLink>
+          <NavLink
+            to="/setting"
+            style={{
+              color: backgroudMode ? "black" : "white",
+              textDecoration: "none",
+            }}
+          >
+            블로그 설정
+          </NavLink>
+
           {user ? (
             <>
               <Box sx={{ flexGrow: 0 }}>
@@ -102,7 +125,6 @@ function Header({ user, onLogin }: HeaderProps) {
                 </IconButton>
                 <Menu
                   sx={{ mt: "45px" }}
-                  id="menu-appbar"
                   anchorEl={anchorElUser}
                   anchorOrigin={{
                     vertical: "top",
@@ -116,9 +138,16 @@ function Header({ user, onLogin }: HeaderProps) {
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}
                 >
-                  {settings.map((setting) => (
-                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                      <Typography textAlign="center">{setting}</Typography>
+                  {userMenu.map((menu, index) => (
+                    <MenuItem key={index} onClick={handleCloseUserMenu}>
+                      <Link href={menu.path} underline="none" color="black">
+                        <Stack direction="row" spacing={1}>
+                          {menu.icon}
+                          <Typography textAlign="center">
+                            {menu.name}
+                          </Typography>
+                        </Stack>
+                      </Link>
                     </MenuItem>
                   ))}
                 </Menu>
