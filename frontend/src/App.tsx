@@ -5,10 +5,12 @@ import SamplePage from "./pages/SamplePage";
 import Setting from "features/setting/Setting";
 import SettingLayout from "features/setting/SettingLayout";
 import PostList from "pages/PostListPage";
+import Header from "./components/Header";
 
 function App() {
   return (
     <div>
+      <Header />
       <Routes>
         <Route path="/" element={<p>Main</p>} />
         <Route path="/sample" element={<SamplePage />} />
