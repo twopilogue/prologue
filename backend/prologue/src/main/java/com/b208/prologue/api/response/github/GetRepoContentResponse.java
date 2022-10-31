@@ -18,4 +18,7 @@ public class GetRepoContentResponse {
     @JsonProperty("content")
     String content;
 
+    @JsonProperty("path")
+    String path;
+
 }
