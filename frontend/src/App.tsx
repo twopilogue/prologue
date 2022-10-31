@@ -5,6 +5,7 @@ import SamplePage from "./pages/SamplePage";
 import SettingPage from "pages/SettingPage";
 import SettingLayout from "features/setting/SettingLayout";
 import { Helmet } from "react-helmet-async";
+import LayoutSample from "features/setting/layout/LayoutSample";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/sample" element={<SamplePage />} />
         <Route path="/setting" element={<SettingPage />} />
         <Route path="/layout" element={<SettingLayout />} />
+        <Route path="/laysample" element={<LayoutSample />} />
       </Routes>
     </div>
   );
