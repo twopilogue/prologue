@@ -1,19 +1,21 @@
 import { useAppSelector } from "app/hooks";
-import React, { useState } from "react";
-import { ChromePicker } from "react-color";
+import React, { useEffect, useState, useRef } from "react";
 import { Layout, Responsive, WidthProvider } from "react-grid-layout";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { selectLayoutList, setLayoutList } from "slices/settingSlice";
 import styles from "../Setting.module.css";
+import "../../../../node_modules/react-grid-layout/css/styles.css";
 
 const LayoutSample = () => {
   const ResponsiveGridLayout = WidthProvider(Responsive);
   const dispatch = useDispatch();
   const navigator = useNavigate();
+  const [isChecked, setIsChecked] = useState(false);
+  const category = useRef<HTMLInputElement>();
+  const categoryDiv = useRef<HTMLInputElement>();
 
   const savedLayoutList: Layout[] = useAppSelector(selectLayoutList);
-  const [color, setColor] = useState<string>("#ffffff");
 
   const getLayout = () => {
     const sessionLayout = sessionStorage.getItem("grid-layout");
@@ -37,6 +39,8 @@ const LayoutSample = () => {
         w: layoutJson[item].w,
         h: layoutJson[item].h,
         static: layoutJson[item].static,
+        isDraggable: layoutJson[item].isDraggable,
+        isResizable: layoutJson[item].isResizable,
       };
       tmpLayoutList.push(layout);
     }
@@ -48,40 +52,46 @@ const LayoutSample = () => {
     sessionStorage.setItem("grid-layout", JSON.stringify(layouts));
   };
 
-  const handleColorChange = (color: any) => {
-    setColor(color);
+  const handleIsChecked = (e: any) => {
+    setIsChecked(!isChecked);
+    console.log(isChecked);
+    if (!isChecked) {
+      console.log(categoryDiv.current.style.backgroundColor);
+      // categoryDiv.current.style.display = "flex";
+    } else {
+      // categoryDiv.current.style.display = "none";
+    }
   };
 
   return (
     <>
-      <ResponsiveGridLayout
-        layouts={getLayout()}
-        breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-        cols={{ lg: 5, md: 4, sm: 3, xs: 2, xxs: 1 }}
-        rowHeight={30}
-        width={1000}
-        onLayoutChange={handleLayoutChange}
-      >
-        <div
-          className={styles.box1}
-          style={{ backgroundColor: `${color}` }}
-          key="a"
-        >
-          Blue Eyes Dragon
-        </div>
-        <div className={styles.box2} key="b">
-          Dark Magician
-        </div>
-        <div className={styles.box3} key="c">
-          Kuriboh
-        </div>
-      </ResponsiveGridLayout>
-      <button onClick={saveLayouts}>저장</button>
-
-      <ChromePicker
-        color={color}
-        onChange={(color) => handleColorChange(color.hex)}
+      <input
+        type="checkbox"
+        ref={category}
+        checked={isChecked}
+        onChange={(e) => handleIsChecked(e)}
       />
+      <div style={{ backgroundColor: "black" }} id="Node1">
+        <ResponsiveGridLayout
+          layouts={getLayout()}
+          breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+          cols={{ lg: 5, md: 4, sm: 3, xs: 2, xxs: 1 }}
+          rowHeight={30}
+          width={1000}
+          onLayoutChange={handleLayoutChange}
+        >
+          <div style={{ backgroundColor: "white" }} ref={categoryDiv} key="a">
+            Blue Eyes Dragon
+          </div>
+          <div style={{ backgroundColor: "white" }} key="b">
+            Dark Magician
+          </div>
+          <div style={{ backgroundColor: "white" }} key="c">
+            Kuriboh
+          </div>
+        </ResponsiveGridLayout>
+        <button onClick={saveLayouts}>저장</button>
+      </div>
     </>
   );
 };
