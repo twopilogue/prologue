@@ -1,11 +1,7 @@
 package com.b208.prologue.api.service;
 
-import com.b208.prologue.api.request.github.CreateCommitRequest;
-import com.b208.prologue.api.request.github.CreateRepositoryRequest;
-import com.b208.prologue.api.request.github.CreateTreeRequest;
-import com.b208.prologue.api.response.github.GetTemplateFileResponse;
-import com.b208.prologue.api.response.github.PostGetListResponse;
-import com.b208.prologue.api.response.github.RepositoryListResponse;
+import com.b208.prologue.api.request.github.*;
+import com.b208.prologue.api.response.github.*;
 import com.b208.prologue.common.Base64Converter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -13,7 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +18,7 @@ public class BlogServiceImpl implements BlogService {
 
     private final WebClient webClient;
     private final Base64Converter base64Converter;
+    static private List<TreeRequest> treeRequestList;
 
     @Override
     public void createRepository(String accessToken, String githubId) throws Exception {
@@ -73,44 +71,48 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     public void selectTemplate(String accessToken, String githubId, int templateNumber) throws Exception {
-        String SHA = null;
-        String tree = null;
-        String message = null;
-        String parents = null;
-
         String decodeAccessToken = base64Converter.decryptAES256(accessToken);
 
-        // 디렉토리 내 파일 불러오기
+        treeRequestList = new ArrayList<>();
+        searchTemplate(decodeAccessToken, githubId, "");
 
-
-        // tree 만들기
-        CreateTreeRequest createTreeRequest = new CreateTreeRequest(tress, base_tree);
-        webClient.post()
-                .uri("/repos/" + githubId + "/" + githubId + ".github.io/git/trees")
+        GetShaResponse getBaseTreeSha = webClient.get()
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io/git/trees/main")
                 .headers(h -> h.setBearerAuth(decodeAccessToken))
-                .body(Mono.just(createCommitRequest), CreateCommitRequest.class)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .bodyToMono(String.class)
+                .bodyToMono(GetShaResponse.class)
                 .block();
+        String base_tree = getBaseTreeSha.getSha();
 
-        // 커밋하기
-        CreateCommitRequest createCommitRequest = new CreateCommitRequest(tree, message, parents);
-        webClient.post()
+        CreateTreeRequest createTreeRequest = new CreateTreeRequest(treeRequestList, base_tree);
+        GetShaResponse getTreeSha = webClient.post()
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io/git/trees")
+                .headers(h -> h.setBearerAuth(decodeAccessToken))
+                .body(Mono.just(createTreeRequest), CreateTreeRequest.class)
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(GetShaResponse.class)
+                .block();
+        String treeSha = getTreeSha.getSha();
+
+        String[] parents = {base_tree};
+        CreateCommitRequest createCommitRequest = new CreateCommitRequest(treeSha, "commit msg", parents);
+        GetShaResponse getCommitSha = webClient.post()
                 .uri("/repos/" + githubId + "/" + githubId + ".github.io/git/commits")
                 .headers(h -> h.setBearerAuth(decodeAccessToken))
                 .body(Mono.just(createCommitRequest), CreateCommitRequest.class)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .bodyToMono(String.class)
+                .bodyToMono(GetShaResponse.class)
                 .block();
+        String commitSha = getCommitSha.getSha();
 
-        // 레퍼런스 업데이트
-        CreateRepositoryRequest createRepositoryRequest = new CreateRepositoryRequest(SHA);
+        UpdateReferencesRequest updateReferencesRequest = new UpdateReferencesRequest(commitSha);
         webClient.patch()
-                .uri("/repos/" + githubId + "/" + githubId + ".github.io/refs/heads/main")
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io/git/refs/heads/main")
                 .headers(h -> h.setBearerAuth(decodeAccessToken))
-                .body(Mono.just(createRepositoryRequest), CreateRepositoryRequest.class)
+                .body(Mono.just(updateReferencesRequest), UpdateReferencesRequest.class)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToMono(String.class)
@@ -118,31 +120,42 @@ public class BlogServiceImpl implements BlogService {
     }
 
     public void searchTemplate(String accessToken, String githubId, String path) {
-        // 파일 경로,파일 컨텐츠 , 파일 이름 불러오기
         GetTemplateFileResponse[] templateFileList = webClient.get()
-                .uri("/repos/" + githubId + "/" + githubId + ".github.io" + "/contents/" + path)
-                .headers(h -> h.setBearerAuth(accessToken))
+                .uri("/repos/" + githubId + "/gatsby-starter-blog/contents/" + path)
                 .accept(MediaType.APPLICATION_JSON)
+                .headers(h -> h.setBearerAuth(accessToken))
                 .retrieve()
                 .bodyToMono(GetTemplateFileResponse[].class).block();
-
         for (GetTemplateFileResponse getTemplateFileResponse : templateFileList) {
             if (getTemplateFileResponse.getType().equals("file")) {
-                getFileContent();
+                getFileContent(accessToken, githubId, getTemplateFileResponse.getPath());
             } else {
-                searchTemplate(accessToken, githubId, getTemplateFileResponse.getType());
+                searchTemplate(accessToken, githubId, getTemplateFileResponse.getPath());
             }
-
         }
     }
 
     public void getFileContent(String accessToken, String githubId, String path) {
-        GetTemplateFileResponse[] templateFileList = webClient.get()
-                .uri("/repos/" + githubId + "/" + githubId + ".github.io" + "/contents/" + path)
+        GetFileContentResponse getFileContentResponse = webClient.get()
+                .uri("/repos/" + githubId + "/gatsby-starter-blog/contents/" + path)
+                .accept(MediaType.APPLICATION_JSON)
                 .headers(h -> h.setBearerAuth(accessToken))
+                .retrieve()
+                .bodyToMono(GetFileContentResponse.class).block();
+        String content = makeBlob(accessToken, githubId, getFileContentResponse.getContent());
+        treeRequestList.add(new TreeRequest(path, "100644", "blob", content));
+    }
+
+    public String makeBlob(String accessToken, String githubId, String content) {
+        CreateBlobRequest createBlobRequest = new CreateBlobRequest(content, "base64");
+        GetShaResponse getShaResponse = webClient.post()
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io" + "/git/blobs")
+                .headers(h -> h.setBearerAuth(accessToken))
+                .body(Mono.just(createBlobRequest), CreateBlobRequest.class)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .bodyToMono(GetTemplateFileResponse[].class).block();
+                .bodyToMono(GetShaResponse.class).block();
+        return getShaResponse.getSha();
     }
 
 }

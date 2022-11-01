@@ -5,8 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class CreateCommitRequest {
-    String tree;
-    String message;
-    String parents[];
+public class CreateBlobRequest {
+    String content;
+    String encoding;
 }
