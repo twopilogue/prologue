@@ -11,9 +11,9 @@ const LayoutSample = () => {
   const ResponsiveGridLayout = WidthProvider(Responsive);
   const dispatch = useDispatch();
   const navigator = useNavigate();
-  const [isChecked, setIsChecked] = useState(false);
-  const category = useRef<HTMLInputElement>();
-  const categoryDiv = useRef<HTMLInputElement>();
+  const [categoryCheck, setCategoryCheck] = useState(true);
+  const [contentCheck, setContentCheck] = useState(true);
+  const [titleCheck, setTitleCheck] = useState(true);
 
   const savedLayoutList: Layout[] = useAppSelector(selectLayoutList);
 
@@ -29,7 +29,7 @@ const LayoutSample = () => {
     const tmpLayoutList: Layout[] = [];
     const layout = sessionStorage.getItem("grid-layout");
     const layoutJson = JSON.parse(layout);
-    console.log(layoutJson);
+    console.log("레이아웃: ", layoutJson);
     const layoutLength = layoutJson.length;
     for (let item = 0; item < layoutLength; item++) {
       const layout: Layout = {
@@ -52,26 +52,31 @@ const LayoutSample = () => {
     sessionStorage.setItem("grid-layout", JSON.stringify(layouts));
   };
 
-  const handleIsChecked = (e: any) => {
-    setIsChecked(!isChecked);
-    console.log(isChecked);
-    if (!isChecked) {
-      console.log(categoryDiv.current.style.backgroundColor);
-      // categoryDiv.current.style.display = "flex";
-    } else {
-      // categoryDiv.current.style.display = "none";
-    }
-  };
-
   return (
     <>
       <input
         type="checkbox"
-        ref={category}
-        checked={isChecked}
-        onChange={(e) => handleIsChecked(e)}
+        checked={categoryCheck}
+        onChange={() => {
+          setCategoryCheck(!categoryCheck);
+        }}
       />
-      <div style={{ backgroundColor: "black" }} id="Node1">
+      <input
+        type="checkbox"
+        checked={contentCheck}
+        onChange={() => {
+          setContentCheck(!contentCheck);
+        }}
+      />
+      <input
+        type="checkbox"
+        checked={titleCheck}
+        onChange={() => {
+          setTitleCheck(!titleCheck);
+        }}
+      />
+
+      <div style={{ backgroundColor: "white" }}>
         <ResponsiveGridLayout
           layouts={getLayout()}
           breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
@@ -80,13 +85,30 @@ const LayoutSample = () => {
           width={1000}
           onLayoutChange={handleLayoutChange}
         >
-          <div style={{ backgroundColor: "white" }} ref={categoryDiv} key="a">
+          <div
+            className={
+              categoryCheck
+                ? `${styles.display_flex}`
+                : `${styles.display_none}`
+            }
+            key="a"
+          >
             Blue Eyes Dragon
           </div>
-          <div style={{ backgroundColor: "white" }} key="b">
+          <div
+            className={
+              contentCheck ? `${styles.display_flex}` : `${styles.display_none}`
+            }
+            key="b"
+          >
             Dark Magician
           </div>
-          <div style={{ backgroundColor: "white" }} key="c">
+          <div
+            className={
+              titleCheck ? `${styles.display_flex}` : `${styles.display_none}`
+            }
+            key="c"
+          >
             Kuriboh
           </div>
         </ResponsiveGridLayout>
