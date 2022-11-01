@@ -1,10 +1,5 @@
 // core
-import {
-  configureStore,
-  ThunkAction,
-  Action,
-  combineReducers,
-} from "@reduxjs/toolkit";
+import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import postReducer from "../slices/postSlice";
 import settingReducer from "../slices/settingSlice";
 
