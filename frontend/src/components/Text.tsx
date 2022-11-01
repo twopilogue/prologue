@@ -19,7 +19,6 @@ const Text = ({ value, type }: Props) => {
   return (
     <>
       <span className={`${styles[type]}`}>{value}</span>
-      <br />
     </>
   );
 };
