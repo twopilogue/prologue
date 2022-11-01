@@ -12,10 +12,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class GetTemplateFileResponse {
 
-    @JsonProperty("sha")
+    @JsonProperty("path")
     String path;
 
-    @JsonProperty("sha")
+    @JsonProperty("type")
     String type;
 
 }
