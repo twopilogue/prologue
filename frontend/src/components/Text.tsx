@@ -1,45 +1,32 @@
 import React from "react";
-import colorPalette, { PaletteKeyTypes } from "./styles/colorPalette";
+import styles from "components/css/Text.module.css";
 
 interface Props {
-  name?: string;
-  color?: PaletteKeyTypes;
-  italic?: boolean;
-  underline?: boolean;
-  bold?: boolean;
-  fontSize?: string;
+  value: string;
+  type?:
+    | "caption"
+    | "text"
+    | "groupTitle"
+    | "groupTitleBold"
+    | "textTitle"
+    | "pageTitle"
+    | "pageTitleBold"
+    | "title"
+    | "titleBold";
 }
 
-const Text = ({
-  name,
-  color,
-  italic,
-  underline,
-  bold,
-  fontSize,
-  ...props
-}: Props) => {
-  const style = {
-    color: color,
-    fontStyle: italic ? "italic" : "normal",
-    textDecoration: underline ? "underline" : "none",
-    fontWeight: bold ? "bold" : "none",
-    fontSize: fontSize,
-  };
+const Text = ({ value, type }: Props) => {
   return (
-    <span style={style} {...props}>
-      {name}
-    </span>
+    <>
+      <span className={`${styles[type]}`}>{value}</span>
+      <br />
+    </>
   );
 };
 
 Text.defaultProps = {
-  name: "Text",
-  color: colorPalette.black,
-  italic: false,
-  underline: false,
-  bold: false,
-  fontSize: "18px",
+  value: "내용이 들어갑니다.",
+  type: "text",
 };
 
 export default Text;

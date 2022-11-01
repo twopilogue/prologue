@@ -6,10 +6,13 @@ import SettingPage from "pages/SettingPage";
 import SettingLayout from "features/setting/SettingLayout";
 import { Helmet } from "react-helmet-async";
 import LayoutSample from "features/setting/layout/LayoutSample";
+import PostList from "pages/PostListPage";
+import Header from "./components/Header";
 
 function App() {
   return (
     <div>
+      <Header />
       <Routes>
         <Route
           path="/"
@@ -26,6 +29,7 @@ function App() {
         <Route path="/setting" element={<SettingPage />} />
         <Route path="/layout" element={<SettingLayout />} />
         <Route path="/laysample" element={<LayoutSample />} />
+        <Route path="/post" element={<PostList />} />
       </Routes>
     </div>
   );
