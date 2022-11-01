@@ -5,7 +5,7 @@ import FormControlLabel, {
   FormControlLabelProps,
 } from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
-import palette from "./styles/colorPalette";
+import palette from "../../components/styles/colorPalette";
 
 interface StyledFormControlLabelProps extends FormControlLabelProps {
   checked: boolean;
@@ -17,6 +17,8 @@ const StyledFormControlLabel = styled((props: StyledFormControlLabelProps) => (
   ".MuiFormControlLabel-label": {
     lineHeight: 1.0,
     fontFamily: "Pretendard-Regular",
+    fontWeight: "400",
+    fontSize: "1.25rem",
   },
 }));
 

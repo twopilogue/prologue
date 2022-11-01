@@ -57,11 +57,38 @@ function SamplePage() {
         <SideNavigation />
         <div style={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>
           <div
-            style={{ textAlign: "center", maxWidth: "500px", padding: "20px" }}
+            style={{ textAlign: "center", maxWidth: "700px", padding: "20px" }}
           >
-            <h3>Text &nbsp;&nbsp;&nbsp;&nbsp;</h3>
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <Text />
+            <h3>Text</h3>
+            <Stack>
+              <Text value="caption Regular 1rem 캡션" type="caption" />
+              <Text value="text Regular 1.125rem 본문" type="text" />
+              <Text
+                value="groupTitle Regular 1.25rem 영역별 타이틀"
+                type="groupTitle"
+              />
+              <Text
+                value="groupTitleBold SemiBold 1.25rem 영역별 타이틀 강조"
+                type="groupTitleBold"
+              />
+              <Text
+                value="textTitle Regular 1.5rem 본문별 타이틀"
+                type="textTitle"
+              />
+              <Text
+                value="pageTitle Regular 2rem 페이지별 타이틀"
+                type="pageTitle"
+              />
+              <Text
+                value="pageTitleBold SemiBold 2rem 페이지별 타이틀 강조"
+                type="pageTitleBold"
+              />
+              <Text value="title Regular 2.5rem 타이틀" type="title" />
+              <Text
+                value="titleBold SemiBold 2.5rem 타이틀 강조"
+                type="titleBold"
+              />
+            </Stack>
             <hr />
             <h3>Button</h3>
             <Button
@@ -78,7 +105,7 @@ function SamplePage() {
             <br />
             <Input onChange={valueCheck} />
             <hr />
-            <h3>SwitchButton2</h3>
+            <h3>SwitchButton</h3>
             <FormControl component="fieldset" variant="standard">
               <FormGroup>
                 <SwitchButton

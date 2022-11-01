@@ -4,6 +4,7 @@ import Switch from "@mui/material/Switch";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import palette from "./styles/colorPalette";
+import Text from "./Text";
 
 const SwitchButton = styled(Switch)(({ theme }) => ({
   width: 32,
@@ -75,7 +76,7 @@ function SwitchWithLabel({ label, ...rest }: Props) {
         inputProps={{ "aria-label": "ant design" }}
         {...rest}
       />
-      <Typography>{label}</Typography>
+      <Text value={label} type="caption" />
     </Stack>
   );
 }
