@@ -13,6 +13,14 @@ function App() {
   return (
     <div>
       <Header />
+
+      <div
+        style={{
+          width: "83vw",
+          margin: "0 auto",
+        }}
+      >
+       
       <Routes>
         <Route
           path="/"
@@ -32,6 +40,7 @@ function App() {
         <Route path="/post" element={<PostList />} />
       </Routes>
     </div>
+  </div>
   );
 }
 
