@@ -1,12 +1,14 @@
 package com.b208.prologue.api.service;
 
 import com.b208.prologue.api.request.github.CreateContentRequest;
+import com.b208.prologue.api.request.github.DeleteContentRequest;
 import com.b208.prologue.api.request.github.UpdateContentRequest;
 import com.b208.prologue.api.response.github.PostGetListResponse;
 import com.b208.prologue.api.response.github.GetRepoContentResponse;
 import com.b208.prologue.api.response.github.PostgetResponse;
 import com.b208.prologue.common.Base64Converter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -76,6 +78,7 @@ public class PostServiceImpl implements PostService {
         return Line;
     }
 
+    @Override
     public void insertDetailPost(String encodedAccessToken, String githubId, String content) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
@@ -97,11 +100,12 @@ public class PostServiceImpl implements PostService {
                 .block();
     }
 
+    @Override
     public void updateDetailPost(String encodedAccessToken, String githubId, String directory, String content, String sha) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
         UpdateContentRequest updateContentRequest = new UpdateContentRequest(
-                "modify: 게시글 수정", base64Converter.encode(content), sha );
+                "modify: 게시글 수정", base64Converter.encode(content), sha);
 
         webClient.put()
                 .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/content/blog/" + directory + "/index.md")
@@ -113,11 +117,41 @@ public class PostServiceImpl implements PostService {
                 .block();
     }
 
+    @Override
+    public void deleteDetailPost(String encodedAccessToken, String githubId, String directory, String sha) throws Exception {
+        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
+
+        GetRepoContentResponse[] responses = getContentList(accessToken, githubId, "content/blog/" + directory);
+        Mono mono = null;
+
+        for (int i = 0; i < responses.length; i++) {
+            DeleteContentRequest deleteContentRequest = new DeleteContentRequest(
+                    "remove: 게시글 삭제", responses[i].getSha());
+
+            Mono<String> tmp = webClient.method(HttpMethod.DELETE)
+                    .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/" + responses[i].getPath())
+                    .headers(h -> h.setBearerAuth(accessToken))
+                    .body(Mono.just(deleteContentRequest), DeleteContentRequest.class)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .retrieve()
+                    .bodyToMono(String.class);
+
+            if (i == 0) {
+                mono = tmp;
+            } else {
+                mono = Mono.zip(mono, tmp);
+            }
+        }
+        mono.block();
+    }
+
+    @Override
     public GetRepoContentResponse getDetailPost(String encodedAccessToken, String githubId, String directory) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
         return getDetailContent(accessToken, githubId, "content/blog/" + directory + "/index.md");
     }
 
+    @Override
     public GetRepoContentResponse getDetailContent(String accessToken, String githubId, String path) throws Exception {
         GetRepoContentResponse postResponse = webClient.get()
                 .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/" + path)
@@ -128,6 +162,18 @@ public class PostServiceImpl implements PostService {
 
         String tmp = postResponse.getContent().replace("\n", "");
         postResponse.setContent(base64Converter.decode(tmp));
+
+        return postResponse;
+    }
+
+    @Override
+    public GetRepoContentResponse[] getContentList(String accessToken, String githubId, String path) throws Exception {
+        GetRepoContentResponse[] postResponse = webClient.get()
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/" + path)
+                .headers(h -> h.setBearerAuth(accessToken))
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(GetRepoContentResponse[].class).block();
 
         return postResponse;
     }

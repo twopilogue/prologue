@@ -1,6 +1,7 @@
 package com.b208.prologue.api.controller;
 
 import com.b208.prologue.api.request.ModifyDetailPostRequest;
+import com.b208.prologue.api.request.RemoveDetailPostRequest;
 import com.b208.prologue.api.request.WriteDetailPostRequest;
 import com.b208.prologue.api.response.BaseResponseBody;
 import com.b208.prologue.api.response.DetailPostResponse;
@@ -90,6 +91,25 @@ public class PostsController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "게시글 수정에 실패하였습니다."));
+        }
+    }
+
+    @DeleteMapping("")
+    @ApiOperation(value = "GitHub 게시글 삭제", notes = "GitHub 블로그 게시글을 삭제한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "게시글 삭제 성공", response = BaseResponseBody.class),
+            @ApiResponse(code = 400, message = "게시글 삭제 실패", response = BaseResponseBody.class),
+            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<? extends BaseResponseBody> removeDetailPost(@RequestBody RemoveDetailPostRequest removeDetailPostRequest) {
+
+        try {
+            postService.deleteDetailPost(removeDetailPostRequest.getAccessToken(), removeDetailPostRequest.getGithubId(),
+                    removeDetailPostRequest.getDirectory(),removeDetailPostRequest.getSha());
+            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "게시글 삭제에 성공하였습니다."));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "게시글 삭제에 실패하였습니다."));
         }
     }
 }
