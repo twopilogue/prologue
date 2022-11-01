@@ -17,6 +17,8 @@ export const ButtonStyled = ({ label, color, width, icon, ...rest }: Props) => {
     color: color === "blue" ? palette.white : palette.black,
     borderRadius: "10px",
     padding: "0.5rem 1.5rem",
+    fontFamily: "Pretendard-Regular",
+    fontWeight: "400",
     width: width,
   };
   return (

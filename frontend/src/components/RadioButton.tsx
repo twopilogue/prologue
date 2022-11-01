@@ -16,6 +16,7 @@ const StyledFormControlLabel = styled((props: StyledFormControlLabelProps) => (
 ))(() => ({
   ".MuiFormControlLabel-label": {
     lineHeight: 1.0,
+    fontFamily: "Pretendard-Regular",
   },
 }));
 
