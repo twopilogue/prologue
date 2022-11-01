@@ -34,3 +34,12 @@
   background-color: green;
 }
 
+.display_none {
+  display: none;
+}
+
+.display_flex {
+  background-color: lightgray;
+  display: flex;
+}
+
