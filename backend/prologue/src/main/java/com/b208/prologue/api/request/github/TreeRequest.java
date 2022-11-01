@@ -5,8 +5,11 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class CreateCommitRequest {
-    String tree;
-    String message;
-    String parents[];
+public class TreeRequest {
+
+    String path;
+    String mode;
+    String type;
+    String sha;
+
 }
