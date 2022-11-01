@@ -55,4 +55,16 @@ public class BlogController {
         return ResponseEntity.status(200).body(CheckRepositoryResponse.of(checkRepository, 200, "블로그 레포지토리 조회를 완료했습니다."));
     }
 
+    @GetMapping("/template")
+    @ApiOperation(value = "블로그 템플릿 생성", notes = "블로그 템플릿을 생성 한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "블로그 템플릿 생성", response = BaseResponseBody.class),
+            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<? extends BaseResponseBody> selectBlogTemplate(@RequestParam @ApiParam(value = "accessToken", required = true) String accessToken,
+                                                                                 @RequestParam @ApiParam(value = "사용자 깃허브 아이디", required = true) String githubId) throws Exception {
+        blogService.selectTemplate(accessToken, githubId, 0);
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "블로그 템플릿 생성을 완료했습니다."));
+    }
+
 }
