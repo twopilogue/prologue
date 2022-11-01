@@ -11,13 +11,21 @@ function App() {
   return (
     <div>
       <Header />
-      <Routes>
-        <Route path="/" element={<p>Main</p>} />
-        <Route path="/sample" element={<SamplePage />} />
-        <Route path="/setting" element={<Setting />} />
-        <Route path="/layout" element={<SettingLayout />} />
-        <Route path="/post" element={<PostList />} />
-      </Routes>
+
+      <div
+        style={{
+          width: "83vw",
+          margin: "0 auto",
+        }}
+      >
+        <Routes>
+          <Route path="/" element={<p>Main</p>} />
+          <Route path="/sample" element={<SamplePage />} />
+          <Route path="/setting" element={<Setting />} />
+          <Route path="/layout" element={<SettingLayout />} />
+          <Route path="/post" element={<PostList />} />
+        </Routes>
+      </div>
     </div>
   );
 }
