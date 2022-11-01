@@ -1,6 +1,8 @@
 import { Tab, Tabs } from "@mui/material";
 import { Box } from "@mui/system";
 import React from "react";
+import MyBlogInfoInput from "./MyBlogInfoInput";
+import MyInfoInput from "./MyInfoInput";
 import { TabPanel } from "./TabMenu";
 
 const SideMenu = () => {
@@ -20,9 +22,9 @@ const SideMenu = () => {
   return (
     <Box
       sx={{
-        flexGrow: 1,
         bgcolor: "background.paper",
         display: "flex",
+        height: "100%",
       }}
     >
       <Tabs
@@ -37,7 +39,8 @@ const SideMenu = () => {
         <Tab label="세부 레이아웃 설정" {...a11yProps(1)} />
       </Tabs>
       <TabPanel value={value} index={0}>
-        Item One
+        <MyInfoInput />
+        <MyBlogInfoInput />
       </TabPanel>
       <TabPanel value={value} index={1}>
         Item Two
