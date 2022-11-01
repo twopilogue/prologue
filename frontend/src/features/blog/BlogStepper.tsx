@@ -17,6 +17,24 @@ interface Props {
 
 const steps = ["Create Git repository", "Layout setting"];
 
+const BlogStepper = ({ step }: Props) => {
+  return (
+    <>
+      <Stepper
+        activeStep={step}
+        alternativeLabel
+        connector={<QontoConnector />}
+      >
+        {steps.map((label) => (
+          <Step key={label}>
+            <StepLabel StepIconComponent={QontoStepIcon}>{label}</StepLabel>
+          </Step>
+        ))}
+      </Stepper>
+    </>
+  );
+};
+
 const QontoConnector = styled(StepConnector)(({ theme }) => ({
   [`&.${stepConnectorClasses.alternativeLabel}`]: {
     top: 10,
@@ -64,9 +82,7 @@ const QontoStepIconRoot = styled("div")<{ ownerState: { active?: boolean } }>(
   }),
 );
 
-function QontoStepIcon(props: StepIconProps) {
-  const { active, completed, className } = props;
-
+function QontoStepIcon({ active, completed, className }: StepIconProps) {
   return (
     <QontoStepIconRoot ownerState={{ active }} className={className}>
       {completed ? (
@@ -78,22 +94,4 @@ function QontoStepIcon(props: StepIconProps) {
   );
 }
 
-const StepperComponent = ({ step }: Props) => {
-  return (
-    <>
-      <Stepper
-        activeStep={step}
-        alternativeLabel
-        connector={<QontoConnector />}
-      >
-        {steps.map((label) => (
-          <Step key={label}>
-            <StepLabel StepIconComponent={QontoStepIcon}>{label}</StepLabel>
-          </Step>
-        ))}
-      </Stepper>
-    </>
-  );
-};
-
-export default StepperComponent;
+export default BlogStepper;
