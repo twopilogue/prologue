@@ -58,7 +58,7 @@ public class BlogController {
     @GetMapping("/template")
     @ApiOperation(value = "블로그 템플릿 생성", notes = "블로그 템플릿을 생성 한다.")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "블로그 템플릿 생성", response = CheckRepositoryResponse.class),
+            @ApiResponse(code = 200, message = "블로그 템플릿 생성", response = BaseResponseBody.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
     public ResponseEntity<? extends BaseResponseBody> selectBlogTemplate(@RequestParam @ApiParam(value = "accessToken", required = true) String accessToken,
