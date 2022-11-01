@@ -1,11 +1,25 @@
 .container {
-  display: flex;
+  display: flex; 
+  width: 200px;
+  height: 100px;
+  padding: 5px;
+
+  flex-direction: column;
+  flex-wrap: wrap;
+  overflow-x: scroll;
+  background-color: blue;
+}
+
+/* 스크롤 숨기기 */
+.container::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }
 
 .box1 {
   width: 100px;
-  height: 100px;
-  background-color: red;
+  height: 100%;
+  background-color: lightblue;
+  /* margin: 5px; */
 }
 
 .box2 {
@@ -19,3 +33,13 @@
   height: 200px;
   background-color: green;
 }
+
+.display_none {
+  display: none;
+}
+
+.display_flex {
+  background-color: lightgray;
+  display: flex;
+}
+
