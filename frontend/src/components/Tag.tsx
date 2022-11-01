@@ -19,6 +19,8 @@ const randomBrightColor = () => {
 const ChipStyled = styled(Chip)(() => ({
   // backgroundColor: palette.blue_5,
   backgroundColor: randomBrightColor(),
+  fontFamily: "Pretendard-Regular",
+  fontWeight: "400",
   color: "white",
   "& .MuiChip-deleteIcon": {
     color: "white",

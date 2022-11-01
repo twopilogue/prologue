@@ -4,7 +4,7 @@ import Button from "./Button";
 import styles from "./css/Modal.module.css";
 
 interface Props {
-  buttonNum: number;
+  buttonNum: 1 | 2;
   text: string;
   oneButtonLabel?: string;
   oneButtonSet?: () => void;

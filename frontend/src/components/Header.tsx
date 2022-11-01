@@ -50,7 +50,7 @@ function Header({ user, onLogin }: HeaderProps) {
 
   const userMenu = [
     {
-      name: "github",
+      name: "GitHub",
       path: `https://github.com/${user}`,
       icon: <GitHubIcon />,
     },
