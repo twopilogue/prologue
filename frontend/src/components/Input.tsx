@@ -1,7 +1,7 @@
 import * as React from "react";
 import { TextField, FormControl, FormHelperText } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import palette from "./styles/colorPalette";
+import palette from "../styles/colorPalette";
 
 interface inputInfo {
   name: string;
