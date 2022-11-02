@@ -8,9 +8,11 @@ import com.b208.prologue.api.response.github.GetRepoContentResponse;
 import com.b208.prologue.api.response.github.PostgetResponse;
 import com.b208.prologue.common.Base64Converter;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
@@ -79,16 +81,15 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void insertDetailPost(String encodedAccessToken, String githubId, String content) throws Exception {
+    public void insertDetailPost(String encodedAccessToken, String githubId, String content, List<MultipartFile> files) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
+        String commit = "add: 새게시글 작성";
 
         Long nowDate = System.currentTimeMillis();
         Timestamp timeStamp = new Timestamp(nowDate);
         String directory = String.valueOf(timeStamp.getTime());
 
-        CreateContentRequest createContentRequest = new CreateContentRequest(
-                "add: 새게시글 작성", base64Converter.encode(content)
-        );
+        CreateContentRequest createContentRequest = new CreateContentRequest(commit, base64Converter.encode(content));
 
         webClient.put()
                 .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/content/blog/" + directory + "/index.md")
@@ -98,6 +99,27 @@ public class PostServiceImpl implements PostService {
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
+
+        if (files != null && !files.isEmpty()) {
+            Mono mono = null;
+            for (int i = 0; i < files.size(); i++) {
+                MultipartFile file = files.get(i);
+                String image = new String(Base64.encodeBase64(file.getBytes()));
+                createContentRequest = new CreateContentRequest(commit, image);
+
+                Mono<String> tmp = webClient.put()
+                        .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/content/blog/" + directory + "/" + file.getOriginalFilename())
+                        .headers(h -> h.setBearerAuth(accessToken))
+                        .body(Mono.just(createContentRequest), CreateContentRequest.class)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .retrieve()
+                        .bodyToMono(String.class);
+                if (mono == null) mono = tmp;
+                else mono = Mono.zip(mono, tmp);
+            }
+            mono.block();
+        }
+
     }
 
     @Override
