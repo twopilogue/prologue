@@ -1,49 +1,23 @@
 .caption {
   font-size: 1rem;
-  font-weight: 400;
 }
 
 .text {
   font-size: 1.125rem;
-  font-weight: 400;
 }
 
 .groupTitle {
   font-size: 1.25rem;
-  font-weight: 400;
-}
-
-.groupTitleBold {
-  font-size: 1.25rem;
-  font-weight: 600;
 }
 
 .textTitle {
   font-size: 1.5rem;
-  font-weight: 400;
-}
-
-.textTitleBold {
-  font-size: 1.5rem;
-  font-weight: 600;
 }
 
 .pageTitle {
   font-size: 2rem;
-  font-weight: 400;
-}
-
-.pageTitleBold {
-  font-size: 2rem;
-  font-weight: 600;
 }
 
 .title {
   font-size: 2.5rem;
-  font-weight: 400;
-}
-
-.titleBold {
-  font-size: 2.5rem;
-  font-weight: 600;
 }

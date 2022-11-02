@@ -69,7 +69,8 @@ function SamplePage() {
               />
               <Text
                 value="groupTitleBold SemiBold 1.25rem 영역별 타이틀 강조"
-                type="groupTitleBold"
+                type="groupTitle"
+                bold
               />
               <Text
                 value="textTitle Regular 1.5rem 본문별 타이틀"
@@ -81,12 +82,14 @@ function SamplePage() {
               />
               <Text
                 value="pageTitleBold SemiBold 2rem 페이지별 타이틀 강조"
-                type="pageTitleBold"
+                type="pageTitle"
+                bold
               />
               <Text value="title Regular 2.5rem 타이틀" type="title" />
               <Text
                 value="titleBold SemiBold 2.5rem 타이틀 강조"
-                type="titleBold"
+                type="title"
+                bold
               />
             </Stack>
             <hr />
