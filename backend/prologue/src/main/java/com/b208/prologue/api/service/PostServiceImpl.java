@@ -144,42 +144,35 @@ public class PostServiceImpl implements PostService {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
         GetRepoContentResponse[] responses = getContentList(accessToken, githubId, "content/blog/" + directory);
-        Mono mono = null;
 
         for (int i = 0; i < responses.length; i++) {
             DeleteContentRequest deleteContentRequest = new DeleteContentRequest(
                     "remove: 게시글 삭제", responses[i].getSha());
 
-            Mono<String> tmp = webClient.method(HttpMethod.DELETE)
+            webClient.method(HttpMethod.DELETE)
                     .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/" + responses[i].getPath())
                     .headers(h -> h.setBearerAuth(accessToken))
                     .body(Mono.just(deleteContentRequest), DeleteContentRequest.class)
                     .accept(MediaType.APPLICATION_JSON)
                     .retrieve()
-                    .bodyToMono(String.class);
-
-            if (i == 0) {
-                mono = tmp;
-            } else {
-                mono = Mono.zip(mono, tmp);
-            }
+                    .bodyToMono(String.class)
+                    .block();
         }
-        mono.block();
     }
 
     @Override
     public GetRepoContentResponse getDetailPost(String encodedAccessToken, String githubId, String directory) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
-        return getDetailContent(accessToken, githubId, "content/blog/" + directory +"/index.md");
+        return getDetailContent(accessToken, githubId, "content/blog/" + directory + "/index.md");
     }
 
     @Override
-    public List<ImageResponse> getImages(String encodedAccessToken, String githubId, String directory) throws Exception{
+    public List<ImageResponse> getImages(String encodedAccessToken, String githubId, String directory) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
         GetRepoContentResponse[] responses = getContentList(accessToken, githubId, "content/blog/" + directory);
         List<ImageResponse> images = new ArrayList<>();
-        for(int i=0; i<responses.length; i++){
-            if(!responses[i].getName().equals("index.md")){
+        for (int i = 0; i < responses.length; i++) {
+            if (!responses[i].getName().equals("index.md")) {
                 images.add(new ImageResponse(responses[i].getName(), responses[i].getUrl()));
             }
         }
