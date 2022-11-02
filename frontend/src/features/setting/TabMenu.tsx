@@ -4,6 +4,7 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import SideMenu from "./SideMenu";
+import { blogTabs, layoutTabs } from "./SettingMenuComponents";
 
 export interface TabPanelProps {
   children?: React.ReactNode;
@@ -45,8 +46,6 @@ const StyledTab = styled((props: StyledTabProps) => (
   <Tab disableRipple {...props} />
 ))(({ theme }) => ({
   textTransform: "none",
-  fontWeight: theme.typography.fontWeightRegular,
-  fontSize: theme.typography.pxToRem(15),
   color: "#000",
   "&.Mui-selected": {
     fontWeight: theme.typography.fontWeightBold,
@@ -93,10 +92,10 @@ const TabMenu = () => {
         </StyledTabs>
       </Box>
       <TabPanel value={value} index={0}>
-        <SideMenu />
+        <SideMenu tabs={blogTabs} />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Item Two
+        <SideMenu tabs={layoutTabs} />
       </TabPanel>
     </Box>
   );

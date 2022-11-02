@@ -5,14 +5,19 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { FormControl, InputLabel, MenuItem } from "@mui/material";
 
 const SelectInput = () => {
-  const [age, setAge] = React.useState("");
+  const [site, setSite] = React.useState("");
   const handleChange = (event: SelectChangeEvent) => {
-    setAge(event.target.value);
+    setSite(event.target.value);
   };
   return (
     <div>
       <FormControl sx={{ width: "100%" }}>
-        <Select id="demo-select-small" value={age} onChange={handleChange}>
+        <Select
+          id="demo-select-small"
+          onChange={handleChange}
+          placeholder="사이트를 선택"
+          value={site}
+        >
           <MenuItem disabled value="">
             <em>사이트를 선택하세요.</em>
           </MenuItem>

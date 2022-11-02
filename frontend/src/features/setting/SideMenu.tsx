@@ -1,11 +1,9 @@
 import { Tab, Tabs } from "@mui/material";
 import { Box } from "@mui/system";
 import React from "react";
-import MyBlogInfoInput from "./MyBlogInfoInput";
-import MyInfoInput from "./MyInfoInput";
 import { TabPanel } from "./TabMenu";
 
-const SideMenu = () => {
+const SideMenu = ({ tabs }: any) => {
   const [value, setValue] = React.useState(0);
 
   const a11yProps = (index: number) => {
@@ -33,18 +31,17 @@ const SideMenu = () => {
         value={value}
         onChange={handleChange}
         aria-label="Vertical tabs example"
-        sx={{ borderRight: 1, borderColor: "divider" }}
+        sx={{ borderRight: 1, borderColor: "divider", width: "200px" }}
       >
-        <Tab label="레이아웃 선택" {...a11yProps(0)} />
-        <Tab label="세부 레이아웃 설정" {...a11yProps(1)} />
+        {tabs.map(({ label }: any, i: number) => (
+          <Tab label={label} key={i} {...a11yProps(i)} />
+        ))}
       </Tabs>
-      <TabPanel value={value} index={0}>
-        <MyInfoInput />
-        <MyBlogInfoInput />
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        Item Two
-      </TabPanel>
+      {tabs.map(({ Component }: any, i: number) => (
+        <TabPanel value={value} index={i} key={i}>
+          {Component}
+        </TabPanel>
+      ))}
     </Box>
   );
 };
