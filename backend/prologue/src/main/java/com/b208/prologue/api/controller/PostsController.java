@@ -5,6 +5,7 @@ import com.b208.prologue.api.request.RemoveDetailPostRequest;
 import com.b208.prologue.api.request.WriteDetailPostRequest;
 import com.b208.prologue.api.response.BaseResponseBody;
 import com.b208.prologue.api.response.DetailPostResponse;
+import com.b208.prologue.api.response.ImageResponse;
 import com.b208.prologue.api.response.PostListResponse;
 import com.b208.prologue.api.response.github.GetRepoContentResponse;
 import com.b208.prologue.api.service.PostService;
@@ -52,7 +53,8 @@ public class PostsController {
         GetRepoContentResponse getRepoContentResponse = null;
         try {
             getRepoContentResponse = postService.getDetailPost(accessToken, githubId, directory);
-            return ResponseEntity.status(200).body(DetailPostResponse.of(getRepoContentResponse, 200, "게시글 상세 조회에 성공하였습니다."));
+            List<ImageResponse> images = postService.getImages(accessToken, githubId, directory);
+            return ResponseEntity.status(200).body(DetailPostResponse.of(getRepoContentResponse, images, 200, "게시글 상세 조회에 성공하였습니다."));
         } catch (Exception e) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "게시글 상세 조회에 실패하였습니다."));
         }

@@ -12,6 +12,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class GetRepoContentResponse {
 
+    @JsonProperty("name")
+    String name;
+
     @JsonProperty("sha")
     String sha;
 
@@ -20,5 +23,8 @@ public class GetRepoContentResponse {
 
     @JsonProperty("path")
     String path;
+
+    @JsonProperty("download_url")
+    String url;
 
 }
