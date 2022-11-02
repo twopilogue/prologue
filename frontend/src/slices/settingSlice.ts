@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { rootState } from "../app/store";
 import { Layout } from "react-grid-layout";
 
-interface CategoryConfig {
+export interface CategoryConfig {
   key: string;
 }
 
@@ -16,10 +16,10 @@ const initialState: LayoutConfig = {
   layoutList: [
     { i: "a", x: 0, y: 0, w: 1, h: 2, static: true, isResizable: false },
     { i: "b", x: 1, y: 0, w: 1, h: 2, isResizable: false },
-    { i: "c", x: 2, y: 0, w: 4, h: 3, isResizable: false },
+    { i: "c", x: 2, y: 0, w: 1, h: 2, isResizable: false },
   ],
   categoryList: [{ key: "a" }, { key: "b" }, { key: "c" }],
-  categoryCnt: 4,
+  categoryCnt: 2,
 };
 
 const settingSlice = createSlice({

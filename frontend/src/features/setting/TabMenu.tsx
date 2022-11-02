@@ -35,7 +35,7 @@ export const TabPanel = (props: TabPanelProps) => {
     >
       {value === index && (
         <Box>
-          <p>{children}</p>
+          <div>{children}</div>
         </Box>
       )}
     </div>
