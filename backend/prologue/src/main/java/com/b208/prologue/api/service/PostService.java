@@ -1,5 +1,6 @@
 package com.b208.prologue.api.service;
 
+import com.b208.prologue.api.response.ImageResponse;
 import com.b208.prologue.api.response.github.GetRepoContentResponse;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,6 +13,7 @@ public interface PostService {
     void updateDetailPost(String encodedAccessToken, String githubId, String directory, String content, String sha, List<MultipartFile> files) throws Exception;
     void deleteDetailPost(String encodedAccessToken, String githubId, String directory, String sha) throws Exception;
     GetRepoContentResponse getDetailPost(String encodedAccessToken, String githubId, String directory) throws Exception;
+    List<ImageResponse> getImages(String encodedAccessToken, String githubId, String directory) throws Exception;
     GetRepoContentResponse getDetailContent(String accessToken, String githubId, String path) throws Exception;
     GetRepoContentResponse[] getContentList(String accessToken, String githubId, String path) throws Exception;
 }

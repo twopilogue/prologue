@@ -6,6 +6,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @ApiModel("DetailPostResponse")
@@ -17,10 +19,14 @@ public class DetailPostResponse extends BaseResponseBody {
     @ApiModelProperty(name = "게시글 내용")
     String content;
 
-    public static DetailPostResponse of(GetRepoContentResponse getRepoContentResponse, Integer statusCode, String message) {
+    @ApiModelProperty(name = "게시글 이미지 url")
+    List<ImageResponse> images;
+
+    public static DetailPostResponse of(GetRepoContentResponse getRepoContentResponse, List<ImageResponse> images, Integer statusCode, String message) {
         DetailPostResponse res = new DetailPostResponse();
         res.setSha(getRepoContentResponse.getSha());
         res.setContent(getRepoContentResponse.getContent());
+        res.setImages(images);
         res.setStatusCode(statusCode);
         res.setMessage(message);
         return res;
