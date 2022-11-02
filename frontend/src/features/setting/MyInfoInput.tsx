@@ -9,7 +9,7 @@ const MemberInfoInput = () => {
     <div>
       <div style={{ margin: "20px" }}>
         <div className={styles.textPadding}>
-          <Text value="내 프로필 정보" type="groupTitleBold" />
+          <Text value="내 프로필 정보" type="groupTitle" bold />
         </div>
         <div className={styles.info_container}>
           <div>

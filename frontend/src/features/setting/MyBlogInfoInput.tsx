@@ -10,7 +10,7 @@ const MyBlogInfoInput = () => {
   return (
     <div style={{ margin: "20px" }}>
       <div className={styles.textPadding}>
-        <Text value="내 블로그 정보" type="groupTitleBold" />
+        <Text value="내 블로그 정보" type="groupTitle" bold />
       </div>
       <div>
         <div className={styles.textMargin}>
