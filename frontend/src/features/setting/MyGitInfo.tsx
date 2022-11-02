@@ -9,7 +9,7 @@ const MyGitInfo = () => {
       <div className={styles.textPadding} style={{ paddingTop: "0" }}>
         <Text value="Github 정보" type="groupTitleBold" />
       </div>
-      <div className={styles.githubContainer}>
+      <div className={styles.flexContainer}>
         <div className={styles.githubBox}>
           <div className={styles.githubProfileImg}></div>
           <div className={styles.githubProfileTexts}>
