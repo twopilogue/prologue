@@ -41,7 +41,7 @@ public class AuthServiceImpl implements AuthService{
 
     @Override
     public String getUri() {
-        return "https://github.com/login/oauth/authorize?client_id="+clientId+"&scope=repo delete_repo";
+        return "https://github.com/login/oauth/authorize?client_id="+clientId+"&scope=repo delete_repo workflow";
     }
 
     @Override
