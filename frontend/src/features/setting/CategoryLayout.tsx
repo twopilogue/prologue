@@ -15,22 +15,23 @@ import {
   setLayoutList,
   setCategoryList,
   setCategoryCnt,
+  CategoryConfig,
 } from "slices/settingSlice";
 import { useDispatch } from "react-redux";
-
-interface CategoryConfig {
-  key: string;
-}
+import ButtonStyled from "components/Button";
 
 const CategoryLayout = () => {
-  const dispatch = useDispatch();
   const categoryList = useAppSelector(selectCategoryList);
   const layoutList = useAppSelector(selectLayoutList);
   const categoryCnt = useAppSelector(selectCategoryCnt);
 
-  const tmpCategoryList: CategoryConfig[] = [...categoryList];
-  const tmpLayoutList: Layout[] = [...layoutList];
-  const tmpCategoryCnt: number = categoryCnt;
+  const [tmpCategoryList, setTmpCategoryList] = useState<CategoryConfig[]>([
+    ...categoryList,
+  ]);
+  const [tmpLayoutList, setTmpLayoutList] = useState<Layout[]>([...layoutList]);
+  const [tmpCategoryCnt, setTmpCategoryCnt] = useState(categoryCnt);
+
+  const dispatch = useDispatch();
 
   const addBox = () => {
     const categoryName = shortid.generate();
@@ -39,18 +40,23 @@ const CategoryLayout = () => {
     tmpCategoryList.push({ key: categoryName });
     tmpLayoutList.push({
       i: categoryName,
-      x: 0,
-      y: tmpCategoryCnt,
+      x: tmpCategoryCnt + 1,
+      y: 0,
       w: 1,
       h: 2,
+      isResizable: false,
     });
+    setTmpCategoryList(tmpCategoryList);
+    setTmpLayoutList(tmpLayoutList);
+    setTmpCategoryCnt(tmpCategoryCnt + 1);
+  };
 
+  const saveCategoryList = () => {
     dispatch(setCategoryList(tmpCategoryList));
     dispatch(setLayoutList(tmpLayoutList));
-    dispatch(setCategoryCnt(tmpCategoryCnt + 1));
-
-    console.log("카테고리", categoryList);
-    console.log("레이아웃", layoutList);
+    dispatch(setCategoryCnt(tmpCategoryCnt));
+    console.log("카테고리", tmpCategoryList);
+    console.log("레이아웃", tmpLayoutList);
   };
 
   return (
@@ -73,7 +79,7 @@ const CategoryLayout = () => {
           <div className={styles.gridContainer}>
             <GridLayout
               className="layout"
-              layout={layoutList}
+              layout={tmpLayoutList}
               cols={1}
               rowHeight={20}
               width={360}
@@ -91,11 +97,13 @@ const CategoryLayout = () => {
                 <MenuIcon fontSize="small" sx={{ p: 1 }} />
                 <Text value="카테고리3" type="caption" />
               </div>
-              {categoryList.map((item) => {
+              {tmpCategoryList.map((item: any, i: number) => {
                 return (
-                  <div className={styles.gridCategoryItem} key={item.key}>
-                    <MenuIcon fontSize="small" sx={{ p: 1 }} />
-                    <Text value={item.key} type="caption" />
+                  <div key={i}>
+                    <div className={styles.gridCategoryItem} key={item.key}>
+                      <MenuIcon fontSize="small" sx={{ p: 1 }} />
+                      <Text value={item.key} type="caption" />
+                    </div>
                   </div>
                 );
               })}
@@ -109,6 +117,9 @@ const CategoryLayout = () => {
             </div>
           </div>
         </div>
+      </div>
+      <div>
+        <ButtonStyled label="저장" onClick={saveCategoryList} />
       </div>
     </div>
   );
