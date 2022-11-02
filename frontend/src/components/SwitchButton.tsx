@@ -3,7 +3,7 @@ import { styled } from "@mui/material/styles";
 import Switch from "@mui/material/Switch";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import palette from "./styles/colorPalette";
+import palette from "../styles/colorPalette";
 import Text from "./Text";
 
 const SwitchButton = styled(Switch)(({ theme }) => ({

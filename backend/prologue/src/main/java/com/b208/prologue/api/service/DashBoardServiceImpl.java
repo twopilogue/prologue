@@ -1,5 +1,7 @@
 package com.b208.prologue.api.service;
 
+import com.b208.prologue.api.response.github.GetRepositorySizeResponse;
+import com.b208.prologue.api.response.github.GetTemplateFileResponse;
 import com.b208.prologue.api.response.github.PostGetListResponse;
 import com.b208.prologue.common.Base64Converter;
 import lombok.RequiredArgsConstructor;
@@ -49,6 +51,20 @@ public class DashBoardServiceImpl implements DashBoardService {
         result.put("directory", directory);
         result.put("postCount", count);
         return result;
+    }
+
+    @Override
+    public Double getRepositorySize(String accessToken, String githubId) throws Exception{
+        String decodeAccessToken = base64Converter.decryptAES256(accessToken);
+
+        GetRepositorySizeResponse getRepositorySizeResponse = webClient.get()
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io")
+                .accept(MediaType.APPLICATION_JSON)
+                .headers(h -> h.setBearerAuth(decodeAccessToken))
+                .retrieve()
+                .bodyToMono(GetRepositorySizeResponse.class).block();
+
+        return getRepositorySizeResponse.getSize()/100.0;
     }
 
 }

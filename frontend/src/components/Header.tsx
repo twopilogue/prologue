@@ -16,7 +16,7 @@ import {
 import GitHubIcon from "@mui/icons-material/GitHub";
 import LogoutIcon from "@mui/icons-material/Logout";
 import styles from "./css/Header.module.css";
-import palette from "./styles/colorPalette";
+import palette from "../styles/colorPalette";
 
 interface HeaderProps {
   user?: string;

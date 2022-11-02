@@ -9,7 +9,7 @@ import {
   StepIconProps,
 } from "@mui/material";
 import { Check } from "@mui/icons-material";
-import palette from "components/styles/colorPalette";
+import palette from "styles/colorPalette";
 
 interface Props {
   step: number;

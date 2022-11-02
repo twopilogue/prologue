@@ -5,4 +5,5 @@ import java.util.Map;
 
 public interface DashBoardService {
     Map<String, List<String>> getList(String accessToken, String gitId);
+    Double getRepositorySize(String accessToken, String githubId) throws Exception;
 }

@@ -23,7 +23,7 @@ function BlogLayoutSetting({ onClick }: Props) {
   return (
     <div className={styles.Box}>
       <div className={styles.BlogLayoutSettingTitle} data-aos="fade-left">
-        <Text value="레이아웃 설정" type="titleBold" />
+        <Text value="레이아웃 설정" type="title" bold />
       </div>
 
       <FormControl data-aos="fade-left">
