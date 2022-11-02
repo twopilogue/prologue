@@ -24,15 +24,15 @@ public class BlogServiceImpl implements BlogService {
     static private List<TreeRequest> treeRequestList;
 
     @Override
-    public void createRepository(String accessToken, String githubId) throws Exception {
+    public void createRepository(String encodedAccessToken, String githubId) throws Exception {
 
         CreateRepositoryRequest createRepositoryRequest = new CreateRepositoryRequest(githubId + ".github.io");
 
-        String decodeAccessToken = base64Converter.decryptAES256(accessToken);
+        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
         webClient.post()
                 .uri("/user/repos")
-                .headers(h -> h.setBearerAuth(decodeAccessToken))
+                .headers(h -> h.setBearerAuth(accessToken))
                 .body(Mono.just(createRepositoryRequest), CreateRepositoryRequest.class)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
@@ -41,13 +41,13 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public void deleteRepository(String accessToken, String githubId) throws Exception {
+    public void deleteRepository(String encodedAccessToken, String githubId) throws Exception {
 
-        String decodeAccessToken = base64Converter.decryptAES256(accessToken);
+        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
         webClient.delete()
                 .uri("/repos/" + githubId + "/" + githubId + ".github.io")
-                .headers(h -> h.setBearerAuth(decodeAccessToken))
+                .headers(h -> h.setBearerAuth(accessToken))
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToMono(String.class)
@@ -55,13 +55,13 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public boolean checkUserRepository(String accessToken, String githubId) throws Exception {
+    public boolean checkUserRepository(String encodedAccessToken, String githubId) throws Exception {
 
-        String decodeAccessToken = base64Converter.decryptAES256(accessToken);
+        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
         RepositoryListResponse[] repoList = webClient.get()
                 .uri("/users/" + githubId + "/repos")
-                .headers(h -> h.setBearerAuth(decodeAccessToken))
+                .headers(h -> h.setBearerAuth(accessToken))
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToMono(RepositoryListResponse[].class)
@@ -73,15 +73,15 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public void selectTemplate(String accessToken, String githubId, int templateNumber) throws Exception {
-        String decodeAccessToken = base64Converter.decryptAES256(accessToken);
+    public void selectTemplate(String encodedAccessToken, String githubId, int templateNumber) throws Exception {
+        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
         treeRequestList = new ArrayList<>();
-        searchTemplate(decodeAccessToken, githubId, "");
+        searchTemplate(accessToken, githubId, "");
 
         GetShaResponse getBaseTreeSha = webClient.get()
                 .uri("/repos/" + githubId + "/" + githubId + ".github.io/git/trees/main")
-                .headers(h -> h.setBearerAuth(decodeAccessToken))
+                .headers(h -> h.setBearerAuth(accessToken))
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToMono(GetShaResponse.class)
@@ -91,7 +91,7 @@ public class BlogServiceImpl implements BlogService {
         CreateTreeRequest createTreeRequest = new CreateTreeRequest(treeRequestList, base_tree);
         GetShaResponse getTreeSha = webClient.post()
                 .uri("/repos/" + githubId + "/" + githubId + ".github.io/git/trees")
-                .headers(h -> h.setBearerAuth(decodeAccessToken))
+                .headers(h -> h.setBearerAuth(accessToken))
                 .body(Mono.just(createTreeRequest), CreateTreeRequest.class)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
@@ -103,7 +103,7 @@ public class BlogServiceImpl implements BlogService {
         CreateCommitRequest createCommitRequest = new CreateCommitRequest(treeSha, "commit msg", parents);
         GetShaResponse getCommitSha = webClient.post()
                 .uri("/repos/" + githubId + "/" + githubId + ".github.io/git/commits")
-                .headers(h -> h.setBearerAuth(decodeAccessToken))
+                .headers(h -> h.setBearerAuth(accessToken))
                 .body(Mono.just(createCommitRequest), CreateCommitRequest.class)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
@@ -114,7 +114,7 @@ public class BlogServiceImpl implements BlogService {
         UpdateReferencesRequest updateReferencesRequest = new UpdateReferencesRequest(commitSha);
         webClient.patch()
                 .uri("/repos/" + githubId + "/" + githubId + ".github.io/git/refs/heads/main")
-                .headers(h -> h.setBearerAuth(decodeAccessToken))
+                .headers(h -> h.setBearerAuth(accessToken))
                 .body(Mono.just(updateReferencesRequest), UpdateReferencesRequest.class)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
@@ -161,8 +161,9 @@ public class BlogServiceImpl implements BlogService {
         return getShaResponse.getSha();
     }
 
-    public void createWorkflow(String accessToken, String githubId) throws Exception{
-        String decodeAccessToken = base64Converter.decryptAES256(accessToken);
+    @Override
+    public void createWorkflow(String encodedAccessToken, String githubId) throws Exception{
+        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
         ClassPathResource resource = new ClassPathResource("deploy.yaml");
         BufferedReader br = new BufferedReader(new InputStreamReader(resource.getInputStream()));
@@ -176,7 +177,7 @@ public class BlogServiceImpl implements BlogService {
         CreateContentRequest createContentRequest = new CreateContentRequest("upload git action workflow", workflow);
         webClient.put()
                 .uri("/repos/" + githubId + "/" + githubId + ".github.io" + "/contents/.github/workflows/deploy.yaml")
-                .headers(h -> h.setBearerAuth(decodeAccessToken))
+                .headers(h -> h.setBearerAuth(accessToken))
                 .body(Mono.just(createContentRequest), CreateContentRequest.class)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
