@@ -9,6 +9,7 @@ interface Props {
     | "groupTitle"
     | "groupTitleBold"
     | "textTitle"
+    | "textTitleBold"
     | "pageTitle"
     | "pageTitleBold"
     | "title"
