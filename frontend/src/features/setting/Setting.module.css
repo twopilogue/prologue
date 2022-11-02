@@ -54,7 +54,7 @@
 }
 
 /* -------------------------------------------- */
-.info_container {
+.grid_container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
 }
@@ -115,9 +115,9 @@
 
 /* -------------------------------------- */
 
-.githubContainer{
+.flexContainer{
   display: flex;
-  /* justify-content: center; */
+  flex-direction: column;
 }
 
 .githubBox{
@@ -160,3 +160,38 @@
   padding-right: 50px;
   box-sizing: border-box;
 }
+
+/* ----------------------------------------------- */
+
+.gridContainer {
+  margin: 20px;
+  padding: 4px;
+  width: 100%;
+  background-color: #F6F4F9;
+}
+
+.gridCategoryItem{
+  display: flex;
+  align-items: center;
+  background-color: white;
+  padding: 0;
+}
+
+.gridAddButton{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 43px;
+  margin: 5px;
+  border: 1px solid #E0E0E0;
+  cursor: pointer;
+}
+
+.gridAddButton:hover {
+  background-color: white;
+}
+
+.gridAddButton_icon{
+  text-align: center;
+}
+
