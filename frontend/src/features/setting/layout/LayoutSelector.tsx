@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./Setting.module.css";
-import LayoutSelectorItem from "./LayoutSelectorItem";
+import LayoutSelectorItem from "./../layout/LayoutSelectorItem";
 
 const LayoutSelector = () => {
   return (

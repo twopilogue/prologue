@@ -3,6 +3,8 @@ import { styled } from "@mui/material/styles";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
+import SideMenu from "./SideMenu";
+import { blogTabs, layoutTabs } from "./SettingMenuComponents";
 
 export interface TabPanelProps {
   children?: React.ReactNode;
@@ -32,7 +34,7 @@ export const TabPanel = (props: TabPanelProps) => {
       {...other}
     >
       {value === index && (
-        <Box sx={{ p: 3 }}>
+        <Box>
           <p>{children}</p>
         </Box>
       )}
@@ -44,9 +46,6 @@ const StyledTab = styled((props: StyledTabProps) => (
   <Tab disableRipple {...props} />
 ))(({ theme }) => ({
   textTransform: "none",
-  fontWeight: theme.typography.fontWeightRegular,
-  fontSize: theme.typography.pxToRem(15),
-  marginRight: theme.spacing(1),
   color: "#000",
   "&.Mui-selected": {
     fontWeight: theme.typography.fontWeightBold,
@@ -65,11 +64,9 @@ const StyledTabs = styled((props: StyledTabsProps) => (
 ))({
   "& .MuiTabs-indicator": {
     display: "flex",
-    justifyContent: "center",
     backgroundColor: "transparent",
   },
   "& .MuiTabs-indicatorSpan": {
-    maxWidth: 70,
     width: "100%",
     backgroundColor: "#393D96",
   },
@@ -95,10 +92,10 @@ const TabMenu = () => {
         </StyledTabs>
       </Box>
       <TabPanel value={value} index={0}>
-        Item One
+        <SideMenu tabs={blogTabs} />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Item Two
+        <SideMenu tabs={layoutTabs} />
       </TabPanel>
     </Box>
   );
