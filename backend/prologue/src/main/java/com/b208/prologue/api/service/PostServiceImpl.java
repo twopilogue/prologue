@@ -93,81 +93,27 @@ public class PostServiceImpl implements PostService {
         String path = "content/blog/" + directory;
 
         String encodedContent = makeBlob(accessToken, githubId, base64Converter.encode(content));
-        treeRequestList.add(new TreeRequest(path+"/index.md", "100644", "blob", encodedContent));
+        treeRequestList.add(new TreeRequest(path + "/index.md", "100644", "blob", encodedContent));
 
         if (files != null && !files.isEmpty()) {
             for (int i = 0; i < files.size(); i++) {
                 MultipartFile file = files.get(i);
                 String image = new String(Base64.encodeBase64(file.getBytes()));
                 encodedContent = makeBlob(accessToken, githubId, image);
-                treeRequestList.add(new TreeRequest(path+"/" + file.getOriginalFilename(), "100644", "blob", encodedContent));
+                treeRequestList.add(new TreeRequest(path + "/" + file.getOriginalFilename(), "100644", "blob", encodedContent));
             }
         }
         push(accessToken, githubId, commit);
     }
 
-    public String makeBlob(String accessToken, String githubId, String content) {
-        CreateBlobRequest createBlobRequest = new CreateBlobRequest(content, "base64");
-        GetShaResponse getShaResponse = webClient.post()
-                .uri("/repos/" + githubId + "/" + githubId + ".github.io" + "/git/blobs")
-                .headers(h -> h.setBearerAuth(accessToken))
-                .body(Mono.just(createBlobRequest), CreateBlobRequest.class)
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToMono(GetShaResponse.class).block();
-        return getShaResponse.getSha();
-    }
-
-    public void push(String accessToken, String githubId, String commit) throws Exception {
-        GetShaResponse getBaseTreeSha = webClient.get()
-                .uri("/repos/" + githubId + "/" + githubId + ".github.io/git/trees/main")
-                .headers(h -> h.setBearerAuth(accessToken))
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToMono(GetShaResponse.class)
-                .block();
-        String base_tree = getBaseTreeSha.getSha();
-
-        CreateTreeRequest createTreeRequest = new CreateTreeRequest(treeRequestList, base_tree);
-        GetShaResponse getTreeSha = webClient.post()
-                .uri("/repos/" + githubId + "/" + githubId + ".github.io/git/trees")
-                .headers(h -> h.setBearerAuth(accessToken))
-                .body(Mono.just(createTreeRequest), CreateTreeRequest.class)
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToMono(GetShaResponse.class)
-                .block();
-        String treeSha = getTreeSha.getSha();
-
-        String[] parents = {base_tree};
-        CreateCommitRequest createCommitRequest = new CreateCommitRequest(treeSha, commit, parents);
-        GetShaResponse getCommitSha = webClient.post()
-                .uri("/repos/" + githubId + "/" + githubId + ".github.io/git/commits")
-                .headers(h -> h.setBearerAuth(accessToken))
-                .body(Mono.just(createCommitRequest), CreateCommitRequest.class)
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToMono(GetShaResponse.class)
-                .block();
-        String commitSha = getCommitSha.getSha();
-
-        UpdateReferencesRequest updateReferencesRequest = new UpdateReferencesRequest(commitSha);
-        webClient.patch()
-                .uri("/repos/" + githubId + "/" + githubId + ".github.io/git/refs/heads/main")
-                .headers(h -> h.setBearerAuth(accessToken))
-                .body(Mono.just(updateReferencesRequest), UpdateReferencesRequest.class)
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
-    }
-
     @Override
-    public void updateDetailPost(String encodedAccessToken, String githubId, String directory, String content, String sha) throws Exception {
+    public void updateDetailPost(String encodedAccessToken, String githubId, String directory, String content, String sha, List<MultipartFile> files) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
+        String commit = "modify: 게시글 수정";
+        String path = "content/blog/" + directory;
 
         UpdateContentRequest updateContentRequest = new UpdateContentRequest(
-                "modify: 게시글 수정", base64Converter.encode(content), sha);
+                commit, base64Converter.encode(content), sha);
 
         webClient.put()
                 .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/content/blog/" + directory + "/index.md")
@@ -177,6 +123,19 @@ public class PostServiceImpl implements PostService {
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
+
+        if (files != null && !files.isEmpty()) {
+            treeRequestList = new ArrayList<>();
+            String encodedContent;
+            for (int i = 0; i < files.size(); i++) {
+                MultipartFile file = files.get(i);
+                String image = new String(Base64.encodeBase64(file.getBytes()));
+                encodedContent = makeBlob(accessToken, githubId, image);
+                treeRequestList.add(new TreeRequest(path + "/" + file.getOriginalFilename(), "100644", "blob", encodedContent));
+            }
+            push(accessToken, githubId, commit);
+        }
+
     }
 
     @Override
@@ -240,4 +199,59 @@ public class PostServiceImpl implements PostService {
         return postResponse;
     }
 
+    public String makeBlob(String accessToken, String githubId, String content) {
+        CreateBlobRequest createBlobRequest = new CreateBlobRequest(content, "base64");
+        GetShaResponse getShaResponse = webClient.post()
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io" + "/git/blobs")
+                .headers(h -> h.setBearerAuth(accessToken))
+                .body(Mono.just(createBlobRequest), CreateBlobRequest.class)
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(GetShaResponse.class).block();
+        return getShaResponse.getSha();
+    }
+
+    public void push(String accessToken, String githubId, String commit) throws Exception {
+        GetShaResponse getBaseTreeSha = webClient.get()
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io/git/trees/main")
+                .headers(h -> h.setBearerAuth(accessToken))
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(GetShaResponse.class)
+                .block();
+        String base_tree = getBaseTreeSha.getSha();
+
+        CreateTreeRequest createTreeRequest = new CreateTreeRequest(treeRequestList, base_tree);
+        GetShaResponse getTreeSha = webClient.post()
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io/git/trees")
+                .headers(h -> h.setBearerAuth(accessToken))
+                .body(Mono.just(createTreeRequest), CreateTreeRequest.class)
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(GetShaResponse.class)
+                .block();
+        String treeSha = getTreeSha.getSha();
+
+        String[] parents = {base_tree};
+        CreateCommitRequest createCommitRequest = new CreateCommitRequest(treeSha, commit, parents);
+        GetShaResponse getCommitSha = webClient.post()
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io/git/commits")
+                .headers(h -> h.setBearerAuth(accessToken))
+                .body(Mono.just(createCommitRequest), CreateCommitRequest.class)
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(GetShaResponse.class)
+                .block();
+        String commitSha = getCommitSha.getSha();
+
+        UpdateReferencesRequest updateReferencesRequest = new UpdateReferencesRequest(commitSha);
+        webClient.patch()
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io/git/refs/heads/main")
+                .headers(h -> h.setBearerAuth(accessToken))
+                .body(Mono.just(updateReferencesRequest), UpdateReferencesRequest.class)
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+    }
 }
