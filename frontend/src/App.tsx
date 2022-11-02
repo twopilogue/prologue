@@ -24,7 +24,7 @@ function App() {
       >
         <Routes>
           <Route path="/" element={<Landing />} />
-          <Route path="/create" element={<Create />} />
+          <Route path="/create/:params" element={<Create />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/setting" element={<SettingPage />} />
           <Route path="/layout" element={<SettingLayout />} />
