@@ -2,8 +2,10 @@ package com.b208.prologue.api.controller;
 
 import com.b208.prologue.api.response.BaseResponseBody;
 import com.b208.prologue.api.response.PostListResponse;
+import com.b208.prologue.api.response.RepositorySizeResponse;
 import com.b208.prologue.api.service.DashBoardService;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
@@ -32,4 +34,18 @@ public class DashBoardController {
 
         return ResponseEntity.status(200).body(PostListResponse.of(result, 200, "게시물 목록 조회 성공"));
     }
+
+    @GetMapping("/size")
+    @ApiOperation(value = "레포지토리 사용량 조회", notes = "레포지토리 사용량 조회")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "레포지토리 사용량 조회 성공", response =  RepositorySizeResponse.class),
+            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<? extends BaseResponseBody> getRepositorySize(@RequestParam @ApiParam(value = "accessToken", required = true) String accessToken,
+                                                                        @RequestParam @ApiParam(value = "사용자 깃허브 아이디", required = true) String githubId) throws Exception {
+        Double size = dashBoardService.getRepositorySize(accessToken, githubId);
+        return ResponseEntity.status(200).body(RepositorySizeResponse.of(size, 200, "레포지토리 사용량 조회 성공"));
+    }
+
+
 }
