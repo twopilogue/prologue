@@ -9,11 +9,13 @@ import com.b208.prologue.api.response.PostListResponse;
 import com.b208.prologue.api.response.github.GetRepoContentResponse;
 import com.b208.prologue.api.service.PostService;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -63,11 +65,11 @@ public class PostsController {
             @ApiResponse(code = 400, message = "게시글 작성 실패", response = BaseResponseBody.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
-    public ResponseEntity<? extends BaseResponseBody> writeDetailPost(@RequestBody WriteDetailPostRequest writeDetailPostRequest) {
+    public ResponseEntity<? extends BaseResponseBody> writeDetailPost(WriteDetailPostRequest writeDetailPostRequest) {
 
         try {
             postService.insertDetailPost(writeDetailPostRequest.getAccessToken(), writeDetailPostRequest.getGithubId(),
-                    writeDetailPostRequest.getContent());
+                    writeDetailPostRequest.getContent(), writeDetailPostRequest.getFiles());
             return ResponseEntity.status(200).body(BaseResponseBody.of(200, "게시글 작성에 성공하였습니다."));
         } catch (Exception e) {
             e.printStackTrace();
