@@ -8,6 +8,7 @@ const initialState: Layouts = {
     { i: "b", x: 1, y: 0, w: 1, h: 2, isResizable: false },
     { i: "c", x: 2, y: 0, w: 4, h: 3, isResizable: false },
   ],
+  categoryList: [],
 };
 
 const settingSlice = createSlice({
