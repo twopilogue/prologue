@@ -3,7 +3,7 @@ import { Box } from "@mui/system";
 import React from "react";
 import { TabPanel } from "./TabMenu";
 
-const SideMenu = () => {
+const SideMenu = ({ tabs }: any) => {
   const [value, setValue] = React.useState(0);
 
   const a11yProps = (index: number) => {
@@ -20,9 +20,9 @@ const SideMenu = () => {
   return (
     <Box
       sx={{
-        flexGrow: 1,
         bgcolor: "background.paper",
         display: "flex",
+        height: "100%",
       }}
     >
       <Tabs
@@ -31,17 +31,17 @@ const SideMenu = () => {
         value={value}
         onChange={handleChange}
         aria-label="Vertical tabs example"
-        sx={{ borderRight: 1, borderColor: "divider" }}
+        sx={{ borderRight: 1, borderColor: "divider", width: "200px" }}
       >
-        <Tab label="레이아웃 선택" {...a11yProps(0)} />
-        <Tab label="세부 레이아웃 설정" {...a11yProps(1)} />
+        {tabs.map(({ label }: any, i: number) => (
+          <Tab label={label} key={i} {...a11yProps(i)} />
+        ))}
       </Tabs>
-      <TabPanel value={value} index={0}>
-        Item One
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        Item Two
-      </TabPanel>
+      {tabs.map(({ Component }: any, i: number) => (
+        <TabPanel value={value} index={i} key={i}>
+          {Component}
+        </TabPanel>
+      ))}
     </Box>
   );
 };
