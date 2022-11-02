@@ -4,11 +4,14 @@ import com.b208.prologue.api.request.github.*;
 import com.b208.prologue.api.response.github.*;
 import com.b208.prologue.common.Base64Converter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -158,4 +161,25 @@ public class BlogServiceImpl implements BlogService {
         return getShaResponse.getSha();
     }
 
+    public void createWorkflow(String accessToken, String githubId) throws Exception{
+        String decodeAccessToken = base64Converter.decryptAES256(accessToken);
+
+        ClassPathResource resource = new ClassPathResource("deploy.yaml");
+        BufferedReader br = new BufferedReader(new InputStreamReader(resource.getInputStream()));
+        StringBuilder sb = new StringBuilder();
+        String nullString = "";
+        while((nullString = br.readLine()) != null){
+            sb.append(nullString).append("\n");
+        }
+        String workflow = base64Converter.encode(sb.toString());
+
+        CreateContentRequest createContentRequest = new CreateContentRequest("upload git action workflow", workflow);
+        webClient.put()
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io" + "/contents/.github/workflows/deploy.yaml")
+                .headers(h -> h.setBearerAuth(decodeAccessToken))
+                .body(Mono.just(createContentRequest), CreateContentRequest.class)
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(String.class).block();
+    }
 }
