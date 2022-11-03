@@ -94,17 +94,110 @@ public class PostServiceImpl implements PostService {
         String path = "content/blog/" + directory;
 
         String encodedContent = makeBlob(accessToken, githubId, base64Converter.encode(content));
-        treeRequestList.add(new TreeRequest(path+"/index.md", "100644", "blob", encodedContent));
+        treeRequestList.add(new TreeRequest(path + "/index.md", "100644", "blob", encodedContent));
 
         if (files != null && !files.isEmpty()) {
             for (int i = 0; i < files.size(); i++) {
                 MultipartFile file = files.get(i);
                 String image = new String(Base64.encodeBase64(file.getBytes()));
                 encodedContent = makeBlob(accessToken, githubId, image);
-                treeRequestList.add(new TreeRequest(path+"/" + file.getOriginalFilename(), "100644", "blob", encodedContent));
+                treeRequestList.add(new TreeRequest(path + "/" + file.getOriginalFilename(), "100644", "blob", encodedContent));
             }
         }
         push(accessToken, githubId, commit);
+    }
+
+    @Override
+    public void updateDetailPost(String encodedAccessToken, String githubId, String directory, String content, String sha, List<MultipartFile> files) throws Exception {
+        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
+        String commit = "modify: 게시글 수정";
+        String path = "content/blog/" + directory;
+
+        UpdateContentRequest updateContentRequest = new UpdateContentRequest(
+                commit, base64Converter.encode(content), sha);
+
+        webClient.put()
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/content/blog/" + directory + "/index.md")
+                .headers(h -> h.setBearerAuth(accessToken))
+                .body(Mono.just(updateContentRequest), UpdateContentRequest.class)
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+
+        if (files != null && !files.isEmpty()) {
+            treeRequestList = new ArrayList<>();
+            String encodedContent;
+            for (int i = 0; i < files.size(); i++) {
+                MultipartFile file = files.get(i);
+                String image = new String(Base64.encodeBase64(file.getBytes()));
+                encodedContent = makeBlob(accessToken, githubId, image);
+                treeRequestList.add(new TreeRequest(path + "/" + file.getOriginalFilename(), "100644", "blob", encodedContent));
+            }
+            push(accessToken, githubId, commit);
+        }
+
+    }
+
+    @Override
+    public void deleteDetailPost(String encodedAccessToken, String githubId, String directory, String sha) throws Exception{
+        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
+        String commit = "remove: 게시글 삭제";
+        String path = "content/blog/" + directory;
+
+        GetRepoContentResponse[] responses = getContentList(accessToken, githubId, path);
+
+        treeRequestList = new ArrayList<>();
+
+        for (int i = 0; i < responses.length; i++) {
+            treeRequestList.add(new TreeRequest(path+"/"+responses[i].getName(), "100644", "blob", null));
+        }
+
+        push(accessToken, githubId, commit);
+    }
+
+    @Override
+    public GetRepoContentResponse getDetailPost(String encodedAccessToken, String githubId, String directory) throws Exception {
+        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
+        return getDetailContent(accessToken, githubId, "content/blog/" + directory + "/index.md");
+    }
+
+    @Override
+    public List<ImageResponse> getImages(String encodedAccessToken, String githubId, String directory) throws Exception {
+        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
+        GetRepoContentResponse[] responses = getContentList(accessToken, githubId, "content/blog/" + directory);
+        List<ImageResponse> images = new ArrayList<>();
+        for (int i = 0; i < responses.length; i++) {
+            if (!responses[i].getName().equals("index.md")) {
+                images.add(new ImageResponse(responses[i].getName(), responses[i].getUrl()));
+            }
+        }
+        return images;
+    }
+
+    @Override
+    public GetRepoContentResponse getDetailContent(String accessToken, String githubId, String path) throws Exception {
+        GetRepoContentResponse postResponse = webClient.get()
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/" + path)
+                .headers(h -> h.setBearerAuth(accessToken))
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(GetRepoContentResponse.class).block();
+        String tmp = postResponse.getContent().replace("\n", "");
+        postResponse.setContent(base64Converter.decode(tmp));
+        return postResponse;
+    }
+
+    @Override
+    public GetRepoContentResponse[] getContentList(String accessToken, String githubId, String path) throws Exception {
+        GetRepoContentResponse[] postResponse = webClient.get()
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/" + path)
+                .headers(h -> h.setBearerAuth(accessToken))
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(GetRepoContentResponse[].class).block();
+
+        return postResponse;
     }
 
     public String makeBlob(String accessToken, String githubId, String content) {
@@ -162,83 +255,4 @@ public class PostServiceImpl implements PostService {
                 .bodyToMono(String.class)
                 .block();
     }
-
-    @Override
-    public void updateDetailPost(String encodedAccessToken, String githubId, String directory, String content, String sha) throws Exception {
-        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
-
-        UpdateContentRequest updateContentRequest = new UpdateContentRequest(
-                "modify: 게시글 수정", base64Converter.encode(content), sha);
-
-        webClient.put()
-                .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/content/blog/" + directory + "/index.md")
-                .headers(h -> h.setBearerAuth(accessToken))
-                .body(Mono.just(updateContentRequest), UpdateContentRequest.class)
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
-    }
-
-    @Override
-    public void deleteDetailPost(String encodedAccessToken, String githubId, String directory, String sha) throws Exception{
-        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
-        String commit = "remove: 게시글 삭제";
-        String path = "content/blog/" + directory;
-
-        GetRepoContentResponse[] responses = getContentList(accessToken, githubId, path);
-
-        treeRequestList = new ArrayList<>();
-
-        for (int i = 0; i < responses.length; i++) {
-            treeRequestList.add(new TreeRequest(path+"/"+responses[i].getName(), "100644", "blob", null));
-        }
-
-        push(accessToken, githubId, commit);
-    }
-
-    @Override
-    public GetRepoContentResponse getDetailPost(String encodedAccessToken, String githubId, String directory) throws Exception {
-        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
-        return getDetailContent(accessToken, githubId, "content/blog/" + directory +"/index.md");
-    }
-
-    @Override
-    public List<ImageResponse> getImages(String encodedAccessToken, String githubId, String directory) throws Exception{
-        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
-        GetRepoContentResponse[] responses = getContentList(accessToken, githubId, "content/blog/" + directory);
-        List<ImageResponse> images = new ArrayList<>();
-        for(int i=0; i<responses.length; i++){
-            if(!responses[i].getName().equals("index.md")){
-                images.add(new ImageResponse(responses[i].getName(), responses[i].getUrl()));
-            }
-        }
-        return images;
-    }
-
-    @Override
-    public GetRepoContentResponse getDetailContent(String accessToken, String githubId, String path) throws Exception {
-        GetRepoContentResponse postResponse = webClient.get()
-                .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/" + path)
-                .headers(h -> h.setBearerAuth(accessToken))
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToMono(GetRepoContentResponse.class).block();
-        String tmp = postResponse.getContent().replace("\n", "");
-        postResponse.setContent(base64Converter.decode(tmp));
-        return postResponse;
-    }
-
-    @Override
-    public GetRepoContentResponse[] getContentList(String accessToken, String githubId, String path) throws Exception {
-        GetRepoContentResponse[] postResponse = webClient.get()
-                .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/" + path)
-                .headers(h -> h.setBearerAuth(accessToken))
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToMono(GetRepoContentResponse[].class).block();
-
-        return postResponse;
-    }
-
 }

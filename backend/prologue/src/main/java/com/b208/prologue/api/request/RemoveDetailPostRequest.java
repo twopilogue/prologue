@@ -3,11 +3,11 @@ package com.b208.prologue.api.request;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 import lombok.Getter;
-import org.springframework.stereotype.Service;
 
 @Getter
-@Service
+@Data
 @ApiModel("RemoveDetailPostRequest")
 public class RemoveDetailPostRequest {
 

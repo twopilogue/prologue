@@ -86,11 +86,11 @@ public class PostsController {
             @ApiResponse(code = 400, message = "게시글 수정 실패", response = BaseResponseBody.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
-    public ResponseEntity<? extends BaseResponseBody> modifyDetailPost(@RequestBody ModifyDetailPostRequest modifyDetailPostRequest) {
+    public ResponseEntity<? extends BaseResponseBody> modifyDetailPost(ModifyDetailPostRequest modifyDetailPostRequest) {
 
         try {
             postService.updateDetailPost(modifyDetailPostRequest.getAccessToken(), modifyDetailPostRequest.getGithubId(),
-                    modifyDetailPostRequest.getDirectory(), modifyDetailPostRequest.getContent(), modifyDetailPostRequest.getSha());
+                    modifyDetailPostRequest.getDirectory(), modifyDetailPostRequest.getContent(), modifyDetailPostRequest.getSha(), modifyDetailPostRequest.getFiles());
             return ResponseEntity.status(200).body(BaseResponseBody.of(200, "게시글 수정에 성공하였습니다."));
         } catch (Exception e) {
             e.printStackTrace();
