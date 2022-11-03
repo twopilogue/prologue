@@ -1,7 +1,7 @@
 /* PostPage */
 .postPage {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+  margin-top: 5vh;
+  margin-bottom: 5vh;
   position: relative;
 }
 
@@ -26,36 +26,39 @@
 /* PostCategoryList */
 .postCategoryList {
   position: relative;
-  width: 17rem;
-  height: 36rem;
+  width: 16vw;
+  height: 70vh;
   background-color: #d6e5f3;
 }
 
 .textCategories {
   position: absolute;
-  width: 15rem;
-  height: 3rem;
+  width: 14vw;
+  height: 4vh;
+  line-height: 4vh;
   background-color: #f1f8ff;
   text-align: center;
   top: 2%;
   left: 50%;
   transform: translate(-50%, -2%);
+  padding: 2%;
 }
 
 .myCategoryList {
   position: absolute;
-  width: 15rem;
-  height: 30.5rem;
+  width: 14vw;
+  height: 59vh;
   background-color: #ffffff;
   top: 76%;
   left: 50%;
   transform: translate(-50%, -76%);
+  padding: 2%;
 }
 
 /* PostList */
 .postList {
-  width: 62rem;
-  height: 36rem;
+  width: 66vw;
+  height: 70vh;
   background-color: #d6e5f3;
 }
 
