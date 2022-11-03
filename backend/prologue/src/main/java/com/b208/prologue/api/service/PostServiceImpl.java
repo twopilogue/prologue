@@ -140,7 +140,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void deleteDetailPost(String encodedAccessToken, String githubId, String directory, String sha) throws Exception{
+    public void deleteDetailPost(String encodedAccessToken, String githubId, String directory) throws Exception{
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
         String commit = "remove: 게시글 삭제";
         String path = "content/blog/" + directory;
