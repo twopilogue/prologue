@@ -28,13 +28,15 @@ public class PostServiceImpl implements PostService {
 
 
     @Override
-    public Map<String, List<String>> getList(String accessToken, String gitId) {
+    public Map<String, List<String>> getList(String encodedAccessToken, String githubId) throws Exception {
+
+        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
         Map<String, List<String>> result = new HashMap<>();
         List<String> content = new ArrayList<>();
         List<String> directory = new ArrayList<>();
 
-        String url = "/repos/" + gitId + "/" + gitId + ".github.io" + "/contents/";
+        String url = "/repos/" + githubId + "/" + githubId + ".github.io" + "/contents/";
 
         PostGetListResponse[] list = webClient.get()
                 .uri(url + "content/blog")
