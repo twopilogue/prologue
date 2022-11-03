@@ -17,11 +17,11 @@ function App() {
   return (
     <div>
       <Header />
-
       <div
         style={{
           width: "83vw",
           margin: "0 auto",
+          paddingTop: "47px"
         }}
       >
         <Routes>
