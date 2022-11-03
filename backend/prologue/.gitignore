@@ -37,6 +37,7 @@ out/
 .vscode/
 
 src/main/resources/application.properties
+src/main/resources/deploy.yaml
 
 **/.DS_Store
 .DS_Store
