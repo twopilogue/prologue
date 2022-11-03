@@ -4,14 +4,28 @@ import BlogLayoutSetting from "features/blog/blogCreate/BlogLayoutSetting";
 import BlogStepper from "features/blog/blogCreate/BlogStepper";
 import Button from "components/Button";
 import { Stack } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const LandingPage = () => {
-  const [BlogCreateClick, setBlogCreateClick] = React.useState(false);
+  const navigate = useNavigate();
+
+  const [BlogCreateClick, setBlogCreateClick] = React.useState(0);
+  const [radioValue, setRadioValue] = React.useState("CustomLayout");
+
+  const layoutSetting = () => {
+    console.log(radioValue);
+    if (radioValue === "GatsbyLayout") navigate("/create/gatsby");
+    if (radioValue === "CustomLayout") {
+      setBlogCreateClick(2);
+      setTimeout(() => {
+        // 블로그 생성시 필요한 것
+      }, 2000);
+    }
+  };
 
   return (
-    // 1. 블로그를 생성하지 않은 경우
     <div style={{ padding: "100px" }}>
-      <BlogStepper step={BlogCreateClick ? 1 : 0} />
+      <BlogStepper step={BlogCreateClick} />
       <div
         style={{
           width: "100%",
@@ -20,18 +34,21 @@ const LandingPage = () => {
           marginTop: "50px",
         }}
       >
-        {BlogCreateClick ? (
+        {BlogCreateClick === 1 ? (
           <Stack
             direction="column"
             justifyContent="center"
             alignItems="center"
             spacing={2}
           >
-            <BlogLayoutSetting />
-            <Button label="Next" onClick={() => setBlogCreateClick(false)} />
+            <BlogLayoutSetting
+              radioValue={radioValue}
+              setValue={setRadioValue}
+            />
+            <Button label="Next" onClick={layoutSetting} />
           </Stack>
         ) : (
-          <BlogCreateBox onClick={() => setBlogCreateClick(true)} />
+          <BlogCreateBox onClick={() => setBlogCreateClick(1)} />
         )}
       </div>
     </div>

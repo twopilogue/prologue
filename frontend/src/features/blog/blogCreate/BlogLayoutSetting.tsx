@@ -7,17 +7,17 @@ import "aos/dist/aos.css";
 import RadioButton from "./BlogRadioButton";
 
 interface Props {
-  onClick?: () => void;
+  radioValue: string;
+  setValue: React.Dispatch<React.SetStateAction<string>>;
 }
 
-function BlogLayoutSetting({ onClick }: Props) {
+function BlogLayoutSetting({ radioValue, setValue }: Props) {
   useEffect(() => {
     AOS.init();
   });
 
-  const [radioValue, setRadioValue] = React.useState("CustomLayout");
   const radioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRadioValue((event.target as HTMLInputElement).value);
+    setValue((event.target as HTMLInputElement).value);
   };
 
   return (
