@@ -183,6 +183,7 @@
   align-items: center;
   background-color: white;
   padding: 0;
+  height: 100%;
 }
 
 .gridAddButton{
@@ -200,6 +201,11 @@
 }
 
 .gridAddButton_icon{
+  text-align: center;
+}
+
+.nonCategory {
+  margin: 20px;
   text-align: center;
 }
 
