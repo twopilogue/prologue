@@ -10,6 +10,8 @@ import SettingPage from "pages/SettingPage";
 import SettingLayout from "features/setting/SettingLayout";
 import LayoutSample from "features/setting/layout/LayoutSample";
 import PostList from "pages/PostListPage";
+import BlogReset from "pages/BlogResetPage";
+import LayoutChoice from "pages/LayoutChoicePage";
 
 function App() {
   return (
@@ -24,7 +26,9 @@ function App() {
       >
         <Routes>
           <Route path="/" element={<Landing />} />
-          <Route path="/create/:params" element={<Create />} />
+          <Route path="/create" element={<Create />} />
+          <Route path="/create/reset" element={<BlogReset />} />
+          <Route path="/create/gatsby" element={<LayoutChoice />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/setting" element={<SettingPage />} />
           <Route path="/layout" element={<SettingLayout />} />
