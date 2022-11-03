@@ -3,6 +3,11 @@ package com.b208.prologue.api.service;
 import com.b208.prologue.api.request.github.AuthAccessTokenRequest;
 import com.b208.prologue.api.response.github.AuthAccessTokenResponse;
 import com.b208.prologue.api.response.github.AuthUserInfoResponse;
+import com.b208.prologue.common.Base64Converter;
+import com.goterl.lazysodium.LazySodiumJava;
+import com.goterl.lazysodium.SodiumJava;
+import com.goterl.lazysodium.interfaces.AEAD;
+import com.goterl.lazysodium.utils.Key;
 import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
@@ -17,6 +22,7 @@ import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
 
 import java.time.Duration;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
@@ -24,8 +30,8 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService{
 
+    private final Base64Converter base64Converter;
     private final WebClient webClient;
-
     private static String clientId;
     private static String clientSecret;
 
@@ -79,6 +85,29 @@ public class AuthServiceImpl implements AuthService{
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToMono(AuthUserInfoResponse.class);
+    }
+
+    @Override
+    public void createRepositorySecrets(String encodedAccessToken, String githubId) throws Exception {
+        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
+
+        LazySodiumJava lazySodium = new LazySodiumJava(new SodiumJava());
+
+        lazySodium.keygen(AEAD.Method.CHACHA20_POLY1305);
+        //Key key = lazySodium.keygen(AEAD.Method.CHACHA20_POLY1305);
+        String encodePk = base64Converter.decode("nv/FxzvHIdBaCOxKGE3D7vsXMqvhC4vD/fzxPeZH1Hg=");
+
+        byte[] publicKey = lazySodium.bytes(encodePk);
+        lazySodium.cryptoAeadChaCha20Poly1305Keygen(publicKey);
+        Key pk = Key.fromBytes(publicKey);
+
+        byte[] nPub = lazySodium.nonce(AEAD.CHACHA20POLY1305_IETF_NPUBBYTES);
+
+        String encrypted_value = lazySodium.encrypt(accessToken, null, nPub, pk, AEAD.Method.CHACHA20_POLY1305);
+        String encodedValue = new String(base64Converter.encode(encrypted_value.getBytes().toString()));
+
+        System.out.println(encodedValue);
+
     }
 
 }
