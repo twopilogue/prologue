@@ -14,6 +14,7 @@ interface StyledFormControlLabelProps extends FormControlLabelProps {
 const StyledFormControlLabel = styled((props: StyledFormControlLabelProps) => (
   <FormControlLabel {...props} />
 ))(() => ({
+  margin: "0px",
   ".MuiFormControlLabel-label": {
     lineHeight: 1.0,
     fontFamily: "Pretendard-Regular",
