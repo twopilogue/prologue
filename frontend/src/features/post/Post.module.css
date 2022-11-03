@@ -1,28 +1,119 @@
-.tabButtonGroup {
-  display: flex;
+/* PostPage */
+.postPage {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  position: relative;
 }
 
-.tabButton input[type="radio"] {
-  display: none;
+.postPageButtons {
+  position: absolute;
+  top: 2%;
+  left: 75%;
+  transform: translate(-75%, -2%);
 }
 
-.tabButton label {
-  display: block;
-  width: 10rem;
-  height: 4rem;
-  border-radius: 30px 30px 0px 0px;
+.postPageCategory {
+  position: absolute;
+  left: 0%;
+}
+
+.postPageList {
+  position: absolute;
+  left: 100%;
+  transform: translate(-100%, 0%);
+}
+
+/* PostCategoryList */
+.postCategoryList {
+  position: relative;
+  width: 17rem;
+  height: 36rem;
+  background-color: #d6e5f3;
+}
+
+.textCategories {
+  position: absolute;
+  width: 15rem;
+  height: 3rem;
+  background-color: #f1f8ff;
   text-align: center;
-  line-height: 4rem;
+  top: 2%;
+  left: 50%;
+  transform: translate(-50%, -2%);
+}
+
+.myCategoryList {
+  position: absolute;
+  width: 15rem;
+  height: 30.5rem;
   background-color: #ffffff;
+  top: 76%;
+  left: 50%;
+  transform: translate(-50%, -76%);
 }
 
-.tabButton input[type="radio"]:checked + label {
+/* PostList */
+.postList {
+  width: 62rem;
+  height: 36rem;
   background-color: #d6e5f3;
-  font-weight: 600;
 }
 
-.tabList {
-  width: 75rem;
-  height: 42rem;
-  background-color: #d6e5f3;
+/* PostListCard */
+.postListCard {
+  position: relative;
+  width: 55rem;
+  height: 7rem;
+  background-color: #ffffff;
+  padding: 2rem;
+}
+
+.postTitle {
+  position: absolute;
+  top: 20%;
+  transform: translate(0%, -20%);
+}
+
+.postDate {
+  position: absolute;
+  top: 20%;
+  left: 60%;
+  transform: translate(-60%, -20%);
+}
+
+.postTag {
+  position: absolute;
+  top: 40%;
+  transform: translate(0%, -40%);
+}
+
+.postCategory {
+  position: absolute;
+  top: 40%;
+  left: 60%;
+  transform: translate(-60%, -40%);
+}
+
+.postText {
+  position: absolute;
+  top: 60%;
+  transform: translate(0%, -60%);
+}
+
+.postCardImg {
+  position: absolute;
+  width: 13rem;
+  height: 8rem;
+  top: 50%;
+  left: 95%;
+  transform: translate(-95%, -50%);
+  background-color: #ececec;
+  border-radius: 10px;
+}
+
+/* PostListImgCard */
+.postListImgCard {
+  width: 20rem;
+  height: 20rem;
+  background-color: #ffffff;
 }
