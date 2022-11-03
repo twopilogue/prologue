@@ -5,6 +5,7 @@ import MyInfoInput from "./MyInfoInput";
 import MyBlogInfoInput from "./MyBlogInfoInput";
 import CategoryLayout from "./CategoryLayout";
 import ConfirmButton from "./ConfirmButton";
+import CategoryCntSetting from "./CategoryCntSetting";
 
 export const blogTabs = [
   {
@@ -25,6 +26,7 @@ export const blogTabs = [
     Component: (
       <div>
         <CategoryLayout />
+        <CategoryCntSetting />
         <ConfirmButton type="categorySetting" />
       </div>
     ),
