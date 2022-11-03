@@ -63,7 +63,15 @@
   display: grid;
   grid-template-columns: 150px 300px;
   margin: 10px;
+  width: 100%;
 } 
+
+.inputTagThree{
+  display: grid;
+  grid-template-columns: 150px 150px 30.3vw;
+  margin: 10px;
+  width: 100%;
+}
 
 .textPadding{
   padding: 30px 20px 30px 20px;
@@ -195,3 +203,13 @@
   text-align: center;
 }
 
+
+/* ---------------------------------- */
+.confirmButton{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30vh;
+
+  padding: 20px;
+}

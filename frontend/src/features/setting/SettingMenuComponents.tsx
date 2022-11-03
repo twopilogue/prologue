@@ -4,6 +4,7 @@ import MyGitInfo from "./MyGitInfo";
 import MyInfoInput from "./MyInfoInput";
 import MyBlogInfoInput from "./MyBlogInfoInput";
 import CategoryLayout from "./CategoryLayout";
+import ConfirmButton from "./ConfirmButton";
 
 export const blogTabs = [
   {
@@ -15,6 +16,7 @@ export const blogTabs = [
         <MyInfoInput />
         <div className={styles.hr}></div>
         <MyBlogInfoInput />
+        <ConfirmButton type="blogSetting" />
       </div>
     ),
   },
