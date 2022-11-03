@@ -4,6 +4,8 @@ import MyGitInfo from "./MyGitInfo";
 import MyInfoInput from "./MyInfoInput";
 import MyBlogInfoInput from "./MyBlogInfoInput";
 import CategoryLayout from "./CategoryLayout";
+import ConfirmButton from "./ConfirmButton";
+import CategoryCntSetting from "./CategoryCntSetting";
 
 export const blogTabs = [
   {
@@ -15,12 +17,19 @@ export const blogTabs = [
         <MyInfoInput />
         <div className={styles.hr}></div>
         <MyBlogInfoInput />
+        <ConfirmButton type="blogSetting" />
       </div>
     ),
   },
   {
     label: "카테고리 설정",
-    Component: <CategoryLayout />,
+    Component: (
+      <div>
+        <CategoryLayout />
+        <CategoryCntSetting />
+        <ConfirmButton type="categorySetting" />
+      </div>
+    ),
   },
 ];
 
