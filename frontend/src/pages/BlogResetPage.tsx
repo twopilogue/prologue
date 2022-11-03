@@ -42,13 +42,13 @@ function BlogResetPage() {
   ];
 
   return (
-    <Box sx={{ mx: 10 }}>
+    <Box sx={{ mx: "10%" }}>
       <Stack
         direction="column"
         justifyContent="center"
         alignItems="center"
         spacing={1}
-        sx={{ my: 7.5 }}
+        sx={{ my: "2vw" }}
       >
         <Text
           value="github.io가 이미 존재합니다"
