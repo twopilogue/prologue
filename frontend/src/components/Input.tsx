@@ -1,5 +1,9 @@
 import * as React from "react";
-import { TextField, FormControl, FormHelperText } from "@mui/material";
+import {
+  FormControl,
+  FormHelperText,
+  OutlinedInput,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
 import palette from "../styles/colorPalette";
 
@@ -17,8 +21,12 @@ interface inputInfo {
   onChange?: React.ChangeEventHandler<HTMLInputElement> | undefined;
 }
 
-const InputStyle = styled(TextField)(() => ({
+const InputStyle = styled(OutlinedInput)(() => ({
   backgroundColor: palette.gray,
+  padding: "0px",
+  fontSize: "0.95rem",
+  fontFamily: "Pretendard-Regular",
+  ".MuiOutlinedInput-input": { padding: "7px 9px" },
 }));
 
 // rest 쪽에는 onChange, type, name, value, placeholder 등의 input 에서 사용 하는 값들을 넣어줄수 있다.
