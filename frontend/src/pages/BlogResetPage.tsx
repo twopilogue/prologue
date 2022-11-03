@@ -3,8 +3,8 @@ import { Box, Stack } from "@mui/material";
 import Text from "components/Text";
 import Modal from "components/Modal";
 import BlogReset from "features/blog/blogReset";
-import resetImg from "assets/blog/RepositoryReset.png";
-import manageImg from "assets/blog/ManageOnly.png";
+import resetImg from "assets/blog/blogChoice/RepositoryReset.png";
+import manageImg from "assets/blog/blogChoice/ManageOnly.png";
 
 function BlogResetPage() {
   const [repositoryModalOpen, setRepositoryModalOpen] = React.useState(false);
