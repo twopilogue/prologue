@@ -8,7 +8,7 @@ import SelectInput from "features/setting/SelectInput";
 
 const MyBlogInfoInput = () => {
   return (
-    <div style={{ margin: "20px" }}>
+    <div>
       <div className={styles.textPadding}>
         <Text value="내 블로그 정보" type="groupTitle" bold />
       </div>
