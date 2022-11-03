@@ -16,24 +16,31 @@ const MyBlogInfoInput = () => {
         <div className={styles.textMargin}>
           <div className={styles.inputTag}>
             <Text value="블로그명" type="text" />
-            <Input placeholder="블로그명을 입력하세요." />
+            <div style={{ width: "40vw" }}>
+              <Input placeholder="블로그명을 입력하세요." />
+            </div>
           </div>
         </div>
         <div className={styles.textMargin}>
           <div className={styles.inputTag}>
             <Text value="블로그 소개" type="text" />
-            <Input
-              placeholder="블로그 소개글을 입력하세요."
-              multiline
-              rows={4}
-            />
+            <div style={{ width: "40vw" }}>
+              <Input
+                placeholder="블로그 소개글을 입력하세요."
+                multiline
+                rows={4}
+              />
+            </div>
           </div>
         </div>
 
         <div className={styles.textMargin}>
-          <div className={styles.inputTag}>
+          <div className={styles.inputTagThree}>
             <Text value="링크 연결" type="text" />
-            <SelectInput />
+            <div style={{ marginRight: "10px" }}>
+              <SelectInput />
+            </div>
+            <Input placeholder="링크를 입력하세요." />
           </div>
         </div>
       </div>
