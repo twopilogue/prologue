@@ -5,4 +5,5 @@ import java.util.List;
 public interface CommonService {
 
     void multiFileCommit(String accessToken, String githubId, List treeRequestList, String commitMsg);
+    String makeBlob(String accessToken, String githubId, String content);
 }
