@@ -1,11 +1,20 @@
-import React from "react";
+import React,{useEffect} from "react";
+import { useNavigate } from "react-router-dom";
 import { Box, Stack } from "@mui/material";
-import Text from "components/Text";
-import Button from "components/Button"
-
 import GatsbyLayoutCard from "features/blog/GatsbyLayoutCard";
+import Text from "components/Text";
+import Button from "components/Button";
+import Modal from "components/Modal";
 
 const LayoutChoicePage = () => {
+  const navigate = useNavigate();
+
+  const [nextModalOpen, setNextModalOpen] = React.useState(false);
+
+  const showNextModal = () => {
+    setNextModalOpen(true);
+  };
+
   return (
     <Box>
       <Stack
@@ -21,14 +30,20 @@ const LayoutChoicePage = () => {
           type="groupTitle"
         />
       </Stack>
-      <Stack
-        direction="column"
-        alignItems="center"
-        spacing={3}
-      >
+      <Stack direction="column" alignItems="center" spacing={3}>
         <GatsbyLayoutCard />
-        <Button label="Next" />
+        <Button label="Next" onClick={showNextModal} />
       </Stack>
+      {nextModalOpen && (
+        <>
+          <Modal
+            buttonNum={1}
+            oneButtonLabel="대시보드로 이동"
+            oneButtonSet={() => navigate("/dashboard")}
+            text={`🎉 개설이 완료 됐습니다 🎉`}
+          />
+        </>
+      )}
     </Box>
   );
 };
