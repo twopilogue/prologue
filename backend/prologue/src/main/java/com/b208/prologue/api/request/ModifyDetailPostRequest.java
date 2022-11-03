@@ -1,6 +1,5 @@
 package com.b208.prologue.api.request;
 
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -28,5 +27,8 @@ public class ModifyDetailPostRequest {
 
     @ApiModelProperty(name = "게시글에 넣는 이미지", example = "이미지 파일")
     List<MultipartFile> files;
+
+    @ApiModelProperty(name = "게시글에서 삭제할 이미지", example = "이미지 파일명")
+    List<String> deletedFiles;
 
 }

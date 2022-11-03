@@ -106,7 +106,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void updateDetailPost(String encodedAccessToken, String githubId, String directory, String content, List<MultipartFile> files) throws Exception {
+    public void updateDetailPost(String encodedAccessToken, String githubId, String directory, String content, List<MultipartFile> files, List<String> deletedFiles) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
         String commit = "modify: 게시글 수정";
         String path = "content/blog/" + directory;
@@ -114,6 +114,12 @@ public class PostServiceImpl implements PostService {
 
         content = commonService.makeBlob(accessToken, githubId, base64Converter.encode(content));
         treeRequestList.add(new TreeRequest(path + "/index.md", "100644", "blob", content));
+
+        if (deletedFiles != null && !deletedFiles.isEmpty()) {
+            for (int i = 0; i < deletedFiles.size(); i++) {
+                treeRequestList.add(new TreeRequest(path + "/" + deletedFiles.get(i), "100644", "blob", null));
+            }
+        }
 
         if (files != null && !files.isEmpty()) {
             for (int i = 0; i < files.size(); i++) {
