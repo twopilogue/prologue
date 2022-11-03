@@ -10,13 +10,11 @@ import com.b208.prologue.api.response.PostListResponse;
 import com.b208.prologue.api.response.github.GetRepoContentResponse;
 import com.b208.prologue.api.service.PostService;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -41,7 +39,8 @@ public class PostsController {
         try {
             Map<String, List<String>> result = postService.getList(accessToken, githubId);
 
-            return ResponseEntity.status(200).body(PostListResponse.of(result, 200, "게시물 목록 조회 성공"));
+            List<Map<String, String>> images = postService.getListImagese(accessToken, githubId, result.get("directory"));
+            return ResponseEntity.status(200).body(PostListResponse.of(result, images, 200, "게시물 목록 조회 성공"));
         } catch (Exception e) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "게시글 목록 조회에 실패하였습니다."));
         }

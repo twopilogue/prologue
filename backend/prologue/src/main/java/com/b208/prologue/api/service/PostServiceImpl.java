@@ -30,7 +30,6 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Map<String, List<String>> getList(String encodedAccessToken, String githubId) throws Exception {
-
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
         Map<String, List<String>> result = new HashMap<>();
@@ -55,6 +54,33 @@ public class PostServiceImpl implements PostService {
         result.put("directory", directory);
         return result;
     }
+
+    @Override
+    public List<Map<String, String>> getListImagese(String encodedAccessToken, String githubId, List<String> directories) throws Exception {
+        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
+
+        List<Map<String, String>> result = new ArrayList<>();
+        Map<String, String> image;
+
+        for (String directory:directories) {
+            GetRepoContentResponse[] responses = getContentList(accessToken, githubId, "content/blog/" + directory);
+            image = new HashMap<>();
+
+            for (int i = 0; i < responses.length; i++) {
+                if (!responses[i].getName().equals("index.md")) {
+                    image.put(directory, responses[i].getUrl());
+                    break;
+                }else{
+                    continue;
+                }
+            }
+
+            result.add(image);
+        }
+
+        return result;
+    }
+
 
     public String setItem(String url, String accessToken, String path) {
         PostgetResponse item = webClient.get()
