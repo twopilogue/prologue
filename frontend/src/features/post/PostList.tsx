@@ -29,9 +29,9 @@ const PostList = () => {
       <FormatAlignLeftIcon />
       <GridViewOutlinedIcon />
 
-      {/* <PostListCard /> */}
+      <PostListCard />
 
-      <PostListImgCard />
+      {/* <PostListImgCard /> */}
     </div>
   );
 };
