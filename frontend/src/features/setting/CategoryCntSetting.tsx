@@ -7,7 +7,7 @@ const CategoryCntSetting = () => {
   const [checkCnt, setCheckCnt] = useState(false);
 
   return (
-    <div style={{ margin: "20px" }}>
+    <>
       <div
         className={styles.textPadding}
         style={{ paddingTop: "0", paddingBottom: "10px" }}
@@ -24,7 +24,7 @@ const CategoryCntSetting = () => {
           />
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
