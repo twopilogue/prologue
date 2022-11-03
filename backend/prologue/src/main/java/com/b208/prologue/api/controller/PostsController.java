@@ -90,7 +90,7 @@ public class PostsController {
 
         try {
             postService.updateDetailPost(modifyDetailPostRequest.getAccessToken(), modifyDetailPostRequest.getGithubId(),
-                    modifyDetailPostRequest.getDirectory(), modifyDetailPostRequest.getContent(), modifyDetailPostRequest.getSha(), modifyDetailPostRequest.getFiles());
+                    modifyDetailPostRequest.getDirectory(), modifyDetailPostRequest.getContent(), modifyDetailPostRequest.getFiles());
             return ResponseEntity.status(200).body(BaseResponseBody.of(200, "게시글 수정에 성공하였습니다."));
         } catch (Exception e) {
             e.printStackTrace();
