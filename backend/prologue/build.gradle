@@ -28,6 +28,8 @@ dependencies {
 	implementation("io.springfox:springfox-boot-starter:3.0.0")
 
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation'
 }
 
 tasks.named('test') {
