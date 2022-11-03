@@ -34,10 +34,10 @@ public class PostsController {
             @ApiResponse(code = 400, message = "게시글 목록 조회 실패", response = BaseResponseBody.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
-    public ResponseEntity<? extends BaseResponseBody> getPost(@RequestParam String accessToken, @RequestParam String githubId) {
+    public ResponseEntity<? extends BaseResponseBody> getPost(@RequestParam String accessToken, @RequestParam String githubId, @RequestParam int page) {
 
         try {
-            Map<String, List<String>> result = postService.getList(accessToken, githubId);
+            Map<String, List<String>> result = postService.getList(accessToken, githubId, page);
 
             List<Map<String, String>> images = postService.getListImagese(accessToken, githubId, result.get("directory"));
             return ResponseEntity.status(200).body(PostListResponse.of(result, images, 200, "게시물 목록 조회 성공"));
