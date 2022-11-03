@@ -1,9 +1,5 @@
 import * as React from "react";
 import {
-<<<<<<< HEAD
-  TextField,
-=======
->>>>>>> 3053410f16ea3d2442e1025e3758aad9a1c1c50a
   FormControl,
   FormHelperText,
   OutlinedInput,
