@@ -1,5 +1,6 @@
 package com.b208.prologue.api.service;
 
+import com.b208.prologue.api.response.github.GetRepoContentResponse;
 import com.b208.prologue.api.response.github.GetRepositorySizeResponse;
 import com.b208.prologue.api.response.github.GetTemplateFileResponse;
 import com.b208.prologue.api.response.github.PostGetListResponse;
@@ -23,14 +24,15 @@ public class DashBoardServiceImpl implements DashBoardService {
     private final PostServiceImpl postService;
 
     @Override
-    public Map<String, List<String>> getList(String accessToken, String gitId) {
+    public Map<String, List<String>> getList(String encodedAccessToken, String githubId) throws Exception{
+        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
         Map<String, List<String>> result = new HashMap<>();
         List<String> content = new ArrayList<>();
         List<String> directory = new ArrayList<>();
         List<String> count = new ArrayList<>();
 
-        String url = "/repos/" + gitId + "/" + gitId + ".github.io" + "/contents/";
+        String url = "/repos/" + githubId + "/" + githubId + ".github.io" + "/contents/";
 
         PostGetListResponse[] list =  webClient.get()
                 .uri(url + "content/blog")
@@ -39,7 +41,7 @@ public class DashBoardServiceImpl implements DashBoardService {
                 .retrieve()
                 .bodyToMono(PostGetListResponse[].class).block();
 
-        for (int i = list.length-1; i > list.length-6; i--){
+        for (int i = list.length - 1; i > list.length - 6; i--){
             if(i < 0) break;
             content.add(postService.setItem(url, accessToken, list[i].getPath()));
             directory.add(list[i].getName());
@@ -54,13 +56,43 @@ public class DashBoardServiceImpl implements DashBoardService {
     }
 
     @Override
-    public Double getRepositorySize(String accessToken, String githubId) throws Exception{
-        String decodeAccessToken = base64Converter.decryptAES256(accessToken);
+    public List<Map<String, String>> getListImagese(String encodedAccessToken, String githubId, List<String> directories) throws Exception {
+        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
+
+        List<Map<String, String>> result = new ArrayList<>();
+        Map<String, String> image;
+
+        for (String directory:directories) {
+            GetRepoContentResponse[] responses = postService.getContentList(accessToken, githubId, "content/blog/" + directory);
+            image = new HashMap<>();
+            int flag = 0;
+
+            for (int i = responses.length - 1; i > responses.length - 6; i--) {
+                if(i < 0) break;
+
+                if (!responses[flag].getName().equals("index.md")) {
+                    image.put(directory, responses[flag].getUrl());
+                    break;
+                }else{
+                    flag++;
+                    continue;
+                }
+            }
+
+            result.add(image);
+        }
+
+        return result;
+    }
+
+    @Override
+    public Double getRepositorySize(String encodedAccessToken, String githubId) throws Exception{
+        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
         GetRepositorySizeResponse getRepositorySizeResponse = webClient.get()
                 .uri("/repos/" + githubId + "/" + githubId + ".github.io")
                 .accept(MediaType.APPLICATION_JSON)
-                .headers(h -> h.setBearerAuth(decodeAccessToken))
+                .headers(h -> h.setBearerAuth(accessToken))
                 .retrieve()
                 .bodyToMono(GetRepositorySizeResponse.class).block();
 

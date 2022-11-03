@@ -1,5 +1,6 @@
 package com.b208.prologue.api.service;
 
+import com.b208.prologue.api.request.github.CreateBlobRequest;
 import com.b208.prologue.api.request.github.CreateCommitRequest;
 import com.b208.prologue.api.request.github.CreateTreeRequest;
 import com.b208.prologue.api.request.github.UpdateReferencesRequest;
@@ -18,6 +19,7 @@ public class CommonServiceImpl implements CommonService {
 
     private final WebClient webClient;
 
+    @Override
     public void multiFileCommit(String accessToken, String githubId, List treeRequestList, String commitMsg){
 
         GetShaResponse getBaseTreeSha = webClient.get()
@@ -62,5 +64,20 @@ public class CommonServiceImpl implements CommonService {
                 .bodyToMono(String.class)
                 .block();
 
-    };
+    }
+
+    @Override
+    public String makeBlob(String accessToken, String githubId, String content) {
+        CreateBlobRequest createBlobRequest = new CreateBlobRequest(content, "base64");
+        GetShaResponse getShaResponse = webClient.post()
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io" + "/git/blobs")
+                .headers(h -> h.setBearerAuth(accessToken))
+                .body(Mono.just(createBlobRequest), CreateBlobRequest.class)
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(GetShaResponse.class).block();
+        return getShaResponse.getSha();
+    }
+
+
 }
