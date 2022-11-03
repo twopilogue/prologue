@@ -67,7 +67,7 @@ const CategoryLayout = () => {
             className={styles.textPadding}
             style={{ paddingTop: "0", paddingBottom: "10px" }}
           >
-            <Text value="카테고리 설정" type="groupTitleBold" />
+            <Text value="카테고리 설정" type="groupTitle" bold />
           </div>
           <div style={{ paddingLeft: "20px" }}>
             <Text
