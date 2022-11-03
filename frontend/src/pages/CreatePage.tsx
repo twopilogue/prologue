@@ -24,7 +24,7 @@ const LandingPage = () => {
   };
 
   return (
-    <div style={{ padding: "100px" }}>
+    <div style={{ padding: "5%"}}>
       <BlogStepper step={BlogCreateClick} />
       <div
         style={{
