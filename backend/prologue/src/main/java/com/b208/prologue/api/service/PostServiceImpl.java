@@ -32,6 +32,7 @@ public class PostServiceImpl implements PostService {
         Map<String, List<String>> result = new HashMap<>();
         List<String> content = new ArrayList<>();
         List<String> directory = new ArrayList<>();
+        List<String> count = new ArrayList<>();
 
         String url = "/repos/" + githubId + "/" + githubId + ".github.io" + "/contents/";
 
@@ -51,8 +52,11 @@ public class PostServiceImpl implements PostService {
             directory.add(list[i].getName());
         }
 
+        String cnt = list.length + "";
+        count.add(cnt);
         result.put("content", content);
         result.put("directory", directory);
+        result.put("postCount", count);
         return result;
     }
 
