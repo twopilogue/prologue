@@ -5,7 +5,7 @@ import ButtonStyled from "components/Button";
 
 const MyGitInfo = () => {
   return (
-    <div style={{ margin: "20px" }}>
+    <div>
       <div className={styles.textPadding} style={{ paddingTop: "0" }}>
         <Text value="Github 정보" type="groupTitle" bold />
       </div>

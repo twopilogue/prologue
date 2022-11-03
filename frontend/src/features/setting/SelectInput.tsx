@@ -11,8 +11,9 @@ const SelectInput = () => {
   };
   return (
     <div>
-      <FormControl sx={{ width: "100%" }}>
+      <FormControl sx={{ width: "100%", height: "100%" }}>
         <Select
+          size="small"
           id="demo-select-small"
           onChange={handleChange}
           placeholder="사이트를 선택"

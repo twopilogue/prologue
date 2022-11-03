@@ -1,7 +1,8 @@
 import { Tab, Tabs } from "@mui/material";
 import { Box } from "@mui/system";
+import { styled } from "@mui/material/styles";
 import React from "react";
-import { TabPanel } from "./TabMenu";
+import { TabPanel, TabPanelProps } from "./TabMenu";
 
 const SideMenu = ({ tabs }: any) => {
   const [value, setValue] = React.useState(0);
@@ -22,7 +23,6 @@ const SideMenu = ({ tabs }: any) => {
       sx={{
         bgcolor: "background.paper",
         display: "flex",
-        height: "100%",
       }}
     >
       <Tabs
@@ -31,7 +31,7 @@ const SideMenu = ({ tabs }: any) => {
         value={value}
         onChange={handleChange}
         aria-label="Vertical tabs example"
-        sx={{ borderRight: 1, borderColor: "divider", width: "200px" }}
+        sx={{ borderRight: 1, borderColor: "divider", width: "300px" }}
       >
         {tabs.map(({ label }: any, i: number) => (
           <Tab label={label} key={i} {...a11yProps(i)} />
@@ -39,7 +39,7 @@ const SideMenu = ({ tabs }: any) => {
       </Tabs>
       {tabs.map(({ Component }: any, i: number) => (
         <TabPanel value={value} index={i} key={i}>
-          {Component}
+          <div style={{ margin: "50px" }}>{Component}</div>
         </TabPanel>
       ))}
     </Box>
