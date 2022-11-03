@@ -12,7 +12,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
 import java.io.UnsupportedEncodingException;
 import java.util.*;
@@ -109,35 +108,30 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void updateDetailPost(String encodedAccessToken, String githubId, String directory, String content, String sha, List<MultipartFile> files) throws Exception {
+    public void updateDetailPost(String encodedAccessToken, String githubId, String directory, String content, List<MultipartFile> files, List<String> deletedFiles) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
         String commit = "modify: 게시글 수정";
         String path = "content/blog/" + directory;
+        List<TreeRequest> treeRequestList = new ArrayList<>();
 
-        UpdateContentRequest updateContentRequest = new UpdateContentRequest(
-                commit, base64Converter.encode(content), sha);
+        content = commonService.makeBlob(accessToken, githubId, base64Converter.encode(content));
+        treeRequestList.add(new TreeRequest(path + "/index.md", "100644", "blob", content));
 
-        webClient.put()
-                .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/content/blog/" + directory + "/index.md")
-                .headers(h -> h.setBearerAuth(accessToken))
-                .body(Mono.just(updateContentRequest), UpdateContentRequest.class)
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
+        if (deletedFiles != null && !deletedFiles.isEmpty()) {
+            for (int i = 0; i < deletedFiles.size(); i++) {
+                treeRequestList.add(new TreeRequest(path + "/" + deletedFiles.get(i), "100644", "blob", null));
+            }
+        }
 
         if (files != null && !files.isEmpty()) {
-            List<TreeRequest> treeRequestList = new ArrayList<>();
-            String encodedContent;
             for (int i = 0; i < files.size(); i++) {
                 MultipartFile file = files.get(i);
                 String image = new String(Base64.encodeBase64(file.getBytes()));
-                encodedContent = commonService.makeBlob(accessToken, githubId, image);
+                String encodedContent = commonService.makeBlob(accessToken, githubId, image);
                 treeRequestList.add(new TreeRequest(path + "/" + file.getOriginalFilename(), "100644", "blob", encodedContent));
             }
-            commonService.multiFileCommit(accessToken, githubId, treeRequestList, commit);
         }
-
+        commonService.multiFileCommit(accessToken, githubId, treeRequestList, commit);
     }
 
     @Override

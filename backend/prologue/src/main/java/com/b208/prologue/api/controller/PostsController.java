@@ -10,13 +10,11 @@ import com.b208.prologue.api.response.PostListResponse;
 import com.b208.prologue.api.response.github.GetRepoContentResponse;
 import com.b208.prologue.api.service.PostService;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -96,7 +94,7 @@ public class PostsController {
 
         try {
             postService.updateDetailPost(modifyDetailPostRequest.getAccessToken(), modifyDetailPostRequest.getGithubId(),
-                    modifyDetailPostRequest.getDirectory(), modifyDetailPostRequest.getContent(), modifyDetailPostRequest.getSha(), modifyDetailPostRequest.getFiles());
+                    modifyDetailPostRequest.getDirectory(), modifyDetailPostRequest.getContent(), modifyDetailPostRequest.getFiles(), modifyDetailPostRequest.getDeletedFiles());
             return ResponseEntity.status(200).body(BaseResponseBody.of(200, "게시글 수정에 성공하였습니다."));
         } catch (Exception e) {
             e.printStackTrace();
