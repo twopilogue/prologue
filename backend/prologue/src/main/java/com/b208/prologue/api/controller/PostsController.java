@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
@@ -71,7 +72,7 @@ public class PostsController {
             @ApiResponse(code = 400, message = "게시글 작성 실패", response = BaseResponseBody.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
-    public ResponseEntity<? extends BaseResponseBody> writeDetailPost(WriteDetailPostRequest writeDetailPostRequest) {
+    public ResponseEntity<? extends BaseResponseBody> writeDetailPost(@Valid WriteDetailPostRequest writeDetailPostRequest) {
 
         try {
             postService.insertDetailPost(writeDetailPostRequest.getAccessToken(), writeDetailPostRequest.getGithubId(),
@@ -90,7 +91,7 @@ public class PostsController {
             @ApiResponse(code = 400, message = "게시글 수정 실패", response = BaseResponseBody.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
-    public ResponseEntity<? extends BaseResponseBody> modifyDetailPost(ModifyDetailPostRequest modifyDetailPostRequest) {
+    public ResponseEntity<? extends BaseResponseBody> modifyDetailPost(@Valid ModifyDetailPostRequest modifyDetailPostRequest) {
 
         try {
             postService.updateDetailPost(modifyDetailPostRequest.getAccessToken(), modifyDetailPostRequest.getGithubId(),
@@ -109,7 +110,7 @@ public class PostsController {
             @ApiResponse(code = 400, message = "게시글 삭제 실패", response = BaseResponseBody.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
-    public ResponseEntity<? extends BaseResponseBody> removeDetailPost(@RequestBody RemoveDetailPostRequest removeDetailPostRequest) {
+    public ResponseEntity<? extends BaseResponseBody> removeDetailPost(@Valid @RequestBody RemoveDetailPostRequest removeDetailPostRequest) {
 
         try {
             postService.deleteDetailPost(removeDetailPostRequest.getAccessToken(), removeDetailPostRequest.getGithubId(), removeDetailPostRequest.getDirectory());
