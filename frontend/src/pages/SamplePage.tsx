@@ -61,36 +61,18 @@ function SamplePage() {
           >
             <h3>Text</h3>
             <Stack>
-              <Text value="caption Regular 1rem 캡션" type="caption" />
-              <Text value="text Regular 1.125rem 본문" type="text" />
+              <Text value="caption 0.875rem 캡션" type="caption" />
+              <Text value="text 1rem 본문" type="text" />
               <Text
-                value="groupTitle Regular 1.25rem 영역별 타이틀"
+                value="groupTitle 1.375rem 영역별 타이틀"
                 type="groupTitle"
               />
+              <Text value="textTitle 1.625rem 본문별 타이틀" type="textTitle" />
               <Text
-                value="groupTitleBold SemiBold 1.25rem 영역별 타이틀 강조"
-                type="groupTitle"
-                bold
-              />
-              <Text
-                value="textTitle Regular 1.5rem 본문별 타이틀"
-                type="textTitle"
-              />
-              <Text
-                value="pageTitle Regular 2rem 페이지별 타이틀"
+                value="pageTitle 2.125rem 페이지별 타이틀"
                 type="pageTitle"
               />
-              <Text
-                value="pageTitleBold SemiBold 2rem 페이지별 타이틀 강조"
-                type="pageTitle"
-                bold
-              />
-              <Text value="title Regular 2.5rem 타이틀" type="title" />
-              <Text
-                value="titleBold SemiBold 2.5rem 타이틀 강조"
-                type="title"
-                bold
-              />
+              <Text value="title 2.625rem 타이틀" type="title" />
             </Stack>
             <hr />
             <h3>Button</h3>
@@ -165,8 +147,6 @@ function SamplePage() {
               />
             )}
             <hr />
-          </div>
-          <div>
             <h3> &nbsp;&nbsp;&nbsp;&nbsp;Header - 로그인 전</h3>
             <Header />
             <h3> &nbsp;&nbsp;&nbsp;&nbsp;Header - 로그인 후</h3>

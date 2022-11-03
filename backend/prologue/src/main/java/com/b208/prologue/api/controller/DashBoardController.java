@@ -27,12 +27,19 @@ public class DashBoardController {
     @ApiOperation(value = "최신게시물 5개 조회", notes = "최신게시물 조회를 위해 Git 통신")
     @ApiResponses({
             @ApiResponse(code = 200, message = "목록 조회 성공", response =  PostListResponse.class),
+            @ApiResponse(code = 400, message = "게시글 목록 조회 실패", response = BaseResponseBody.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
     public ResponseEntity<? extends BaseResponseBody> getCurrentPost(@RequestParam String accessToken, @RequestParam String githubId){
-        Map<String, List<String>> result = dashBoardService.getList(accessToken, githubId);
+        try {
+            Map<String, List<String>> result = dashBoardService.getList(accessToken, githubId);
 
-        return ResponseEntity.status(200).body(PostListResponse.of(result, 200, "게시물 목록 조회 성공"));
+            List<Map<String, String>> images = dashBoardService.getListImagese(accessToken, githubId, result.get("directory"));
+            return ResponseEntity.status(200).body(PostListResponse.of(result, images, 200, "게시물 목록 조회 성공"));
+        } catch (Exception e){
+            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "게시글 목록 조회에 실패하였습니다."));
+        }
+
     }
 
     @GetMapping("/size")

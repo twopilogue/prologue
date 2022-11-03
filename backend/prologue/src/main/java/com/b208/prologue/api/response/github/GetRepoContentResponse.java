@@ -15,9 +15,6 @@ public class GetRepoContentResponse {
     @JsonProperty("name")
     String name;
 
-    @JsonProperty("sha")
-    String sha;
-
     @JsonProperty("content")
     String content;
 
