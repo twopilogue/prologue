@@ -7,14 +7,14 @@ const MyGitInfo = () => {
   return (
     <div style={{ margin: "20px" }}>
       <div className={styles.textPadding} style={{ paddingTop: "0" }}>
-        <Text value="Github 정보" type="groupTitleBold" />
+        <Text value="Github 정보" type="groupTitle" bold />
       </div>
       <div className={styles.flexContainer}>
         <div className={styles.githubBox}>
           <div className={styles.githubProfileImg}></div>
           <div className={styles.githubProfileTexts}>
             <div className={styles.githubProfileText}>
-              <Text value="yeonsu-k" type="groupTitleBold" />
+              <Text value="yeonsu-k" type="groupTitle" bold />
             </div>
             <div className={styles.githubProfileText}>
               <Text value="github.com/yeonsu-k" type="caption" />
