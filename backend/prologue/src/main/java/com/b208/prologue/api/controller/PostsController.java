@@ -114,8 +114,7 @@ public class PostsController {
     public ResponseEntity<? extends BaseResponseBody> removeDetailPost(@RequestBody RemoveDetailPostRequest removeDetailPostRequest) {
 
         try {
-            postService.deleteDetailPost(removeDetailPostRequest.getAccessToken(), removeDetailPostRequest.getGithubId(),
-                    removeDetailPostRequest.getDirectory(),removeDetailPostRequest.getSha());
+            postService.deleteDetailPost(removeDetailPostRequest.getAccessToken(), removeDetailPostRequest.getGithubId(), removeDetailPostRequest.getDirectory());
             return ResponseEntity.status(200).body(BaseResponseBody.of(200, "게시글 삭제에 성공하였습니다."));
         } catch (Exception e) {
             e.printStackTrace();
