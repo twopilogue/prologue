@@ -111,31 +111,20 @@ public class PostServiceImpl implements PostService {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
         String commit = "modify: 게시글 수정";
         String path = "content/blog/" + directory;
+        List<TreeRequest> treeRequestList = new ArrayList<>();
 
-        UpdateContentRequest updateContentRequest = new UpdateContentRequest(
-                commit, base64Converter.encode(content), sha);
-
-        webClient.put()
-                .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/content/blog/" + directory + "/index.md")
-                .headers(h -> h.setBearerAuth(accessToken))
-                .body(Mono.just(updateContentRequest), UpdateContentRequest.class)
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
+        content = commonService.makeBlob(accessToken, githubId, base64Converter.encode(content));
+        treeRequestList.add(new TreeRequest(path + "/index.md", "100644", "blob", content));
 
         if (files != null && !files.isEmpty()) {
-            List<TreeRequest> treeRequestList = new ArrayList<>();
-            String encodedContent;
             for (int i = 0; i < files.size(); i++) {
                 MultipartFile file = files.get(i);
                 String image = new String(Base64.encodeBase64(file.getBytes()));
-                encodedContent = commonService.makeBlob(accessToken, githubId, image);
+                String encodedContent = commonService.makeBlob(accessToken, githubId, image);
                 treeRequestList.add(new TreeRequest(path + "/" + file.getOriginalFilename(), "100644", "blob", encodedContent));
             }
-            commonService.multiFileCommit(accessToken, githubId, treeRequestList, commit);
         }
-
+        commonService.multiFileCommit(accessToken, githubId, treeRequestList, commit);
     }
 
     @Override
