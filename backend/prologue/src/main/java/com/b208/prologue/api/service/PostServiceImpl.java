@@ -26,10 +26,10 @@ public class PostServiceImpl implements PostService {
     private final CommonService commonService;
 
     @Override
-    public Map<String, List<String>> getList(String encodedAccessToken, String githubId, int page) throws Exception {
+    public Map<String, Object> getList(String encodedAccessToken, String githubId, int page) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
-        Map<String, List<String>> result = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
         List<String> content = new ArrayList<>();
         List<String> directory = new ArrayList<>();
         List<String> count = new ArrayList<>();
@@ -52,11 +52,10 @@ public class PostServiceImpl implements PostService {
             directory.add(list[i].getName());
         }
 
-        String cnt = list.length + "";
-        count.add(cnt);
+        int cnt = list.length;
         result.put("content", content);
         result.put("directory", directory);
-        result.put("postCount", count);
+        result.put("postCount", cnt);
         return result;
     }
 
