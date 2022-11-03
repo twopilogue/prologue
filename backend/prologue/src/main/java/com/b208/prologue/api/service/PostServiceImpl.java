@@ -181,31 +181,20 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void deleteDetailPost(String encodedAccessToken, String githubId, String directory, String sha) throws Exception {
+    public void deleteDetailPost(String encodedAccessToken, String githubId, String directory, String sha) throws Exception{
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
+        String commit = "remove: 게시글 삭제";
+        String path = "content/blog/" + directory;
 
-        GetRepoContentResponse[] responses = getContentList(accessToken, githubId, "content/blog/" + directory);
-        Mono mono = null;
+        GetRepoContentResponse[] responses = getContentList(accessToken, githubId, path);
+
+        treeRequestList = new ArrayList<>();
 
         for (int i = 0; i < responses.length; i++) {
-            DeleteContentRequest deleteContentRequest = new DeleteContentRequest(
-                    "remove: 게시글 삭제", responses[i].getSha());
-
-            Mono<String> tmp = webClient.method(HttpMethod.DELETE)
-                    .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/" + responses[i].getPath())
-                    .headers(h -> h.setBearerAuth(accessToken))
-                    .body(Mono.just(deleteContentRequest), DeleteContentRequest.class)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .retrieve()
-                    .bodyToMono(String.class);
-
-            if (i == 0) {
-                mono = tmp;
-            } else {
-                mono = Mono.zip(mono, tmp);
-            }
+            treeRequestList.add(new TreeRequest(path+"/"+responses[i].getName(), "100644", "blob", null));
         }
-        mono.block();
+
+        push(accessToken, githubId, commit);
     }
 
     @Override
