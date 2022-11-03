@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import styles from "./Blog.module.css";
+import styles from "features/blog/Blog.module.css";
 import Text from "components/Text";
 import { Box, FormControl, RadioGroup, Stack } from "@mui/material";
 import AOS from "aos";
