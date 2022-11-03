@@ -12,7 +12,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
 import java.io.UnsupportedEncodingException;
 import java.util.*;
@@ -107,7 +106,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void updateDetailPost(String encodedAccessToken, String githubId, String directory, String content, String sha, List<MultipartFile> files) throws Exception {
+    public void updateDetailPost(String encodedAccessToken, String githubId, String directory, String content, List<MultipartFile> files) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
         String commit = "modify: 게시글 수정";
         String path = "content/blog/" + directory;
