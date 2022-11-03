@@ -11,7 +11,7 @@ const MemberInfoInput = () => {
         <div className={styles.textPadding}>
           <Text value="내 프로필 정보" type="groupTitle" bold />
         </div>
-        <div className={styles.info_container}>
+        <div className={styles.grid_container}>
           <div>
             <div className={styles.textMargin}>
               <div className={styles.inputTag}>
