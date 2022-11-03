@@ -21,6 +21,7 @@ public class BlogServiceImpl implements BlogService {
 
     private final WebClient webClient;
     private final Base64Converter base64Converter;
+    private final CommonService commonService;
     static private List<TreeRequest> treeRequestList;
 
     @Override
@@ -75,51 +76,9 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public void selectTemplate(String encodedAccessToken, String githubId, int templateNumber) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
-
         treeRequestList = new ArrayList<>();
         searchTemplate(accessToken, githubId, "");
-
-        GetShaResponse getBaseTreeSha = webClient.get()
-                .uri("/repos/" + githubId + "/" + githubId + ".github.io/git/trees/main")
-                .headers(h -> h.setBearerAuth(accessToken))
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToMono(GetShaResponse.class)
-                .block();
-        String base_tree = getBaseTreeSha.getSha();
-
-        CreateTreeRequest createTreeRequest = new CreateTreeRequest(treeRequestList, base_tree);
-        GetShaResponse getTreeSha = webClient.post()
-                .uri("/repos/" + githubId + "/" + githubId + ".github.io/git/trees")
-                .headers(h -> h.setBearerAuth(accessToken))
-                .body(Mono.just(createTreeRequest), CreateTreeRequest.class)
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToMono(GetShaResponse.class)
-                .block();
-        String treeSha = getTreeSha.getSha();
-
-        String[] parents = {base_tree};
-        CreateCommitRequest createCommitRequest = new CreateCommitRequest(treeSha, "commit msg", parents);
-        GetShaResponse getCommitSha = webClient.post()
-                .uri("/repos/" + githubId + "/" + githubId + ".github.io/git/commits")
-                .headers(h -> h.setBearerAuth(accessToken))
-                .body(Mono.just(createCommitRequest), CreateCommitRequest.class)
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToMono(GetShaResponse.class)
-                .block();
-        String commitSha = getCommitSha.getSha();
-
-        UpdateReferencesRequest updateReferencesRequest = new UpdateReferencesRequest(commitSha);
-        webClient.patch()
-                .uri("/repos/" + githubId + "/" + githubId + ".github.io/git/refs/heads/main")
-                .headers(h -> h.setBearerAuth(accessToken))
-                .body(Mono.just(updateReferencesRequest), UpdateReferencesRequest.class)
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
+        commonService.multiFileCommit(accessToken, githubId, treeRequestList, "template upload");
     }
 
     public void searchTemplate(String accessToken, String githubId, String path) {
