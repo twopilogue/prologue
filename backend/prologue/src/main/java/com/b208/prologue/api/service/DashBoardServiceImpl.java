@@ -23,14 +23,15 @@ public class DashBoardServiceImpl implements DashBoardService {
     private final PostServiceImpl postService;
 
     @Override
-    public Map<String, List<String>> getList(String accessToken, String gitId) {
+    public Map<String, List<String>> getList(String encodedAccessToken, String githubId) throws Exception{
+        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
         Map<String, List<String>> result = new HashMap<>();
         List<String> content = new ArrayList<>();
         List<String> directory = new ArrayList<>();
         List<String> count = new ArrayList<>();
 
-        String url = "/repos/" + gitId + "/" + gitId + ".github.io" + "/contents/";
+        String url = "/repos/" + githubId + "/" + githubId + ".github.io" + "/contents/";
 
         PostGetListResponse[] list =  webClient.get()
                 .uri(url + "content/blog")
@@ -54,13 +55,13 @@ public class DashBoardServiceImpl implements DashBoardService {
     }
 
     @Override
-    public Double getRepositorySize(String accessToken, String githubId) throws Exception{
-        String decodeAccessToken = base64Converter.decryptAES256(accessToken);
+    public Double getRepositorySize(String encodedAccessToken, String githubId) throws Exception{
+        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
         GetRepositorySizeResponse getRepositorySizeResponse = webClient.get()
                 .uri("/repos/" + githubId + "/" + githubId + ".github.io")
                 .accept(MediaType.APPLICATION_JSON)
-                .headers(h -> h.setBearerAuth(decodeAccessToken))
+                .headers(h -> h.setBearerAuth(accessToken))
                 .retrieve()
                 .bodyToMono(GetRepositorySizeResponse.class).block();
 
