@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import styles from "./Blog.module.css";
+import React from "react";
+import styles from "features/blog/Blog.module.css";
 import Text from "components/Text";
 import Button from "components/Button";
 import { Stack } from "@mui/material";
