@@ -1,5 +1,6 @@
 package com.b208.prologue.api.service;
 
+import com.b208.prologue.api.response.github.GetRepoContentResponse;
 import com.b208.prologue.api.response.github.GetRepositorySizeResponse;
 import com.b208.prologue.api.response.github.GetTemplateFileResponse;
 import com.b208.prologue.api.response.github.PostGetListResponse;
@@ -40,7 +41,7 @@ public class DashBoardServiceImpl implements DashBoardService {
                 .retrieve()
                 .bodyToMono(PostGetListResponse[].class).block();
 
-        for (int i = list.length-1; i > list.length-6; i--){
+        for (int i = list.length - 1; i > list.length - 6; i--){
             if(i < 0) break;
             content.add(postService.setItem(url, accessToken, list[i].getPath()));
             directory.add(list[i].getName());
@@ -51,6 +52,36 @@ public class DashBoardServiceImpl implements DashBoardService {
         result.put("content", content);
         result.put("directory", directory);
         result.put("postCount", count);
+        return result;
+    }
+
+    @Override
+    public List<Map<String, String>> getListImagese(String encodedAccessToken, String githubId, List<String> directories) throws Exception {
+        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
+
+        List<Map<String, String>> result = new ArrayList<>();
+        Map<String, String> image;
+
+        for (String directory:directories) {
+            GetRepoContentResponse[] responses = postService.getContentList(accessToken, githubId, "content/blog/" + directory);
+            image = new HashMap<>();
+            int flag = 0;
+
+            for (int i = responses.length - 1; i > responses.length - 6; i--) {
+                if(i < 0) break;
+
+                if (!responses[flag].getName().equals("index.md")) {
+                    image.put(directory, responses[flag].getUrl());
+                    break;
+                }else{
+                    flag++;
+                    continue;
+                }
+            }
+
+            result.add(image);
+        }
+
         return result;
     }
 
