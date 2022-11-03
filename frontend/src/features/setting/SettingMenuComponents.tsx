@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./Setting.module.css";
-
+import MyGitInfo from "./MyGitInfo";
 import MyInfoInput from "./MyInfoInput";
 import MyBlogInfoInput from "./MyBlogInfoInput";
 import CategoryLayout from "./CategoryLayout";
@@ -10,6 +10,8 @@ export const blogTabs = [
     label: "블로그 정보 설정",
     Component: (
       <div>
+        <MyGitInfo />
+        <div className={styles.hr}></div>
         <MyInfoInput />
         <div className={styles.hr}></div>
         <MyBlogInfoInput />
