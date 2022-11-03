@@ -22,7 +22,12 @@ export const blogTabs = [
   },
   {
     label: "카테고리 설정",
-    Component: <CategoryLayout />,
+    Component: (
+      <div>
+        <CategoryLayout />
+        <ConfirmButton type="categorySetting" />
+      </div>
+    ),
   },
 ];
 

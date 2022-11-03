@@ -13,13 +13,9 @@ interface LayoutConfig {
 }
 
 const initialState: LayoutConfig = {
-  layoutList: [
-    { i: "a", x: 0, y: 0, w: 1, h: 2, static: true, isResizable: false },
-    { i: "b", x: 1, y: 0, w: 1, h: 2, isResizable: false },
-    { i: "c", x: 2, y: 0, w: 1, h: 2, isResizable: false },
-  ],
-  categoryList: [{ key: "a" }, { key: "b" }, { key: "c" }],
-  categoryCnt: 2,
+  layoutList: [],
+  categoryList: [],
+  categoryCnt: 1,
 };
 
 const settingSlice = createSlice({
@@ -46,3 +42,13 @@ export const selectCategoryCnt = (state: rootState) =>
 export const selectCategoryList = (state: rootState) =>
   state.setting.categoryList;
 export default settingSlice.reducer;
+
+/*
+
+{ i: "a", x: 0, y: 0, w: 1, h: 2, static: true, isResizable: false },
+{ i: "b", x: 1, y: 0, w: 1, h: 2, isResizable: false },
+{ i: "c", x: 2, y: 0, w: 1, h: 2, isResizable: false },
+
+{ key: "a" }, { key: "b" }, { key: "c" }
+
+*/
