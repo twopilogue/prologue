@@ -1,5 +1,6 @@
 package com.b208.prologue.api.response.github;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,8 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RepositoryPublicKeyResponse {
 
-    @ApiModelProperty(name = "key_id")
+    @JsonProperty("key_id")
     String keyId;
-    @ApiModelProperty(name = "key")
+    @JsonProperty("key")
     String key;
 }
