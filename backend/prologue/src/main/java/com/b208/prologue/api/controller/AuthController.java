@@ -7,6 +7,7 @@ import com.b208.prologue.api.response.github.AuthUserInfoResponse;
 import com.b208.prologue.api.service.AuthService;
 import com.b208.prologue.common.Base64Converter;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
@@ -49,6 +50,23 @@ public class AuthController {
             e.printStackTrace();
         }
         return ResponseEntity.status(400).body(BaseResponseBody.of(400, "GitHub 사용자 정보 조회에 실패하였습니다."));
+    }
+
+    @PutMapping("/secrets")
+    @ApiOperation(value = "레포지토리 시크릿 생성", notes = "레포지토리 시크릿을 생성한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "레포지토리 시크릿 생성 성공", response = BaseResponseBody.class),
+            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<? extends BaseResponseBody> login(@RequestParam @ApiParam(value = "accessToken", required = true) String accessToken,
+                                                            @RequestParam @ApiParam(value = "사용자 깃허브 아이디", required = true) String githubId) throws Exception {
+        try {
+            authService.createRepositorySecrets(accessToken, githubId);
+            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "레포지토리 시크릿 생성에 성공하였습니다."));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.status(400).body(BaseResponseBody.of(400, "레포지토리 시크릿 생성에 실패하였습니다."));
     }
 
 }
