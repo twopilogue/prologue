@@ -1,14 +1,11 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Box, Stack } from "@mui/material";
-import GatsbyLayoutCard from "features/blog/GatsbyLayoutCard";
+import GatsbyLayoutCard from "features/blog/BlogGatsbyTheme";
 import Text from "components/Text";
 import Button from "components/Button";
-import Modal from "components/Modal";
+import BlogDashboardMoveModal from "features/blog/BlogDashboardMoveModal";
 
 const LayoutChoicePage = () => {
-  const navigate = useNavigate();
-
   const [isChoiceTheme, setChoiceTheme] = useState(
     "gatsby-starter-minimal-blog",
   );
@@ -39,16 +36,7 @@ const LayoutChoicePage = () => {
         <GatsbyLayoutCard setChoiceTheme={setChoiceTheme} />
         <Button label="Next" onClick={showNextModal} />
       </Stack>
-      {nextModalOpen && (
-        <>
-          <Modal
-            buttonNum={1}
-            oneButtonLabel="대시보드로 이동"
-            oneButtonSet={() => navigate("/dashboard")}
-            text={`🎉 개설이 완료 됐습니다 🎉`}
-          />
-        </>
-      )}
+      {nextModalOpen && <BlogDashboardMoveModal />}
     </Box>
   );
 };

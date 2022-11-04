@@ -2,9 +2,9 @@ import React from "react";
 import BlogCreateBox from "features/blog/blogCreate/BlogCreateBox";
 import BlogLayoutSetting from "features/blog/blogCreate/BlogLayoutSetting";
 import BlogStepper from "features/blog/blogCreate/BlogStepper";
-// import Button from "components/Button";
 import { Stack } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import BlogDashboardMoveModal from "features/blog/BlogDashboardMoveModal";
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -34,7 +34,9 @@ const LandingPage = () => {
           marginTop: "5%",
         }}
       >
-        {BlogCreateClick === 1 ? (
+        {BlogCreateClick === 0 ? (
+          <BlogCreateBox onClick={() => setBlogCreateClick(1)} />
+        ) : BlogCreateClick === 1 ? (
           <Stack
             direction="column"
             justifyContent="center"
@@ -46,10 +48,9 @@ const LandingPage = () => {
               setValue={setRadioValue}
               onClick={layoutSetting}
             />
-            {/* <Button label="Next" onClick={layoutSetting} /> */}
           </Stack>
         ) : (
-          <BlogCreateBox onClick={() => setBlogCreateClick(1)} />
+          <BlogDashboardMoveModal />
         )}
       </div>
     </div>
