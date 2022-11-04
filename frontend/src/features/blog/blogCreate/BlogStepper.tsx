@@ -15,7 +15,7 @@ interface Props {
   step: number;
 }
 
-const steps = ["Create Git repository", "Layout setting"];
+const steps = ["Create Git repository", "Layout Setting", `Create Success`];
 
 const BlogStepper = ({ step }: Props) => {
   return (
