@@ -32,7 +32,6 @@ public class PostServiceImpl implements PostService {
         Map<String, Object> result = new HashMap<>();
         List<String> content = new ArrayList<>();
         List<String> directory = new ArrayList<>();
-        List<String> count = new ArrayList<>();
 
         String url = "/repos/" + githubId + "/" + githubId + ".github.io" + "/contents/";
 
