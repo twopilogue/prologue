@@ -3,7 +3,10 @@ import React, { useEffect, useState, useRef } from "react";
 import { Layout, Responsive, WidthProvider } from "react-grid-layout";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { selectLayoutList, setLayoutList } from "slices/settingSlice";
+import {
+  selectCategoryLayoutList,
+  setCategoryLayoutList,
+} from "slices/settingSlice";
 import styles from "../Setting.module.css";
 import "../../../../node_modules/react-grid-layout/css/styles.css";
 
@@ -15,7 +18,7 @@ const LayoutSample = () => {
   const [contentCheck, setContentCheck] = useState(true);
   const [titleCheck, setTitleCheck] = useState(true);
 
-  const savedLayoutList: Layout[] = useAppSelector(selectLayoutList);
+  const savedLayoutList: Layout[] = useAppSelector(selectCategoryLayoutList);
 
   const getLayout = () => {
     const sessionLayout = sessionStorage.getItem("grid-layout");
@@ -44,7 +47,7 @@ const LayoutSample = () => {
       };
       tmpLayoutList.push(layout);
     }
-    dispatch(setLayoutList(tmpLayoutList));
+    dispatch(setCategoryLayoutList(tmpLayoutList));
     navigator("/layout");
   };
 
