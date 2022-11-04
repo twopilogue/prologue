@@ -10,7 +10,6 @@ import { Layout, Responsive, WidthProvider } from "react-grid-layout";
 import GridLayout from "react-grid-layout";
 import styles from "./Setting.module.css";
 import Text from "components/Text";
-import shortid from "shortid";
 
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -18,8 +17,8 @@ import { useAppSelector } from "app/hooks";
 import {
   selectCategoryCnt,
   selectCategoryList,
-  selectLayoutList,
-  setLayoutList,
+  selectCategoryLayoutList,
+  setCategoryLayoutList,
   setCategoryList,
   setCategoryCnt,
   CategoryConfig,
@@ -28,7 +27,7 @@ import { useDispatch } from "react-redux";
 
 const CategoryLayout = () => {
   const categoryList = useAppSelector(selectCategoryList);
-  const layoutList = useAppSelector(selectLayoutList);
+  const layoutList = useAppSelector(selectCategoryLayoutList);
   const categoryCnt = useAppSelector(selectCategoryCnt);
 
   const [tmpCategoryList, setTmpCategoryList] = useState<CategoryConfig[]>([
@@ -61,7 +60,7 @@ const CategoryLayout = () => {
 
   const saveCategoryList = () => {
     dispatch(setCategoryList(tmpCategoryList));
-    dispatch(setLayoutList(tmpLayoutList));
+    dispatch(setCategoryLayoutList(tmpLayoutList));
     dispatch(setCategoryCnt(tmpCategoryCnt));
     console.log("카테고리", tmpCategoryList);
     console.log("레이아웃", tmpLayoutList);

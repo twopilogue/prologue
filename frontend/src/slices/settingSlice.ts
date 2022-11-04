@@ -6,24 +6,36 @@ export interface CategoryConfig {
   key: string;
 }
 
+export interface PageConfig {
+  key: string;
+}
+
 interface LayoutConfig {
-  layoutList: Layout[];
+  categoryLayoutList: Layout[];
   categoryList: CategoryConfig[];
   categoryCnt: number;
+
+  pageLayoutList: Layout[];
+  pageList: PageConfig[];
+  pageCnt: number;
 }
 
 const initialState: LayoutConfig = {
-  layoutList: [],
+  categoryLayoutList: [],
   categoryList: [],
   categoryCnt: 1,
+
+  pageLayoutList: [],
+  pageList: [],
+  pageCnt: 1,
 };
 
 const settingSlice = createSlice({
   name: "setting",
   initialState,
   reducers: {
-    setLayoutList: (state, { payload }) => {
-      state.layoutList = payload;
+    setCategoryLayoutList: (state, { payload }) => {
+      state.categoryLayoutList = payload;
     },
     setCategoryList: (state, { payload }) => {
       state.categoryList = payload;
@@ -31,16 +43,38 @@ const settingSlice = createSlice({
     setCategoryCnt: (state, { payload }) => {
       state.categoryCnt = payload;
     },
+
+    setPageLayoutList: (state, { payload }) => {
+      state.pageLayoutList = payload;
+    },
+    setPageList: (state, { payload }) => {
+      state.pageList = payload;
+    },
+    setPageCnt: (state, { payload }) => {
+      state.pageCnt = payload;
+    },
   },
 });
-export const { setLayoutList, setCategoryList, setCategoryCnt } =
-  settingSlice.actions;
+export const {
+  setCategoryLayoutList,
+  setCategoryList,
+  setCategoryCnt,
+  setPageList,
+  setPageCnt,
+} = settingSlice.actions;
 
-export const selectLayoutList = (state: rootState) => state.setting.layoutList;
+export const selectCategoryLayoutList = (state: rootState) =>
+  state.setting.categoryLayoutList;
 export const selectCategoryCnt = (state: rootState) =>
   state.setting.categoryCnt;
 export const selectCategoryList = (state: rootState) =>
   state.setting.categoryList;
+
+export const selectPageLayoutList = (state: rootState) =>
+  state.setting.pageLayoutList;
+export const selectPageList = (state: rootState) => state.setting.pageList;
+export const selectPageCnt = (state: rootState) => state.setting.pageCnt;
+
 export default settingSlice.reducer;
 
 /*
