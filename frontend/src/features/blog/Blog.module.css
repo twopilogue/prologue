@@ -24,30 +24,34 @@
     align-content: center;
     align-items: center;
     justify-content: center;
-    height: 45%;
+    height: 34%;
 }
 
 .BlogResetBox {
-    width: 43%;
+    min-width: 485px;
     max-width: 600px;
+    /* height: 500px; */
     border: 0.5px solid #464646;
     box-shadow: 0px 0px 8px 1px rgb(0 0 0 / 20%);
     border-radius: 20px;
-    padding: 40px 20px;
+    padding: 20px 10px;
+}
+
+.BlogResetBoxTitle {
+    margin: 10px 0px;
 }
 
 .BlogResetImgDiv {
     display: flex;
     justify-content: center;
     width: 100%;
-    max-height: 250px;
+    max-height: 200px;
     overflow: hidden;
-    padding: 20px 0px;
 }
 
 .BlogResetImgDiv>img {
     width: 100%;
-    max-height: 250px;
+    max-height: 200px;
     height: auto;
     object-fit: contain;
 }
@@ -58,8 +62,9 @@
 }
 
 .GatsbyCardBox {
- filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.25));
+    filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.25));
 }
+
 .GatsbyCardBox:hover {
     border: 3px solid #766aff;
     border-radius: 7px;

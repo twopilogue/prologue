@@ -2,7 +2,7 @@ import React from "react";
 import BlogCreateBox from "features/blog/blogCreate/BlogCreateBox";
 import BlogLayoutSetting from "features/blog/blogCreate/BlogLayoutSetting";
 import BlogStepper from "features/blog/blogCreate/BlogStepper";
-import Button from "components/Button";
+// import Button from "components/Button";
 import { Stack } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
@@ -24,14 +24,14 @@ const LandingPage = () => {
   };
 
   return (
-    <div style={{ padding: "5%"}}>
+    <div style={{ paddingTop: "5%" }}>
       <BlogStepper step={BlogCreateClick} />
       <div
         style={{
           width: "100%",
           display: "flex",
           justifyContent: "center",
-          marginTop: "50px",
+          marginTop: "5%",
         }}
       >
         {BlogCreateClick === 1 ? (
@@ -44,8 +44,9 @@ const LandingPage = () => {
             <BlogLayoutSetting
               radioValue={radioValue}
               setValue={setRadioValue}
+              onClick={layoutSetting}
             />
-            <Button label="Next" onClick={layoutSetting} />
+            {/* <Button label="Next" onClick={layoutSetting} /> */}
           </Stack>
         ) : (
           <BlogCreateBox onClick={() => setBlogCreateClick(1)} />
