@@ -2,7 +2,6 @@ import * as React from "react";
 import { styled } from "@mui/material/styles";
 import Switch from "@mui/material/Switch";
 import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
 import palette from "../styles/colorPalette";
 import Text from "./Text";
 
@@ -76,7 +75,7 @@ function SwitchWithLabel({ label, ...rest }: Props) {
         inputProps={{ "aria-label": "ant design" }}
         {...rest}
       />
-      <Text value={label} type="caption" />
+      <Text value={label} />
     </Stack>
   );
 }
