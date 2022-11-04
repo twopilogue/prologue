@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./Setting.module.css";
 import MyGitInfo from "./MyGitInfo";
 import MyInfoInput from "./MyInfoInput";
@@ -8,6 +8,7 @@ import ConfirmButton from "./ConfirmButton";
 import CategoryCntSetting from "./CategoryCntSetting";
 import PageLayout from "./PageLayout";
 import LayoutSelector from "./layout/LayoutSelector";
+import LayoutSample from "./layout/LayoutSample";
 
 export const blogTabs = [
   {
@@ -50,6 +51,8 @@ export const layoutTabs = [
     Component: (
       <div>
         <LayoutSelector />
+        <LayoutSample />
+        <ConfirmButton type="layoutSetting" />
       </div>
     ),
   },
