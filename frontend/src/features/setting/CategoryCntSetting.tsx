@@ -8,10 +8,7 @@ const CategoryCntSetting = () => {
 
   return (
     <>
-      <div
-        className={styles.textPadding}
-        style={{ paddingTop: "0", paddingBottom: "10px" }}
-      >
+      <div className={styles.textPadding}>
         <Text value="기타 설정" type="groupTitle" bold />
       </div>
       <div className={styles.gridContainer}>
