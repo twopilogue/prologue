@@ -102,7 +102,7 @@ public class AuthServiceImpl implements AuthService {
         String sealed_box = lazySodiumJava.cryptoBoxSealEasy(accessToken, publicKey);
         String encrypted_value = Base64.getEncoder().encodeToString(lazySodiumJava.sodiumHex2Bin(sealed_box));
 
-        UpdateRepositorySecretRequest updateRepositorySecretRequest = new UpdateRepositorySecretRequest(encrypted_value, repositoryPublicKey.getKey_id());
+        UpdateRepositorySecretRequest updateRepositorySecretRequest = new UpdateRepositorySecretRequest(encrypted_value, repositoryPublicKey.getKeyId());
         webClient.put()
                 .uri("/repos/" + githubId + "/" + githubId + ".github.io/actions/secrets/TOKEN")
                 .headers(h -> h.setBearerAuth(accessToken))

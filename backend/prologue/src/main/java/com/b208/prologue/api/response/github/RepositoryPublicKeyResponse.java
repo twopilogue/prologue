@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 public class RepositoryPublicKeyResponse {
 
     @ApiModelProperty(name = "key_id")
-    String key_id;
+    String keyId;
     @ApiModelProperty(name = "key")
     String key;
 }
