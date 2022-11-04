@@ -5,13 +5,15 @@ import { Box, FormControl, RadioGroup, Stack } from "@mui/material";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import RadioButton from "./BlogRadioButton";
+import Button from "components/Button";
 
 interface Props {
   radioValue: string;
   setValue: React.Dispatch<React.SetStateAction<string>>;
+  onClick?: () => void;
 }
 
-function BlogLayoutSetting({ radioValue, setValue }: Props) {
+function BlogLayoutSetting({ radioValue, setValue, onClick }: Props) {
   useEffect(() => {
     AOS.init();
   });
@@ -26,7 +28,7 @@ function BlogLayoutSetting({ radioValue, setValue }: Props) {
         <Text value="레이아웃 설정" type="title" bold />
       </div>
 
-      <FormControl data-aos="fade-left">
+      <FormControl data-aos="fade-left" sx={{ marginBottom: "7%" }}>
         <RadioGroup value={radioValue} onChange={radioChange}>
           <Stack spacing={8}>
             <Stack spacing={0.5}>
@@ -44,6 +46,8 @@ function BlogLayoutSetting({ radioValue, setValue }: Props) {
           </Stack>
         </RadioGroup>
       </FormControl>
+
+      <Button label="Next" onClick={onClick} data-aos="fade-left" />
     </div>
   );
 }
