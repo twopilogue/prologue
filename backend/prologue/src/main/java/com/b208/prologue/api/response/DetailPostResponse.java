@@ -13,9 +13,6 @@ import java.util.List;
 @ApiModel("DetailPostResponse")
 public class DetailPostResponse extends BaseResponseBody {
 
-    @ApiModelProperty(name = "게시글 수정 시 필요한 코드")
-    String sha;
-
     @ApiModelProperty(name = "게시글 내용")
     String content;
 
@@ -24,7 +21,6 @@ public class DetailPostResponse extends BaseResponseBody {
 
     public static DetailPostResponse of(GetRepoContentResponse getRepoContentResponse, List<ImageResponse> images, Integer statusCode, String message) {
         DetailPostResponse res = new DetailPostResponse();
-        res.setSha(getRepoContentResponse.getSha());
         res.setContent(getRepoContentResponse.getContent());
         res.setImages(images);
         res.setStatusCode(statusCode);

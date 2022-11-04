@@ -9,7 +9,7 @@ import Dashboard from "./pages/DashboardPage";
 import SettingPage from "pages/SettingPage";
 import SettingLayout from "features/setting/SettingLayout";
 import LayoutSample from "features/setting/layout/LayoutSample";
-import PostList from "pages/PostListPage";
+import PostPage from "pages/PostPage";
 import BlogReset from "pages/BlogResetPage";
 import LayoutChoice from "pages/LayoutChoicePage";
 
@@ -33,7 +33,7 @@ function App() {
           <Route path="/setting" element={<SettingPage />} />
           <Route path="/layout" element={<SettingLayout />} />
           <Route path="/laysample" element={<LayoutSample />} />
-          <Route path="/post" element={<PostList />} />
+          <Route path="/post" element={<PostPage />} />
 
           <Route path="/sample" element={<SamplePage />} />
         </Routes>

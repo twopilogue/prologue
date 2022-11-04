@@ -31,6 +31,9 @@ dependencies {
 
 	implementation "com.goterl:lazysodium-java:5.1.1"
 	implementation "net.java.dev.jna:jna:5.11.0"
+	
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation'
+
 }
 
 tasks.named('test') {

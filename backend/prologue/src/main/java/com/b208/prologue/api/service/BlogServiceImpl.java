@@ -104,20 +104,8 @@ public class BlogServiceImpl implements BlogService {
                 .headers(h -> h.setBearerAuth(accessToken))
                 .retrieve()
                 .bodyToMono(GetFileContentResponse.class).block();
-        String content = makeBlob(accessToken, githubId, getFileContentResponse.getContent());
+        String content = commonService.makeBlob(accessToken, githubId, getFileContentResponse.getContent());
         treeRequestList.add(new TreeRequest(path, "100644", "blob", content));
-    }
-
-    public String makeBlob(String accessToken, String githubId, String content) {
-        CreateBlobRequest createBlobRequest = new CreateBlobRequest(content, "base64");
-        GetShaResponse getShaResponse = webClient.post()
-                .uri("/repos/" + githubId + "/" + githubId + ".github.io" + "/git/blobs")
-                .headers(h -> h.setBearerAuth(accessToken))
-                .body(Mono.just(createBlobRequest), CreateBlobRequest.class)
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToMono(GetShaResponse.class).block();
-        return getShaResponse.getSha();
     }
 
     @Override
