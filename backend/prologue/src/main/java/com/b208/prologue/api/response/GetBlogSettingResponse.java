@@ -29,9 +29,9 @@ public class GetBlogSettingResponse extends BaseResponseBody {
     String description;
 
     @ApiModelProperty(name = "소셜/링크")
-    List<Map<String, String>> social;
+    Map<String, String> social;
 
-    public static GetBlogSettingResponse of(String nickName, String profileImg, String summary, String blogName, String description, List<Map<String, String>> social, Integer statusCode, String message) {
+    public static GetBlogSettingResponse of(String nickName, String profileImg, String summary, String blogName, String description, Map<String, String> social, Integer statusCode, String message) {
         GetBlogSettingResponse res = new GetBlogSettingResponse();
         res.setNickName(nickName);
         res.setProfileImg(profileImg);
