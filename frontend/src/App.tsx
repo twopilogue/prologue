@@ -33,7 +33,7 @@ function App() {
           <Route path="/setting" element={<SettingPage />} />
           <Route path="/layout" element={<SettingLayout />} />
           <Route path="/laysample" element={<LayoutSample />} />
-          <Route path="/post" element={<PostPage />} />
+          <Route path="/post/*" element={<PostPage />} />
 
           <Route path="/sample" element={<SamplePage />} />
         </Routes>
