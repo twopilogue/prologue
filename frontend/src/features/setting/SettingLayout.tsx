@@ -3,11 +3,11 @@ import styles from "./Setting.module.css";
 
 import { Responsive, WidthProvider, Layout } from "react-grid-layout";
 import { useAppSelector } from "app/hooks";
-import { selectLayoutList } from "slices/settingSlice";
+import { selectCategoryLayoutList } from "slices/settingSlice";
 
 const SettingLayout = () => {
   const ResponsiveGridLayout = WidthProvider(Responsive);
-  const savedLayoutList: Layout[] = useAppSelector(selectLayoutList);
+  const savedLayoutList: Layout[] = useAppSelector(selectCategoryLayoutList);
   const [layoutList, setLayoutList] = useState<Layout[]>(savedLayoutList);
 
   useEffect(() => {

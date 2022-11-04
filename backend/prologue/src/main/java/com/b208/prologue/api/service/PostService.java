@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface PostService {
-    Map<String, List<String>> getList(String encodedAccessToken, String githubId) throws Exception;
+    Map<String, Object> getList(String encodedAccessToken, String githubId, int page) throws Exception;
     List<Map<String, String>> getListImagese(String encodedAccessToken, String githubId, List<String> directories) throws  Exception;
     void insertDetailPost(String encodedAccessToken, String githubId, String content, List<MultipartFile> files) throws Exception;
     void updateDetailPost(String encodedAccessToken, String githubId, String directory, String content, List<MultipartFile> files, List<String> deletedFiles) throws Exception;

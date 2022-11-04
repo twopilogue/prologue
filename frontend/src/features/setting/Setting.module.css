@@ -61,9 +61,17 @@
 
 .inputTag {
   display: grid;
-  grid-template-columns: 150px 300px;
+  grid-template-columns: 100px 250px;
   margin: 10px;
+  width: 100%;
 } 
+
+.inputTagThree{
+  display: grid;
+  grid-template-columns: 100px 150px 30.3vw;
+  margin: 10px;
+  width: 100%;
+}
 
 .textPadding{
   padding: 30px 20px 30px 20px;
@@ -124,7 +132,7 @@
   display: flex;
   align-items: center;
   
-  width: 100%;
+  /* width: 100%; */
   height: 157px;
   margin: 10px;
   background-color: #FFFFFF;
@@ -166,7 +174,6 @@
 .gridContainer {
   margin: 20px;
   padding: 4px;
-  width: 100%;
   background-color: #F6F4F9;
 }
 
@@ -175,6 +182,7 @@
   align-items: center;
   background-color: white;
   padding: 0;
+  height: 100%;
 }
 
 .gridAddButton{
@@ -195,3 +203,18 @@
   text-align: center;
 }
 
+.nonCategory {
+  margin: 20px;
+  text-align: center;
+}
+
+
+/* ---------------------------------- */
+.confirmButton{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30vh;
+
+  padding: 20px;
+}
