@@ -18,7 +18,7 @@ function BlogCreateBox({ onClick }: Props) {
           alignItems="center"
           spacing={0.5}
         >
-          <Text value="GitHub 블로그 생성" type="title" />
+          <Text value="GitHub 블로그 생성" type="title" bold />
           <Text
             value="깃허브 블로그가 이미 존재한다면 생성이 불가능합니다."
             type="groupTitle"
