@@ -1,4 +1,4 @@
-import React,{useEffect} from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, Stack } from "@mui/material";
 import GatsbyLayoutCard from "features/blog/GatsbyLayoutCard";
@@ -9,10 +9,15 @@ import Modal from "components/Modal";
 const LayoutChoicePage = () => {
   const navigate = useNavigate();
 
+  const [isChoiceTheme, setChoiceTheme] = useState(
+    "gatsby-starter-minimal-blog",
+  );
+
   const [nextModalOpen, setNextModalOpen] = React.useState(false);
 
   const showNextModal = () => {
     setNextModalOpen(true);
+    console.log("선택한 테마 : ", isChoiceTheme);
   };
 
   return (
@@ -22,7 +27,7 @@ const LayoutChoicePage = () => {
         justifyContent="center"
         alignItems="center"
         spacing={1}
-        sx={{ my: "3vw" }}
+        sx={{ mt: "2%" }}
       >
         <Text value="Gatsby 테마 선택" type="pageTitle" bold />
         <Text
@@ -31,7 +36,7 @@ const LayoutChoicePage = () => {
         />
       </Stack>
       <Stack direction="column" alignItems="center" spacing={3}>
-        <GatsbyLayoutCard />
+        <GatsbyLayoutCard setChoiceTheme={setChoiceTheme} />
         <Button label="Next" onClick={showNextModal} />
       </Stack>
       {nextModalOpen && (
