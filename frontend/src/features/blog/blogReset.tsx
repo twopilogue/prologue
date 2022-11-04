@@ -20,7 +20,9 @@ function BlogReset(value: Props) {
         alignItems="center"
         spacing={3}
       >
-        <Text value={value.title} type="textTitle" bold />
+        <div className={styles.BlogResetBoxTitle}>
+          <Text value={value.title} type="textTitle" bold />
+        </div>
         <div className={styles.BlogResetImgDiv}>
           <img src={value.image} alt={value.title} loading="lazy" />
         </div>
