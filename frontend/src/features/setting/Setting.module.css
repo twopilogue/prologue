@@ -1,25 +1,32 @@
-.container {
-  display: flex; 
-  width: 200px;
-  height: 100px;
-  padding: 5px;
+/* 레이아웃 ---------------------------------- */
+
+.layoutContainer {
+  display:flex;
+  width: 100%;
+  height: 110px;
+  /* padding: 5px; */
+  margin: 20px;
 
   flex-direction: column;
   flex-wrap: wrap;
   overflow-x: scroll;
-  background-color: blue;
+  overflow-y: hidden;
+  background-color: white;
+  border: 1px solid #ECECEC;
+
 }
 
 /* 스크롤 숨기기 */
-.container::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
+.layoutContainer::-webkit-scrollbar {
+  display: none;
 }
+
 
 .box1 {
   width: 100px;
   height: 100%;
-  background-color: lightblue;
-  /* margin: 5px; */
+  background-color: #ECECEC;
+  margin: 5px;
 }
 
 .box2 {
@@ -218,3 +225,6 @@
 
   padding: 20px;
 }
+
+/* ---------------------------------- */
+
