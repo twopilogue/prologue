@@ -1,12 +1,13 @@
 package com.b208.prologue.api.service;
 
 import com.b208.prologue.api.request.github.AuthAccessTokenRequest;
+import com.b208.prologue.api.request.github.UpdateRepositorySecretRequest;
+import com.b208.prologue.api.response.github.RepositoryPublicKeyResponse;
 import com.b208.prologue.api.response.github.AuthAccessTokenResponse;
 import com.b208.prologue.api.response.github.AuthUserInfoResponse;
 import com.b208.prologue.common.Base64Converter;
 import com.goterl.lazysodium.LazySodiumJava;
 import com.goterl.lazysodium.SodiumJava;
-import com.goterl.lazysodium.interfaces.AEAD;
 import com.goterl.lazysodium.utils.Key;
 import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
@@ -21,6 +22,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
 
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Base64;
 import java.util.Collections;
@@ -28,7 +30,7 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
-public class AuthServiceImpl implements AuthService{
+public class AuthServiceImpl implements AuthService {
 
     private final Base64Converter base64Converter;
     private final WebClient webClient;
@@ -36,18 +38,18 @@ public class AuthServiceImpl implements AuthService{
     private static String clientSecret;
 
     @Value("${github.clientId}")
-    private void setClientId(String clientId){
-        this.clientId=clientId;
+    private void setClientId(String clientId) {
+        this.clientId = clientId;
     }
 
     @Value("${github.clientSecret}")
-    private void setClientSecret(String clientSecret){
-        this.clientSecret=clientSecret;
+    private void setClientSecret(String clientSecret) {
+        this.clientSecret = clientSecret;
     }
 
     @Override
     public String getUri() {
-        return "https://github.com/login/oauth/authorize?client_id="+clientId+"&scope=repo delete_repo workflow";
+        return "https://github.com/login/oauth/authorize?client_id=" + clientId + "&scope=repo delete_repo workflow";
     }
 
     @Override
@@ -71,7 +73,7 @@ public class AuthServiceImpl implements AuthService{
 
         return client.post()
                 .uri("/login/oauth/access_token")
-                .body(Mono.just(requestBody),AuthAccessTokenRequest.class)
+                .body(Mono.just(requestBody), AuthAccessTokenRequest.class)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToMono(AuthAccessTokenResponse.class);
@@ -91,23 +93,35 @@ public class AuthServiceImpl implements AuthService{
     public void createRepositorySecrets(String encodedAccessToken, String githubId) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
-        LazySodiumJava lazySodium = new LazySodiumJava(new SodiumJava());
+        RepositoryPublicKeyResponse repositoryPublicKey = getRepositoryPublicKey(accessToken, githubId);
+        Key publicKey = Key.fromBase64String(repositoryPublicKey.getKey());
 
-        lazySodium.keygen(AEAD.Method.CHACHA20_POLY1305);
-        //Key key = lazySodium.keygen(AEAD.Method.CHACHA20_POLY1305);
-        String encodePk = base64Converter.decode("nv/FxzvHIdBaCOxKGE3D7vsXMqvhC4vD/fzxPeZH1Hg=");
+        SodiumJava sodiumJava = new SodiumJava();
+        LazySodiumJava lazySodiumJava = new LazySodiumJava(sodiumJava, StandardCharsets.UTF_8);
 
-        byte[] publicKey = lazySodium.bytes(encodePk);
-        lazySodium.cryptoAeadChaCha20Poly1305Keygen(publicKey);
-        Key pk = Key.fromBytes(publicKey);
+        String sealed_box = lazySodiumJava.cryptoBoxSealEasy(accessToken, publicKey);
+        String encrypted_value = Base64.getEncoder().encodeToString(lazySodiumJava.sodiumHex2Bin(sealed_box));
 
-        byte[] nPub = lazySodium.nonce(AEAD.CHACHA20POLY1305_IETF_NPUBBYTES);
+        UpdateRepositorySecretRequest updateRepositorySecretRequest = new UpdateRepositorySecretRequest(encrypted_value, repositoryPublicKey.getKey_id());
+        webClient.put()
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io/actions/secrets/TOKEN")
+                .headers(h -> h.setBearerAuth(accessToken))
+                .body(Mono.just(updateRepositorySecretRequest), UpdateRepositorySecretRequest.class)
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+    }
 
-        String encrypted_value = lazySodium.encrypt(accessToken, null, nPub, pk, AEAD.Method.CHACHA20_POLY1305);
-        String encodedValue = new String(base64Converter.encode(encrypted_value.getBytes().toString()));
-
-        System.out.println(encodedValue);
-
+    public RepositoryPublicKeyResponse getRepositoryPublicKey(String accessToken, String githubId) {
+        RepositoryPublicKeyResponse repositoryPublicKey = webClient.get()
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io/actions/secrets/public-key")
+                .headers(h -> h.setBearerAuth(accessToken))
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(RepositoryPublicKeyResponse.class)
+                .block();
+        return repositoryPublicKey;
     }
 
 }
