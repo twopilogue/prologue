@@ -62,7 +62,7 @@ public class BlogController {
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
     public ResponseEntity<? extends BaseResponseBody> selectBlogTemplate(@RequestParam @ApiParam(value = "accessToken", required = true) String accessToken,
-                                                                                 @RequestParam @ApiParam(value = "사용자 깃허브 아이디", required = true) String githubId) throws Exception {
+                                                                         @RequestParam @ApiParam(value = "사용자 깃허브 아이디", required = true) String githubId) throws Exception {
         blogService.selectTemplate(accessToken, githubId, 0);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "블로그 템플릿 생성을 완료했습니다."));
     }
@@ -74,9 +74,21 @@ public class BlogController {
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
     public ResponseEntity<? extends BaseResponseBody> createWorkflow(@RequestParam @ApiParam(value = "accessToken", required = true) String accessToken,
-                                                                         @RequestParam @ApiParam(value = "사용자 깃허브 아이디", required = true) String githubId) throws Exception {
+                                                                     @RequestParam @ApiParam(value = "사용자 깃허브 아이디", required = true) String githubId) throws Exception {
         blogService.createWorkflow(accessToken, githubId);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "git actions workflow 생성을 완료했습니다."));
+    }
+
+    @PutMapping("/deploy-branch")
+    @ApiOperation(value = "깃허브 페이지 배포 프렌치 수정", notes = "git actions workflow 를 생성 한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "깃허브 페이지 배포 프렌치 수정", response = BaseResponseBody.class),
+            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<? extends BaseResponseBody> updateDeployBranch(@RequestParam @ApiParam(value = "accessToken", required = true) String accessToken,
+                                                                         @RequestParam @ApiParam(value = "사용자 깃허브 아이디", required = true) String githubId) throws Exception {
+        blogService.updateDeployBranch(accessToken, githubId);
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "깃허브 페이지 배포 프렌치 수정을 완료했습니다."));
     }
 
 }
