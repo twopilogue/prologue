@@ -7,6 +7,7 @@ import CategoryLayout from "./CategoryLayout";
 import ConfirmButton from "./ConfirmButton";
 import CategoryCntSetting from "./CategoryCntSetting";
 import PageLayout from "./PageLayout";
+import LayoutSelector from "./layout/LayoutSelector";
 
 export const blogTabs = [
   {
@@ -46,7 +47,11 @@ export const blogTabs = [
 export const layoutTabs = [
   {
     label: "레이아웃 선택",
-    Component: <div>Hello, I am tab 1</div>,
+    Component: (
+      <div>
+        <LayoutSelector />
+      </div>
+    ),
   },
   {
     label: "세부 레이아웃 설정",
