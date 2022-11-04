@@ -6,6 +6,7 @@ import MyBlogInfoInput from "./MyBlogInfoInput";
 import CategoryLayout from "./CategoryLayout";
 import ConfirmButton from "./ConfirmButton";
 import CategoryCntSetting from "./CategoryCntSetting";
+import PageLayout from "./PageLayout";
 
 export const blogTabs = [
   {
@@ -27,6 +28,15 @@ export const blogTabs = [
       <div>
         <CategoryLayout />
         <CategoryCntSetting />
+        <ConfirmButton type="categorySetting" />
+      </div>
+    ),
+  },
+  {
+    label: "페이지 설정",
+    Component: (
+      <div>
+        <PageLayout />
         <ConfirmButton type="categorySetting" />
       </div>
     ),
