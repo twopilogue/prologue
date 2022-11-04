@@ -2,9 +2,9 @@ import React from "react";
 import { Box, Stack } from "@mui/material";
 import Text from "components/Text";
 import Modal from "components/Modal";
-import BlogReset from "features/blog/blogReset";
-import resetImg from "assets/blog/RepositoryReset.png";
-import manageImg from "assets/blog/ManageOnly.png";
+import BlogReset from "features/blog/BlogReset";
+import resetImg from "assets/blog/blogChoice/RepositoryReset.png";
+import manageImg from "assets/blog/blogChoice/ManageOnly.png";
 
 function BlogResetPage() {
   const [repositoryModalOpen, setRepositoryModalOpen] = React.useState(false);
@@ -33,7 +33,7 @@ function BlogResetPage() {
       title: "게시글만 관리",
       image: manageImg,
       text: [
-        "• 기존에 존재하는 github.io를 분석하여 게시글을 관리 할 수 있도록 지원합니다.",
+        "• 기존에 존재하는 github.io를 분석하여 게시글을 관리합니다.",
         "• 대시보드와 게시글 목록보기를 지원합니다.",
         "• 레이아웃 수정 및 게시글 작성 지원은 불가 합니다.",
       ],
@@ -42,13 +42,13 @@ function BlogResetPage() {
   ];
 
   return (
-    <Box sx={{ mx: 10 }}>
+    <Box>
       <Stack
         direction="column"
         justifyContent="center"
         alignItems="center"
         spacing={1}
-        sx={{ my: 7.5 }}
+        sx={{ py: "2vw" }}
       >
         <Text
           value="github.io가 이미 존재합니다"
@@ -65,7 +65,7 @@ function BlogResetPage() {
         direction="row"
         justifyContent="center"
         alignItems="center"
-        spacing={8}
+        spacing={6.5}
       >
         <BlogReset
           title={context[0].title}
@@ -73,7 +73,7 @@ function BlogResetPage() {
           text={context[0].text}
           onClick={context[0].onClick}
         />
-        <div style={{ borderLeft: "1px dashed #000000", height: "500px" }} />
+        <div style={{ borderLeft: "1px dashed #000000", height: "450px" }} />
         <BlogReset
           title={context[1].title}
           image={context[1].image}
