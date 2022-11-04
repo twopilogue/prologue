@@ -1,4 +1,11 @@
-import React, { useState, useRef, createRef } from "react";
+import React, {
+  useState,
+  useRef,
+  createRef,
+  useLayoutEffect,
+  useEffect,
+  useCallback,
+} from "react";
 import { Layout, Responsive, WidthProvider } from "react-grid-layout";
 import GridLayout from "react-grid-layout";
 import styles from "./Setting.module.css";
@@ -18,7 +25,6 @@ import {
   CategoryConfig,
 } from "slices/settingSlice";
 import { useDispatch } from "react-redux";
-import ButtonStyled from "components/Button";
 
 const CategoryLayout = () => {
   const categoryList = useAppSelector(selectCategoryList);
@@ -32,7 +38,7 @@ const CategoryLayout = () => {
   const [tmpCategoryCnt, setTmpCategoryCnt] = useState(categoryCnt);
 
   const dispatch = useDispatch();
-  const gridAddRef = createRef();
+  // const gridAddRef = useRef<HTMLDivElement>();
 
   const addBox = () => {
     const categoryName = "새 카테고리 " + tmpCategoryCnt;
@@ -61,6 +67,31 @@ const CategoryLayout = () => {
     console.log("레이아웃", tmpLayoutList);
   };
 
+  const useGettingWidth = () => {
+    const [gridWidth, setGridWidth] = useState(null);
+
+    // ✅  useRef와 useEffect를 지우고 callback ref를 새로 작성
+    const gridAddRef = useCallback((node: HTMLElement) => {
+      if (node !== null) {
+        // setGridWidth(node);
+        console.log(node.offsetWidth);
+        setGridWidth(node.offsetWidth);
+      }
+    }, []);
+
+    return [gridWidth, gridAddRef];
+  };
+
+  const [gridWidth, gridAddRef] = useGettingWidth();
+
+  // useCallback(() => {
+  //   setGridWidth(gridAddRef.current);
+  //   if (gridAddRef.current) {
+  //     setGridWidth(gridAddRef.current.offsetWidth);
+  //     console.log(gridWidth);
+  //   }
+  // }, []);
+
   return (
     <div>
       <div
@@ -84,7 +115,7 @@ const CategoryLayout = () => {
             rowHeight={45}
             margin={[5, 5]}
             cols={1}
-            width={883}
+            width={gridWidth + 10}
           >
             {tmpCategoryList.map((item: any, i: number) => {
               return (
@@ -102,7 +133,7 @@ const CategoryLayout = () => {
             <Text value="생성된 카테고리가 없습니다." />
           </div>
         )}
-        <div className={styles.gridAddButton} onClick={addBox}>
+        <div ref={gridAddRef} className={styles.gridAddButton} onClick={addBox}>
           <AddCircleOutlineIcon fontSize="small" sx={{ p: 1, color: "gray" }} />
           <Text value="카테고리 추가하기" type="caption" />
         </div>
