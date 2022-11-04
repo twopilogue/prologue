@@ -1,14 +1,5 @@
 import React from "react";
-import {
-  Box,
-  Stack,
-  Grid,
-  FormControl,
-  RadioGroup,
-  useRadioGroup,
-  FormControlLabel,
-  FormControlLabelProps,
-} from "@mui/material";
+import { Box, Stack, Grid } from "@mui/material";
 import foundation from "assets/blog/gatsbyTheme/foundation.png";
 import gatsbyAdvancedBlogSystem from "assets/blog/gatsbyTheme/gatsbyAdvancedBlogSystem.png";
 import gatsbyNetlifycmsStarterTemplate from "assets/blog/gatsbyTheme/gatsbyNetlifycmsStarterTemplate.png";
@@ -20,20 +11,7 @@ import serialProgrammer from "assets/blog/gatsbyTheme/serialProgrammer.png";
 import styles from "features/blog/Blog.module.css";
 import Text from "components/Text";
 
-interface StyledFormControlLabelProps extends FormControlLabelProps {
-  checked: boolean;
-}
-
-function MyFormControlLabel(props: StyledFormControlLabelProps) {
-  const radioGroup = useRadioGroup();
-  let checked = false;
-  if (radioGroup) {
-    checked = radioGroup.value === props.value;
-  }
-  return <FormControlLabel checked={checked} {...props} />;
-}
-
-function GatsbyLayoutCard() {
+function GatsbyLayoutCard(props: { setChoiceTheme: (arg0: string) => void }) {
   const layouts = [
     {
       idx: 1,
@@ -92,48 +70,54 @@ function GatsbyLayoutCard() {
       color: "#FFFDFD",
     },
   ];
-  const [radioValue, setRadioValue] = React.useState("1");
+  const [radioValue, setRadioValue] = React.useState(
+    "gatsby-starter-minimal-blog",
+  );
 
-  const radioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRadioValue((event.target as HTMLInputElement).value);
-    console.log(radioValue);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRadioValue(e.target.value);
+    props.setChoiceTheme(e.target.value);
   };
 
+  const controlProps = (item: string) => ({
+    type: "radio",
+    value: item,
+    className: styles.inputValue,
+    checked: radioValue === item,
+    onChange: handleChange,
+  });
+
   return (
-    <FormControl>
-      <RadioGroup value={radioValue} onChange={radioChange}>
-        <Grid
-          container
-          spacing={{ xs: 2, md: 2.5 }}
-          columns={{ xs: 4, sm: 8, md: 12 }}
-        >
-          {layouts.map((layout) => (
-            <Grid item xs={2} sm={4} md={3} key={layout.idx}>
-              <MyFormControlLabel
-                value={layout.idx}
-                checked={false}
-                label={""}
-                control={
-                  <Box className={styles.GatsbyCardBox}>
-                    <img src={layout.img} alt={layout.title} />
-                    <Stack
-                      spacing={0.2}
-                      sx={{
-                        backgroundColor: layout.color,
-                      }}
-                      className={styles.GatsbyCardText}
-                    >
-                      <Text value={layout.title} type="caption" bold />
-                      <Text value={layout.production} type="caption" />
-                    </Stack>
-                  </Box>
-                }
-              />
-            </Grid>
-          ))}
+    <Grid
+      container
+      spacing={{ xs: 2, md: 2.5 }}
+      columns={{ xs: 4, sm: 8, md: 12 }}
+      sx={{ px: 15 }}
+    >
+      {layouts.map((layout) => (
+        <Grid item xs={2} sm={4} md={3} key={layout.idx}>
+          <label>
+            <input
+              {...controlProps(layout.title)}
+              style={{ visibility: "hidden" }}
+            />
+            <Box className={styles.GatsbyCardBox}>
+              <img src={layout.img} alt={layout.title} />
+              <Stack
+                spacing={0.2}
+                sx={{
+                  backgroundColor: layout.color,
+                }}
+                className={styles.GatsbyCardText}
+              >
+                <Text value={layout.title} type="caption" bold />
+                <Text value={layout.production} type="caption" />
+              </Stack>
+            </Box>
+          </label>
         </Grid>
-      </RadioGroup>
-    </FormControl>
+      ))}
+    </Grid>
   );
 }
 
