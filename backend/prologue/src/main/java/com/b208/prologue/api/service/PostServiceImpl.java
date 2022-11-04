@@ -25,14 +25,14 @@ public class PostServiceImpl implements PostService {
     private final Base64Converter base64Converter;
     private final CommonService commonService;
 
-
     @Override
-    public Map<String, List<String>> getList(String encodedAccessToken, String githubId) throws Exception {
+    public Map<String, Object> getList(String encodedAccessToken, String githubId, int page) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
-        Map<String, List<String>> result = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
         List<String> content = new ArrayList<>();
         List<String> directory = new ArrayList<>();
+        List<String> count = new ArrayList<>();
 
         String url = "/repos/" + githubId + "/" + githubId + ".github.io" + "/contents/";
 
@@ -43,13 +43,19 @@ public class PostServiceImpl implements PostService {
                 .retrieve()
                 .bodyToMono(PostGetListResponse[].class).block();
 
-        for (int i = 0; i < list.length; i++) {
+        for (int i = 6 * page; i < list.length; i++) {
+
+            if(i >= 6 * (page+1)){
+                break;
+            }
             content.add(setItem(url, accessToken, list[i].getPath()));
             directory.add(list[i].getName());
         }
 
+        int cnt = list.length;
         result.put("content", content);
         result.put("directory", directory);
+        result.put("postCount", cnt);
         return result;
     }
 
