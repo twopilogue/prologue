@@ -7,7 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.StringTokenizer;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -17,9 +17,10 @@ public class SettingServiceImpl implements SettingService {
     private final Base64Converter base64Converter;
 
     @Override
-    public Object getBlogSetting(String encodedAccessToken, String githubId) throws Exception {
+    public List<Object> getBlogSetting(String encodedAccessToken, String githubId) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
+        List<Object> result = new ArrayList<>();
         String url = "/repos/" + githubId + "/" + githubId + ".github.io" + "/contents/";
 
         GetSettingResponse item = webClient.get()
@@ -41,6 +42,54 @@ public class SettingServiceImpl implements SettingService {
         String Line = "";
         Line = base64Converter.decode(sb.toString());
 
-        return Line;
+        String cut = ",\n" + "    },\n" + "  },\n" + "  plugins: \\[";
+        String[] stringVal = Line.split(cut);
+
+        cut = "siteMetadata: \\{\n" + "    title: `";
+        stringVal = stringVal[0].split(cut);
+
+        cut = "`,\n" + "    author: \\{\n" + "      name: `";
+        stringVal = stringVal[1].split(cut);
+        String blogName = stringVal[0];
+        result.add(blogName);
+
+        cut = "`,\n" + "      summary: `";
+        stringVal = stringVal[1].split(cut);
+        String nickName = stringVal[0];
+        result.add(nickName);
+
+        cut = "`,\n" + "      profileImg: \"";
+        stringVal = stringVal[1].split(cut);
+        String summary = stringVal[0];
+        result.add(summary);
+
+        cut = "\",\n" + "    },\n" + "    description: `";
+        stringVal = stringVal[1].split(cut);
+        String profileImgPath = stringVal[0];
+        result.add(profileImgPath);
+
+        cut = "`,\n" + "    siteUrl:";
+        stringVal = stringVal[1].split(cut);
+        String description = stringVal[0];
+        result.add(description);
+
+        Map<String, String> social = new HashMap<>();
+
+        if(stringVal[1].contains("Github") || stringVal[1].contains("Instagram") || stringVal[1].contains("twitter")){
+            cut = "social: \\{\n      ";
+            stringVal = stringVal[1].split(cut);
+            stringVal = stringVal[1].split(",\n      ");
+
+            if(stringVal.length > 0){
+                for (int i = 0; i < stringVal.length; i++){
+                    String[] temp = stringVal[i].split(": ");
+
+                    social.put(temp[0], temp[1].replace("`",""));
+                }
+            }
+        }
+
+        result.add(social);
+        return result;
     }
 }
