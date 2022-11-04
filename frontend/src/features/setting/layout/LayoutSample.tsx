@@ -64,7 +64,7 @@ const LayoutSample = () => {
 
   return (
     <div>
-      <div className={styles.textPadding} style={{}}>
+      <div className={styles.textPadding} style={{ paddingBottom: "10px" }}>
         <Text value="레이아웃 배치" type="groupTitle" bold />
       </div>
       <div style={{ paddingLeft: "20px" }}>
