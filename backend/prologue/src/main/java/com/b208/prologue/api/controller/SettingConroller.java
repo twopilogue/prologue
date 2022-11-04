@@ -30,7 +30,7 @@ public class SettingConroller {
         try {
             Object test = settingService.getBlogSetting(accessToken, githubId);
 
-            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "test 조회에 성공하였습니다."));
+            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "블로그 설정 조회에 성공하였습니다."));
         }catch (Exception e){
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "블로그 설정 조회에 실패하였습니다."));
         }
