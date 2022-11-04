@@ -7,7 +7,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.io.UnsupportedEncodingException;
 import java.util.StringTokenizer;
 
 @Service
@@ -40,11 +39,7 @@ public class SettingServiceImpl implements SettingService {
         }
 
         String Line = "";
-        try {
-            Line = base64Converter.decode(sb.toString());
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        Line = base64Converter.decode(sb.toString());
 
         return Line;
     }
