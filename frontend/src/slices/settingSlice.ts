@@ -2,11 +2,11 @@ import { createSlice } from "@reduxjs/toolkit";
 import { rootState } from "../app/store";
 import { Layout } from "react-grid-layout";
 
-export interface CategoryConfig {
+export interface KeyConfig {
   key: string;
 }
 
-export interface PageConfig {
+export interface ComponentConfig {
   key: string;
 }
 
@@ -19,12 +19,15 @@ export interface ComponentCheckConfig {
 
 interface LayoutConfig {
   categoryLayoutList: Layout[];
-  categoryList: CategoryConfig[];
+  categoryList: KeyConfig[];
   categoryCnt: number;
 
   pageLayoutList: Layout[];
-  pageList: PageConfig[];
+  pageList: KeyConfig[];
   pageCnt: number;
+
+  componentLayoutList: Layout[];
+  componentList: ComponentConfig[];
 
   checkList: ComponentCheckConfig;
 }
@@ -37,6 +40,14 @@ const initialState: LayoutConfig = {
   pageLayoutList: [],
   pageList: [],
   pageCnt: 1,
+
+  componentLayoutList: [
+    { i: "logo", x: 0, y: 0, w: 1, h: 1, static: true, isResizable: false },
+    { i: "profile", x: 1, y: 0, w: 1, h: 2, isResizable: false },
+    { i: "category", x: 2, y: 0, w: 1, h: 2, isResizable: false },
+    { i: "navi", x: 2, y: 0, w: 1, h: 2, isResizable: false },
+  ],
+  componentList: [{ key: "logo" }, { key: "profile" }, { key: "category" }, { key: "navi" }],
 
   checkList: {
     logoCheck: true,
@@ -69,10 +80,15 @@ const settingSlice = createSlice({
     setPageCnt: (state, { payload }) => {
       state.pageCnt = payload;
     },
-    setCheckList: (
-      state,
-      { payload: { logoCheck, categoryCheck, profileCheck, naviCheck } },
-    ) => {
+
+    setComponentLayoutList: (state, { payload }) => {
+      state.componentLayoutList = payload;
+    },
+    setComponentList: (state, { payload }) => {
+      state.componentList = payload;
+    },
+
+    setCheckList: (state, { payload: { logoCheck, categoryCheck, profileCheck, naviCheck } }) => {
       state.checkList = { logoCheck, categoryCheck, profileCheck, naviCheck };
     },
   },
@@ -83,20 +99,21 @@ export const {
   setCategoryCnt,
   setPageList,
   setPageCnt,
+  setComponentList,
+  setComponentLayoutList,
   setCheckList,
 } = settingSlice.actions;
 
-export const selectCategoryLayoutList = (state: rootState) =>
-  state.setting.categoryLayoutList;
-export const selectCategoryCnt = (state: rootState) =>
-  state.setting.categoryCnt;
-export const selectCategoryList = (state: rootState) =>
-  state.setting.categoryList;
+export const selectCategoryLayoutList = (state: rootState) => state.setting.categoryLayoutList;
+export const selectCategoryCnt = (state: rootState) => state.setting.categoryCnt;
+export const selectCategoryList = (state: rootState) => state.setting.categoryList;
 
-export const selectPageLayoutList = (state: rootState) =>
-  state.setting.pageLayoutList;
+export const selectPageLayoutList = (state: rootState) => state.setting.pageLayoutList;
 export const selectPageList = (state: rootState) => state.setting.pageList;
 export const selectPageCnt = (state: rootState) => state.setting.pageCnt;
+
+export const selectComponentLayoutList = (state: rootState) => state.setting.componentLayoutList;
+export const SelectComponentList = (state: rootState) => state.setting.componentList;
 
 export const selectCheckList = (state: rootState) => state.setting.checkList;
 
