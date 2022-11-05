@@ -4,7 +4,9 @@ import com.b208.prologue.api.request.github.CreateBlobRequest;
 import com.b208.prologue.api.request.github.CreateCommitRequest;
 import com.b208.prologue.api.request.github.CreateTreeRequest;
 import com.b208.prologue.api.request.github.UpdateReferencesRequest;
+import com.b208.prologue.api.response.github.GetRepoContentResponse;
 import com.b208.prologue.api.response.github.GetShaResponse;
+import com.b208.prologue.common.Base64Converter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ import java.util.List;
 public class CommonServiceImpl implements CommonService {
 
     private final WebClient webClient;
+    private final Base64Converter base64Converter;
 
     @Override
     public void multiFileCommit(String accessToken, String githubId, List treeRequestList, String commitMsg){
@@ -79,5 +82,29 @@ public class CommonServiceImpl implements CommonService {
         return getShaResponse.getSha();
     }
 
+    @Override
+    public GetRepoContentResponse getDetailContent(String accessToken, String githubId, String path) throws Exception {
+        GetRepoContentResponse postResponse = webClient.get()
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/" + path)
+                .headers(h -> h.setBearerAuth(accessToken))
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(GetRepoContentResponse.class).block();
+        String tmp = postResponse.getContent().replace("\n", "");
+        postResponse.setContent(base64Converter.decode(tmp));
+        return postResponse;
+    }
+
+    @Override
+    public GetRepoContentResponse[] getContentList(String accessToken, String githubId, String path) throws Exception {
+        GetRepoContentResponse[] postResponse = webClient.get()
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/" + path)
+                .headers(h -> h.setBearerAuth(accessToken))
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(GetRepoContentResponse[].class).block();
+
+        return postResponse;
+    }
 
 }
