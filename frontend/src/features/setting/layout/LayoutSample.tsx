@@ -5,8 +5,11 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
   ComponentCheckConfig,
+  ComponentConfig,
   selectCategoryLayoutList,
   selectCheckList,
+  // selectCheckList,
+  SelectComponentList,
   setCategoryLayoutList,
 } from "slices/settingSlice";
 import ComponentSelector from "../layout/ComponentSelector";
@@ -19,21 +22,9 @@ const LayoutSample = () => {
   const dispatch = useDispatch();
   const navigator = useNavigate();
 
-  const savedLayoutList: Layout[] = useAppSelector(selectCategoryLayoutList);
-  const [checkList, setCheckList] = useState<ComponentCheckConfig>({
-    logoCheck: true,
-    profileCheck: true,
-    categoryCheck: true,
-    naviCheck: true,
-  });
-
-  const getLayout = () => {
-    const sessionLayout = sessionStorage.getItem("grid-layout");
-    console.log(JSON.parse(sessionLayout));
-    return sessionLayout
-      ? { lg: JSON.parse(sessionLayout) }
-      : { lg: savedLayoutList };
-  };
+  const [componentLayoutList, SetComponentLayoutList] = useState<Layout[]>(useAppSelector(selectCategoryLayoutList));
+  const [componentList, setComponentList] = useState<ComponentConfig[]>(useAppSelector(SelectComponentList));
+  const [checkList, setCheckList] = useState<ComponentCheckConfig>(useAppSelector(selectCheckList));
 
   const saveLayouts = () => {
     const tmpLayoutList: Layout[] = [];
@@ -68,10 +59,7 @@ const LayoutSample = () => {
         <Text value="레이아웃 배치" type="groupTitle" bold />
       </div>
       <div style={{ paddingLeft: "20px" }}>
-        <Text
-          value="드래그 앤 드롭으로 레이아웃의 위치를 자유롭게 설정하세요."
-          type="caption"
-        />
+        <Text value="드래그 앤 드롭으로 레이아웃의 위치를 자유롭게 설정하세요." type="caption" />
       </div>
       <div className={styles.layoutSelectContainer}>
         <ComponentSelector checkList={checkList} setCheckList={setCheckList} />
@@ -83,54 +71,26 @@ const LayoutSample = () => {
           }}
         >
           <ResponsiveGridLayout
-            layouts={getLayout()}
+            layouts={{ lg: componentLayoutList }}
             breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
             cols={{ lg: 5, md: 4, sm: 3, xs: 2, xxs: 1 }}
             rowHeight={30}
             width={1000}
             onLayoutChange={handleLayoutChange}
           >
-            <div
-              className={
-                checkList.logoCheck
-                  ? `${styles.display_flex}`
-                  : `${styles.display_none}`
-              }
-              key="logo"
-            >
-              블로그 로고
-            </div>
-            <div
-              className={
-                checkList.profileCheck
-                  ? `${styles.display_flex}`
-                  : `${styles.display_none}`
-              }
-              key="profile"
-            >
-              프로필
-            </div>
-            <div
-              className={
-                checkList.categoryCheck
-                  ? `${styles.display_flex}`
-                  : `${styles.display_none}`
-              }
-              key="category"
-            >
-              카테고리
-            </div>
-
-            <div
-              className={
-                checkList.naviCheck
-                  ? `${styles.display_flex}`
-                  : `${styles.display_none}`
-              }
-              key="page"
-            >
-              페이지
-            </div>
+            {componentList.map((item: any, i: number) => {
+              return (
+                <div key={i}>
+                  {checkList.{ㅑㅅㄷ} ? (
+                    <div className={item.isChecked ? `styles.${item.key}` : styles.display_none} key={item.key}>
+                      {item.key}
+                    </div>
+                  ) : (
+                    <></>
+                  )}
+                </div>
+              );
+            })}
           </ResponsiveGridLayout>
         </div>
       </div>

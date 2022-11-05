@@ -9,6 +9,8 @@ import CategoryCntSetting from "./CategoryCntSetting";
 import PageLayout from "./PageLayout";
 import LayoutSelector from "./layout/LayoutSelector";
 import LayoutSample from "./layout/LayoutSample";
+import DetailSelector from "./DetailSelector";
+import DetailSetting from "./DetailSetting";
 
 export const blogTabs = [
   {
@@ -58,6 +60,10 @@ export const layoutTabs = [
   },
   {
     label: "세부 레이아웃 설정",
-    Component: <div>Hello, I am tab 2</div>,
+    Component: (
+      <div>
+        <DetailSetting />
+      </div>
+    ),
   },
 ];
