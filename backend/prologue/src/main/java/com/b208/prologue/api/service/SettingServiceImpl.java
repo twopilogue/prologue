@@ -57,8 +57,7 @@ public class SettingServiceImpl implements SettingService {
         imagePath = imagePath.replace(" ","");
         imagePath = imagePath.replace("\n","");
 
-        System.out.println(imagePath);
-        System.out.println("zz");
+
         result.add(getProfileImage(accessToken, url, imagePath));
 
         return result;
@@ -66,7 +65,6 @@ public class SettingServiceImpl implements SettingService {
 
     public String getProfileImage(String accessToken, String url, String path){
 
-        System.out.println(url+path);
         GetRepoContentResponse item = webClient.get()
                 .uri(url + path)
                 .headers(h -> h.setBearerAuth(accessToken))
@@ -74,7 +72,6 @@ public class SettingServiceImpl implements SettingService {
                 .retrieve()
                 .bodyToMono(GetRepoContentResponse.class).block();
 
-        System.out.println(item.getUrl());
         return item.getUrl();
     }
 }
