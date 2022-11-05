@@ -1,0 +1,21 @@
+.container {
+  border-radius: 30px;
+  width: 100%;
+  height: 100%;
+  border: 1px solid black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.calendar {
+  background-color: #393D96;
+  color: white;
+}
+
+.avatarImg {
+  width: 150px;
+  height: 150px;
+  margin-bottom: 5px;
+}
