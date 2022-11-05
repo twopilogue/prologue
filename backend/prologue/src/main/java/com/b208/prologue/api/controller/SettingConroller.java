@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @CrossOrigin("*")
 @RequestMapping("/api/setting")
@@ -31,11 +30,9 @@ public class SettingConroller {
     public ResponseEntity<? extends BaseResponseBody> getBlogSetting(@RequestParam String accessToken, @RequestParam String githubId) {
 
         try {
-            List<Object> result = settingService.getBlogSetting(accessToken, githubId);
+           List<String> result = settingService.getBlogSetting(accessToken, githubId);
 
-            return ResponseEntity.status(200).body(GetBlogSettingResponse.of(
-                    (String)result.get(1), (String)result.get(3), (String)result.get(2),
-                    (String)result.get(0), (String)result.get(4), (Map<String, String>)result.get(5), 200, "블로그 설정 조회에 성공하였습니다."));
+            return ResponseEntity.status(200).body(GetBlogSettingResponse.of(result.get(0), result.get(1), 200, "블로그 설정 조회에 성공하였습니다."));
         }catch (Exception e){
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "블로그 설정 조회에 실패하였습니다."));
         }
