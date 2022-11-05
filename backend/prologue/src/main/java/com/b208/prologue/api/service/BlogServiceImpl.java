@@ -42,6 +42,23 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
+    public void updateDeployBranch(String encodedAccessToken, String githubId) throws Exception{
+
+        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
+
+        SourceRequest sourceRequest = new SourceRequest("deploy", "/");
+        UpdateDeployBranchRequest updateDeployBranchRequest = new UpdateDeployBranchRequest(sourceRequest);
+        webClient.put()
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io/pages")
+                .headers(h -> h.setBearerAuth(accessToken))
+                .body(Mono.just(updateDeployBranchRequest), UpdateDeployBranchRequest.class)
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+    }
+
+    @Override
     public void deleteRepository(String encodedAccessToken, String githubId) throws Exception {
 
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);

@@ -10,9 +10,15 @@ const PostCategoryList = () => {
       </div>
 
       <div className={styles.myCategoryList}>
-        스터디 <hr />
-        개발 <hr />
-        기타 <hr />
+        <div className={styles.categoryName}>
+          <Text value="스터디" type="text" color="gray" /> <hr />
+        </div>
+        <div className={styles.categoryName}>
+          <Text value="개발" type="text" color="gray" /> <hr />
+        </div>
+        <div className={styles.categoryName}>
+          <Text value="기타" type="text" color="gray" /> <hr />
+        </div>
       </div>
     </div>
   );
