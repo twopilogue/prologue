@@ -108,4 +108,25 @@ public class SettingServiceImpl implements SettingService {
                 .bodyToMono(String.class)
                 .block();
     }
+
+    @Override
+    public String[] getBlogPages(String encodedAccessToken, String githubId) throws Exception {
+        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
+
+        String content = commonService.getDetailContent(accessToken, githubId, "customizing-setting.json").getContent();
+        int index = content.indexOf('=');
+        content = content.substring(index + 1);
+
+        JSONParser jsonParser = new JSONParser();
+        JSONObject jsonObj = (JSONObject) jsonParser.parse(content);
+        JSONArray jsonArray = (JSONArray) jsonObj.get("pages");
+
+        String[] pages = new String[jsonArray.size()];
+
+        for (int i = 0; i < pages.length; i++) {
+            pages[i] = jsonArray.get(i).toString();
+        }
+
+        return pages;
+    }
 }
