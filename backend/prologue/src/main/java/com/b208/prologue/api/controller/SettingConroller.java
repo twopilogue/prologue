@@ -1,6 +1,7 @@
 package com.b208.prologue.api.controller;
 
 import com.b208.prologue.api.response.BaseResponseBody;
+import com.b208.prologue.api.response.BlogCategoryResponse;
 import com.b208.prologue.api.response.GetBlogSettingResponse;
 import com.b208.prologue.api.service.SettingService;
 import io.swagger.annotations.ApiOperation;
@@ -33,6 +34,23 @@ public class SettingConroller {
             return ResponseEntity.status(200).body(BaseResponseBody.of(200, "블로그 설정 조회에 성공하였습니다."));
         }catch (Exception e){
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "블로그 설정 조회에 실패하였습니다."));
+        }
+    }
+
+    @GetMapping("/category")
+    @ApiOperation(value = "블로그 카테고리 조회", notes = "블로그 카테고리 설정을 위해 카테고리 목록을 조회한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "블로그 카테고리 조회 성공", response = BlogCategoryResponse.class),
+            @ApiResponse(code = 400, message = "블로그 카테고리 조회 실패", response = BaseResponseBody.class),
+            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<? extends BaseResponseBody> getBlogCategory(@RequestParam String accessToken, @RequestParam String githubId) {
+
+        try {
+            String[] category = settingService.getBlogCategory(accessToken, githubId);
+            return ResponseEntity.status(200).body(BlogCategoryResponse.of(category,200, "블로그 카테고리 조회에 성공하였습니다."));
+        }catch (Exception e){
+            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "블로그 카테고리 조회에 실패하였습니다."));
         }
     }
 }
