@@ -23,10 +23,10 @@ public class WebClientConfig {
 
         HttpClient httpClient = HttpClient.create()
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000)
-                .responseTimeout(Duration.ofMillis(5000))
+                .responseTimeout(Duration.ofMillis(30000))
                 .doOnConnected(conn ->
-                        conn.addHandlerLast(new ReadTimeoutHandler(5000, TimeUnit.MILLISECONDS))
-                                .addHandlerLast(new WriteTimeoutHandler(5000, TimeUnit.MILLISECONDS)));
+                        conn.addHandlerLast(new ReadTimeoutHandler(15000, TimeUnit.MILLISECONDS))
+                                .addHandlerLast(new WriteTimeoutHandler(15000, TimeUnit.MILLISECONDS)));
 
         WebClient client = WebClient.builder()
                 .baseUrl("https://api.github.com")
