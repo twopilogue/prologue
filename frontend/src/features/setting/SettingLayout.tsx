@@ -3,13 +3,15 @@ import styles from "./Setting.module.css";
 
 import { Responsive, WidthProvider, Layout } from "react-grid-layout";
 import { useAppSelector } from "app/hooks";
-import { selectCategoryLayoutList } from "slices/settingSlice";
+import { KeyConfig, selectComponentLayoutList, SelectComponentList } from "slices/settingSlice";
+import Text from "components/Text";
 
-const SettingLayout = () => {
+const SettingLayout = (props: any) => {
   const ResponsiveGridLayout = WidthProvider(Responsive);
-  const savedLayoutList: Layout[] = useAppSelector(selectCategoryLayoutList);
-  const [layoutList, setLayoutList] = useState<Layout[]>(savedLayoutList);
 
+  const [layoutList, setLayoutList] = useState<Layout[]>(useAppSelector(selectComponentLayoutList));
+  const [categoryList, setCategoryList] = useState<KeyConfig[]>(useAppSelector(SelectComponentList));
+  console.log(props.titleColor);
   useEffect(() => {
     const tmpLayoutList: Layout[] = [];
     const layoutLength = layoutList.length;
@@ -20,7 +22,6 @@ const SettingLayout = () => {
         static: true,
       });
     }
-    console.log(tmpLayoutList);
     setLayoutList(tmpLayoutList);
   }, []);
 
@@ -32,15 +33,15 @@ const SettingLayout = () => {
       rowHeight={30}
       width={1000}
     >
-      <div className={styles.box1} key="a">
-        Category
-      </div>
-      <div className={styles.box2} key="b">
-        Main
-      </div>
-      <div className={styles.box3} key="c">
-        Contents
-      </div>
+      {categoryList.map((item: any, i: number) => {
+        return (
+          <div key={i}>
+            <div className={styles.gridCategoryItem} key={item.key}>
+              <Text value={item.key} type="caption" />
+            </div>
+          </div>
+        );
+      })}
     </ResponsiveGridLayout>
   );
 };
