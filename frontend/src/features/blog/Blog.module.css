@@ -1,7 +1,7 @@
 .Box {
     display: flex;
-    width: 700px;
-    height: 500px;
+    width: 650px;
+    height: 450px;
     flex-direction: column;
     align-items: center;
     background: #FFFFFF;
@@ -24,29 +24,33 @@
     align-content: center;
     align-items: center;
     justify-content: center;
-    height: 45%;
+    height: 34%;
 }
 
 .BlogResetBox {
-    width: 43%;
+    min-width: 485px;
     max-width: 600px;
     border: 0.5px solid #464646;
     box-shadow: 0px 0px 8px 1px rgb(0 0 0 / 20%);
     border-radius: 20px;
-    padding: 40px 20px;
+    padding: 20px 10px;
+}
+
+.BlogResetBoxTitle {
+    margin: 10px 0px;
 }
 
 .BlogResetImgDiv {
     display: flex;
     justify-content: center;
     width: 100%;
+    max-height: 200px;
     overflow: hidden;
-    padding: 20px 0px;
 }
 
 .BlogResetImgDiv>img {
     width: 100%;
-    max-height: 250px;
+    max-height: 200px;
     height: auto;
     object-fit: contain;
 }
@@ -54,4 +58,35 @@
 .line {
     border-left: 1px dashed #000000;
     height: 500px;
+}
+
+.inputValue:checked+.GatsbyCardBox {
+    border: 3px solid #766aff;
+    border-radius: 7px;
+}
+
+.GatsbyCardBox {
+    filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.25));
+    border: 3px solid transparent;
+    border-radius: 7px;
+}
+
+.GatsbyCardBox:hover {
+    border: 3px solid #766aff;
+    border-radius: 7px;
+}
+
+.GatsbyCardBox>img {
+    width: 100%;
+    height: auto;
+    max-height: 24vh;
+    object-fit: cover;
+    object-position: left top;
+    filter: blur(0.5px);
+    border-radius: 7px 7px 0px 0px;
+}
+
+.GatsbyCardText {
+    border-radius: 0px 0px 7px 7px;
+    padding: 4px 8px;
 }
