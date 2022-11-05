@@ -10,6 +10,13 @@ export interface PageConfig {
   key: string;
 }
 
+export interface ComponentCheckConfig {
+  logoCheck: boolean;
+  profileCheck: boolean;
+  categoryCheck: boolean;
+  naviCheck: boolean;
+}
+
 interface LayoutConfig {
   categoryLayoutList: Layout[];
   categoryList: CategoryConfig[];
@@ -18,6 +25,8 @@ interface LayoutConfig {
   pageLayoutList: Layout[];
   pageList: PageConfig[];
   pageCnt: number;
+
+  checkList: ComponentCheckConfig;
 }
 
 const initialState: LayoutConfig = {
@@ -28,6 +37,13 @@ const initialState: LayoutConfig = {
   pageLayoutList: [],
   pageList: [],
   pageCnt: 1,
+
+  checkList: {
+    logoCheck: true,
+    profileCheck: true,
+    categoryCheck: true,
+    naviCheck: true,
+  },
 };
 
 const settingSlice = createSlice({
@@ -53,6 +69,12 @@ const settingSlice = createSlice({
     setPageCnt: (state, { payload }) => {
       state.pageCnt = payload;
     },
+    setCheckList: (
+      state,
+      { payload: { logoCheck, categoryCheck, profileCheck, naviCheck } },
+    ) => {
+      state.checkList = { logoCheck, categoryCheck, profileCheck, naviCheck };
+    },
   },
 });
 export const {
@@ -61,6 +83,7 @@ export const {
   setCategoryCnt,
   setPageList,
   setPageCnt,
+  setCheckList,
 } = settingSlice.actions;
 
 export const selectCategoryLayoutList = (state: rootState) =>
@@ -74,6 +97,8 @@ export const selectPageLayoutList = (state: rootState) =>
   state.setting.pageLayoutList;
 export const selectPageList = (state: rootState) => state.setting.pageList;
 export const selectPageCnt = (state: rootState) => state.setting.pageCnt;
+
+export const selectCheckList = (state: rootState) => state.setting.checkList;
 
 export default settingSlice.reducer;
 

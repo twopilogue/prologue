@@ -8,4 +8,5 @@ public interface AuthService {
     String getUri();
     Mono<AuthAccessTokenResponse> getAccessToken(String code);
     Mono<AuthUserInfoResponse> getUserInfo(String accessToken);
+    void createRepositorySecrets(String encodedAccessToken, String githubId) throws Exception;
 }

@@ -24,4 +24,6 @@ public class GetRepoContentResponse {
     @JsonProperty("download_url")
     String url;
 
+    @JsonProperty("sha")
+    String sha;
 }
