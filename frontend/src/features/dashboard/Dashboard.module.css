@@ -22,6 +22,7 @@
   justify-content: space-between;
 }
 
+/* 달력 */
 .calendar {
   background-color: #393D96;
   width: 100%;
@@ -41,6 +42,7 @@
   margin: 2px 0px;
 }
 
+/* 블로그 바로가기 */
 .preview {
   position: relative;
   width: 100%;
@@ -74,3 +76,60 @@ iframe {
 .previewInfo>div {
   padding: 5px 30px;
 }
+
+/* 최신글 보기 */
+.list {
+  width: 100%;
+  background-color: white;
+}
+
+.list>div {
+  width: 100%;
+}
+
+.list>div>div {
+  padding: 0px 35px;
+}
+
+.listAll {
+  margin-bottom: 30px;
+}
+
+.listOne {
+  margin-top: 20px;
+  border-bottom: 1px solid #E3E3E3;
+}
+
+/* 블로그 정보 */
+.info {
+  background-color: #D6E5F3;
+}
+
+.info>div {
+  width: 90%;
+  height: 90%;
+}
+
+.infoGroup {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 78px 12px;
+}
+
+.infoTitle {
+  white-space: pre-line;
+  background: #F1F8FF;
+  border-radius: 20px 20px 0px 0px;
+  padding: 10px;
+}
+
+.infoValue {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #FFFFFF;
+  height: 135%;
+  border-radius: 0px 0px 20px 20px;
+}
+
+/* 페이지 이동 */
