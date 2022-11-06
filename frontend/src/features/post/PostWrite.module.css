@@ -1,15 +1,17 @@
 /* PostWrite */
 .postWrite {
   position: relative;
-  border: 2px solid green;
+}
+
+.textBox {
+  transform: translate(-7%);
 }
 
 .postWriteButtons {
   position: absolute;
-  top: 30%;
-  left: 35%;
-  transform: translate(-35%, -30%);
-  border: 2px solid red;
+  top: -30%;
+  left: 14%;
+  transform: translate(-14%, 30%);
 }
 
 /* PostWriteTitle */
