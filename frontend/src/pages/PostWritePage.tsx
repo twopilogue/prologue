@@ -4,10 +4,10 @@ import Text from "components/Text";
 import ButtonStyled from "components/Button";
 import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
 import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
-import PostWriteTitle from "./PostWriteTitle";
-import PostWriteContents from "./PostWriteContents";
+import PostWriteTitle from "../features/post/PostWriteTitle";
+import PostWriteContents from "../features/post/PostWriteContents";
 
-const PostWrite = () => {
+const PostWritePage = () => {
   return (
     <div className={styles.postWrite}>
       <div className={styles.scrollUp}>
@@ -44,4 +44,4 @@ const PostWrite = () => {
   );
 };
 
-export default PostWrite;
+export default PostWritePage;

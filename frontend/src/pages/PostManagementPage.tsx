@@ -7,7 +7,7 @@ import PostCategoryList from "features/post/PostCategoryList";
 import PostList from "features/post/PostList";
 import { useNavigate } from "react-router-dom";
 
-const Post = () => {
+const PostManagementPage = () => {
   const navigate = useNavigate();
 
   return (
@@ -43,4 +43,4 @@ const Post = () => {
   );
 };
 
-export default Post;
+export default PostManagementPage;
