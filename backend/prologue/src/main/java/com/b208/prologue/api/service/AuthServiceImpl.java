@@ -131,7 +131,19 @@ public class AuthServiceImpl implements AuthService {
                 .retrieve()
                 .bodyToMono(GetFileNameResponse[].class).block();
         for(GetFileNameResponse getFileNameResponse : getFileList){
-            if(getFileNameResponse.getName().equals("AuthFile")) return true;
+            if(getFileNameResponse.getName().equals("AuthFile")) {
+                GetFileContentResponse authFile = webClient.get()
+                        .uri("/repos/" + githubId + "/" +githubId + ".github.io/contents/AuthFile")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .headers(h -> h.setBearerAuth(accessToken))
+                        .retrieve()
+                        .bodyToMono(GetFileContentResponse.class).block();
+                if(githubId.equals(base64Converter.decryptAES256(authFile.getContent()))) {
+                    return true;
+                }else {
+                    return false;
+                }
+            }
         }
         return false;
     }
