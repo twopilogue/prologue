@@ -1,15 +1,18 @@
 import * as React from "react";
 import { Stack } from "@mui/material";
 import { NavLink } from "react-router-dom";
+import LandingMain from "features/landing/LandingMain";
+import LandingSub from "features/landing/LandingSub";
 
 const LandingPage = () => {
   return (
     <>
-      <h1>랜딩페이지</h1>
-      <br />
-      <Stack justifyContent="center" alignItems="center" spacing={2}>
-        <NavLink to="/create">블로그 생성</NavLink>
+      {/* <Stack justifyContent="center" alignItems="center" spacing={2}>
         <NavLink to="/dashboard">대시보드</NavLink>
+      </Stack> */}
+      <Stack justifyContent="center" alignItems="center">
+        <LandingMain />
+        <LandingSub />
       </Stack>
     </>
   );
