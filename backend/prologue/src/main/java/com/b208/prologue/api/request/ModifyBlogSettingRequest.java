@@ -8,6 +8,7 @@ import lombok.Getter;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Data
@@ -23,26 +24,11 @@ public class ModifyBlogSettingRequest {
     String githubId;
 
     @NotNull
-    @ApiModelProperty(name = "닉네임", example = "닉네임", required = true)
-    String nickName;
+    @ApiModelProperty(name = "수정된 내용", example = "수정된 내용", required = true)
+    String modified;
 
     @NotNull
-    @ApiModelProperty(name = "자기소개", example = "자기소개", required = true)
-    String summary;
+    @ApiModelProperty(name = "프로필 이미지 경로", example = "프로필 이미지 경로", required = true)
+    String imgPath;
 
-    @NotNull
-    @ApiModelProperty(name = "기술스택 목록", example = "기술스택 목록", required = true)
-    List<String> techStack;
-
-    @NotNull
-    @ApiModelProperty(name = "블로그명", example = "블로그명", required = true)
-    String blogName;
-
-    @NotNull
-    @ApiModelProperty(name = "블로그소개", example = "블로그소개", required = true)
-    String description;
-
-    @NotNull
-    @ApiModelProperty(name = "소셜링크", example = "소셜링크", required = true)
-    List<String> social;
 }
