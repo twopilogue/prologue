@@ -90,31 +90,51 @@ public class SettingServiceImpl implements SettingService {
     }
 
     @Override
-    public void updateProfileImage(String encodedAccessToken, String githubId, String imgPath, MultipartFile imageFile) throws Exception {
+    public void updateProfileImage(String encodedAccessToken, String githubId, MultipartFile imageFile) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
-        GetShaResponse getShaResponse = webClient.get()
-                .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/" + imgPath)
+        GetRepoContentResponse[] getRepoContentResponse = webClient.get()
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/images")
                 .headers(h -> h.setBearerAuth(accessToken))
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .bodyToMono(GetShaResponse.class).block();
+                .bodyToMono(GetRepoContentResponse[].class).block();
 
-        DeleteContentRequest deleteContentRequest = new DeleteContentRequest("delete: profile img 삭제", getShaResponse.getSha());
+        String fileName = "";
+        String sha = "";
+        for (int i = 0; i < getRepoContentResponse.length; i++){
+            GetRepoContentResponse getRepoContent = webClient.get()
+                    .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/" + getRepoContentResponse[i].getPath())
+                    .headers(h -> h.setBearerAuth(accessToken))
+                    .accept(MediaType.APPLICATION_JSON)
+                    .retrieve()
+                    .bodyToMono(GetRepoContentResponse.class).block();
+
+            if(getRepoContent.getName().contains("profile-pic")){
+                fileName = getRepoContent.getName();
+                sha = getRepoContent.getSha();
+                break;
+            }
+        }
+
+        DeleteContentRequest deleteContentRequest = new DeleteContentRequest("delete: profile img 삭제", sha);
         webClient.method(HttpMethod.DELETE)
-                .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/" + imgPath)
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/images/" + fileName)
                 .headers(h -> h.setBearerAuth(accessToken))
                 .body(Mono.just(deleteContentRequest), DeleteContentRequest.class)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToMono(String.class).block();
 
+        int idx = imageFile.getOriginalFilename().indexOf(".");
+        fileName = "profile-pic" + imageFile.getOriginalFilename().substring(idx);
+
         String image = new String(Base64.encodeBase64(imageFile.getBytes()));
 
         CreateContentRequest createContentRequest = new CreateContentRequest("update: 프로필 이미지 변경", image);
 
         webClient.put()
-                .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/" + imgPath)
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/images/" + fileName)
                 .headers(h -> h.setBearerAuth(accessToken))
                 .body(Mono.just(createContentRequest), CreateContentRequest.class)
                 .accept(MediaType.APPLICATION_JSON)
