@@ -8,13 +8,16 @@ export interface KeyConfig {
 
 export interface ComponentConfig {
   key: string;
+  id: string;
 }
 
 export interface ComponentCheckConfig {
-  logoCheck: boolean;
-  profileCheck: boolean;
-  categoryCheck: boolean;
-  naviCheck: boolean;
+  [logo: string]: boolean;
+  profile: boolean;
+  category: boolean;
+  page: boolean;
+  title: boolean;
+  contents: boolean;
 }
 
 interface LayoutConfig {
@@ -51,19 +54,21 @@ const initialState: LayoutConfig = {
     { i: "글 목록", x: 1, y: 7, w: 4, h: 6, static: true, isResizable: false },
   ],
   componentList: [
-    { key: "블로그 로고" },
-    { key: "프로필" },
-    { key: "카테고리" },
-    { key: "페이지" },
-    { key: "타이틀" },
-    { key: "글 목록" },
+    { key: "블로그 로고", id: "logo" },
+    { key: "프로필", id: "profile" },
+    { key: "카테고리", id: "category" },
+    { key: "페이지", id: "page" },
+    { key: "타이틀", id: "title" },
+    { key: "글 목록", id: "contents" },
   ],
 
   checkList: {
-    logoCheck: true,
-    profileCheck: true,
-    categoryCheck: true,
-    naviCheck: true,
+    logo: true,
+    profile: true,
+    category: true,
+    page: true,
+    title: true,
+    contents: true,
   },
 };
 
@@ -98,8 +103,8 @@ const settingSlice = createSlice({
       state.componentList = payload;
     },
 
-    setCheckList: (state, { payload: { logoCheck, categoryCheck, profileCheck, naviCheck } }) => {
-      state.checkList = { logoCheck, categoryCheck, profileCheck, naviCheck };
+    setCheckList: (state, { payload: { logo, category, profile, page, title, contents } }) => {
+      state.checkList = { logo, category, profile, page, title, contents };
     },
   },
 });
