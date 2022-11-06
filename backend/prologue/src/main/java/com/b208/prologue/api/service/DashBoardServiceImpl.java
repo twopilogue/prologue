@@ -22,6 +22,7 @@ public class DashBoardServiceImpl implements DashBoardService {
     private final WebClient webClient;
     private final Base64Converter base64Converter;
     private final PostServiceImpl postService;
+    private final CommonService commonService;
 
     @Override
     public Map<String, Object> getList(String encodedAccessToken, String githubId) throws Exception{
@@ -61,7 +62,7 @@ public class DashBoardServiceImpl implements DashBoardService {
         Map<String, String> image;
 
         for (String directory:directories) {
-            GetRepoContentResponse[] responses = postService.getContentList(accessToken, githubId, "content/blog/" + directory);
+            GetRepoContentResponse[] responses = commonService.getContentList(accessToken, githubId, "content/blog/" + directory);
             image = new HashMap<>();
             int flag = 0;
 
