@@ -56,10 +56,10 @@ public class PostsController {
     })
     public ResponseEntity<? extends BaseResponseBody> getDetailPost(@RequestParam String accessToken, @RequestParam String githubId, @RequestParam String directory) {
 
-        GetRepoContentResponse getRepoContentResponse = null;
+        String path = "content/blog/" + directory;
         try {
-            getRepoContentResponse = postService.getDetailPost(accessToken, githubId, directory);
-            List<ImageResponse> images = postService.getImages(accessToken, githubId, directory);
+            GetRepoContentResponse getRepoContentResponse = postService.getDetailPost(accessToken, githubId, path);
+            List<ImageResponse> images = postService.getImages(accessToken, githubId, path);
             return ResponseEntity.status(200).body(DetailPostResponse.of(getRepoContentResponse, images, 200, "게시글 상세 조회에 성공하였습니다."));
         } catch (Exception e) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "게시글 상세 조회에 실패하였습니다."));
@@ -119,6 +119,25 @@ public class PostsController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "게시글 삭제에 실패하였습니다."));
+        }
+    }
+
+    @GetMapping("/pages")
+    @ApiOperation(value = "GitHub 페이지 글 조회", notes = "GitHub에서 페이지 글을 조회한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "페이지 글 조회 성공", response = DetailPostResponse.class),
+            @ApiResponse(code = 400, message = "페이지 글 조회 실패", response = BaseResponseBody.class),
+            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<? extends BaseResponseBody> getDetailPage(@RequestParam String accessToken, @RequestParam String githubId, @RequestParam String pageName) {
+
+        String path = "content/pages/" + pageName;
+        try {
+            GetRepoContentResponse getRepoContentResponse = postService.getDetailPost(accessToken, githubId, path);
+            List<ImageResponse> images = postService.getImages(accessToken, githubId, path);
+            return ResponseEntity.status(200).body(DetailPostResponse.of(getRepoContentResponse, images, 200, "페이지 글 조회에 성공하였습니다."));
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "페이지 글 조회에 실패하였습니다."));
         }
     }
 }

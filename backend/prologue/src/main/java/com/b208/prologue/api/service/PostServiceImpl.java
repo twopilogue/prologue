@@ -183,15 +183,15 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public GetRepoContentResponse getDetailPost(String encodedAccessToken, String githubId, String directory) throws Exception {
+    public GetRepoContentResponse getDetailPost(String encodedAccessToken, String githubId, String path) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
-        return commonService.getDetailContent(accessToken, githubId, "content/blog/" + directory + "/index.md");
+        return commonService.getDetailContent(accessToken, githubId, path + "/index.md");
     }
 
     @Override
-    public List<ImageResponse> getImages(String encodedAccessToken, String githubId, String directory) throws Exception {
+    public List<ImageResponse> getImages(String encodedAccessToken, String githubId, String path) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
-        GetRepoContentResponse[] responses = commonService.getContentList(accessToken, githubId, "content/blog/" + directory);
+        GetRepoContentResponse[] responses = commonService.getContentList(accessToken, githubId, path);
         List<ImageResponse> images = new ArrayList<>();
         for (int i = 0; i < responses.length; i++) {
             if (!responses[i].getName().equals("index.md")) {

@@ -13,6 +13,6 @@ public interface PostService {
     void insertDetailPost(String encodedAccessToken, String githubId, String content, List<MultipartFile> files) throws Exception;
     void updateDetailPost(String encodedAccessToken, String githubId, String directory, String content, List<MultipartFile> files, List<String> deletedFiles) throws Exception;
     void deleteDetailPost(String encodedAccessToken, String githubId, String directory) throws Exception;
-    GetRepoContentResponse getDetailPost(String encodedAccessToken, String githubId, String directory) throws Exception;
-    List<ImageResponse> getImages(String encodedAccessToken, String githubId, String directory) throws Exception;
+    GetRepoContentResponse getDetailPost(String encodedAccessToken, String githubId, String path) throws Exception;
+    List<ImageResponse> getImages(String encodedAccessToken, String githubId, String path) throws Exception;
 }
