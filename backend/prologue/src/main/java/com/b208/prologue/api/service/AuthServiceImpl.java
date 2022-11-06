@@ -2,9 +2,7 @@ package com.b208.prologue.api.service;
 
 import com.b208.prologue.api.request.github.AuthAccessTokenRequest;
 import com.b208.prologue.api.request.github.UpdateRepositorySecretRequest;
-import com.b208.prologue.api.response.github.RepositoryPublicKeyResponse;
-import com.b208.prologue.api.response.github.AuthAccessTokenResponse;
-import com.b208.prologue.api.response.github.AuthUserInfoResponse;
+import com.b208.prologue.api.response.github.*;
 import com.b208.prologue.common.Base64Converter;
 import com.goterl.lazysodium.LazySodiumJava;
 import com.goterl.lazysodium.SodiumJava;
@@ -122,6 +120,20 @@ public class AuthServiceImpl implements AuthService {
                 .bodyToMono(RepositoryPublicKeyResponse.class)
                 .block();
         return repositoryPublicKey;
+    }
+
+    public boolean checkAuthFile(String encodedAccessToken, String githubId) throws Exception {
+        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
+        GetFileNameResponse[] getFileList = webClient.get()
+                .uri("/repos/" + githubId + "/" +githubId + ".github.io/contents")
+                .accept(MediaType.APPLICATION_JSON)
+                .headers(h -> h.setBearerAuth(accessToken))
+                .retrieve()
+                .bodyToMono(GetFileNameResponse[].class).block();
+        for(GetFileNameResponse getFileNameResponse : getFileList){
+            if(getFileNameResponse.getName().equals("AuthFile")) return true;
+        }
+        return false;
     }
 
 }

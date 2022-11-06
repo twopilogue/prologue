@@ -9,4 +9,6 @@ public interface AuthService {
     Mono<AuthAccessTokenResponse> getAccessToken(String code);
     Mono<AuthUserInfoResponse> getUserInfo(String accessToken);
     void createRepositorySecrets(String encodedAccessToken, String githubId) throws Exception;
+    boolean checkAuthFile(String encodedAccessToken, String githubId) throws Exception;
+
 }
