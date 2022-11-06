@@ -44,12 +44,11 @@
 }
 
 .checkListContents {
-  padding: 20px;
-  padding-bottom: 5px;
+  padding: 30px 25px 10px 25px;
 }
 
 .checkListItem {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
 .box1 {
@@ -75,24 +74,19 @@
   display: none;
 }
 
-.display_logo,
-.display_title,
-.display_category,
-.display_navi {
+.display_logo {
+  margin: 10px;
   background-color: #d3d3eb;
-  margin: 5px;
+  border-radius: 5px;
 }
 
-.display_title {
-  height: 200px;
+.icon {
+  display: flex;
+  justify-content: center;
 }
 
-.display_flex {
-  background-color: #d3d3eb;
-  /* display: flex; */
-  /* padding: 10px; */
-  margin: 5px;
-  width: 100px;
+.innerText {
+  text-align: center;
 }
 
 .hr {

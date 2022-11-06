@@ -42,21 +42,21 @@ const initialState: LayoutConfig = {
   pageCnt: 1,
 
   componentLayoutList: [
-    { i: "logo", x: 0, y: 0, w: 1, h: 1, isResizable: false },
-    { i: "profile", x: 0, y: 1, w: 1, h: 1, isResizable: false },
-    { i: "category", x: 0, y: 2, w: 1, h: 1, isResizable: false },
-    { i: "navi", x: 3, y: 0, w: 1, h: 1, isResizable: false },
+    { i: "블로그 로고", x: 0, y: 0, w: 1, h: 2, isResizable: false },
+    { i: "프로필", x: 0, y: 1, w: 1, h: 3, isResizable: false },
+    { i: "카테고리", x: 0, y: 2, w: 1, h: 4, isResizable: false },
+    { i: "페이지", x: 1, y: 0, w: 4, h: 2, isResizable: false },
 
-    { i: "title", x: 0, y: 2, w: 1, h: 1, static: true, isResizable: false },
-    { i: "contents", x: 0, y: 3, w: 1, h: 1, static: true, isResizable: false },
+    { i: "타이틀", x: 1, y: 2, w: 4, h: 5, static: true, isResizable: false },
+    { i: "글 목록", x: 1, y: 7, w: 4, h: 6, static: true, isResizable: false },
   ],
   componentList: [
-    { key: "logo" },
-    { key: "profile" },
-    { key: "category" },
-    { key: "navi" },
-    { key: "title" },
-    { key: "contents" },
+    { key: "블로그 로고" },
+    { key: "프로필" },
+    { key: "카테고리" },
+    { key: "페이지" },
+    { key: "타이틀" },
+    { key: "글 목록" },
   ],
 
   checkList: {

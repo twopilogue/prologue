@@ -17,6 +17,7 @@ import ComponentSelector from "../layout/ComponentSelector";
 import styles from "../Setting.module.css";
 import "../../../../node_modules/react-grid-layout/css/styles.css";
 import Text from "components/Text";
+import DragHandleIcon from "@mui/icons-material/DragHandle";
 
 const LayoutSample = () => {
   const ResponsiveGridLayout = WidthProvider(Responsive);
@@ -41,7 +42,6 @@ const LayoutSample = () => {
 
     return [layoutWidth, layoutContainer];
   };
-
   const [layoutWidth, layoutContainer] = useGettingWidth();
 
   const saveLayouts = () => {
@@ -92,7 +92,7 @@ const LayoutSample = () => {
         >
           <GridLayout
             layout={componentLayoutList}
-            cols={3}
+            cols={6}
             rowHeight={30}
             width={layoutWidth - 10}
             onLayoutChange={handleLayoutChange}
@@ -100,7 +100,16 @@ const LayoutSample = () => {
             {componentList.map((item: any, i: number) => {
               return (
                 <div className={styles.display_logo} key={item.key}>
-                  {item.key}
+                  {item.key != "타이틀" && item.key != "글 목록" ? (
+                    <div className={styles.icon}>
+                      <DragHandleIcon fontSize="small" sx={{ color: "white" }} />
+                    </div>
+                  ) : (
+                    <div style={{ marginTop: "15px" }}></div>
+                  )}
+                  <div className={styles.innerText}>
+                    <Text value={item.key} type="caption" color="gray" />
+                  </div>
                 </div>
               );
             })}
