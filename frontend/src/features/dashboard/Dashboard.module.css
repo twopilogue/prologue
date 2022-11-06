@@ -30,16 +30,20 @@
 }
 
 .calendarInfoText {
-  margin: 15px 0px 25px 0px;
+  margin: 15px 0px 40px 0px;
 }
 
 .calendarDiv {
-  width: 100%;
+  width: 90%;
   background: #4A4DA8;
-  border-radius: 20px;
-  padding: 12px 12px;
-  margin: 2px 0px;
+  border-radius: 10px;
+  padding: 10px 20px;
+  margin: 3px 0px;
 }
+
+/* .calendarDiv>div {
+  height: 32vh;
+} */
 
 /* 블로그 바로가기 */
 .preview {
@@ -112,7 +116,7 @@ iframe {
 .infoGroup {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 78px 12px;
+  gap: 63% 12px;
 }
 
 .infoTitle {
@@ -129,7 +133,7 @@ iframe {
 }
 
 .infoVolume>.icon {
-  padding: 0px 6px 0px 15px;
+  padding: 0px 6px 0px 22px;
   font-size: 1rem;
 }
 
@@ -139,7 +143,7 @@ iframe {
   justify-content: center;
   align-items: center;
   background: #FFFFFF;
-  height: 130%;
+  height: 160%;
   border-radius: 0px 0px 20px 20px;
 }
 
