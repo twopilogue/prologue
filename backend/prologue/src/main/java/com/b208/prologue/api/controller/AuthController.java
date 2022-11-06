@@ -59,7 +59,7 @@ public class AuthController {
             @ApiResponse(code = 200, message = "레포지토리 시크릿 생성 성공", response = BaseResponseBody.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
-    public ResponseEntity<? extends BaseResponseBody> login(@RequestParam @ApiParam(value = "accessToken", required = true) String accessToken,
+    public ResponseEntity<? extends BaseResponseBody> createSecrets(@RequestParam @ApiParam(value = "accessToken", required = true) String accessToken,
                                                             @RequestParam @ApiParam(value = "사용자 깃허브 아이디", required = true) String githubId) throws Exception {
         try {
             authService.createRepositorySecrets(accessToken, githubId);
