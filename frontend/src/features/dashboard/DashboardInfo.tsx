@@ -3,12 +3,6 @@ import styles from "features/dashboard/Dashboard.module.css";
 import Text from "components/Text";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import Tooltip from "@mui/material/Tooltip";
-import { styled } from "@mui/material/styles";
-
-
-const TooltipStyle = styled(Tooltip)(() => ({
-  border: "0px",
-}));
 
 function DashboardInfo() {
   return (
@@ -48,13 +42,13 @@ function DashboardInfo() {
             <div>
               <div className={`${styles.infoTitle} ${styles.infoVolume}`}>
                 <Text value="사용량" bold />
-                <TooltipStyle
+                <Tooltip
                   title="깃허브 블로그는 최대 1GB를 넘을 수 없습니다"
                   placement="top-start"
                   arrow
                 >
                   <InfoOutlinedIcon className={styles.icon} fontSize="small" />
-                </TooltipStyle>
+                </Tooltip>
               </div>
               <div className={styles.infoValue}>
                 <Text value={String(100)} type="pageTitle" bold />
