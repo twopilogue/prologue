@@ -139,10 +139,10 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void updateDetailPost(String encodedAccessToken, String githubId, String directory, String content, List<MultipartFile> files, List<String> deletedFiles) throws Exception {
+    public void updateDetailPost(String encodedAccessToken, String githubId, String path, String content, List<MultipartFile> files, List<String> deletedFiles) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
         String commit = "modify: 게시글 수정";
-        String path = "content/blog/" + directory;
+
         List<TreeRequest> treeRequestList = new ArrayList<>();
 
         content = commonService.makeBlob(accessToken, githubId, base64Converter.encode(content));
