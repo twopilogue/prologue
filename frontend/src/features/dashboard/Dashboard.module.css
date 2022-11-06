@@ -41,9 +41,9 @@
   margin: 3px 0px;
 }
 
-/* .calendarDiv>div {
-  height: 32vh;
-} */
+.calendarDiv>div {
+  height: 36vh;
+}
 
 /* 블로그 바로가기 */
 .preview {

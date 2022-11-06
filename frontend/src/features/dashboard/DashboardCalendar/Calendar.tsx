@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import moment from "moment";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-// import styles from "features/dashboard/DashboardCalendar/Calendar.module.css"
 import styled from "@emotion/styled";
 import palette  from "styles/colorPalette";
 
@@ -11,12 +10,6 @@ const CalendarStyled = styled(Calendar)(() => ({
   fontFamily: "Pretendard-Regular",
   fontSize: "0.8rem",
   border: "0px",
-  //달력에 오늘 날짜 표시 변경
-  ".react-calendar__tile--now": {
-    backgroundColor: "#6394ff",
-    color: "#DFDFDF",
-    pointerEvents: "none",
-  },
   //달력 년/월 표시 글씨 커스텀
   ".react-calendar__navigation__label > span": {
     fontWeight: 600,
@@ -37,6 +30,7 @@ const CalendarStyled = styled(Calendar)(() => ({
     pointerEvents: "none",
   },
   ".react-calendar__navigation button": {
+    color: "white",
     "&:enabled:hover": {
       backgroundColor: "transparent",
     },
@@ -44,12 +38,21 @@ const CalendarStyled = styled(Calendar)(() => ({
       backgroundColor: "transparent",
     },
   },
+  //달력에 오늘 날짜 표시 변경
+  ".react-calendar__tile--now": {
+    backgroundColor: palette.sky_2,
+    color: "black",
+    pointerEvents: "none",
+  },
+  ".mark": {
+    background: palette.purlue_4,
+  },
 }));
 
 function CalenderCustom() {
   const [value, onChange] = useState(new Date());
 
-  const [mark, setMark] = useState([
+  const [marks, setMark] = useState([
     "2022-10-30",
     "2022-11-01",
     "2022-11-04",
@@ -69,7 +72,12 @@ function CalenderCustom() {
         prev2Label={null}
         showNeighboringMonth={false}
         calendarType="Hebrew"
-        locale="en"
+        locale="en-EN"
+        tileClassName={({ date, view }) => {
+          if (marks.find((x) => x === moment(date).format("YYYY-MM-DD"))) {
+            return "mark";
+          }
+        }}
       />
     </div>
   );
