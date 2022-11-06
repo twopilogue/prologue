@@ -42,12 +42,22 @@ const initialState: LayoutConfig = {
   pageCnt: 1,
 
   componentLayoutList: [
-    { i: "logo", x: 0, y: 0, w: 1, h: 1, static: true, isResizable: false },
-    { i: "profile", x: 1, y: 0, w: 1, h: 2, isResizable: false },
-    { i: "category", x: 2, y: 0, w: 1, h: 2, isResizable: false },
-    { i: "navi", x: 2, y: 0, w: 1, h: 2, isResizable: false },
+    { i: "logo", x: 0, y: 0, w: 1, h: 1, isResizable: false },
+    { i: "profile", x: 0, y: 1, w: 1, h: 1, isResizable: false },
+    { i: "category", x: 0, y: 2, w: 1, h: 1, isResizable: false },
+    { i: "navi", x: 3, y: 0, w: 1, h: 1, isResizable: false },
+
+    { i: "title", x: 0, y: 2, w: 1, h: 1, static: true, isResizable: false },
+    { i: "contents", x: 0, y: 3, w: 1, h: 1, static: true, isResizable: false },
   ],
-  componentList: [{ key: "logo" }, { key: "profile" }, { key: "category" }, { key: "navi" }],
+  componentList: [
+    { key: "logo" },
+    { key: "profile" },
+    { key: "category" },
+    { key: "navi" },
+    { key: "title" },
+    { key: "contents" },
+  ],
 
   checkList: {
     logoCheck: true,
@@ -113,7 +123,7 @@ export const selectPageList = (state: rootState) => state.setting.pageList;
 export const selectPageCnt = (state: rootState) => state.setting.pageCnt;
 
 export const selectComponentLayoutList = (state: rootState) => state.setting.componentLayoutList;
-export const SelectComponentList = (state: rootState) => state.setting.componentList;
+export const selectComponentList = (state: rootState) => state.setting.componentList;
 
 export const selectCheckList = (state: rootState) => state.setting.checkList;
 

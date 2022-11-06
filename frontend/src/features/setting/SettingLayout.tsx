@@ -3,14 +3,14 @@ import styles from "./Setting.module.css";
 
 import { Responsive, WidthProvider, Layout } from "react-grid-layout";
 import { useAppSelector } from "app/hooks";
-import { KeyConfig, selectComponentLayoutList, SelectComponentList } from "slices/settingSlice";
+import { KeyConfig, selectComponentLayoutList, selectComponentList } from "slices/settingSlice";
 import Text from "components/Text";
 
 const SettingLayout = (props: any) => {
   const ResponsiveGridLayout = WidthProvider(Responsive);
 
   const [layoutList, setLayoutList] = useState<Layout[]>(useAppSelector(selectComponentLayoutList));
-  const [categoryList, setCategoryList] = useState<KeyConfig[]>(useAppSelector(SelectComponentList));
+  const [categoryList, setCategoryList] = useState<KeyConfig[]>(useAppSelector(selectComponentList));
   console.log(props.titleColor);
   useEffect(() => {
     const tmpLayoutList: Layout[] = [];
