@@ -8,10 +8,11 @@ const PostWriteContents = () => {
   return (
     <div className={styles.postWriteContents}>
       <Text value="내용" type="text" />
+      <div style={{ marginTop: "1%" }}></div>
       <Editor
         initialValue=""
         previewStyle="vertical"
-        height="60vh"
+        height="70vh"
         initialEditType="markdown"
       ></Editor>
     </div>
