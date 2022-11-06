@@ -1,5 +1,5 @@
 import React from "react";
-import DashboardCalendar from "features/dashboard/DashboardCalendar";
+import DashboardCalendar from "features/dashboard/DashboardCalendar/DashboardCalendar";
 import DashboardInfo from "features/dashboard/DashboardInfo";
 import DashboardList from "features/dashboard/DashboardList";
 import DashboardMenu from "features/dashboard/DashboardMenu";
