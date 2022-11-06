@@ -15,6 +15,4 @@ public interface PostService {
     void deleteDetailPost(String encodedAccessToken, String githubId, String directory) throws Exception;
     GetRepoContentResponse getDetailPost(String encodedAccessToken, String githubId, String directory) throws Exception;
     List<ImageResponse> getImages(String encodedAccessToken, String githubId, String directory) throws Exception;
-    GetRepoContentResponse getDetailContent(String accessToken, String githubId, String path) throws Exception;
-    GetRepoContentResponse[] getContentList(String accessToken, String githubId, String path) throws Exception;
 }
