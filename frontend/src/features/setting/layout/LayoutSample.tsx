@@ -81,13 +81,9 @@ const LayoutSample = () => {
             {componentList.map((item: any, i: number) => {
               return (
                 <div key={i}>
-                  {checkList.{ㅑㅅㄷ} ? (
-                    <div className={item.isChecked ? `styles.${item.key}` : styles.display_none} key={item.key}>
-                      {item.key}
-                    </div>
-                  ) : (
-                    <></>
-                  )}
+                  <div className={item.isChecked ? `styles.${item.key}` : styles.display_none} key={item.key}>
+                    {item.key}
+                  </div>
                 </div>
               );
             })}
