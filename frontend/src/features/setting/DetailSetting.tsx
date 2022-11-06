@@ -14,10 +14,7 @@ const DetailSetting = () => {
         <Text value="세부 레이아웃 설정" type="groupTitle" bold />
       </div>
       <div style={{ paddingLeft: "20px" }}>
-        <Text
-          value="레이아웃에 원하는 디자인을 선택하여 적용하세요."
-          type="caption"
-        />
+        <Text value="레이아웃에 원하는 디자인을 선택하여 적용하세요." type="caption" />
       </div>
       <div className={styles.layoutSelectContainer}>
         <DetailSelector titleColor={titleColor} setTitleColor={setTitleColor} />
