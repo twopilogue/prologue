@@ -27,8 +27,4 @@ public class ModifyBlogSettingRequest {
     @ApiModelProperty(name = "수정된 내용", example = "수정된 내용", required = true)
     String modified;
 
-    @NotNull
-    @ApiModelProperty(name = "프로필 이미지 경로", example = "프로필 이미지 경로", required = true)
-    String imgPath;
-
 }

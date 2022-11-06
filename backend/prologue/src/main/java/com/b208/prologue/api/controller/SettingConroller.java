@@ -56,7 +56,7 @@ public class SettingConroller {
             settingService.updateBlogSetting(modifyBlogSettingRequest.getAccessToken(), modifyBlogSettingRequest.getGithubId(), modifyBlogSettingRequest.getModified());
 
             if(imgFile != null){
-                settingService.updateProfileImage(modifyBlogSettingRequest.getAccessToken(), modifyBlogSettingRequest.getGithubId(), modifyBlogSettingRequest.getImgPath(), imgFile);
+                settingService.updateProfileImage(modifyBlogSettingRequest.getAccessToken(), modifyBlogSettingRequest.getGithubId(), imgFile);
             }
             return ResponseEntity.status(200).body(BaseResponseBody.of(200, "블로그 설정 수정에 성공하였습니다."));
         } catch (Exception e) {
