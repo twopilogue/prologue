@@ -12,6 +12,7 @@ import {
   selectComponentList,
   selectComponentLayoutList,
   setCategoryLayoutList,
+  setComponentLayoutList,
 } from "slices/settingSlice";
 import ComponentSelector from "../layout/ComponentSelector";
 import styles from "../Setting.module.css";
@@ -19,8 +20,22 @@ import "../../../../node_modules/react-grid-layout/css/styles.css";
 import Text from "components/Text";
 import DragHandleIcon from "@mui/icons-material/DragHandle";
 
+export const useGettingWidth = () => {
+  const [layoutWidth, setLayoutWidth] = useState(null);
+
+  // ✅  useRef와 useEffect를 지우고 callback ref를 새로 작성
+  const layoutContainer = useCallback((node: HTMLElement) => {
+    if (node !== null) {
+      // setGridWidth(node);
+      console.log(node.offsetWidth);
+      setLayoutWidth(node.offsetWidth);
+    }
+  }, []);
+
+  return [layoutWidth, layoutContainer];
+};
+
 const LayoutSample = () => {
-  const ResponsiveGridLayout = WidthProvider(Responsive);
   const dispatch = useDispatch();
   const navigator = useNavigate();
 
@@ -28,20 +43,6 @@ const LayoutSample = () => {
   const [componentList, setComponentList] = useState<ComponentConfig[]>(useAppSelector(selectComponentList));
   const [checkList, setCheckList] = useState<ComponentCheckConfig>(useAppSelector(selectCheckList));
 
-  const useGettingWidth = () => {
-    const [layoutWidth, setLayoutWidth] = useState(null);
-
-    // ✅  useRef와 useEffect를 지우고 callback ref를 새로 작성
-    const layoutContainer = useCallback((node: HTMLElement) => {
-      if (node !== null) {
-        // setGridWidth(node);
-        console.log(node.offsetWidth);
-        setLayoutWidth(node.offsetWidth);
-      }
-    }, []);
-
-    return [layoutWidth, layoutContainer];
-  };
   const [layoutWidth, layoutContainer] = useGettingWidth();
 
   const saveLayouts = () => {
@@ -68,7 +69,9 @@ const LayoutSample = () => {
   };
 
   const handleLayoutChange = (layouts: any) => {
-    sessionStorage.setItem("grid-layout", JSON.stringify(layouts));
+    console.log(componentLayoutList);
+    setComponentLayoutList(componentLayoutList);
+    dispatch(setComponentLayoutList(componentLayoutList));
   };
 
   return (
@@ -88,6 +91,7 @@ const LayoutSample = () => {
             border: "2px solid #ECECEC",
             marginLeft: "5px",
             marginRight: "5px",
+            paddingBottom: "20px",
           }}
         >
           <GridLayout
@@ -97,21 +101,25 @@ const LayoutSample = () => {
             width={layoutWidth - 10}
             onLayoutChange={handleLayoutChange}
           >
-            {componentList.map((item: any, i: number) => {
-              return (
-                <div className={styles.display_logo} key={item.key}>
-                  {item.key != "타이틀" && item.key != "글 목록" ? (
-                    <div className={styles.icon}>
-                      <DragHandleIcon fontSize="small" sx={{ color: "white" }} />
+            {componentList.map((item: ComponentConfig) => {
+              {
+                return checkList[item.id] ? (
+                  <div className={styles.display_logo} key={item.key}>
+                    {item.key != "타이틀" && item.key != "글 목록" ? (
+                      <div className={styles.icon}>
+                        <DragHandleIcon fontSize="small" sx={{ color: "white" }} />
+                      </div>
+                    ) : (
+                      <div style={{ marginTop: "15px" }}></div>
+                    )}
+                    <div className={styles.innerText}>
+                      <Text value={item.key} type="caption" color="gray" />
                     </div>
-                  ) : (
-                    <div style={{ marginTop: "15px" }}></div>
-                  )}
-                  <div className={styles.innerText}>
-                    <Text value={item.key} type="caption" color="gray" />
                   </div>
-                </div>
-              );
+                ) : (
+                  <></>
+                );
+              }
             })}
           </GridLayout>
         </div>
