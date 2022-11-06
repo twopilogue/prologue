@@ -1,15 +1,16 @@
 import { useAppSelector } from "app/hooks";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { Layout, Responsive, WidthProvider } from "react-grid-layout";
+import GridLayout from "react-grid-layout";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
   ComponentCheckConfig,
   ComponentConfig,
-  selectCategoryLayoutList,
   selectCheckList,
   // selectCheckList,
-  SelectComponentList,
+  selectComponentList,
+  selectComponentLayoutList,
   setCategoryLayoutList,
 } from "slices/settingSlice";
 import ComponentSelector from "../layout/ComponentSelector";
@@ -22,9 +23,26 @@ const LayoutSample = () => {
   const dispatch = useDispatch();
   const navigator = useNavigate();
 
-  const [componentLayoutList, SetComponentLayoutList] = useState<Layout[]>(useAppSelector(selectCategoryLayoutList));
-  const [componentList, setComponentList] = useState<ComponentConfig[]>(useAppSelector(SelectComponentList));
+  const [componentLayoutList, SetComponentLayoutList] = useState<Layout[]>(useAppSelector(selectComponentLayoutList));
+  const [componentList, setComponentList] = useState<ComponentConfig[]>(useAppSelector(selectComponentList));
   const [checkList, setCheckList] = useState<ComponentCheckConfig>(useAppSelector(selectCheckList));
+
+  const useGettingWidth = () => {
+    const [layoutWidth, setLayoutWidth] = useState(null);
+
+    // ✅  useRef와 useEffect를 지우고 callback ref를 새로 작성
+    const layoutContainer = useCallback((node: HTMLElement) => {
+      if (node !== null) {
+        // setGridWidth(node);
+        console.log(node.offsetWidth);
+        setLayoutWidth(node.offsetWidth);
+      }
+    }, []);
+
+    return [layoutWidth, layoutContainer];
+  };
+
+  const [layoutWidth, layoutContainer] = useGettingWidth();
 
   const saveLayouts = () => {
     const tmpLayoutList: Layout[] = [];
@@ -64,30 +82,29 @@ const LayoutSample = () => {
       <div className={styles.layoutSelectContainer}>
         <ComponentSelector checkList={checkList} setCheckList={setCheckList} />
         <div
+          ref={layoutContainer}
           style={{
             backgroundColor: "white",
             border: "2px solid #ECECEC",
             marginLeft: "5px",
+            marginRight: "5px",
           }}
         >
-          <ResponsiveGridLayout
-            layouts={{ lg: componentLayoutList }}
-            breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-            cols={{ lg: 5, md: 4, sm: 3, xs: 2, xxs: 1 }}
+          <GridLayout
+            layout={componentLayoutList}
+            cols={3}
             rowHeight={30}
-            width={1000}
+            width={layoutWidth - 10}
             onLayoutChange={handleLayoutChange}
           >
             {componentList.map((item: any, i: number) => {
               return (
-                <div key={i}>
-                  <div className={item.isChecked ? `styles.${item.key}` : styles.display_none} key={item.key}>
-                    {item.key}
-                  </div>
+                <div className={styles.display_logo} key={item.key}>
+                  {item.key}
                 </div>
               );
             })}
-          </ResponsiveGridLayout>
+          </GridLayout>
         </div>
       </div>
     </div>
