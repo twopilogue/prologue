@@ -49,8 +49,7 @@ function Header() {
 
   const onLogin = () => {
     Axios.get(api.auth.getUri()).then((res) => {
-      console.log(res);
-      // window.location.href = res.data.uri;
+      window.location.href = res.data.uri;
     });
   };
 
