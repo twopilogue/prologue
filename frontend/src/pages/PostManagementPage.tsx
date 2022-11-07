@@ -7,7 +7,7 @@ import PostCategoryList from "features/post/PostCategoryList";
 import PostList from "features/post/PostList";
 import { useNavigate } from "react-router-dom";
 
-const Post = () => {
+const PostManagementPage = () => {
   const navigate = useNavigate();
 
   return (
@@ -17,7 +17,7 @@ const Post = () => {
       <Text
         value="깃허브 블로그 게시글을 한 눈에 관리가 가능합니다."
         type="caption"
-        color="gray"
+        color="dark_gray"
       />
       <div className={styles.postPageButtons}>
         <ButtonStyled
@@ -43,4 +43,4 @@ const Post = () => {
   );
 };
 
-export default Post;
+export default PostManagementPage;
