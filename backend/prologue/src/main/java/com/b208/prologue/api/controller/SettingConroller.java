@@ -35,7 +35,6 @@ public class SettingConroller {
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
     public ResponseEntity<? extends BaseResponseBody> getBlogSetting(@RequestParam String accessToken, @RequestParam String githubId) {
-
         try {
             List<String> result = settingService.getBlogSetting(accessToken, githubId);
 

@@ -1,6 +1,7 @@
 package com.b208.prologue.api.controller;
 
 import com.b208.prologue.api.response.BaseResponseBody;
+import com.b208.prologue.api.response.DateListResponse;
 import com.b208.prologue.api.response.PostListResponse;
 import com.b208.prologue.api.response.RepositorySizeResponse;
 import com.b208.prologue.api.service.DashBoardService;
@@ -52,6 +53,24 @@ public class DashBoardController {
                                                                         @RequestParam @ApiParam(value = "사용자 깃허브 아이디", required = true) String githubId) throws Exception {
         Double size = dashBoardService.getRepositorySize(accessToken, githubId);
         return ResponseEntity.status(200).body(RepositorySizeResponse.of(size, 200, "레포지토리 사용량 조회 성공"));
+    }
+
+    @GetMapping("/month-posts")
+    @ApiOperation(value = "게시글 날짜 조회", notes = "게시글 날짜 조회")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "게시글 날짜 조회 성공", response = DateListResponse.class),
+            @ApiResponse(code = 400, message = "게시글 날짜 조회 실패", response = BaseResponseBody.class),
+            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<? extends  BaseResponseBody> getDateList(@RequestParam String accessToken, @RequestParam String githubId) {
+
+        try {
+            List<String> result = dashBoardService.getDateList(accessToken, githubId);
+
+            return ResponseEntity.status(200).body(DateListResponse.of(result, 200, "게시물 목록 조회 성공"));
+        } catch (Exception e){
+            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "게시글 목록 조회에 실패하였습니다."));
+        }
     }
 
 
