@@ -1,8 +1,10 @@
 package com.b208.prologue.api.service;
 
+import com.b208.prologue.api.request.CreateAuthFileRequest;
 import com.b208.prologue.api.request.github.AuthAccessTokenRequest;
 import com.b208.prologue.api.request.github.CreateContentRequest;
 import com.b208.prologue.api.request.github.UpdateRepositorySecretRequest;
+import com.b208.prologue.api.response.AuthFileCheckResponse;
 import com.b208.prologue.api.response.github.*;
 import com.b208.prologue.common.Base64Converter;
 import com.goterl.lazysodium.LazySodiumJava;
@@ -21,10 +23,12 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
 
+import java.io.BufferedReader;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Base64;
 import java.util.Collections;
+import java.util.StringTokenizer;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -123,8 +127,9 @@ public class AuthServiceImpl implements AuthService {
         return repositoryPublicKey;
     }
 
-    public boolean checkAuthFile(String encodedAccessToken, String githubId) throws Exception {
+    public AuthFileCheckResponse checkAuthFile(String encodedAccessToken, String githubId) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
+        AuthFileCheckResponse authFileCheckResponse = new AuthFileCheckResponse();
         GetFileNameResponse[] getFileList = webClient.get()
                 .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents")
                 .accept(MediaType.APPLICATION_JSON)
@@ -139,23 +144,33 @@ public class AuthServiceImpl implements AuthService {
                         .headers(h -> h.setBearerAuth(accessToken))
                         .retrieve()
                         .bodyToMono(GetFileContentResponse.class).block();
+
                 String encodeContent = (authFile.getContent().replace("\n", ""));
-                String content = base64Converter.decode(encodeContent);
-                if (githubId.equals(base64Converter.decryptAES256(content))) {
-                    return true;
+                String content = base64Converter.decryptAES256(base64Converter.decode(encodeContent));
+
+                StringTokenizer st = new StringTokenizer(content, " ");
+                String authGithubId = st.nextToken();
+                Integer blogType = Integer.parseInt(st.nextToken());
+
+                if (githubId.equals(authGithubId)) {
+                    authFileCheckResponse.setCheckAuthFile(true);
+                    authFileCheckResponse.setBlogType(blogType);
+                    return authFileCheckResponse;
                 } else {
-                    return false;
+                    return authFileCheckResponse;
                 }
             }
         }
-        return false;
+        return authFileCheckResponse;
     }
 
-    public void createAuthFile(String encodedAccessToken, String githubId) throws Exception {
-        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
-        String authFile = base64Converter.encode(base64Converter.encryptAES256(githubId));
+    public void createAuthFile(CreateAuthFileRequest createAuthFileRequest) throws Exception {
+        String accessToken = base64Converter.decryptAES256(createAuthFileRequest.getAccessToken());
+        String githubId = createAuthFileRequest.getGithubId();
+        String authFile = base64Converter.encode(base64Converter.encryptAES256(githubId + " " + createAuthFileRequest.getBlogType()));
 
         CreateContentRequest createContentRequest = new CreateContentRequest("upload service auth file", authFile);
+
         webClient.put()
                 .uri("/repos/" + githubId + "/" + githubId + ".github.io" + "/contents/AuthFile")
                 .headers(h -> h.setBearerAuth(accessToken))
