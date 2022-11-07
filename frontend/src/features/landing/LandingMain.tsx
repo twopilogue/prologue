@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Box, Stack } from "@mui/system";
 import Button from "@mui/material/Button";
 import Text from "components/Text";
 import styles from "features/landing/Landing.module.css";
 import GitHubIcon from "@mui/icons-material/GitHub";
-import landingMainImg from "assets/landing/landinMainImg.png";
+import landingMainImg1 from "assets/landing/landingMainImg1.png";
+import landingMainImg2 from "assets/landing/landingMainImg2.png";
+import landingMainImg3 from "assets/landing/landingMainImg3.png";
+import landingMainImg4 from "assets/landing/landingMainImg4.png";
 
 function LandingMain() {
   const [isTextTyping, setIsTextTyping] = useState<boolean>(false);
@@ -52,7 +55,7 @@ function LandingMain() {
             Signup With GitHub
           </Button>
         </Stack>
-        <img className={styles.landingMainImg} src={landingMainImg} />
+        <img className={styles.landingMainImg} src={landingMainImg1} />
       </div>
     </Box>
   );
