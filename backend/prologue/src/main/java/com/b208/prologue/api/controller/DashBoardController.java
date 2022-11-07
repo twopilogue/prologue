@@ -1,11 +1,8 @@
 package com.b208.prologue.api.controller;
 
 import com.b208.prologue.api.response.BaseResponseBody;
-<<<<<<< HEAD
 import com.b208.prologue.api.response.DateListResponse;
-=======
 import com.b208.prologue.api.response.LatestBuildTimeResponse;
->>>>>>> cb70e4fa4444badf902da69845fbdbb5c8bf5789
 import com.b208.prologue.api.response.PostListResponse;
 import com.b208.prologue.api.response.RepositorySizeResponse;
 import com.b208.prologue.api.service.DashBoardService;
@@ -58,7 +55,6 @@ public class DashBoardController {
         return ResponseEntity.status(200).body(RepositorySizeResponse.of(size, 200, "레포지토리 사용량 조회 성공"));
     }
 
-<<<<<<< HEAD
     @GetMapping("/month-posts")
     @ApiOperation(value = "게시글 날짜 조회", notes = "게시글 날짜 조회")
     @ApiResponses({
@@ -77,7 +73,6 @@ public class DashBoardController {
         }
     }
 
-=======
     @GetMapping("/latest-build")
     @ApiOperation(value = "최근 빌드 시간 조회", notes = "최근 빌드 시간 조회")
     @ApiResponses({
@@ -94,6 +89,4 @@ public class DashBoardController {
         }
         return ResponseEntity.status(200).body(BaseResponseBody.of(400, "최근 빌드 시간 조회 실패"));
     }
->>>>>>> cb70e4fa4444badf902da69845fbdbb5c8bf5789
-
 }

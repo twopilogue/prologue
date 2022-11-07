@@ -94,7 +94,6 @@ public class DashBoardServiceImpl implements DashBoardService {
     }
 
     @Override
-<<<<<<< HEAD
     public List<String> getDateList(String encodedAccessToken, String githubId) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
@@ -116,7 +115,6 @@ public class DashBoardServiceImpl implements DashBoardService {
         return result;
     }
 
-=======
     public String getLatestBuildTime(String encodedAccessToken, String githubId) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
@@ -130,5 +128,4 @@ public class DashBoardServiceImpl implements DashBoardService {
         SimpleDateFormat dataFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
         return dataFormat.format(getLatestBuildTimeResponse.getLastBuildTime());
     }
->>>>>>> cb70e4fa4444badf902da69845fbdbb5c8bf5789
 }
