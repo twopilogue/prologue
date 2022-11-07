@@ -1,5 +1,6 @@
 package com.b208.prologue.api.controller;
 
+import com.b208.prologue.api.request.ModifyDetailPageRequest;
 import com.b208.prologue.api.request.ModifyDetailPostRequest;
 import com.b208.prologue.api.request.RemoveDetailPostRequest;
 import com.b208.prologue.api.request.WriteDetailPostRequest;
@@ -94,9 +95,10 @@ public class PostsController {
     })
     public ResponseEntity<? extends BaseResponseBody> modifyDetailPost(@Valid ModifyDetailPostRequest modifyDetailPostRequest) {
 
+        String path = "content/blog/" + modifyDetailPostRequest.getDirectory();
         try {
             postService.updateDetailPost(modifyDetailPostRequest.getAccessToken(), modifyDetailPostRequest.getGithubId(),
-                    modifyDetailPostRequest.getDirectory(), modifyDetailPostRequest.getContent(), modifyDetailPostRequest.getFiles(), modifyDetailPostRequest.getDeletedFiles());
+                    path , modifyDetailPostRequest.getContent(), modifyDetailPostRequest.getFiles(), modifyDetailPostRequest.getDeletedFiles());
             return ResponseEntity.status(200).body(BaseResponseBody.of(200, "게시글 수정에 성공하였습니다."));
         } catch (Exception e) {
             e.printStackTrace();
@@ -138,6 +140,26 @@ public class PostsController {
             return ResponseEntity.status(200).body(DetailPostResponse.of(getRepoContentResponse, images, 200, "페이지 글 조회에 성공하였습니다."));
         } catch (Exception e) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "페이지 글 조회에 실패하였습니다."));
+        }
+    }
+
+    @PutMapping("/pages")
+    @ApiOperation(value = "GitHub 페이지 글 수정", notes = "GitHub 페이지 글을 수정한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "페이지 글 수정 성공", response = BaseResponseBody.class),
+            @ApiResponse(code = 400, message = "페이지 글 수정 실패", response = BaseResponseBody.class),
+            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<? extends BaseResponseBody> modifyDetailPage(@Valid ModifyDetailPageRequest modifyDetailPageRequest) {
+
+        String path = "content/pages/" + modifyDetailPageRequest.getPageName();
+        try {
+            postService.updateDetailPost(modifyDetailPageRequest.getAccessToken(), modifyDetailPageRequest.getGithubId(),
+                    path, modifyDetailPageRequest.getContent(), modifyDetailPageRequest.getFiles(), modifyDetailPageRequest.getDeletedFiles());
+            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "페이지 글 수정에 성공하였습니다."));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "페이지 글 수정에 실패하였습니다."));
         }
     }
 }
