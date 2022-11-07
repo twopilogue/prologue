@@ -1,8 +1,6 @@
 package com.b208.prologue.api.service;
 
 import com.b208.prologue.api.request.github.TreeRequest;
-import com.b208.prologue.api.request.github.CreateContentRequest;
-import com.b208.prologue.api.request.github.DeleteContentRequest;
 import com.b208.prologue.api.request.github.UpdateContentRequest;
 import com.b208.prologue.api.response.github.GetRepoContentResponse;
 import com.b208.prologue.api.response.github.GetSettingResponse;
@@ -12,7 +10,6 @@ import org.apache.tomcat.util.codec.binary.Base64;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

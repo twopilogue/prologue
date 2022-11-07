@@ -1,19 +1,14 @@
 package com.b208.prologue.api.service;
 
-import com.b208.prologue.api.response.github.GetRepoContentResponse;
-import com.b208.prologue.api.response.github.GetRepositorySizeResponse;
-import com.b208.prologue.api.response.github.GetTemplateFileResponse;
-import com.b208.prologue.api.response.github.PostGetListResponse;
+import com.b208.prologue.api.response.github.*;
 import com.b208.prologue.common.Base64Converter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -96,6 +91,28 @@ public class DashBoardServiceImpl implements DashBoardService {
                 .bodyToMono(GetRepositorySizeResponse.class).block();
 
         return getRepositorySizeResponse.getSize()/100.0;
+    }
+
+    @Override
+    public List<String> getDateList(String encodedAccessToken, String githubId) throws Exception {
+        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
+
+        List<String> result = new ArrayList<>();
+        GetFileNameResponse[] getFileNameResponse = webClient.get()
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/content/blog")
+                .accept(MediaType.APPLICATION_JSON)
+                .headers(h -> h.setBearerAuth(accessToken))
+                .retrieve()
+                .bodyToMono(GetFileNameResponse[].class).block();
+
+        for (int i = 0; i < getFileNameResponse.length; i++){
+            Date date = new Date(Long.parseLong(getFileNameResponse[i].getName()));
+            SimpleDateFormat dateFormat = new SimpleDateFormat ("yyyy-MM-dd");
+
+            result.add(String.valueOf(dateFormat.format(date)));
+        }
+
+        return result;
     }
 
 }
