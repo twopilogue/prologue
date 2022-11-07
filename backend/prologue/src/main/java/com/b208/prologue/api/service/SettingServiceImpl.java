@@ -1,10 +1,6 @@
 package com.b208.prologue.api.service;
 
-<<<<<<< HEAD
-
-=======
 import com.b208.prologue.api.request.github.TreeRequest;
->>>>>>> bc67c730439af5224e77809cec39af6d6c88a11a
 import com.b208.prologue.api.request.github.CreateContentRequest;
 import com.b208.prologue.api.request.github.DeleteContentRequest;
 import com.b208.prologue.api.request.github.UpdateContentRequest;
