@@ -19,6 +19,7 @@ import styles from "../Setting.module.css";
 import "../../../../node_modules/react-grid-layout/css/styles.css";
 import Text from "components/Text";
 import DragHandleIcon from "@mui/icons-material/DragHandle";
+import ConfirmButton from "../ConfirmButton";
 
 export const useGettingWidth = () => {
   const [layoutWidth, setLayoutWidth] = useState(null);
@@ -124,6 +125,7 @@ const LayoutSample = () => {
           </GridLayout>
         </div>
       </div>
+      <ConfirmButton type="layoutSetting" payload={{ checkList, componentLayoutList }} />
     </div>
   );
 };

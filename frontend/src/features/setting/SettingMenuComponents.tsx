@@ -22,7 +22,6 @@ export const blogTabs = [
         <MyInfoInput />
         <div className={styles.hr}></div>
         <MyBlogInfoInput />
-        <ConfirmButton type="blogSetting" />
       </div>
     ),
   },
@@ -32,7 +31,6 @@ export const blogTabs = [
       <div>
         <CategoryLayout />
         <CategoryCntSetting />
-        <ConfirmButton type="categorySetting" />
       </div>
     ),
   },
@@ -41,7 +39,6 @@ export const blogTabs = [
     Component: (
       <div>
         <PageLayout />
-        <ConfirmButton type="categorySetting" />
       </div>
     ),
   },
@@ -54,7 +51,6 @@ export const layoutTabs = [
       <div>
         <LayoutSelector />
         <LayoutSample />
-        <ConfirmButton type="layoutSetting" />
       </div>
     ),
   },
