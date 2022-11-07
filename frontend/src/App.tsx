@@ -12,6 +12,7 @@ import LayoutSample from "features/setting/layout/LayoutSample";
 import PostRouterPage from "pages/PostRouterPage";
 import BlogReset from "pages/BlogResetPage";
 import GatsbyLayout from "pages/GatsbyLayoutPage";
+import LayoutBuildPage from "features/setting/layout/LayoutBuildPage";
 
 function App() {
   const location = useLocation();
@@ -43,7 +44,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/setting" element={<SettingPage />} />
           <Route path="/layout" element={<SettingLayout />} />
-          <Route path="/laysample" element={<LayoutSample />} />
+          <Route path="/tmpBlog" element={<LayoutBuildPage />} />
           <Route path="/post/*" element={<PostRouterPage />} />
 
           <Route path="/sample" element={<SamplePage />} />

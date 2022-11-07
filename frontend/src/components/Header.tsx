@@ -2,17 +2,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import { LightMode, DarkMode } from "@mui/icons-material";
-import {
-  Avatar,
-  Box,
-  IconButton,
-  Menu,
-  MenuItem,
-  Stack,
-  Typography,
-  Button,
-  Link,
-} from "@mui/material";
+import { Avatar, Box, IconButton, Menu, MenuItem, Stack, Typography, Button, Link } from "@mui/material";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import LogoutIcon from "@mui/icons-material/Logout";
 import styles from "./css/Header.module.css";
@@ -44,9 +34,7 @@ const AvatarStyled = styled(Avatar)(() => ({
 function Header({ user, onLogin }: HeaderProps) {
   const [backgroudMode, setBackgroudMode] = React.useState(true);
 
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
-    null,
-  );
+  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
   const userMenu = [
     {
@@ -116,6 +104,15 @@ function Header({ user, onLogin }: HeaderProps) {
           >
             블로그 설정
           </NavLink>
+          <NavLink
+            to="/tmpBlog"
+            style={{
+              color: backgroudMode ? "black" : "white",
+              textDecoration: "none",
+            }}
+          >
+            (임시)블로그
+          </NavLink>
 
           {user ? (
             <>
@@ -143,9 +140,7 @@ function Header({ user, onLogin }: HeaderProps) {
                       <Link href={menu.path} underline="none" color="black">
                         <Stack direction="row" spacing={1}>
                           {menu.icon}
-                          <Typography textAlign="center">
-                            {menu.name}
-                          </Typography>
+                          <Typography textAlign="center">{menu.name}</Typography>
                         </Stack>
                       </Link>
                     </MenuItem>
