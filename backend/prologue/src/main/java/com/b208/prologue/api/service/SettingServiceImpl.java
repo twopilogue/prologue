@@ -72,15 +72,8 @@ public class SettingServiceImpl implements SettingService {
 
         String imageUrl = "";
         for (int i = 0; i < getRepoContentResponse.length; i++){
-            GetRepoContentResponse getRepoContent = webClient.get()
-                    .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/" + getRepoContentResponse[i].getPath())
-                    .headers(h -> h.setBearerAuth(accessToken))
-                    .accept(MediaType.APPLICATION_JSON)
-                    .retrieve()
-                    .bodyToMono(GetRepoContentResponse.class).block();
-
-            if(getRepoContent.getName().contains("profile-pic")){
-                imageUrl = getRepoContent.getUrl();
+            if(getRepoContentResponse[i].getName().contains("profile-pic")){
+                imageUrl = getRepoContentResponse[i].getUrl();
                 break;
             }
         }
