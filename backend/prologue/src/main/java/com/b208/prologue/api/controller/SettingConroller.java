@@ -2,6 +2,7 @@ package com.b208.prologue.api.controller;
 
 import com.b208.prologue.api.request.ModifyBlogCategoryRequest;
 import com.b208.prologue.api.request.ModifyBlogPagesRequest;
+import com.b208.prologue.api.request.ModifyBlogSettingRequest;
 import com.b208.prologue.api.response.BaseResponseBody;
 import com.b208.prologue.api.response.BlogCategoryResponse;
 import com.b208.prologue.api.response.BlogPagesResponse;
@@ -13,7 +14,9 @@ import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import javax.validation.Valid;
 
 @CrossOrigin("*")
@@ -34,11 +37,31 @@ public class SettingConroller {
     public ResponseEntity<? extends BaseResponseBody> getBlogSetting(@RequestParam String accessToken, @RequestParam String githubId) {
 
         try {
-            Object test = settingService.getBlogSetting(accessToken, githubId);
+           List<String> result = settingService.getBlogSetting(accessToken, githubId);
 
-            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "블로그 설정 조회에 성공하였습니다."));
-        } catch (Exception e) {
+            return ResponseEntity.status(200).body(GetBlogSettingResponse.of(result.get(0), result.get(1), 200, "블로그 설정 조회에 성공하였습니다."));
+        }catch (Exception e){
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "블로그 설정 조회에 실패하였습니다."));
+        }
+    }
+
+    @PutMapping("/blog")
+    @ApiOperation(value = "블로그 설정 수정", notes = "블로그 설정을 수정한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "블로그 설정 수정 성공", response = BaseResponseBody.class),
+            @ApiResponse(code = 400, message = "블로그 설정 수정 실패", response = BaseResponseBody.class),
+            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<? extends BaseResponseBody> modifyBlogSetting(@Valid @RequestPart ModifyBlogSettingRequest modifyBlogSettingRequest, @RequestPart (required = false) MultipartFile imgFile) {
+        try {
+            settingService.updateBlogSetting(modifyBlogSettingRequest.getAccessToken(), modifyBlogSettingRequest.getGithubId(), modifyBlogSettingRequest.getModified());
+
+            if(imgFile != null){
+                settingService.updateProfileImage(modifyBlogSettingRequest.getAccessToken(), modifyBlogSettingRequest.getGithubId(), imgFile);
+            }
+            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "블로그 설정 수정에 성공하였습니다."));
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "블로그 설정 수정에 실패하였습니다."));
         }
     }
 
