@@ -4,9 +4,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.http.ResponseEntity;
 
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -14,9 +13,9 @@ import java.util.List;
 public class DateListResponse extends BaseResponseBody{
 
     @ApiModelProperty(name = "날짜 목록")
-    List<String> dateList;
+    Set<String> dateList;
 
-    public static DateListResponse of(List<String> dateList, Integer statusCode, String message){
+    public static DateListResponse of(Set<String> dateList, Integer statusCode, String message){
         DateListResponse res = new DateListResponse();
         res.setDateList(dateList);
         res.setStatusCode(statusCode);

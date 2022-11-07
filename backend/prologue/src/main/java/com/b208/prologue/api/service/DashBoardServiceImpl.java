@@ -94,10 +94,10 @@ public class DashBoardServiceImpl implements DashBoardService {
     }
 
     @Override
-    public List<String> getDateList(String encodedAccessToken, String githubId) throws Exception {
+    public Set<String> getDateList(String encodedAccessToken, String githubId) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
-        List<String> result = new ArrayList<>();
+        Set<String> result = new HashSet<>();
         GetFileNameResponse[] getFileNameResponse = webClient.get()
                 .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/content/blog")
                 .accept(MediaType.APPLICATION_JSON)
