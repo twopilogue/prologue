@@ -84,77 +84,44 @@ public class SettingServiceImpl implements SettingService {
     }
 
     @Override
-    public void updateBlogSetting(String encodedAccessToken, String githubId, String modified) throws Exception {
+    public void updateBlogSetting(String encodedAccessToken, String githubId, String modified, MultipartFile imageFile) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
+        String commit = "update: 블로그 설정 수정";
 
-        GetRepoContentResponse getRepoContentResponse = commonService.getDetailContent(accessToken, githubId, "gatsby-config.js");
-        String sha = getRepoContentResponse.getSha();
+        List<TreeRequest> treeRequestList = new ArrayList<>();
 
         String lastModify = "module.exports = " + modified;
-        UpdateContentRequest updateContentRequest = new UpdateContentRequest(
-                "modify: 블로그 설정", base64Converter.encode(lastModify), sha);
+        String encodedContent = commonService.makeBlob(accessToken, githubId, base64Converter.encode(lastModify));
+        treeRequestList.add(new TreeRequest("gatsby-config.js", "100644", "blob", encodedContent));
 
-        webClient.put()
-                .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/gatsby-config.js")
-                .headers(h -> h.setBearerAuth(accessToken))
-                .body(Mono.just(updateContentRequest), UpdateContentRequest.class)
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
-    }
+        if(imageFile != null){
+            String path = "images/";
 
-    @Override
-    public void updateProfileImage(String encodedAccessToken, String githubId, MultipartFile imageFile) throws Exception {
-        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
-
-        GetRepoContentResponse[] getRepoContentResponse = webClient.get()
-                .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/images")
-                .headers(h -> h.setBearerAuth(accessToken))
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToMono(GetRepoContentResponse[].class).block();
-
-        String fileName = "";
-        String sha = "";
-        for (int i = 0; i < getRepoContentResponse.length; i++){
-            GetRepoContentResponse getRepoContent = webClient.get()
-                    .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/" + getRepoContentResponse[i].getPath())
+            GetRepoContentResponse[] getRepoContentResponse = webClient.get()
+                    .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/images")
                     .headers(h -> h.setBearerAuth(accessToken))
                     .accept(MediaType.APPLICATION_JSON)
                     .retrieve()
-                    .bodyToMono(GetRepoContentResponse.class).block();
+                    .bodyToMono(GetRepoContentResponse[].class).block();
 
-            if(getRepoContent.getName().contains("profile-pic")){
-                fileName = getRepoContent.getName();
-                sha = getRepoContent.getSha();
-                break;
+            String fileName = "";
+            for (int i = 0; i < getRepoContentResponse.length; i++){
+                if(getRepoContentResponse[i].getName().contains("profile-pic")){
+                    fileName = getRepoContentResponse[i].getName();
+                    treeRequestList.add(new TreeRequest(path + getRepoContentResponse[i].getName(), "100644", "blob", null));
+                    break;
+                }
             }
+
+            int idx = imageFile.getOriginalFilename().indexOf(".");
+            fileName = "profile-pic" + imageFile.getOriginalFilename().substring(idx);
+
+            String image = new String(Base64.encodeBase64(imageFile.getBytes()));
+            encodedContent = commonService.makeBlob(accessToken, githubId, image);
+            treeRequestList.add(new TreeRequest(path + fileName, "100644", "blob", encodedContent));
         }
 
-        DeleteContentRequest deleteContentRequest = new DeleteContentRequest("delete: profile img 삭제", sha);
-        webClient.method(HttpMethod.DELETE)
-                .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/images/" + fileName)
-                .headers(h -> h.setBearerAuth(accessToken))
-                .body(Mono.just(deleteContentRequest), DeleteContentRequest.class)
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToMono(String.class).block();
-
-        int idx = imageFile.getOriginalFilename().indexOf(".");
-        fileName = "profile-pic" + imageFile.getOriginalFilename().substring(idx);
-
-        String image = new String(Base64.encodeBase64(imageFile.getBytes()));
-
-        CreateContentRequest createContentRequest = new CreateContentRequest("update: 프로필 이미지 변경", image);
-
-        webClient.put()
-                .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/images/" + fileName)
-                .headers(h -> h.setBearerAuth(accessToken))
-                .body(Mono.just(createContentRequest), CreateContentRequest.class)
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToMono(String.class).block();
+        commonService.multiFileCommit(accessToken, githubId, treeRequestList, commit);
     }
 
     @Override
