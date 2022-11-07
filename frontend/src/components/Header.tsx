@@ -17,12 +17,10 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 import LogoutIcon from "@mui/icons-material/Logout";
 import styles from "./css/Header.module.css";
 import palette from "../styles/colorPalette";
-
-interface HeaderProps {
-  user?: string;
-  onLogin?: () => void;
-  onLogout?: () => void;
-}
+import { useDispatch, useSelector } from "react-redux";
+import { useAppSelector } from "app/hooks";
+import axios from "axios";
+import api from "api/api";
 
 const GithubButton = styled(Button)(() => ({
   margin: 3,
@@ -41,12 +39,14 @@ const AvatarStyled = styled(Avatar)(() => ({
   height: "30px",
 }));
 
-function Header({ user, onLogin }: HeaderProps) {
-  const [backgroudMode, setBackgroudMode] = React.useState(true);
+function Header() {
+  const dispatch = useDispatch();
 
+  const [backgroudMode, setBackgroudMode] = React.useState(true);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null,
   );
+  const [user, setUser] = React.useState("");
 
   const userMenu = [
     {
@@ -64,6 +64,10 @@ function Header({ user, onLogin }: HeaderProps) {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  const onLogin = () => {
+    window.location.href = `https://github.com/login/oauth/authorize?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&scope=repo`;
+  }
 
   return (
     <header>
@@ -91,12 +95,11 @@ function Header({ user, onLogin }: HeaderProps) {
         </div>
 
         <Stack direction="row" spacing={2} style={{ alignItems: "center" }}>
-          <IconButton sx={{ color: backgroudMode ? "black" : "white" }}>
-            {backgroudMode ? (
-              <LightMode onClick={() => setBackgroudMode(!backgroudMode)} />
-            ) : (
-              <DarkMode onClick={() => setBackgroudMode(!backgroudMode)} />
-            )}
+          <IconButton
+            sx={{ color: backgroudMode ? "black" : "white" }}
+            onClick={() => setBackgroudMode(!backgroudMode)}
+          >
+            {backgroudMode ? <LightMode /> : <DarkMode />}
           </IconButton>
           <NavLink
             to="/post"
@@ -154,17 +157,15 @@ function Header({ user, onLogin }: HeaderProps) {
               </Box>
             </>
           ) : (
-            <>
-              <GithubButton
-                startIcon={<GitHubIcon />}
-                onClick={onLogin}
-                sx={{
-                  color: backgroudMode ? "black" : "white",
-                }}
-              >
-                Login
-              </GithubButton>
-            </>
+            <GithubButton
+              startIcon={<GitHubIcon />}
+              onClick={onLogin}
+              sx={{
+                color: backgroudMode ? "black" : "white",
+              }}
+            >
+              Login
+            </GithubButton>
           )}
         </Stack>
       </div>
@@ -173,3 +174,4 @@ function Header({ user, onLogin }: HeaderProps) {
 }
 
 export default Header;
+
