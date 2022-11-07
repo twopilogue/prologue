@@ -2,25 +2,15 @@ import React, { useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import { LightMode, DarkMode } from "@mui/icons-material";
-import {
-  Avatar,
-  Box,
-  IconButton,
-  Menu,
-  MenuItem,
-  Stack,
-  Typography,
-  Button,
-  Link,
-} from "@mui/material";
+import { Avatar, Box, IconButton, Menu, MenuItem, Stack, Typography, Button, Link } from "@mui/material";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import LogoutIcon from "@mui/icons-material/Logout";
 import styles from "./css/Header.module.css";
 import palette from "../styles/colorPalette";
 import { useDispatch, useSelector } from "react-redux";
 import { rootState } from "app/store";
-import api from "api/api";
-import Axios from "api/Axios";
+import api from "api/Api";
+import Axios from "api/JsonAxios";
 import { authActions } from "slices/authSlice";
 
 const GithubButton = styled(Button)(() => ({
@@ -44,14 +34,10 @@ function Header() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { auth, githubId, githubImage } = useSelector(
-    (state: rootState) => state.auth,
-  );
+  const { auth, githubId, githubImage } = useSelector((state: rootState) => state.auth);
 
   const [backgroudMode, setBackgroudMode] = React.useState(true);
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
-    null,
-  );
+  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
@@ -62,8 +48,9 @@ function Header() {
   };
 
   const onLogin = () => {
-    Axios.get(api.auth.uri()).then((res) => {
-      window.location.href = res.data.uri;
+    Axios.get(api.auth.getUri()).then((res) => {
+      console.log(res);
+      // window.location.href = res.data.uri;
     });
   };
 
@@ -171,11 +158,7 @@ function Header() {
                   onClose={handleCloseUserMenu}
                 >
                   <MenuItem onClick={handleCloseUserMenu}>
-                    <Link
-                      href={`https://github.com/${githubId}`}
-                      underline="none"
-                      color="black"
-                    >
+                    <Link href={`https://github.com/${githubId}`} underline="none" color="black">
                       <Stack direction="row" spacing={1}>
                         <GitHubIcon />
                         <Typography textAlign="center">GitHub</Typography>
