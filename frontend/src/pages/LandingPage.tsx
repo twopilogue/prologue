@@ -53,13 +53,17 @@ const LandingPage = () => {
             blogType: res.data.blogType,
           }),
         );
-        // setSecretRepo(accessToken, githubId);
-      }
-      else navigate("/create/reset");
+        setSecretRepo(accessToken, githubId);
+      } else navigate("/create/reset");
     });
   }
-
-
+  
+  async function setSecretRepo(accessToken: string, githubId: string) {
+    await Axios.put(api.auth.setSecretRepo(accessToken, githubId)).then((res) => {
+      console.log("레포지토리 Secret 생성 성공");
+      // navigate("/dashboard"); 대시보드로 이동
+    });
+  }
 
   return (
     <>
