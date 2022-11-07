@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Stack } from "@mui/material";
 import Text from "components/Text";
 import Modal from "components/Modal";
-import BlogReset from "features/blog/blogReset";
+import BlogReset from "features/blog/BlogReset";
 import resetImg from "assets/blog/blogChoice/RepositoryReset.png";
 import manageImg from "assets/blog/blogChoice/ManageOnly.png";
 
