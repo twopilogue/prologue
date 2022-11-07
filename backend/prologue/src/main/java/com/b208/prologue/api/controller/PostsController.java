@@ -72,7 +72,7 @@ public class PostsController {
             @ApiResponse(code = 400, message = "게시글 작성 실패", response = BaseResponseBody.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
-    public ResponseEntity<? extends BaseResponseBody> writeDetailPost(@Valid @RequestPart WriteDetailPostRequest writeDetailPostRequest, @RequestPart List<MultipartFile> files) {
+    public ResponseEntity<? extends BaseResponseBody> writeDetailPost(@Valid @RequestPart WriteDetailPostRequest writeDetailPostRequest, @RequestPart(required = false) List<MultipartFile> files) {
 
         try {
             postService.insertDetailPost(writeDetailPostRequest.getAccessToken(), writeDetailPostRequest.getGithubId(),
