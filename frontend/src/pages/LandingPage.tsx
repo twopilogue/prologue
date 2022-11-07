@@ -1,8 +1,8 @@
 import { Stack } from "@mui/material";
 import React, { useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import api from "api/api";
-import Axios from "api/Axios";
+import api from "api/Api";
+import Axios from "api/JsonAxios";
 import { useDispatch } from "react-redux";
 import { authActions } from "slices/authSlice";
 
@@ -13,11 +13,8 @@ const LandingPage = () => {
   const code = new URLSearchParams(location.search).get("code");
 
   useEffect(() => {
-    console.log(code);
     async function getAccessToken() {
-      Axios.get(api.auth.login(), {
-        params: { code: code },
-      }).then((res) => {
+      Axios.get(api.auth.login(code)).then((res) => {
         console.log("결과", res.data);
         dispatch(
           authActions.login({
