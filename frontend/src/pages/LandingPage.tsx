@@ -11,7 +11,7 @@ const LandingPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { auth, accessToken, githubId } = useSelector((state: rootState) => state.auth);
+  const { auth } = useSelector((state: rootState) => state.auth);
   const code = new URLSearchParams(location.search).get("code");
 
   useEffect(() => {
@@ -47,7 +47,6 @@ const LandingPage = () => {
   async function getAuthFile(accessToken: string, githubId: string) {
     await Axios.get(api.auth.getAuthFile(accessToken, githubId)).then((res) => {
       if (res.data.checkAuthFile) {
-        res.data.blogType;
         dispatch(
           authActions.blogType({
             blogType: res.data.blogType,
