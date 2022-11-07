@@ -1,6 +1,10 @@
 package com.b208.prologue.api.service;
 
+<<<<<<< HEAD
 
+=======
+import com.b208.prologue.api.request.github.TreeRequest;
+>>>>>>> bc67c730439af5224e77809cec39af6d6c88a11a
 import com.b208.prologue.api.request.github.CreateContentRequest;
 import com.b208.prologue.api.request.github.DeleteContentRequest;
 import com.b208.prologue.api.request.github.UpdateContentRequest;
@@ -21,6 +25,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 @Service
@@ -168,8 +173,8 @@ public class SettingServiceImpl implements SettingService {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
         String content = commonService.getDetailContent(accessToken, githubId, "customizing-setting.json").getContent();
-        int index = content.indexOf('=');
-        content = content.substring(index + 1);
+        int index = content.indexOf('{');
+        content = content.substring(index);
 
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObj = (JSONObject) jsonParser.parse(content);
@@ -198,8 +203,8 @@ public class SettingServiceImpl implements SettingService {
         String content = getRepoContentResponse.getContent();
         String sha = getRepoContentResponse.getSha();
 
-        int index = content.indexOf('=');
-        content = content.substring(index + 1);
+        int index = content.indexOf('{');
+        content = content.substring(index);
 
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObj = (JSONObject) jsonParser.parse(content);
@@ -225,8 +230,8 @@ public class SettingServiceImpl implements SettingService {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
         String content = commonService.getDetailContent(accessToken, githubId, "customizing-setting.json").getContent();
-        int index = content.indexOf('=');
-        content = content.substring(index + 1);
+        int index = content.indexOf('{');
+        content = content.substring(index);
 
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObj = (JSONObject) jsonParser.parse(content);
@@ -240,4 +245,69 @@ public class SettingServiceImpl implements SettingService {
 
         return pages;
     }
+
+    @Override
+    public void updateBlogPages(String encodedAccessToken, String githubId, List<String> pages,
+                                List<Map<String, String>> modifiedPages, List<String> addedPages, List<String> deletedPages) throws Exception {
+        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
+        String commit = "modify: 페이지 목록 수정";
+
+        String path = "content/pages/";
+        List<TreeRequest> treeRequestList = new ArrayList<>();
+
+        for (int i = 0; i < deletedPages.size(); i++) {
+            GetRepoContentResponse[] repoContentResponses = commonService.getContentList(accessToken, githubId, path + deletedPages.get(i));
+
+            for (GetRepoContentResponse getRepoContentResponse : repoContentResponses) {
+                treeRequestList.add(new TreeRequest(getRepoContentResponse.getPath(), "100644", "blob", null));
+            }
+        }
+
+        List<TreeRequest> temp = new ArrayList<>();
+        for (int i = 0; i < modifiedPages.size(); i++) {
+            GetRepoContentResponse[] repoContentResponses = commonService.getContentList(accessToken, githubId, path + modifiedPages.get(i).get("oldName"));
+
+            for (GetRepoContentResponse getRepoContentResponse : repoContentResponses) {
+                GetRepoContentResponse response = commonService.getDetailContent(accessToken, githubId, getRepoContentResponse.getPath());
+                String encodedContent = commonService.makeBlob(accessToken, githubId, base64Converter.encode(response.getContent()));
+                temp.add(new TreeRequest(path + modifiedPages.get(i).get("newName") + "/" + response.getName(), "100644", "blob", encodedContent));
+                treeRequestList.add(new TreeRequest(getRepoContentResponse.getPath(), "100644", "blob", null));
+            }
+        }
+
+        for (int i = 0; i < temp.size(); i++) {
+            treeRequestList.add(temp.get(i));
+        }
+
+        String defaultContent = "페이지 내용 넣기";
+        for (int i = 0; i < addedPages.size(); i++) {
+            String encodedContent = commonService.makeBlob(accessToken, githubId, base64Converter.encode(defaultContent));
+            treeRequestList.add(new TreeRequest(path + addedPages.get(i) + "/index.md", "100644", "blob", encodedContent));
+        }
+
+        JSONArray jsonArray = new JSONArray();
+        for (int i = 0; i < pages.size(); i++) {
+            jsonArray.add(pages.get(i));
+        }
+
+        GetRepoContentResponse getRepoContentResponse = commonService.getDetailContent(accessToken, githubId, "customizing-setting.json");
+        String content = getRepoContentResponse.getContent();
+
+        int index = content.indexOf('{');
+        content = content.substring(index);
+
+        JSONParser jsonParser = new JSONParser();
+        JSONObject jsonObj = (JSONObject) jsonParser.parse(content);
+
+        jsonObj.replace("pages", jsonArray);
+
+        String jsonString = "customizing-setting=" + jsonObj;
+
+        String encodedContent = commonService.makeBlob(accessToken, githubId, base64Converter.encode(jsonString));
+        treeRequestList.add(new TreeRequest("customizing-setting.json", "100644", "blob", encodedContent));
+
+        commonService.multiFileCommit(accessToken, githubId, treeRequestList, commit);
+
+    }
+
 }
