@@ -9,14 +9,16 @@ import BlogDashboardMoveModal from "features/blog/BlogDashboardMoveModal";
 const LandingPage = () => {
   const navigate = useNavigate();
 
-  const [BlogCreateClick, setBlogCreateClick] = React.useState(0);
+  const [isStepNumber, setStepNumber] = React.useState(0);
   const [radioValue, setRadioValue] = React.useState("CustomLayout");
+
+  
 
   const layoutSetting = () => {
     console.log(radioValue);
     if (radioValue === "GatsbyLayout") navigate("/create/gatsby");
     if (radioValue === "CustomLayout") {
-      setBlogCreateClick(2);
+      setStepNumber(2);
       setTimeout(() => {
         // 블로그 생성시 필요한 것
       }, 2000);
@@ -25,7 +27,7 @@ const LandingPage = () => {
 
   return (
     <div style={{ paddingTop: "5%" }}>
-      <BlogStepper step={BlogCreateClick} />
+      <BlogStepper step={isStepNumber} />
       <div
         style={{
           width: "100%",
@@ -34,20 +36,11 @@ const LandingPage = () => {
           marginTop: "5%",
         }}
       >
-        {BlogCreateClick === 0 ? (
-          <BlogCreateBox onClick={() => setBlogCreateClick(1)} />
-        ) : BlogCreateClick === 1 ? (
-          <Stack
-            direction="column"
-            justifyContent="center"
-            alignItems="center"
-            spacing={2}
-          >
-            <BlogLayoutSetting
-              radioValue={radioValue}
-              setValue={setRadioValue}
-              onClick={layoutSetting}
-            />
+        {isStepNumber === 0 ? (
+          <BlogCreateBox onClick={() => setStepNumber(1)} />
+        ) : isStepNumber === 1 ? (
+          <Stack direction="column" justifyContent="center" alignItems="center" spacing={2}>
+            <BlogLayoutSetting radioValue={radioValue} setValue={setRadioValue} onClick={layoutSetting} />
           </Stack>
         ) : (
           <BlogDashboardMoveModal />
