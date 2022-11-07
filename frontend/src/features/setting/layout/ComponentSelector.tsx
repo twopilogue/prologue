@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { ComponentCheckConfig } from "slices/settingSlice";
+import React from "react";
 import styles from "../Setting.module.css";
 import SwitchButton from "components/SwitchButton";
 import Text from "components/Text";
@@ -14,12 +13,12 @@ const ComponentSelector = (props: any) => {
         <div className={styles.checkListItem}>
           <SwitchButton
             label="블로그 로고"
-            name="logoCheck"
-            checked={props.checkList.logoCheck}
+            name="logo"
+            checked={props.checkList.logo}
             onChange={() => {
               props.setCheckList({
                 ...props.checkList,
-                logoCheck: !props.checkList.logoCheck,
+                logo: !props.checkList.logo,
               });
             }}
           />
@@ -27,12 +26,12 @@ const ComponentSelector = (props: any) => {
         <div className={styles.checkListItem}>
           <SwitchButton
             label="프로필"
-            name="profileCheck"
-            checked={props.checkList.profileCheck}
+            name="profile"
+            checked={props.checkList.profile}
             onChange={() => {
               props.setCheckList({
                 ...props.checkList,
-                profileCheck: !props.checkList.profileCheck,
+                profile: !props.checkList.profile,
               });
             }}
           />
@@ -40,12 +39,12 @@ const ComponentSelector = (props: any) => {
         <div className={styles.checkListItem}>
           <SwitchButton
             label="카테고리"
-            name="categoryCheck"
-            checked={props.checkList.categoryCheck}
+            name="category"
+            checked={props.checkList.category}
             onChange={() => {
               props.setCheckList({
                 ...props.checkList,
-                categoryCheck: !props.checkList.categoryCheck,
+                category: !props.checkList.category,
               });
             }}
           />
@@ -53,12 +52,12 @@ const ComponentSelector = (props: any) => {
         <div className={styles.checkListItem}>
           <SwitchButton
             label="페이지"
-            name="naviCheck"
-            checked={props.checkList.naviCheck}
+            name="page"
+            checked={props.checkList.page}
             onChange={() => {
               props.setCheckList({
                 ...props.checkList,
-                naviCheck: !props.checkList.naviCheck,
+                page: !props.checkList.page,
               });
             }}
           />

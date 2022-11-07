@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "components/css/Text.module.css";
-import { PaletteKeyTypes } from "styles/colorPalette";
+import palette,{ PaletteKeyTypes } from "styles/colorPalette";
 
 interface Props {
   value: string;
@@ -18,7 +18,7 @@ interface Props {
 const Text = ({ value, type, bold, color }: Props) => {
   const style = {
     fontWeight: bold ? "600" : "400",
-    color: color,
+    color: palette[color],
   };
   return (
     <>

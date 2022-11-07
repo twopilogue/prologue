@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
 import SamplePage from "./pages/SamplePage";
 import Header from "./components/Header";
@@ -14,14 +14,25 @@ import BlogReset from "pages/BlogResetPage";
 import GatsbyLayout from "pages/GatsbyLayoutPage";
 
 function App() {
+  const location = useLocation();
+
   return (
-    <div>
+    <div
+      style={
+        location.pathname === "/dashboard"
+          ? {
+              backgroundColor: "#F1F8FF",
+              height: "100vh",
+            }
+          : {}
+      }
+    >
       <Header />
       <div
         style={{
           width: "83vw",
           margin: "0 auto",
-          paddingTop: "47px"
+          paddingTop: "47px",
         }}
       >
         <Routes>
