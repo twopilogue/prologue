@@ -37,7 +37,7 @@ public class SettingConroller {
     public ResponseEntity<? extends BaseResponseBody> getBlogSetting(@RequestParam String accessToken, @RequestParam String githubId) {
 
         try {
-           List<String> result = settingService.getBlogSetting(accessToken, githubId);
+            List<String> result = settingService.getBlogSetting(accessToken, githubId);
 
             return ResponseEntity.status(200).body(GetBlogSettingResponse.of(result.get(0), result.get(1), 200, "블로그 설정 조회에 성공하였습니다."));
         }catch (Exception e){
