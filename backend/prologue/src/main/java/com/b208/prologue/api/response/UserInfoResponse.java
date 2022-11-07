@@ -17,9 +17,6 @@ public class UserInfoResponse extends BaseResponseBody{
     @ApiModelProperty(name = "GitHub 아이디")
     String githubId;
 
-    @ApiModelProperty(name = "GitHub 사용자 이름")
-    String githubName;
-
     @ApiModelProperty(name = "GitHub 사용자 프로필 사진")
     String githubImage;
 
@@ -27,7 +24,6 @@ public class UserInfoResponse extends BaseResponseBody{
         UserInfoResponse res = new UserInfoResponse();
         res.setAccessToken(token);
         res.setGithubId(userInfo.getLogin());
-        res.setGithubName(userInfo.getName());
         res.setGithubImage(userInfo.getAvatarUrl());
         res.setStatusCode(statusCode);
         res.setMessage(message);
