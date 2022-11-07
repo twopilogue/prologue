@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Stack } from "@mui/material";
 import Text from "components/Text";
 import Modal from "components/Modal";
-import BlogReset from "features/blog/blogReset";
+import BlogReset from "features/blog/BlogReset";
 import resetImg from "assets/blog/blogChoice/RepositoryReset.png";
 import manageImg from "assets/blog/blogChoice/ManageOnly.png";
 
@@ -43,30 +43,11 @@ function BlogResetPage() {
 
   return (
     <Box>
-      <Stack
-        direction="column"
-        justifyContent="center"
-        alignItems="center"
-        spacing={1}
-        sx={{ py: "2vw" }}
-      >
-        <Text
-          value="github.io가 이미 존재합니다"
-          type="pageTitle"
-          bold
-          color="red"
-        />
-        <Text
-          value="사이트에서 지원하는 깃허브 블로그가 아닙니다. 다음 중 선택하세요."
-          type="groupTitle"
-        />
+      <Stack direction="column" justifyContent="center" alignItems="center" spacing={1} sx={{ py: "2vw" }}>
+        <Text value="github.io가 이미 존재합니다" type="pageTitle" bold color="red" />
+        <Text value="사이트에서 지원하는 깃허브 블로그가 아닙니다. 다음 중 선택하세요." type="groupTitle" />
       </Stack>
-      <Stack
-        direction="row"
-        justifyContent="center"
-        alignItems="center"
-        spacing={6.5}
-      >
+      <Stack direction="row" justifyContent="center" alignItems="center" spacing={6.5}>
         <BlogReset
           title={context[0].title}
           image={context[0].image}
