@@ -46,8 +46,8 @@ const initialState: LayoutConfig = {
 
   componentLayoutList: [
     { i: "블로그 로고", x: 0, y: 0, w: 1, h: 2, isResizable: false },
-    { i: "프로필", x: 0, y: 1, w: 1, h: 3, isResizable: false },
-    { i: "카테고리", x: 0, y: 2, w: 1, h: 4, isResizable: false },
+    { i: "프로필", x: 0, y: 2, w: 1, h: 3, isResizable: false },
+    { i: "카테고리", x: 0, y: 5, w: 1, h: 4, isResizable: false },
     { i: "페이지", x: 1, y: 0, w: 4, h: 2, isResizable: false },
 
     { i: "타이틀", x: 1, y: 2, w: 4, h: 5, static: true, isResizable: false },
