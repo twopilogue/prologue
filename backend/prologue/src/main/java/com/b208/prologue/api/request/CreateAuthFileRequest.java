@@ -4,14 +4,16 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.Getter;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Getter
 @Data
-@ApiModel("WriteDetailPostRequest")
-public class WriteDetailPostRequest {
+@ApiModel("ModifyDetailPostRequest")
+public class CreateAuthFileRequest {
 
     @NotBlank
     @ApiModelProperty(name = "엑세스 토큰", example = "Qdsfhdf...", required = true)
@@ -22,7 +24,7 @@ public class WriteDetailPostRequest {
     String githubId;
 
     @NotNull
-    @ApiModelProperty(name = "게시글 내용", example = "md파일 내용...", required = true)
-    String content;
+    @ApiModelProperty(name = "블로그 타입", example = "0", required = true)
+    int blogType;
 
 }

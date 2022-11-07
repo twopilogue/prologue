@@ -11,11 +11,15 @@ import lombok.Setter;
 public class AuthFileCheckResponse extends BaseResponseBody {
 
     @ApiModelProperty(name = "서비스 인증 파일 조회")
-    boolean checkAuthFile;
+    boolean checkAuthFile = false;
 
-    public static AuthFileCheckResponse of(boolean checkAuthFile, Integer statusCode, String message){
+    @ApiModelProperty(name = "블로그 타입")
+    Integer blogType = null;
+
+    public static AuthFileCheckResponse of(boolean checkAuthFile, Integer blogType, Integer statusCode, String message) {
         AuthFileCheckResponse res = new AuthFileCheckResponse();
         res.setCheckAuthFile(checkAuthFile);
+        res.setBlogType(blogType);
         res.setStatusCode(statusCode);
         res.setMessage(message);
         return res;
