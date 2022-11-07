@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @CrossOrigin("*")
 @RestController
@@ -65,7 +66,7 @@ public class DashBoardController {
     public ResponseEntity<? extends  BaseResponseBody> getDateList(@RequestParam String accessToken, @RequestParam String githubId) {
 
         try {
-            List<String> result = dashBoardService.getDateList(accessToken, githubId);
+            Set<String> result = dashBoardService.getDateList(accessToken, githubId);
 
             return ResponseEntity.status(200).body(DateListResponse.of(result, 200, "게시물 목록 조회 성공"));
         } catch (Exception e){
