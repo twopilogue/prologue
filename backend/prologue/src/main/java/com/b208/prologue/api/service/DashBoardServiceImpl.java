@@ -20,7 +20,7 @@ public class DashBoardServiceImpl implements DashBoardService {
     private final CommonService commonService;
 
     @Override
-    public Map<String, Object> getList(String encodedAccessToken, String githubId) throws Exception{
+    public Map<String, Object> getList(String encodedAccessToken, String githubId) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
         Map<String, Object> result = new HashMap<>();
@@ -29,15 +29,15 @@ public class DashBoardServiceImpl implements DashBoardService {
 
         String url = "/repos/" + githubId + "/" + githubId + ".github.io" + "/contents/";
 
-        PostGetListResponse[] list =  webClient.get()
+        PostGetListResponse[] list = webClient.get()
                 .uri(url + "content/blog")
                 .headers(h -> h.setBearerAuth(accessToken))
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToMono(PostGetListResponse[].class).block();
 
-        for (int i = list.length - 1; i > list.length - 6; i--){
-            if(i < 0) break;
+        for (int i = list.length - 1; i > list.length - 6; i--) {
+            if (i < 0) break;
             content.add(postService.setItem(url, accessToken, list[i].getPath()));
             directory.add(list[i].getName());
         }
@@ -56,18 +56,18 @@ public class DashBoardServiceImpl implements DashBoardService {
         List<Map<String, String>> result = new ArrayList<>();
         Map<String, String> image;
 
-        for (String directory:directories) {
+        for (String directory : directories) {
             GetRepoContentResponse[] responses = commonService.getContentList(accessToken, githubId, "content/blog/" + directory);
             image = new HashMap<>();
             int flag = 0;
 
             for (int i = responses.length - 1; i > responses.length - 6; i--) {
-                if(i < 0) break;
+                if (i < 0) break;
 
                 if (!responses[flag].getName().equals("index.md")) {
                     image.put(directory, responses[flag].getUrl());
                     break;
-                }else{
+                } else {
                     flag++;
                     continue;
                 }
@@ -80,7 +80,7 @@ public class DashBoardServiceImpl implements DashBoardService {
     }
 
     @Override
-    public Double getRepositorySize(String encodedAccessToken, String githubId) throws Exception{
+    public Double getRepositorySize(String encodedAccessToken, String githubId) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
         GetRepositorySizeResponse getRepositorySizeResponse = webClient.get()
@@ -90,10 +90,11 @@ public class DashBoardServiceImpl implements DashBoardService {
                 .retrieve()
                 .bodyToMono(GetRepositorySizeResponse.class).block();
 
-        return getRepositorySizeResponse.getSize()/100.0;
+        return getRepositorySizeResponse.getSize() / 100.0;
     }
 
     @Override
+<<<<<<< HEAD
     public List<String> getDateList(String encodedAccessToken, String githubId) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
@@ -115,4 +116,19 @@ public class DashBoardServiceImpl implements DashBoardService {
         return result;
     }
 
+=======
+    public String getLatestBuildTime(String encodedAccessToken, String githubId) throws Exception {
+        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
+
+        GetLatestBuildTimeResponse getLatestBuildTimeResponse = webClient.get()
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io/pages/builds/latest")
+                .accept(MediaType.APPLICATION_JSON)
+                .headers(h -> h.setBearerAuth(accessToken))
+                .retrieve()
+                .bodyToMono(GetLatestBuildTimeResponse.class).block();
+
+        SimpleDateFormat dataFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+        return dataFormat.format(getLatestBuildTimeResponse.getLastBuildTime());
+    }
+>>>>>>> cb70e4fa4444badf902da69845fbdbb5c8bf5789
 }
