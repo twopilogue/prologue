@@ -3,31 +3,47 @@ import React, { useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import api from "api/Api";
 import Axios from "api/JsonAxios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "slices/authSlice";
+import { rootState } from "app/store";
 
 const LandingPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const { auth, accessToken, githubId } = useSelector((state: rootState) => state.auth);
   const code = new URLSearchParams(location.search).get("code");
 
   useEffect(() => {
-    async function getAccessToken() {
-      Axios.get(api.auth.login(code)).then((res) => {
-        console.log("결과", res.data);
-        dispatch(
-          authActions.login({
-            accessToken: res.data.accessToken,
-            githubId: res.data.githubId,
-            githubImage: res.data.githubImage,
-            auth: true,
-          }),
-        );
-      });
-    }
-    getAccessToken();
+    if (!auth) getAccessToken();
   });
+
+  async function getAccessToken() {
+    await Axios.get(api.auth.login(code)).then((res) => {
+      dispatch(
+        authActions.login({
+          accessToken: res.data.accessToken,
+          githubId: res.data.githubId,
+          githubImage: res.data.githubImage,
+          auth: true,
+        }),
+      );
+      navigate("/");
+      getRepoList(res.data.accessToken, res.data.githubId);
+    });
+  }
+
+  // 깃허브 블로그 개설여부
+  async function getRepoList(accessToken: string, githubId: string) {
+    await Axios.get(api.blog.getRepoList(accessToken, githubId)).then((res) => {
+      if (res.data.checkRepository) {
+        // getAuthFile(accessToken, githubId);
+      } else {
+        navigate("/create");
+      }
+    });
+  }
+
 
   return (
     <>
