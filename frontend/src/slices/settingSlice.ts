@@ -2,29 +2,35 @@ import { createSlice } from "@reduxjs/toolkit";
 import { rootState } from "../app/store";
 import { Layout } from "react-grid-layout";
 
-export interface CategoryConfig {
+export interface KeyConfig {
   key: string;
 }
 
-export interface PageConfig {
+export interface ComponentConfig {
   key: string;
+  id: string;
 }
 
 export interface ComponentCheckConfig {
-  logoCheck: boolean;
-  profileCheck: boolean;
-  categoryCheck: boolean;
-  naviCheck: boolean;
+  [logo: string]: boolean;
+  profile: boolean;
+  category: boolean;
+  page: boolean;
+  title: boolean;
+  contents: boolean;
 }
 
 interface LayoutConfig {
   categoryLayoutList: Layout[];
-  categoryList: CategoryConfig[];
+  categoryList: KeyConfig[];
   categoryCnt: number;
 
   pageLayoutList: Layout[];
-  pageList: PageConfig[];
+  pageList: KeyConfig[];
   pageCnt: number;
+
+  componentLayoutList: Layout[];
+  componentList: ComponentConfig[];
 
   checkList: ComponentCheckConfig;
 }
@@ -38,11 +44,31 @@ const initialState: LayoutConfig = {
   pageList: [],
   pageCnt: 1,
 
+  componentLayoutList: [
+    { i: "블로그 로고", x: 0, y: 0, w: 1, h: 2, isResizable: false },
+    { i: "프로필", x: 0, y: 1, w: 1, h: 3, isResizable: false },
+    { i: "카테고리", x: 0, y: 2, w: 1, h: 4, isResizable: false },
+    { i: "페이지", x: 1, y: 0, w: 4, h: 2, isResizable: false },
+
+    { i: "타이틀", x: 1, y: 2, w: 4, h: 5, static: true, isResizable: false },
+    { i: "글 목록", x: 1, y: 7, w: 4, h: 6, static: true, isResizable: false },
+  ],
+  componentList: [
+    { key: "블로그 로고", id: "logo" },
+    { key: "프로필", id: "profile" },
+    { key: "카테고리", id: "category" },
+    { key: "페이지", id: "page" },
+    { key: "타이틀", id: "title" },
+    { key: "글 목록", id: "contents" },
+  ],
+
   checkList: {
-    logoCheck: true,
-    profileCheck: true,
-    categoryCheck: true,
-    naviCheck: true,
+    logo: true,
+    profile: true,
+    category: true,
+    page: true,
+    title: true,
+    contents: true,
   },
 };
 
@@ -69,11 +95,16 @@ const settingSlice = createSlice({
     setPageCnt: (state, { payload }) => {
       state.pageCnt = payload;
     },
-    setCheckList: (
-      state,
-      { payload: { logoCheck, categoryCheck, profileCheck, naviCheck } },
-    ) => {
-      state.checkList = { logoCheck, categoryCheck, profileCheck, naviCheck };
+
+    setComponentLayoutList: (state, { payload }) => {
+      state.componentLayoutList = payload;
+    },
+    setComponentList: (state, { payload }) => {
+      state.componentList = payload;
+    },
+
+    setCheckList: (state, { payload: { logo, category, profile, page, title, contents } }) => {
+      state.checkList = { logo, category, profile, page, title, contents };
     },
   },
 });
@@ -83,20 +114,21 @@ export const {
   setCategoryCnt,
   setPageList,
   setPageCnt,
+  setComponentList,
+  setComponentLayoutList,
   setCheckList,
 } = settingSlice.actions;
 
-export const selectCategoryLayoutList = (state: rootState) =>
-  state.setting.categoryLayoutList;
-export const selectCategoryCnt = (state: rootState) =>
-  state.setting.categoryCnt;
-export const selectCategoryList = (state: rootState) =>
-  state.setting.categoryList;
+export const selectCategoryLayoutList = (state: rootState) => state.setting.categoryLayoutList;
+export const selectCategoryCnt = (state: rootState) => state.setting.categoryCnt;
+export const selectCategoryList = (state: rootState) => state.setting.categoryList;
 
-export const selectPageLayoutList = (state: rootState) =>
-  state.setting.pageLayoutList;
+export const selectPageLayoutList = (state: rootState) => state.setting.pageLayoutList;
 export const selectPageList = (state: rootState) => state.setting.pageList;
 export const selectPageCnt = (state: rootState) => state.setting.pageCnt;
+
+export const selectComponentLayoutList = (state: rootState) => state.setting.componentLayoutList;
+export const selectComponentList = (state: rootState) => state.setting.componentList;
 
 export const selectCheckList = (state: rootState) => state.setting.checkList;
 

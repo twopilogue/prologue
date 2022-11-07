@@ -1,47 +1,70 @@
 import React, { useEffect, useState } from "react";
 import styles from "./Setting.module.css";
-
-import { Responsive, WidthProvider, Layout } from "react-grid-layout";
+import { Layout } from "react-grid-layout";
+import GridLayout from "react-grid-layout";
 import { useAppSelector } from "app/hooks";
-import { selectCategoryLayoutList } from "slices/settingSlice";
+import {
+  ComponentCheckConfig,
+  ComponentConfig,
+  KeyConfig,
+  selectCheckList,
+  selectComponentLayoutList,
+  selectComponentList,
+} from "slices/settingSlice";
+import { useGettingWidth } from "./layout/LayoutSample";
+import Text from "components/Text";
+import DragHandleIcon from "@mui/icons-material/DragHandle";
 
-const SettingLayout = () => {
-  const ResponsiveGridLayout = WidthProvider(Responsive);
-  const savedLayoutList: Layout[] = useAppSelector(selectCategoryLayoutList);
-  const [layoutList, setLayoutList] = useState<Layout[]>(savedLayoutList);
+const SettingLayout = (props: any) => {
+  const [componentLayoutList, setComponentLayoutList] = useState<Layout[]>(useAppSelector(selectComponentLayoutList));
+  const [componentList, setComponentList] = useState<ComponentConfig[]>(useAppSelector(selectComponentList));
+  const [checkList, setCheckList] = useState<ComponentCheckConfig>(useAppSelector(selectCheckList));
+  const [layoutWidth, layoutContainer] = useGettingWidth();
 
+  console.log(props.titleColor);
   useEffect(() => {
     const tmpLayoutList: Layout[] = [];
-    const layoutLength = layoutList.length;
+    const layoutLength = componentLayoutList.length;
     for (let i = 0; i < layoutLength; i++) {
-      console.log(layoutList[i]);
+      console.log(componentLayoutList[i]);
       tmpLayoutList.push({
-        ...layoutList[i],
+        ...componentLayoutList[i],
         static: true,
       });
     }
-    console.log(tmpLayoutList);
-    setLayoutList(tmpLayoutList);
+    setComponentLayoutList(tmpLayoutList);
   }, []);
 
   return (
-    <ResponsiveGridLayout
-      layouts={{ lg: layoutList }}
-      breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-      cols={{ lg: 5, md: 4, sm: 3, xs: 2, xxs: 1 }}
-      rowHeight={30}
-      width={1000}
-    >
-      <div className={styles.box1} key="a">
-        Category
+    <div>
+      <div
+        ref={layoutContainer}
+        style={{
+          backgroundColor: "white",
+          border: "2px solid #ECECEC",
+          marginLeft: "5px",
+          marginRight: "5px",
+          paddingBottom: "20px",
+        }}
+      >
+        <GridLayout layout={componentLayoutList} cols={6} rowHeight={30} width={layoutWidth - 10}>
+          {componentList.map((item: ComponentConfig) => {
+            {
+              return checkList[item.id] ? (
+                <div className={styles.display_logo} key={item.key}>
+                  <div style={{ marginTop: "15px" }}></div>
+                  <div className={styles.innerText}>
+                    <Text value={item.key} type="caption" color="gray" />
+                  </div>
+                </div>
+              ) : (
+                <></>
+              );
+            }
+          })}
+        </GridLayout>
       </div>
-      <div className={styles.box2} key="b">
-        Main
-      </div>
-      <div className={styles.box3} key="c">
-        Contents
-      </div>
-    </ResponsiveGridLayout>
+    </div>
   );
 };
 

@@ -7,12 +7,7 @@ import GridLayout from "react-grid-layout";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useAppSelector } from "app/hooks";
-import {
-  PageConfig,
-  selectPageLayoutList,
-  selectPageList,
-  selectPageCnt,
-} from "slices/settingSlice";
+import { KeyConfig, selectPageLayoutList, selectPageList, selectPageCnt } from "slices/settingSlice";
 
 const PageLayout = () => {
   const pageLayout = useAppSelector(selectPageLayoutList);
@@ -21,7 +16,7 @@ const PageLayout = () => {
 
   const [tmpPageCnt, setTmpPageCnt] = useState(pageCnt);
   const [tmpPageLayout, setTmpPageLayout] = useState<Layout[]>([...pageLayout]);
-  const [tmpPageList, setTmpPageList] = useState<PageConfig[]>([...pageList]);
+  const [tmpPageList, setTmpPageList] = useState<KeyConfig[]>([...pageList]);
 
   const addBox = () => {
     const pageName = "새 페이지 " + tmpPageCnt;
@@ -58,17 +53,11 @@ const PageLayout = () => {
 
   return (
     <div>
-      <div
-        className={styles.textPadding}
-        style={{ paddingTop: "0", paddingBottom: "10px" }}
-      >
+      <div className={styles.textPadding} style={{ paddingTop: "0", paddingBottom: "10px" }}>
         <Text value="페이지 설정" type="groupTitle" bold />
       </div>
       <div style={{ paddingLeft: "20px" }}>
-        <Text
-          value="드래그 앤 드롭으로 페이지 순서를 변경할 수 있습니다."
-          type="caption"
-        />
+        <Text value="드래그 앤 드롭으로 페이지 순서를 변경할 수 있습니다." type="caption" />
       </div>
 
       <div className={styles.gridContainer}>
