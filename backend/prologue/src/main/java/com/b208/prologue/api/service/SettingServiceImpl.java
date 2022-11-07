@@ -6,7 +6,6 @@ import com.b208.prologue.api.request.github.DeleteContentRequest;
 import com.b208.prologue.api.request.github.UpdateContentRequest;
 import com.b208.prologue.api.response.github.GetRepoContentResponse;
 import com.b208.prologue.api.response.github.GetSettingResponse;
-import com.b208.prologue.api.response.github.GetShaResponse;
 import com.b208.prologue.common.Base64Converter;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -59,13 +58,27 @@ public class SettingServiceImpl implements SettingService {
         String Line = "";
         Line = base64Converter.decode(sb.toString());
 
-        String[] stringVal = Line.split(",\n" + "  plugins:");
-        String tempVal = stringVal[0].replace("module.exports = {\n", "");
+        int idx = Line.indexOf("=");
+        Line = Line.substring(idx+1);
 
-        result.add(tempVal);
+        result.add(Line);
 
-        String imagePath = "images/profile-pic.png";
-        result.add(getProfileImage(accessToken, url, imagePath));
+        GetRepoContentResponse[] getRepoContentResponse = webClient.get()
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/images")
+                .headers(h -> h.setBearerAuth(accessToken))
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(GetRepoContentResponse[].class).block();
+
+        String imageUrl = "";
+        for (int i = 0; i < getRepoContentResponse.length; i++){
+            if(getRepoContentResponse[i].getName().contains("profile-pic")){
+                imageUrl = getRepoContentResponse[i].getUrl();
+                break;
+            }
+        }
+
+        result.add(imageUrl);
 
         return result;
     }
@@ -142,18 +155,6 @@ public class SettingServiceImpl implements SettingService {
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToMono(String.class).block();
-    }
-
-
-    public String getProfileImage(String accessToken, String url, String path){
-        GetRepoContentResponse item = webClient.get()
-                .uri(url + path)
-                .headers(h -> h.setBearerAuth(accessToken))
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToMono(GetRepoContentResponse.class).block();
-
-        return item.getUrl();
     }
 
     @Override
