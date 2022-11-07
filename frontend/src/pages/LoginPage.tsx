@@ -8,32 +8,29 @@ import { authActions } from "slices/authSlice";
 const LoginPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
- 
+
   const code = new URLSearchParams(location.search).get("code");
-  
-  useEffect(() => {
-    async function getAccessToken() {
-      const getAccessToken = Axios.get(api.auth.login, {
-        params: { code: code },
-      }).then((res) => {
-        console.log("결과", res.data);
-        dispatch(
-          authActions.login({
-            accessToken: res.data.accessToken,
-            githubId: res.data.githubId,
-            githubName: res.data.githubName,
-            githubImage: res.data.githubImage,
-            auth: true,
-          })
-        );
-      });
-      
-    }
-    getAccessToken();
-  });
 
-
-
+  // useEffect(() => {
+  //   console.log(code);
+  //   async function getAccessToken() {
+  //     Axios.get(api.auth.login(), {
+  //       params: { code: code },
+  //     }).then((res) => {
+  //       console.log("결과", res.data);
+  //       dispatch(
+  //         authActions.login({
+  //           accessToken: res.data.accessToken,
+  //           githubId: res.data.githubId,
+  //           githubImage: res.data.githubImage,
+  //           auth: true,
+  //         }),
+  //       );
+  //       navigate("/");
+  //     });
+  //   }
+  //   getAccessToken();
+  // });
 
   return (
     <>
