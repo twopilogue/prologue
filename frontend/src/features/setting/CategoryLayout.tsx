@@ -1,11 +1,4 @@
-import React, {
-  useState,
-  useRef,
-  createRef,
-  useLayoutEffect,
-  useEffect,
-  useCallback,
-} from "react";
+import React, { useState, useCallback } from "react";
 import { Layout, Responsive, WidthProvider } from "react-grid-layout";
 import GridLayout from "react-grid-layout";
 import styles from "./Setting.module.css";
@@ -21,7 +14,7 @@ import {
   setCategoryLayoutList,
   setCategoryList,
   setCategoryCnt,
-  CategoryConfig,
+  KeyConfig,
 } from "slices/settingSlice";
 import { useDispatch } from "react-redux";
 
@@ -30,9 +23,7 @@ const CategoryLayout = () => {
   const layoutList = useAppSelector(selectCategoryLayoutList);
   const categoryCnt = useAppSelector(selectCategoryCnt);
 
-  const [tmpCategoryList, setTmpCategoryList] = useState<CategoryConfig[]>([
-    ...categoryList,
-  ]);
+  const [tmpCategoryList, setTmpCategoryList] = useState<KeyConfig[]>([...categoryList]);
   const [tmpLayoutList, setTmpLayoutList] = useState<Layout[]>([...layoutList]);
   const [tmpCategoryCnt, setTmpCategoryCnt] = useState(categoryCnt);
 
@@ -93,17 +84,11 @@ const CategoryLayout = () => {
 
   return (
     <div>
-      <div
-        className={styles.textPadding}
-        style={{ paddingTop: "0", paddingBottom: "10px" }}
-      >
+      <div className={styles.textPadding} style={{ paddingTop: "0", paddingBottom: "10px" }}>
         <Text value="카테고리 설정" type="groupTitle" bold />
       </div>
       <div style={{ paddingLeft: "20px" }}>
-        <Text
-          value="드래그 앤 드롭으로 카테고리 순서를 변경할 수 있습니다."
-          type="caption"
-        />
+        <Text value="드래그 앤 드롭으로 카테고리 순서를 변경할 수 있습니다." type="caption" />
       </div>
 
       <div className={styles.gridContainer}>
