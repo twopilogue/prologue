@@ -1,5 +1,5 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+import React, { useEffect } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import { LightMode, DarkMode } from "@mui/icons-material";
 import {
@@ -18,9 +18,10 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import styles from "./css/Header.module.css";
 import palette from "../styles/colorPalette";
 import { useDispatch, useSelector } from "react-redux";
-import { useAppSelector } from "app/hooks";
-import axios from "axios";
+import { rootState } from "app/store";
 import api from "api/api";
+import Axios from "api/Axios";
+import { authActions } from "slices/authSlice";
 
 const GithubButton = styled(Button)(() => ({
   margin: 3,
@@ -41,21 +42,16 @@ const AvatarStyled = styled(Avatar)(() => ({
 
 function Header() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { auth, githubId, githubImage } = useSelector(
+    (state: rootState) => state.auth,
+  );
 
   const [backgroudMode, setBackgroudMode] = React.useState(true);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null,
   );
-  const [user, setUser] = React.useState("");
-
-  const userMenu = [
-    {
-      name: "GitHub",
-      path: `https://github.com/${user}`,
-      icon: <GitHubIcon />,
-    },
-    { name: "Logout", path: "/prologue", icon: <LogoutIcon /> },
-  ];
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
@@ -66,8 +62,16 @@ function Header() {
   };
 
   const onLogin = () => {
-    window.location.href = `https://github.com/login/oauth/authorize?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&scope=repo`;
-  }
+    Axios.get(api.auth.uri()).then((res) => {
+      window.location.href = res.data.uri;
+    });
+  };
+
+  const onLogout = () => {
+    handleCloseUserMenu();
+    dispatch(authActions.logout());
+    navigate("/");
+  };
 
   return (
     <header>
@@ -120,17 +124,16 @@ function Header() {
             블로그 설정
           </NavLink>
 
-          {user ? (
+          {auth ? (
             <>
               <Box sx={{ flexGrow: 0 }}>
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <AvatarStyled alt="Remy Sharp" src="이미지경로" />
+                  <AvatarStyled alt="Remy Sharp" src={githubImage} />
                 </IconButton>
                 <Menu
-                  sx={{ mt: "45px" }}
                   anchorEl={anchorElUser}
                   anchorOrigin={{
-                    vertical: "top",
+                    vertical: "bottom",
                     horizontal: "right",
                   }}
                   keepMounted
@@ -138,21 +141,53 @@ function Header() {
                     vertical: "top",
                     horizontal: "right",
                   }}
+                  PaperProps={{
+                    elevation: 0,
+                    sx: {
+                      overflow: "visible",
+                      filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                      mt: 1.5,
+                      "& .MuiAvatar-root": {
+                        width: 32,
+                        height: 32,
+                        ml: -0.5,
+                        mr: 1,
+                      },
+                      "&:before": {
+                        content: '""',
+                        display: "block",
+                        position: "absolute",
+                        top: 0,
+                        right: 14,
+                        width: 10,
+                        height: 10,
+                        bgcolor: "background.paper",
+                        transform: "translateY(-50%) rotate(45deg)",
+                        zIndex: 0,
+                      },
+                    },
+                  }}
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}
                 >
-                  {userMenu.map((menu, index) => (
-                    <MenuItem key={index} onClick={handleCloseUserMenu}>
-                      <Link href={menu.path} underline="none" color="black">
-                        <Stack direction="row" spacing={1}>
-                          {menu.icon}
-                          <Typography textAlign="center">
-                            {menu.name}
-                          </Typography>
-                        </Stack>
-                      </Link>
-                    </MenuItem>
-                  ))}
+                  <MenuItem onClick={handleCloseUserMenu}>
+                    <Link
+                      href={`https://github.com/${githubId}`}
+                      underline="none"
+                      color="black"
+                    >
+                      <Stack direction="row" spacing={1}>
+                        <GitHubIcon />
+                        <Typography textAlign="center">GitHub</Typography>
+                      </Stack>
+                    </Link>
+                  </MenuItem>
+                  <MenuItem onClick={onLogout}>
+                    <Stack direction="row" spacing={1}>
+                      <LogoutIcon />
+                      <Typography textAlign="center">Logout</Typography>
+                    </Stack>
+                  </MenuItem>
                 </Menu>
               </Box>
             </>
@@ -174,4 +209,3 @@ function Header() {
 }
 
 export default Header;
-

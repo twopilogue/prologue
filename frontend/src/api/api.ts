@@ -8,9 +8,9 @@ const SETTING = "setting";
 
 interface apiInterface {
   auth: {
-    // url: string;
-    login: string;
-    secret: string;
+    uri: () => string;
+    login: () => string;
+    secret: () => string;
   };
   setting: {
     getCategory: () => string;
@@ -19,9 +19,9 @@ interface apiInterface {
 
 const api: apiInterface = {
   auth: {
-    // url: AUTH + "url",
-    login: AUTH + "login",
-    secret: AUTH + "secret",
+    uri: () => HOST + AUTH + "uri",
+    login: () => HOST + AUTH + "login",
+    secret: () => HOST + AUTH + "secret",
   },
   setting: {
     getCategory: () => HOST + SETTING + "/category",
