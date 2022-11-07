@@ -15,6 +15,4 @@ public class AuthUserInfoResponse {
     String login;
     @JsonProperty("avatar_url")
     String avatarUrl;
-    @JsonProperty("name")
-    String name;
 }
