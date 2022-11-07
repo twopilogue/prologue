@@ -25,7 +25,6 @@ const LandingPage = () => {
           accessToken: res.data.accessToken,
           githubId: res.data.githubId,
           githubImage: res.data.githubImage,
-          auth: true,
         }),
       );
       navigate("/");
@@ -37,12 +36,29 @@ const LandingPage = () => {
   async function getRepoList(accessToken: string, githubId: string) {
     await Axios.get(api.blog.getRepoList(accessToken, githubId)).then((res) => {
       if (res.data.checkRepository) {
-        // getAuthFile(accessToken, githubId);
+        getAuthFile(accessToken, githubId);
       } else {
         navigate("/create");
       }
     });
   }
+
+  // 서비스 인증 파일 존재 여부
+  async function getAuthFile(accessToken: string, githubId: string) {
+    await Axios.get(api.auth.getAuthFile(accessToken, githubId)).then((res) => {
+      if (res.data.checkAuthFile) {
+        res.data.blogType;
+        dispatch(
+          authActions.blogType({
+            blogType: res.data.blogType,
+          }),
+        );
+        // setSecretRepo(accessToken, githubId);
+      }
+      else navigate("/create/reset");
+    });
+  }
+
 
 
   return (
