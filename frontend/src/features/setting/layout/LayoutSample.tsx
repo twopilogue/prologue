@@ -1,39 +1,49 @@
 import { useAppSelector } from "app/hooks";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { Layout, Responsive, WidthProvider } from "react-grid-layout";
+import GridLayout from "react-grid-layout";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
   ComponentCheckConfig,
-  selectCategoryLayoutList,
+  ComponentConfig,
   selectCheckList,
+  // selectCheckList,
+  selectComponentList,
+  selectComponentLayoutList,
   setCategoryLayoutList,
+  setComponentLayoutList,
 } from "slices/settingSlice";
 import ComponentSelector from "../layout/ComponentSelector";
 import styles from "../Setting.module.css";
 import "../../../../node_modules/react-grid-layout/css/styles.css";
 import Text from "components/Text";
+import DragHandleIcon from "@mui/icons-material/DragHandle";
+
+export const useGettingWidth = () => {
+  const [layoutWidth, setLayoutWidth] = useState(null);
+
+  // ✅  useRef와 useEffect를 지우고 callback ref를 새로 작성
+  const layoutContainer = useCallback((node: HTMLElement) => {
+    if (node !== null) {
+      // setGridWidth(node);
+      console.log(node.offsetWidth);
+      setLayoutWidth(node.offsetWidth);
+    }
+  }, []);
+
+  return [layoutWidth, layoutContainer];
+};
 
 const LayoutSample = () => {
-  const ResponsiveGridLayout = WidthProvider(Responsive);
   const dispatch = useDispatch();
   const navigator = useNavigate();
 
-  const savedLayoutList: Layout[] = useAppSelector(selectCategoryLayoutList);
-  const [checkList, setCheckList] = useState<ComponentCheckConfig>({
-    logoCheck: true,
-    profileCheck: true,
-    categoryCheck: true,
-    naviCheck: true,
-  });
+  const [componentLayoutList, SetComponentLayoutList] = useState<Layout[]>(useAppSelector(selectComponentLayoutList));
+  const [componentList, setComponentList] = useState<ComponentConfig[]>(useAppSelector(selectComponentList));
+  const [checkList, setCheckList] = useState<ComponentCheckConfig>(useAppSelector(selectCheckList));
 
-  const getLayout = () => {
-    const sessionLayout = sessionStorage.getItem("grid-layout");
-    console.log(JSON.parse(sessionLayout));
-    return sessionLayout
-      ? { lg: JSON.parse(sessionLayout) }
-      : { lg: savedLayoutList };
-  };
+  const [layoutWidth, layoutContainer] = useGettingWidth();
 
   const saveLayouts = () => {
     const tmpLayoutList: Layout[] = [];
@@ -59,7 +69,9 @@ const LayoutSample = () => {
   };
 
   const handleLayoutChange = (layouts: any) => {
-    sessionStorage.setItem("grid-layout", JSON.stringify(layouts));
+    console.log(componentLayoutList);
+    setComponentLayoutList(componentLayoutList);
+    dispatch(setComponentLayoutList(componentLayoutList));
   };
 
   return (
@@ -68,70 +80,48 @@ const LayoutSample = () => {
         <Text value="레이아웃 배치" type="groupTitle" bold />
       </div>
       <div style={{ paddingLeft: "20px" }}>
-        <Text
-          value="드래그 앤 드롭으로 레이아웃의 위치를 자유롭게 설정하세요."
-          type="caption"
-        />
+        <Text value="드래그 앤 드롭으로 레이아웃의 위치를 자유롭게 설정하세요." type="caption" />
       </div>
       <div className={styles.layoutSelectContainer}>
         <ComponentSelector checkList={checkList} setCheckList={setCheckList} />
         <div
+          ref={layoutContainer}
           style={{
             backgroundColor: "white",
             border: "2px solid #ECECEC",
             marginLeft: "5px",
+            marginRight: "5px",
+            paddingBottom: "20px",
           }}
         >
-          <ResponsiveGridLayout
-            layouts={getLayout()}
-            breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-            cols={{ lg: 5, md: 4, sm: 3, xs: 2, xxs: 1 }}
+          <GridLayout
+            layout={componentLayoutList}
+            cols={6}
             rowHeight={30}
-            width={1000}
+            width={layoutWidth - 10}
             onLayoutChange={handleLayoutChange}
           >
-            <div
-              className={
-                checkList.logoCheck
-                  ? `${styles.display_flex}`
-                  : `${styles.display_none}`
+            {componentList.map((item: ComponentConfig) => {
+              {
+                return checkList[item.id] ? (
+                  <div className={styles.display_logo} key={item.key}>
+                    {item.key != "타이틀" && item.key != "글 목록" ? (
+                      <div className={styles.icon}>
+                        <DragHandleIcon fontSize="small" sx={{ color: "white" }} />
+                      </div>
+                    ) : (
+                      <div style={{ marginTop: "15px" }}></div>
+                    )}
+                    <div className={styles.innerText}>
+                      <Text value={item.key} type="caption" color="gray" />
+                    </div>
+                  </div>
+                ) : (
+                  <></>
+                );
               }
-              key="logo"
-            >
-              블로그 로고
-            </div>
-            <div
-              className={
-                checkList.profileCheck
-                  ? `${styles.display_flex}`
-                  : `${styles.display_none}`
-              }
-              key="profile"
-            >
-              프로필
-            </div>
-            <div
-              className={
-                checkList.categoryCheck
-                  ? `${styles.display_flex}`
-                  : `${styles.display_none}`
-              }
-              key="category"
-            >
-              카테고리
-            </div>
-
-            <div
-              className={
-                checkList.naviCheck
-                  ? `${styles.display_flex}`
-                  : `${styles.display_none}`
-              }
-              key="page"
-            >
-              페이지
-            </div>
-          </ResponsiveGridLayout>
+            })}
+          </GridLayout>
         </div>
       </div>
     </div>
