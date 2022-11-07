@@ -1,6 +1,7 @@
 package com.b208.prologue.api.controller;
 
 import com.b208.prologue.api.response.BaseResponseBody;
+import com.b208.prologue.api.response.DateListResponse;
 import com.b208.prologue.api.response.LatestBuildTimeResponse;
 import com.b208.prologue.api.response.PostListResponse;
 import com.b208.prologue.api.response.RepositorySizeResponse;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @CrossOrigin("*")
 @RestController
@@ -54,6 +56,24 @@ public class DashBoardController {
         return ResponseEntity.status(200).body(RepositorySizeResponse.of(size, 200, "레포지토리 사용량 조회 성공"));
     }
 
+    @GetMapping("/month-posts")
+    @ApiOperation(value = "게시글 날짜 조회", notes = "게시글 날짜 조회")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "게시글 날짜 조회 성공", response = DateListResponse.class),
+            @ApiResponse(code = 400, message = "게시글 날짜 조회 실패", response = BaseResponseBody.class),
+            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<? extends  BaseResponseBody> getDateList(@RequestParam String accessToken, @RequestParam String githubId) {
+
+        try {
+            Set<String> result = dashBoardService.getDateList(accessToken, githubId);
+
+            return ResponseEntity.status(200).body(DateListResponse.of(result, 200, "게시물 목록 조회 성공"));
+        } catch (Exception e){
+            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "게시글 목록 조회에 실패하였습니다."));
+        }
+    }
+
     @GetMapping("/latest-build")
     @ApiOperation(value = "최근 빌드 시간 조회", notes = "최근 빌드 시간 조회")
     @ApiResponses({
@@ -70,5 +90,4 @@ public class DashBoardController {
         }
         return ResponseEntity.status(200).body(BaseResponseBody.of(400, "최근 빌드 시간 조회 실패"));
     }
-
 }
