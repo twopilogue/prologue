@@ -9,7 +9,7 @@ import Dashboard from "./pages/DashboardPage";
 import SettingPage from "pages/SettingPage";
 import SettingLayout from "features/setting/SettingLayout";
 import LayoutSample from "features/setting/layout/LayoutSample";
-import PostPage from "pages/PostPage";
+import PostRouterPage from "pages/PostRouterPage";
 import BlogReset from "pages/BlogResetPage";
 import GatsbyLayout from "pages/GatsbyLayoutPage";
 
@@ -44,7 +44,7 @@ function App() {
           <Route path="/setting" element={<SettingPage />} />
           <Route path="/layout" element={<SettingLayout />} />
           <Route path="/laysample" element={<LayoutSample />} />
-          <Route path="/post/*" element={<PostPage />} />
+          <Route path="/post/*" element={<PostRouterPage />} />
 
           <Route path="/sample" element={<SamplePage />} />
         </Routes>

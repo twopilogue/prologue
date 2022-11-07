@@ -12,6 +12,7 @@ export const colorPalette = {
   purlue_3: "#D0ADFF",
   purlue_4: "#B88AF7",
   gray: "#F7F8F8",
+  dark_gray: "#A4A4A4",
   white: "#FFFFFF",
   black: "#000000",
 };

@@ -1,10 +1,11 @@
-/* PostPage */
-.postPage {
+/* PostRouterPage */
+.postRouterPage {
   margin-top: 5vh;
   margin-bottom: 5vh;
   position: relative;
 }
 
+/* PostPage */
 .postPageButtons {
   position: absolute;
   top: 20%;
