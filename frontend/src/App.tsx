@@ -12,6 +12,7 @@ import LayoutSample from "features/setting/layout/LayoutSample";
 import PostRouterPage from "pages/PostRouterPage";
 import BlogReset from "pages/BlogResetPage";
 import GatsbyLayout from "pages/GatsbyLayoutPage";
+import LoginPage from "pages/LoginPage";
 
 function App() {
   const location = useLocation();
@@ -37,6 +38,7 @@ function App() {
       >
         <Routes>
           <Route path="/" element={<Landing />} />
+          <Route path="/login" element={<LoginPage />} />
           <Route path="/create" element={<Create />} />
           <Route path="/create/reset" element={<BlogReset />} />
           <Route path="/create/gatsby" element={<GatsbyLayout />} />
@@ -54,3 +56,5 @@ function App() {
 }
 
 export default App;
+
+
