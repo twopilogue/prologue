@@ -1,5 +1,6 @@
 package com.b208.prologue.api.controller;
 
+import com.b208.prologue.api.response.AuthFileCheckResponse;
 import com.b208.prologue.api.response.AuthUriResponse;
 import com.b208.prologue.api.response.BaseResponseBody;
 import com.b208.prologue.api.response.UserInfoResponse;
@@ -58,7 +59,7 @@ public class AuthController {
             @ApiResponse(code = 200, message = "레포지토리 시크릿 생성 성공", response = BaseResponseBody.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
-    public ResponseEntity<? extends BaseResponseBody> login(@RequestParam @ApiParam(value = "accessToken", required = true) String accessToken,
+    public ResponseEntity<? extends BaseResponseBody> createSecrets(@RequestParam @ApiParam(value = "accessToken", required = true) String accessToken,
                                                             @RequestParam @ApiParam(value = "사용자 깃허브 아이디", required = true) String githubId) throws Exception {
         try {
             authService.createRepositorySecrets(accessToken, githubId);
@@ -67,6 +68,40 @@ public class AuthController {
             e.printStackTrace();
         }
         return ResponseEntity.status(400).body(BaseResponseBody.of(400, "레포지토리 시크릿 생성에 실패하였습니다."));
+    }
+
+    @GetMapping("/check")
+    @ApiOperation(value = "서비스 인증 파일 조회", notes = "서비스 인증 파일을 조회한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "서비스 인증 파일 조회 성공", response = AuthFileCheckResponse.class),
+            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<? extends BaseResponseBody> checkAuthFile(@RequestParam @ApiParam(value = "accessToken", required = true) String accessToken,
+                                                            @RequestParam @ApiParam(value = "사용자 깃허브 아이디", required = true) String githubId) throws Exception {
+        try {
+            boolean checkAuthFile = authService.checkAuthFile(accessToken, githubId);
+            return ResponseEntity.status(200).body(AuthFileCheckResponse.of(checkAuthFile, 200, "서비스 인증 파일 조회를 성공하였습니다."));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.status(400).body(BaseResponseBody.of(400, "서비스 인증 파일 조회를 실패하였습니다."));
+    }
+
+    @PutMapping("/check")
+    @ApiOperation(value = "서비스 인증 파일 조회", notes = "서비스 인증 파일을 생성한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "서비스 인증 파일 생성 성공", response = BaseResponseBody.class),
+            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<? extends BaseResponseBody> createAuthFile(@RequestParam @ApiParam(value = "accessToken", required = true) String accessToken,
+                                                                    @RequestParam @ApiParam(value = "사용자 깃허브 아이디", required = true) String githubId) throws Exception {
+        try {
+            authService.createAuthFile(accessToken, githubId);
+            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "서비스 인증 파일 생성을 성공하였습니다."));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.status(400).body(BaseResponseBody.of(400, "서비스 인증 파일 생성을 실패하였습니다."));
     }
 
 }
