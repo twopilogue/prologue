@@ -92,7 +92,7 @@ public class PostsController {
             @ApiResponse(code = 400, message = "게시글 수정 실패", response = BaseResponseBody.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
-    public ResponseEntity<? extends BaseResponseBody> modifyDetailPost(@Valid @RequestPart ModifyDetailPostRequest modifyDetailPostRequest, @RequestPart(required = false)  List<MultipartFile> files) {
+    public ResponseEntity<? extends BaseResponseBody> modifyDetailPost(@Valid @RequestPart ModifyDetailPostRequest modifyDetailPostRequest, @RequestPart(required = false) List<MultipartFile> files) {
 
         String path = "content/blog/" + modifyDetailPostRequest.getDirectory();
         try {
@@ -149,12 +149,12 @@ public class PostsController {
             @ApiResponse(code = 400, message = "페이지 글 수정 실패", response = BaseResponseBody.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
-    public ResponseEntity<? extends BaseResponseBody> modifyDetailPage(@Valid ModifyDetailPageRequest modifyDetailPageRequest) {
+    public ResponseEntity<? extends BaseResponseBody> modifyDetailPage(@Valid @RequestPart ModifyDetailPageRequest modifyDetailPageRequest, @RequestPart(required = false) List<MultipartFile> files) {
 
         String path = "content/pages/" + modifyDetailPageRequest.getPageName();
         try {
             postService.updateDetailPost(modifyDetailPageRequest.getAccessToken(), modifyDetailPageRequest.getGithubId(),
-                    path, modifyDetailPageRequest.getContent(), modifyDetailPageRequest.getFiles(), modifyDetailPageRequest.getDeletedFiles());
+                    path, modifyDetailPageRequest.getContent(), files, modifyDetailPageRequest.getDeletedFiles());
             return ResponseEntity.status(200).body(BaseResponseBody.of(200, "페이지 글 수정에 성공하였습니다."));
         } catch (Exception e) {
             e.printStackTrace();
