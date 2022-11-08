@@ -23,7 +23,7 @@ public class DashBoardController {
     private final DashBoardService dashBoardService;
 
     @GetMapping("/list")
-    @ApiOperation(value = "최신게시물 5개 조회", notes = "최신게시물 조회를 위해 Git 통신")
+    @ApiOperation(value = "최신게시글 5개 조회", notes = "최신게시물 조회를 위해 Git 통신")
     @ApiResponses({
             @ApiResponse(code = 200, message = "목록 조회 성공", response = PostListResponse.class),
             @ApiResponse(code = 400, message = "게시글 목록 조회 실패", response = BaseResponseBody.class),
@@ -32,7 +32,7 @@ public class DashBoardController {
     public ResponseEntity<? extends BaseResponseBody> getCurrentPost(@RequestParam String accessToken, @RequestParam String githubId) {
         try {
             Map<String, List<String>> result = dashBoardService.getList(accessToken, githubId);
-            return ResponseEntity.status(200).body(DashBoardListResponse.of(result, 200, "게시물 목록 조회 성공"));
+            return ResponseEntity.status(200).body(DashBoardListResponse.of(result, 200, "게시글 목록 조회 성공"));
         } catch (Exception e) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "게시글 목록 조회에 실패하였습니다."));
         }
@@ -62,7 +62,7 @@ public class DashBoardController {
         try {
             Set<String> result = dashBoardService.getDateList(accessToken, githubId);
 
-            return ResponseEntity.status(200).body(DateListResponse.of(result, 200, "게시물 날짜목록 조회 성공"));
+            return ResponseEntity.status(200).body(DateListResponse.of(result, 200, "게시글 날짜목록 조회 성공"));
         } catch (Exception e){
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "게시글 날짜목록 조회에 실패하였습니다."));
         }
@@ -97,9 +97,9 @@ public class DashBoardController {
         try {
             int result = dashBoardService.getTotalCount(accessToken, githubId);
 
-            return ResponseEntity.status(200).body(GetTotalCountResponse.of(result, 200, "전체 게시물 수 조회 성공"));
+            return ResponseEntity.status(200).body(GetTotalCountResponse.of(result, 200, "전체 게시글 수 조회 성공"));
         } catch (Exception e){
-            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "전체 게시물 수 조회에 실패하였습니다."));
+            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "전체 게시글 수 조회에 실패하였습니다."));
         }
     }
 }
