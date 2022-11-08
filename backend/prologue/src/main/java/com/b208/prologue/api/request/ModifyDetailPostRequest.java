@@ -4,7 +4,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.Getter;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -30,9 +29,6 @@ public class ModifyDetailPostRequest {
     @NotNull
     @ApiModelProperty(name = "게시글 내용", example = "md파일 내용...", required = true)
     String content;
-
-    @ApiModelProperty(name = "게시글에 넣는 이미지", example = "이미지 파일")
-    List<MultipartFile> files;
 
     @ApiModelProperty(name = "게시글에서 삭제할 이미지", example = "이미지 파일명")
     List<String> deletedFiles;
