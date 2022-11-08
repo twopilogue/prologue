@@ -215,6 +215,9 @@ public class SettingServiceImpl implements SettingService {
             String directory = page.get("label").toString().toLowerCase();
 
             if(page.get("type").equals("deleted")){
+                if(Boolean.parseBoolean(page.get("posts").toString())){
+                    throw new Exception("posts는 삭제할 수 없습니다.");
+                }
                 GetRepoContentResponse[] repoContentResponses = commonService.getContentList(accessToken, githubId, path + directory);
 
                 for (GetRepoContentResponse getRepoContentResponse : repoContentResponses) {
@@ -222,6 +225,9 @@ public class SettingServiceImpl implements SettingService {
                 }
                 continue;
             }else if(page.get("type").equals("changing")){
+                if(!Boolean.parseBoolean(page.get("posts").toString())&&(directory.equals("post") || directory.equals("posts") || directory.equals("blog"))){
+                    throw new Exception("해당 이름으로 변경할 수 없습니다.");
+                }
                 GetRepoContentResponse[] repoContentResponses = commonService.getContentList(accessToken, githubId, path + page.get("oldName").toString().toLowerCase());
                 for (GetRepoContentResponse getRepoContentResponse : repoContentResponses) {
                     GetRepoContentResponse response = commonService.getDetailContent(accessToken, githubId, getRepoContentResponse.getPath());
@@ -230,6 +236,9 @@ public class SettingServiceImpl implements SettingService {
                     treeRequestList.add(new TreeRequest(getRepoContentResponse.getPath(), "100644", "blob", null));
                 }
             }else if(page.get("type").equals("new")){
+                if(directory.equals("post") || directory.equals("posts") || directory.equals("blog")){
+                    throw new Exception("해당 이름은 생성할 수 없습니다.");
+                }
                 String encodedContent = commonService.makeBlob(accessToken, githubId, base64Converter.encode(defaultContent));
                 addedTreeRequestList.add(new TreeRequest(path + directory + "/index.md", "100644", "blob", encodedContent));
             }
