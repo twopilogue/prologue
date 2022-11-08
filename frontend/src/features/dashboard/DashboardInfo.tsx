@@ -46,6 +46,7 @@ function DashboardInfo() {
             },
             volume: res2.data.size,
           });
+          console.log("사용량", res2.data);
         }),
       );
   }
@@ -95,7 +96,6 @@ function DashboardInfo() {
               </div>
             </div>
           </div>
-          {info.volume}
         </div>
       </div>
     </div>
