@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Carousel from "react-material-ui-carousel";
 import { Box, Stack } from "@mui/system";
 import Button from "@mui/material/Button";
@@ -66,10 +66,27 @@ function LandingMain() {
           <Button
             startIcon={<GitHubIcon />}
             sx={{
-              backgroundColor: "black",
+              backgroundColor: "#2f2f2f",
               color: "white",
               width: "300px",
               borderRadius: "10px",
+              zIndex: "1",
+              "&:after": {
+                zIndex: "-1",
+                borderRadius: "10px",
+                backgroundColor: "#212121",
+                transition: "all 0.3s ease",
+              },
+              "&:hover": {
+                color: "#fff",
+              },
+              "&:hover:after": {
+                left: "0",
+                width: "100%",
+              },
+              "&:active": {
+                top: "2px",
+              },
             }}
           >
             Signup With GitHub
