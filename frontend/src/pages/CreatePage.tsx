@@ -39,9 +39,7 @@ const LandingPage = () => {
           template: "prologue-template",
         }).then((res) => {
           console.log("기본테마 적용", res.data);
-        }).catch((err) => {
-          console.error("기본테마 적용", err)
-        });
+        })
         // setStepNumber(2);
       });
     } else if (radioValue === "GatsbyLayout") {
