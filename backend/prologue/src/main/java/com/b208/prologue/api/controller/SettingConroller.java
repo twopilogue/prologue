@@ -12,6 +12,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.json.simple.JSONObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -104,7 +105,7 @@ public class SettingConroller {
     public ResponseEntity<? extends BaseResponseBody> getBlogPages(@RequestParam String accessToken, @RequestParam String githubId) {
 
         try {
-            String[] pages = settingService.getBlogPages(accessToken, githubId);
+            JSONObject[] pages = settingService.getBlogPages(accessToken, githubId);
             return ResponseEntity.status(200).body(BlogPagesResponse.of(pages, 200, "블로그 페이지 목록 조회에 성공하였습니다."));
         } catch (Exception e) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "블로그 페이지 목록 조회에 실패하였습니다."));
@@ -120,8 +121,7 @@ public class SettingConroller {
     })
     public ResponseEntity<? extends BaseResponseBody> modifyBlogPages(@Valid @RequestBody ModifyBlogPagesRequest modifyBlogPagesRequest) {
         try {
-            settingService.updateBlogPages(modifyBlogPagesRequest.getAccessToken(), modifyBlogPagesRequest.getGithubId(), modifyBlogPagesRequest.getPages(),
-                    modifyBlogPagesRequest.getModifiedPages(), modifyBlogPagesRequest.getAddedPages(), modifyBlogPagesRequest.getDeletedPages());
+            settingService.updateBlogPages(modifyBlogPagesRequest.getAccessToken(), modifyBlogPagesRequest.getGithubId(), modifyBlogPagesRequest.getPages());
             return ResponseEntity.status(200).body(BaseResponseBody.of(200, "블로그 페이지 목록 수정에 성공하였습니다."));
         } catch (Exception e) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "블로그 페이지 목록 수정에 실패하였습니다."));
