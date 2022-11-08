@@ -160,4 +160,19 @@ public class DashBoardServiceImpl implements DashBoardService {
         SimpleDateFormat dataFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
         return dataFormat.format(getLatestBuildTimeResponse.getLastBuildTime());
     }
+
+    @Override
+    public Integer getTotalCount(String encodedAccessToken, String githubId) throws Exception {
+        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
+        String url = "/repos/" + githubId + "/" + githubId + ".github.io" + "/contents/";
+
+        PostGetListResponse[] list = webClient.get()
+                .uri(url + "content/blog")
+                .headers(h -> h.setBearerAuth(accessToken))
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(PostGetListResponse[].class).block();
+
+        return list.length;
+    }
 }

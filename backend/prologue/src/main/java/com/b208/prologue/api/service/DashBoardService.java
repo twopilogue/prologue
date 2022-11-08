@@ -9,4 +9,5 @@ public interface DashBoardService {
     Double getRepositorySize(String encodedAccessToken, String githubId) throws Exception;
     Set<String> getDateList(String encodedAccessToken, String githubId) throws Exception;
     String getLatestBuildTime(String encodedAccessToken, String githubId) throws Exception;
+    Integer getTotalCount(String encodedAccessToken, String githubId) throws Exception;
 }
