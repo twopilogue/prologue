@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import Carousel from "react-material-ui-carousel";
 import { Box, Stack } from "@mui/system";
 import Button from "@mui/material/Button";
 import Text from "components/Text";
@@ -8,8 +9,10 @@ import landingMainImg1 from "assets/landing/landingMainImg1.png";
 import landingMainImg2 from "assets/landing/landingMainImg2.png";
 import landingMainImg3 from "assets/landing/landingMainImg3.png";
 import landingMainImg4 from "assets/landing/landingMainImg4.png";
+import { Paper } from "@mui/material";
 
 function LandingMain() {
+  const [state, setState] = useState({ height: 0 });
   const [isTextTyping, setIsTextTyping] = useState<boolean>(false);
 
   const content = "1분만에 만드는\n나만의 깃허브 블로그";
@@ -33,9 +36,26 @@ function LandingMain() {
     setIsTextTyping(true);
   }, []);
 
+  const images = [landingMainImg1, landingMainImg2, landingMainImg3, landingMainImg4];
+
+  const getMainDivHeight = () => {
+    const mainImageWidth = 1668;
+    const mainImageHeight = 1039;
+    return Math.floor((window.innerWidth * mainImageHeight) / mainImageWidth);
+  };
+
+  const updateDimensions = () => {
+    setState({ height: getMainDivHeight() });
+  };
+
+  const componentDidMount = () => {
+    window.addEventListener("resize", updateDimensions);
+    updateDimensions(); //최초로 한번 실행하기
+  };
+
   return (
     <Box className={styles.mainBox}>
-      <div className={styles.landingMainDiv}>
+      <Stack direction="row" alignItems="center" spacing={30} sx={{ ml: 5 }}>
         <Stack spacing={1}>
           <Text value="깃허브 블로그를 편리하게" type="groupTitle" />
           <Stack spacing={0.5} sx={{ pb: 3 }}>
@@ -55,8 +75,16 @@ function LandingMain() {
             Signup With GitHub
           </Button>
         </Stack>
-        <img className={styles.landingMainImg} src={landingMainImg1} />
-      </div>
+        <Paper elevation={5} sx={{ borderRadius: "10px" }}>
+          <Carousel sx={{ width: 562, height: 350 }} navButtonsAlwaysInvisible animation="fade">
+            {images.map((img, idx) => (
+              <Box key={idx} sx={{ width: "100%", height: state.height }}>
+                <img src={img} className={styles.mainImg} />
+              </Box>
+            ))}
+          </Carousel>
+        </Paper>
+      </Stack>
     </Box>
   );
 }
