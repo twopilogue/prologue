@@ -109,6 +109,15 @@ function Header() {
           >
             블로그 설정
           </NavLink>
+          <NavLink
+            to="/tmpBlog"
+            style={{
+              color: backgroudMode ? "black" : "white",
+              textDecoration: "none",
+            }}
+          >
+            (임시)블로그
+          </NavLink>
 
           {auth ? (
             <>

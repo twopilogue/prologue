@@ -44,7 +44,6 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/setting" element={<SettingPage />} />
           <Route path="/layout" element={<SettingLayout />} />
-          <Route path="/laysample" element={<LayoutSample />} />
           <Route path="/post/*" element={<PostRouterPage />} />
 
           <Route path="/sample" element={<SamplePage />} />
