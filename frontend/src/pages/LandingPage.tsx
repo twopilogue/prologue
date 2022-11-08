@@ -60,10 +60,14 @@ const LandingPage = () => {
   }
 
   async function setSecretRepo(accessToken: string, githubId: string) {
-    await Axios.put(api.auth.setSecretRepo(accessToken, githubId)).then((res) => {
-      console.log("레포지토리 Secret 생성 성공");
-      // navigate("/dashboard"); 대시보드로 이동
-    });
+    await Axios.put(api.auth.setSecretRepo(accessToken, githubId))
+      .then((res) => {
+        console.log("레포지토리 Secret", res);
+        navigate("/dashboard");
+      })
+      .catch((err) => {
+        console.error("레포지토리 Secret", err);
+      });
   }
 
   return (

@@ -10,6 +10,7 @@ import api from "api/Api";
 import { useDispatch, useSelector } from "react-redux";
 import { rootState } from "app/store";
 import { authActions } from "slices/authSlice";
+import axios from "axios";
 
 const LandingPage = () => {
   const dispatch = useDispatch();
@@ -39,8 +40,9 @@ const LandingPage = () => {
           template: "prologue-template",
         }).then((res) => {
           console.log("기본테마 적용", res.data);
+          // setStepNumber(2);
+          distributeRepo();
         })
-        // setStepNumber(2);
       });
     } else if (radioValue === "GatsbyLayout") {
       Axios.put(api.auth.setAuthFile(), {
@@ -53,6 +55,24 @@ const LandingPage = () => {
       });
     }
   };
+
+    async function distributeRepo() {
+      axios
+        .all([
+          Axios.put(api.blog.changeBranch(accessToken, githubId)),
+          Axios.post(api.blog.setGitWorkflow(accessToken, githubId)),
+          Axios.put(api.auth.setSecretRepo(accessToken, githubId)),
+        ])
+        .then(
+          axios.spread((res1, res2,res3) => {
+            console.log("배포 브랜치 변경", res1.data);
+            console.log("Repo secrets 생성", res2.data);
+            console.log("Workflow 생성", res3.data);
+          }),
+      ).catch((err)=>{
+        console.error("배포 err",err);
+        });
+    }
 
   return (
     <div style={{ paddingTop: "5%" }}>
