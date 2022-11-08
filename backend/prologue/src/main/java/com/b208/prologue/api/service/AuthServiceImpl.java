@@ -16,6 +16,7 @@ import io.netty.handler.timeout.WriteTimeoutHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ import reactor.netty.http.client.HttpClient;
 import java.io.BufferedReader;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.StringTokenizer;
@@ -130,12 +132,17 @@ public class AuthServiceImpl implements AuthService {
     public AuthFileCheckResponse checkAuthFile(String encodedAccessToken, String githubId) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
         AuthFileCheckResponse authFileCheckResponse = new AuthFileCheckResponse();
-        GetFileNameResponse[] getFileList = webClient.get()
+
+        GetFileNameResponse[] getFileList = {};
+        getFileList = webClient.get()
                 .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents")
                 .accept(MediaType.APPLICATION_JSON)
                 .headers(h -> h.setBearerAuth(accessToken))
                 .retrieve()
-                .bodyToMono(GetFileNameResponse[].class).block();
+                .bodyToMono(GetFileNameResponse[].class)
+                .onErrorReturn(getFileList)
+                .block();
+
         for (GetFileNameResponse getFileNameResponse : getFileList) {
             if (getFileNameResponse.getName().equals("AuthFile")) {
                 GetFileContentResponse authFile = webClient.get()
@@ -143,7 +150,8 @@ public class AuthServiceImpl implements AuthService {
                         .accept(MediaType.APPLICATION_JSON)
                         .headers(h -> h.setBearerAuth(accessToken))
                         .retrieve()
-                        .bodyToMono(GetFileContentResponse.class).block();
+                        .bodyToMono(GetFileContentResponse.class)
+                        .block();
 
                 String encodeContent = (authFile.getContent().replace("\n", ""));
                 String content = base64Converter.decryptAES256(base64Converter.decode(encodeContent));
