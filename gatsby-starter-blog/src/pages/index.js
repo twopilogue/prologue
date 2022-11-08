@@ -8,6 +8,7 @@ import Contents from "../components/contents"
 import Category from "../components/category"
 import Title from "../components/title"
 import Logo from "../components/logo"
+import Header from "../components/header"
 
 const BlogIndex = ({ data, location }) => {
   const siteTitle = data.site.siteMetadata?.title || `Title`
@@ -30,6 +31,7 @@ const BlogIndex = ({ data, location }) => {
 
   return (
     <Layout location={location} title={siteTitle}>
+      <Header />
       <Logo />
       <div className="display_row">
         <div className="display_column">
