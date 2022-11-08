@@ -6,6 +6,8 @@ import Axios from "api/JsonAxios";
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "slices/authSlice";
 import { rootState } from "app/store";
+import LandingMain from "features/landing/LandingMain";
+import LandingSub from "features/landing/LandingSub";
 
 const LandingPage = () => {
   const dispatch = useDispatch();
@@ -16,7 +18,7 @@ const LandingPage = () => {
 
   useEffect(() => {
     if (!auth) getAccessToken();
-  });
+  }, []);
 
   async function getAccessToken() {
     await Axios.get(api.auth.login(code)).then((res) => {
@@ -56,7 +58,7 @@ const LandingPage = () => {
       } else navigate("/create/reset");
     });
   }
-  
+
   async function setSecretRepo(accessToken: string, githubId: string) {
     await Axios.put(api.auth.setSecretRepo(accessToken, githubId)).then((res) => {
       console.log("레포지토리 Secret 생성 성공");
@@ -66,11 +68,12 @@ const LandingPage = () => {
 
   return (
     <>
-      <h1>랜딩페이지</h1>
-      <br />
-      <Stack justifyContent="center" alignItems="center" spacing={2}>
-        <NavLink to="/create">블로그 생성</NavLink>
+      {/* <Stack justifyContent="center" alignItems="center" spacing={2}>
         <NavLink to="/dashboard">대시보드</NavLink>
+      </Stack> */}
+      <Stack justifyContent="center" alignItems="center">
+        <LandingMain />
+        <LandingSub />
       </Stack>
     </>
   );
