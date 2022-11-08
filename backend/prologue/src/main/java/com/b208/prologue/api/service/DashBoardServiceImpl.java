@@ -90,7 +90,7 @@ public class DashBoardServiceImpl implements DashBoardService {
                 .retrieve()
                 .bodyToMono(GetRepositorySizeResponse.class).block();
 
-        return getRepositorySizeResponse.getSize() / 100.0;
+        return getRepositorySizeResponse.getSize() / 1000.0;
     }
 
     @Override
