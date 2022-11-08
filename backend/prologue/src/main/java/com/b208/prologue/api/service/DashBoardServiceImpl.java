@@ -119,7 +119,7 @@ public class DashBoardServiceImpl implements DashBoardService {
 
     public static boolean isNumeric(String s) {
         try {
-            Double.parseDouble(s);
+            Long.parseLong(s);
             return true;
         } catch (NumberFormatException e) {
             return false;
