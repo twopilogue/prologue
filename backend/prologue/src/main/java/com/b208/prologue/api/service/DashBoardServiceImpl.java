@@ -98,6 +98,7 @@ public class DashBoardServiceImpl implements DashBoardService {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
         Set<String> result = new LinkedHashSet<>();
+
         GetFileNameResponse[] getFileNameResponse = webClient.get()
                 .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/content/blog")
                 .accept(MediaType.APPLICATION_JSON)
@@ -106,6 +107,7 @@ public class DashBoardServiceImpl implements DashBoardService {
                 .bodyToMono(GetFileNameResponse[].class).block();
 
         for (int i = 0; i < getFileNameResponse.length; i++){
+            if(isNumeric(getFileNameResponse[i].getName()) == false && getFileNameResponse[i].getName().length() != 13) continue;
             Date date = new Date(Long.parseLong(getFileNameResponse[i].getName()));
             SimpleDateFormat dateFormat = new SimpleDateFormat ("yyyy-MM-dd");
 
@@ -113,6 +115,15 @@ public class DashBoardServiceImpl implements DashBoardService {
         }
 
         return result;
+    }
+
+    public static boolean isNumeric(String s) {
+        try {
+            Long.parseLong(s);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     public String getLatestBuildTime(String encodedAccessToken, String githubId) throws Exception {
