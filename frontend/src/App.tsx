@@ -16,17 +16,18 @@ import GatsbyLayout from "pages/GatsbyLayoutPage";
 function App() {
   const location = useLocation();
 
+  const dashboardStyle = {
+    backgroundColor: "#F1F8FF",
+    height: "100vh",
+  };
+
+  const landingStyle = {
+    backgroundColor: "#F1F8FF",
+    height: "100vh",
+  };
+
   return (
-    <div
-      style={
-        location.pathname === "/dashboard"
-          ? {
-              backgroundColor: "#F1F8FF",
-              height: "100vh",
-            }
-          : {}
-      }
-    >
+    <div style={(location.pathname === "/dashboard" && dashboardStyle) || (location.pathname === "/" && landingStyle)}>
       <Header />
       <div
         style={{
