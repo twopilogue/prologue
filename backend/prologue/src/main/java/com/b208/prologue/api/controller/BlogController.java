@@ -1,5 +1,6 @@
 package com.b208.prologue.api.controller;
 
+import com.b208.prologue.api.request.CreateBlogTemplateRequest;
 import com.b208.prologue.api.response.BaseResponseBody;
 import com.b208.prologue.api.response.CheckRepositoryResponse;
 import com.b208.prologue.api.service.BlogService;
@@ -10,6 +11,8 @@ import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @CrossOrigin("*")
 @RestController
@@ -61,9 +64,8 @@ public class BlogController {
             @ApiResponse(code = 200, message = "블로그 템플릿 생성", response = BaseResponseBody.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
-    public ResponseEntity<? extends BaseResponseBody> selectBlogTemplate(@RequestParam @ApiParam(value = "accessToken", required = true) String accessToken,
-                                                                         @RequestParam @ApiParam(value = "사용자 깃허브 아이디", required = true) String githubId) throws Exception {
-        blogService.selectTemplate(accessToken, githubId, 0);
+    public ResponseEntity<? extends BaseResponseBody> selectBlogTemplate(@Valid @RequestBody CreateBlogTemplateRequest createBlogTemplateRequest) throws Exception {
+        blogService.selectTemplate(createBlogTemplateRequest.getAccessToken(), createBlogTemplateRequest.getGithubId(), createBlogTemplateRequest.getTemplate());
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "블로그 템플릿 생성을 완료했습니다."));
     }
 

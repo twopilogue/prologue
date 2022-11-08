@@ -17,14 +17,15 @@ public class DashBoardServiceImpl implements DashBoardService {
     private final WebClient webClient;
     private final Base64Converter base64Converter;
     private final PostServiceImpl postService;
-    private final CommonService commonService;
 
     @Override
-    public Map<String, Object> getList(String encodedAccessToken, String githubId) throws Exception {
+    public Map<String, List<String>> getList(String encodedAccessToken, String githubId) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
-        Map<String, Object> result = new HashMap<>();
-        List<String> content = new ArrayList<>();
+        Map<String, List<String>> result = new HashMap<>();
+        List<String> title = new ArrayList<>();
+        List<String> temp = new ArrayList<>();
+        List<String> date = new ArrayList<>();
         List<String> directory = new ArrayList<>();
 
         String url = "/repos/" + githubId + "/" + githubId + ".github.io" + "/contents/";
@@ -36,46 +37,66 @@ public class DashBoardServiceImpl implements DashBoardService {
                 .retrieve()
                 .bodyToMono(PostGetListResponse[].class).block();
 
-        for (int i = list.length - 1; i > list.length - 6; i--) {
+        for (int i = list.length - 1; i > list.length - 7; i--) {
             if (i < 0) break;
-            content.add(postService.setItem(url, accessToken, list[i].getPath()));
-            directory.add(list[i].getName());
-        }
 
-        int cnt = list.length;
-        result.put("content", content);
-        result.put("directory", directory);
-        result.put("postCount", cnt);
-        return result;
-    }
+            if(isNumeric(list[i].getName()) == false && list[i].getName().length() != 13) {
+                String post = postService.setItem(url, accessToken, list[i].getPath());
+                temp.add(post);
+                directory.add(list[i].getName());
 
-    @Override
-    public List<Map<String, String>> getListImagese(String encodedAccessToken, String githubId, List<String> directories) throws Exception {
-        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
+                StringTokenizer st = new StringTokenizer(post, "\n");
+                int cnt = st.countTokens();
 
-        List<Map<String, String>> result = new ArrayList<>();
-        Map<String, String> image;
+                boolean flag = false;
+                for(int j = 0; j < cnt; j++){
+                    String line = st.nextToken();
 
-        for (String directory : directories) {
-            GetRepoContentResponse[] responses = commonService.getContentList(accessToken, githubId, "content/blog/" + directory);
-            image = new HashMap<>();
-            int flag = 0;
+                    if(line.contains("date")){
+                        flag = true;
 
-            for (int i = responses.length - 1; i > responses.length - 6; i--) {
-                if (i < 0) break;
+                        String tempDate = line.substring(line.indexOf("\"") + 1);
+                        String[] tmp = tempDate.split("T");
+                        tempDate = tmp[0];
 
-                if (!responses[flag].getName().equals("index.md")) {
-                    image.put(directory, responses[flag].getUrl());
-                    break;
-                } else {
-                    flag++;
+                        date.add(tempDate);
+                        break;
+                    }
+                }
+                if(flag == false){
                     continue;
                 }
+            }else{
+                temp.add(postService.setItem(url, accessToken, list[i].getPath()));
+                directory.add(list[i].getName());
+
+                Date tempDate = new Date(Long.parseLong(list[i].getName()));
+                SimpleDateFormat dateFormat = new SimpleDateFormat ("yyyy-MM-dd");
+
+                date.add(String.valueOf(dateFormat.format(tempDate)));
             }
 
-            result.add(image);
         }
 
+        for(int i = 0; i < temp.size(); i++){
+            StringTokenizer st = new StringTokenizer(temp.get(i), "\n");
+            int cnt = st.countTokens();
+
+            for(int j = 0; j < cnt; j++){
+                String line = st.nextToken();
+                if(line.contains("title")){
+                    title.add(line.substring(line.indexOf(": ") + 1));
+                    break;
+                }
+                if(j == (cnt-1)){
+                    title.add("No Title");
+                }
+            }
+        }
+
+        result.put("title", title);
+        result.put("date", date);
+        result.put("directory", directory);
         return result;
     }
 
@@ -90,7 +111,7 @@ public class DashBoardServiceImpl implements DashBoardService {
                 .retrieve()
                 .bodyToMono(GetRepositorySizeResponse.class).block();
 
-        return getRepositorySizeResponse.getSize() / 100.0;
+        return getRepositorySizeResponse.getSize() / 1000.0;
     }
 
     @Override
@@ -98,6 +119,7 @@ public class DashBoardServiceImpl implements DashBoardService {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
         Set<String> result = new LinkedHashSet<>();
+
         GetFileNameResponse[] getFileNameResponse = webClient.get()
                 .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/content/blog")
                 .accept(MediaType.APPLICATION_JSON)
@@ -106,6 +128,7 @@ public class DashBoardServiceImpl implements DashBoardService {
                 .bodyToMono(GetFileNameResponse[].class).block();
 
         for (int i = 0; i < getFileNameResponse.length; i++){
+            if(isNumeric(getFileNameResponse[i].getName()) == false && getFileNameResponse[i].getName().length() != 13) continue;
             Date date = new Date(Long.parseLong(getFileNameResponse[i].getName()));
             SimpleDateFormat dateFormat = new SimpleDateFormat ("yyyy-MM-dd");
 
@@ -113,6 +136,15 @@ public class DashBoardServiceImpl implements DashBoardService {
         }
 
         return result;
+    }
+
+    public static boolean isNumeric(String s) {
+        try {
+            Long.parseLong(s);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     public String getLatestBuildTime(String encodedAccessToken, String githubId) throws Exception {
@@ -127,5 +159,20 @@ public class DashBoardServiceImpl implements DashBoardService {
 
         SimpleDateFormat dataFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
         return dataFormat.format(getLatestBuildTimeResponse.getLastBuildTime());
+    }
+
+    @Override
+    public Integer getTotalCount(String encodedAccessToken, String githubId) throws Exception {
+        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
+        String url = "/repos/" + githubId + "/" + githubId + ".github.io" + "/contents/";
+
+        PostGetListResponse[] list = webClient.get()
+                .uri(url + "content/blog")
+                .headers(h -> h.setBearerAuth(accessToken))
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(PostGetListResponse[].class).block();
+
+        return list.length;
     }
 }
