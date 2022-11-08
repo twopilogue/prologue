@@ -1,9 +1,6 @@
 package com.b208.prologue.api.controller;
 
-import com.b208.prologue.api.request.ModifyDetailPageRequest;
-import com.b208.prologue.api.request.ModifyDetailPostRequest;
-import com.b208.prologue.api.request.RemoveDetailPostRequest;
-import com.b208.prologue.api.request.WriteDetailPostRequest;
+import com.b208.prologue.api.request.*;
 import com.b208.prologue.api.response.BaseResponseBody;
 import com.b208.prologue.api.response.DetailPostResponse;
 import com.b208.prologue.api.response.ImageResponse;
@@ -16,6 +13,7 @@ import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -74,11 +72,11 @@ public class PostsController {
             @ApiResponse(code = 400, message = "게시글 작성 실패", response = BaseResponseBody.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
-    public ResponseEntity<? extends BaseResponseBody> writeDetailPost(@Valid WriteDetailPostRequest writeDetailPostRequest) {
+    public ResponseEntity<? extends BaseResponseBody> writeDetailPost(@Valid @RequestPart WriteDetailPostRequest writeDetailPostRequest, @RequestPart(required = false) List<MultipartFile> files) {
 
         try {
             postService.insertDetailPost(writeDetailPostRequest.getAccessToken(), writeDetailPostRequest.getGithubId(),
-                    writeDetailPostRequest.getContent(), writeDetailPostRequest.getFiles());
+                    writeDetailPostRequest.getContent(), files);
             return ResponseEntity.status(200).body(BaseResponseBody.of(200, "게시글 작성에 성공하였습니다."));
         } catch (Exception e) {
             e.printStackTrace();

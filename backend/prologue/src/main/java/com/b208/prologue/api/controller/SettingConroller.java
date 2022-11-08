@@ -35,7 +35,6 @@ public class SettingConroller {
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
     public ResponseEntity<? extends BaseResponseBody> getBlogSetting(@RequestParam String accessToken, @RequestParam String githubId) {
-
         try {
             List<String> result = settingService.getBlogSetting(accessToken, githubId);
 
@@ -54,11 +53,7 @@ public class SettingConroller {
     })
     public ResponseEntity<? extends BaseResponseBody> modifyBlogSetting(@Valid @RequestPart ModifyBlogSettingRequest modifyBlogSettingRequest, @RequestPart (required = false) MultipartFile imgFile) {
         try {
-            settingService.updateBlogSetting(modifyBlogSettingRequest.getAccessToken(), modifyBlogSettingRequest.getGithubId(), modifyBlogSettingRequest.getModified());
-
-            if(imgFile != null){
-                settingService.updateProfileImage(modifyBlogSettingRequest.getAccessToken(), modifyBlogSettingRequest.getGithubId(), imgFile);
-            }
+            settingService.updateBlogSetting(modifyBlogSettingRequest.getAccessToken(), modifyBlogSettingRequest.getGithubId(), modifyBlogSettingRequest.getModified(), imgFile);
             return ResponseEntity.status(200).body(BaseResponseBody.of(200, "블로그 설정 수정에 성공하였습니다."));
         } catch (Exception e) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "블로그 설정 수정에 실패하였습니다."));

@@ -1,8 +1,34 @@
-import * as React from "react";
 import { Stack } from "@mui/material";
-import { NavLink } from "react-router-dom";
+import React, { useEffect } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import api from "api/Api";
+import Axios from "api/JsonAxios";
+import { useDispatch } from "react-redux";
+import { authActions } from "slices/authSlice";
 
 const LandingPage = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const code = new URLSearchParams(location.search).get("code");
+
+  useEffect(() => {
+    async function getAccessToken() {
+      Axios.get(api.auth.login(code)).then((res) => {
+        console.log("결과", res.data);
+        dispatch(
+          authActions.login({
+            accessToken: res.data.accessToken,
+            githubId: res.data.githubId,
+            githubImage: res.data.githubImage,
+            auth: true,
+          }),
+        );
+      });
+    }
+    getAccessToken();
+  });
+
   return (
     <>
       <h1>랜딩페이지</h1>
