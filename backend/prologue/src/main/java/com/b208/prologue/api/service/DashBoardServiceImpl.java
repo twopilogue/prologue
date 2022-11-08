@@ -39,15 +39,43 @@ public class DashBoardServiceImpl implements DashBoardService {
 
         for (int i = list.length - 1; i > list.length - 7; i--) {
             if (i < 0) break;
-            temp.add(postService.setItem(url, accessToken, list[i].getPath()));
 
-            directory.add(list[i].getName());
+            if(isNumeric(list[i].getName()) == false && list[i].getName().length() != 13) {
+                String post = postService.setItem(url, accessToken, list[i].getPath());
+                temp.add(post);
+                directory.add(list[i].getName());
 
-            if(isNumeric(list[i].getName()) == false && list[i].getName().length() != 13) continue;
-            Date tempDate = new Date(Long.parseLong(list[i].getName()));
-            SimpleDateFormat dateFormat = new SimpleDateFormat ("yyyy-MM-dd");
+                StringTokenizer st = new StringTokenizer(post, "\n");
+                int cnt = st.countTokens();
 
-            date.add(String.valueOf(dateFormat.format(tempDate)));
+                boolean flag = false;
+                for(int j = 0; j < cnt; j++){
+                    String line = st.nextToken();
+
+                    if(line.contains("date")){
+                        flag = true;
+
+                        String tempDate = line.substring(line.indexOf("\"") + 1);
+                        String[] tmp = tempDate.split("T");
+                        tempDate = tmp[0];
+
+                        date.add(tempDate);
+                        break;
+                    }
+                }
+                if(flag == false){
+                    continue;
+                }
+            }else{
+                temp.add(postService.setItem(url, accessToken, list[i].getPath()));
+                directory.add(list[i].getName());
+
+                Date tempDate = new Date(Long.parseLong(list[i].getName()));
+                SimpleDateFormat dateFormat = new SimpleDateFormat ("yyyy-MM-dd");
+
+                date.add(String.valueOf(dateFormat.format(tempDate)));
+            }
+
         }
 
         for(int i = 0; i < temp.size(); i++){
@@ -57,8 +85,11 @@ public class DashBoardServiceImpl implements DashBoardService {
             for(int j = 0; j < cnt; j++){
                 String line = st.nextToken();
                 if(line.contains("title")){
-                    title.add(line.substring(line.indexOf(":") + 1));
+                    title.add(line.substring(line.indexOf(": ") + 1));
                     break;
+                }
+                if(j == (cnt-1)){
+                    title.add("No Title");
                 }
             }
         }

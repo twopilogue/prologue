@@ -84,4 +84,22 @@ public class DashBoardController {
         }
         return ResponseEntity.status(200).body(BaseResponseBody.of(400, "최근 빌드 시간 조회 실패"));
     }
+
+    @GetMapping("/total")
+    @ApiOperation(value = "게시글 날짜 조회", notes = "게시글 날짜 조회")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "전체 게시글 수 조회 성공", response = DateListResponse.class),
+            @ApiResponse(code = 400, message = "전체 게시글 수 조회 실패", response = BaseResponseBody.class),
+            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<? extends  BaseResponseBody> getTotalPostCount(@RequestParam String accessToken, @RequestParam String githubId) {
+
+        try {
+            Set<String> result = dashBoardService.getDateList(accessToken, githubId);
+
+            return ResponseEntity.status(200).body(DateListResponse.of(result, 200, "게시물 목록 조회 성공"));
+        } catch (Exception e){
+            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "게시글 목록 조회에 실패하였습니다."));
+        }
+    }
 }
