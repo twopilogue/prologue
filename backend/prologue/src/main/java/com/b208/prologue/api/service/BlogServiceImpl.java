@@ -107,16 +107,16 @@ public class BlogServiceImpl implements BlogService {
                 .bodyToMono(GetTemplateFileResponse[].class).block();
         for (GetTemplateFileResponse getTemplateFileResponse : templateFileList) {
             if (getTemplateFileResponse.getType().equals("file")) {
-                getFileContent(accessToken, githubId, getTemplateFileResponse.getPath());
+                getFileContent(accessToken, githubId, template, getTemplateFileResponse.getPath());
             } else {
                 searchTemplate(accessToken, githubId, template, getTemplateFileResponse.getPath());
             }
         }
     }
 
-    public void getFileContent(String accessToken, String githubId, String path) {
+    public void getFileContent(String accessToken, String githubId, String template, String path) {
         GetFileContentResponse getFileContentResponse = webClient.get()
-                .uri("/repos/" + githubId + "/gatsby-starter-blog/contents/" + path)
+                .uri("/repos/team-epilogue/" + template + "/contents/" + path)
                 .accept(MediaType.APPLICATION_JSON)
                 .headers(h -> h.setBearerAuth(accessToken))
                 .retrieve()
