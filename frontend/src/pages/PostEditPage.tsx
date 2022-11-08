@@ -4,10 +4,13 @@ import Text from "components/Text";
 import Button from "components/Button";
 import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
 import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+import PostWriteTitle from "../features/post/PostWriteTitle";
+import PostWriteContents from "../features/post/PostWriteContents";
 
 const PostEditPage = () => {
   return (
-    <div>
+    <div className={styles.postWrite}>
       <div className={styles.textBox}>
         <Text value="게시글 수정" type="groupTitle" bold />
         <br /> <br />
@@ -17,6 +20,14 @@ const PostEditPage = () => {
           &nbsp; &nbsp; &nbsp;
           <Button label="작성완료" width="10vw" icon={<CheckOutlinedIcon />} />
         </div>
+        <div className={styles.postDeleteButton}>
+          <Button label="삭제하기" width="10vw" icon={<CloseOutlinedIcon />} />
+        </div>
+      </div>
+
+      <div style={{ display: "flex", marginTop: "1%" }}>
+        <PostWriteTitle />
+        <PostWriteContents />
       </div>
     </div>
   );
