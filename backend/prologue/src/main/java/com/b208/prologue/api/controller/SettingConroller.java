@@ -121,8 +121,7 @@ public class SettingConroller {
     })
     public ResponseEntity<? extends BaseResponseBody> modifyBlogPages(@Valid @RequestBody ModifyBlogPagesRequest modifyBlogPagesRequest) {
         try {
-            settingService.updateBlogPages(modifyBlogPagesRequest.getAccessToken(), modifyBlogPagesRequest.getGithubId(), modifyBlogPagesRequest.getPages(),
-                    modifyBlogPagesRequest.getModifiedPages(), modifyBlogPagesRequest.getAddedPages(), modifyBlogPagesRequest.getDeletedPages());
+            settingService.updateBlogPages(modifyBlogPagesRequest.getAccessToken(), modifyBlogPagesRequest.getGithubId(), modifyBlogPagesRequest.getPages());
             return ResponseEntity.status(200).body(BaseResponseBody.of(200, "블로그 페이지 목록 수정에 성공하였습니다."));
         } catch (Exception e) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "블로그 페이지 목록 수정에 실패하였습니다."));

@@ -125,7 +125,8 @@ public class SettingServiceImpl implements SettingService {
     public String[] getBlogCategory(String encodedAccessToken, String githubId) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
-        String content = commonService.getDetailContent(accessToken, githubId, "customizing-setting.json").getContent();
+        String content = base64Converter.decode(commonService.getDetailContent(accessToken, githubId, "customizing-setting.json")
+                .getContent().replace("\n", ""));
         int index = content.indexOf('{');
         content = content.substring(index);
 
@@ -153,7 +154,7 @@ public class SettingServiceImpl implements SettingService {
         }
 
         GetRepoContentResponse getRepoContentResponse = commonService.getDetailContent(accessToken, githubId, "customizing-setting.json");
-        String content = getRepoContentResponse.getContent();
+        String content = base64Converter.decode(getRepoContentResponse.getContent().replace("\n", ""));
         String sha = getRepoContentResponse.getSha();
 
         int index = content.indexOf('{');
@@ -182,8 +183,8 @@ public class SettingServiceImpl implements SettingService {
     public JSONObject[] getBlogPages(String encodedAccessToken, String githubId) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
-        String content = commonService.getDetailContent(accessToken, githubId, "customizing-setting.json").getContent();
-
+        String content = base64Converter.decode(commonService.getDetailContent(accessToken, githubId, "customizing-setting.json")
+                .getContent().replace("\n", ""));
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObj = (JSONObject) jsonParser.parse(content);
         JSONArray jsonArray = (JSONArray) jsonObj.get("pages");
@@ -198,67 +199,65 @@ public class SettingServiceImpl implements SettingService {
     }
 
     @Override
-    public void updateBlogPages(String encodedAccessToken, String githubId, List<String> pages,
-                                List<Map<String, String>> modifiedPages, List<String> addedPages, List<String> deletedPages) throws Exception {
+    public void updateBlogPages(String encodedAccessToken, String githubId, List<Map<String,String>> pages) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
         String commit = "modify: 페이지 목록 수정";
 
         String path = "content/pages/";
         List<TreeRequest> treeRequestList = new ArrayList<>();
-
-        for (int i = 0; i < deletedPages.size(); i++) {
-            GetRepoContentResponse[] repoContentResponses = commonService.getContentList(accessToken, githubId, path + deletedPages.get(i));
-
-            for (GetRepoContentResponse getRepoContentResponse : repoContentResponses) {
-                treeRequestList.add(new TreeRequest(getRepoContentResponse.getPath(), "100644", "blob", null));
-            }
-        }
-
-        List<TreeRequest> temp = new ArrayList<>();
-        for (int i = 0; i < modifiedPages.size(); i++) {
-            GetRepoContentResponse[] repoContentResponses = commonService.getContentList(accessToken, githubId, path + modifiedPages.get(i).get("oldName"));
-
-            for (GetRepoContentResponse getRepoContentResponse : repoContentResponses) {
-                GetRepoContentResponse response = commonService.getDetailContent(accessToken, githubId, getRepoContentResponse.getPath());
-                String encodedContent = commonService.makeBlob(accessToken, githubId, base64Converter.encode(response.getContent()));
-                temp.add(new TreeRequest(path + modifiedPages.get(i).get("newName") + "/" + response.getName(), "100644", "blob", encodedContent));
-                treeRequestList.add(new TreeRequest(getRepoContentResponse.getPath(), "100644", "blob", null));
-            }
-        }
-
-        for (int i = 0; i < temp.size(); i++) {
-            treeRequestList.add(temp.get(i));
-        }
-
+        List<TreeRequest> addedTreeRequestList = new ArrayList<>();
         String defaultContent = "페이지 내용 넣기";
-        for (int i = 0; i < addedPages.size(); i++) {
-            String encodedContent = commonService.makeBlob(accessToken, githubId, base64Converter.encode(defaultContent));
-            treeRequestList.add(new TreeRequest(path + addedPages.get(i) + "/index.md", "100644", "blob", encodedContent));
-        }
 
         JSONArray jsonArray = new JSONArray();
+
         for (int i = 0; i < pages.size(); i++) {
-            jsonArray.add(pages.get(i));
+            Map page = pages.get(i);
+            String directory = page.get("label").toString().toLowerCase();
+
+            if(page.get("type").equals("deleted")){
+                GetRepoContentResponse[] repoContentResponses = commonService.getContentList(accessToken, githubId, path + directory);
+
+                for (GetRepoContentResponse getRepoContentResponse : repoContentResponses) {
+                    treeRequestList.add(new TreeRequest(getRepoContentResponse.getPath(), "100644", "blob", null));
+                }
+                continue;
+            }else if(page.get("type").equals("changing")){
+                GetRepoContentResponse[] repoContentResponses = commonService.getContentList(accessToken, githubId, path + page.get("oldName").toString().toLowerCase());
+                for (GetRepoContentResponse getRepoContentResponse : repoContentResponses) {
+                    GetRepoContentResponse response = commonService.getDetailContent(accessToken, githubId, getRepoContentResponse.getPath());
+                    String encodedContent = commonService.makeBlob(accessToken, githubId, response.getContent());
+                    addedTreeRequestList.add(new TreeRequest(path + directory + "/" + response.getName(), "100644", "blob", encodedContent));
+                    treeRequestList.add(new TreeRequest(getRepoContentResponse.getPath(), "100644", "blob", null));
+                }
+            }else if(page.get("type").equals("new")){
+                String encodedContent = commonService.makeBlob(accessToken, githubId, base64Converter.encode(defaultContent));
+                addedTreeRequestList.add(new TreeRequest(path + directory + "/index.md", "100644", "blob", encodedContent));
+            }
+
+            String url = Boolean.parseBoolean(page.get("posts").toString())? "/blog" : "/"+directory+"/";
+
+            JSONObject jsonObj = new JSONObject();
+            jsonObj.put("label",page.get("label"));
+            jsonObj.put("url",url);
+            jsonArray.add(jsonObj);
+        }
+
+        for (int i = 0; i < addedTreeRequestList.size(); i++) {
+            treeRequestList.add(addedTreeRequestList.get(i));
         }
 
         GetRepoContentResponse getRepoContentResponse = commonService.getDetailContent(accessToken, githubId, "customizing-setting.json");
-        String content = getRepoContentResponse.getContent();
-
-        int index = content.indexOf('{');
-        content = content.substring(index);
+        String content = base64Converter.decode(getRepoContentResponse.getContent().replace("\n", ""));
 
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObj = (JSONObject) jsonParser.parse(content);
 
         jsonObj.replace("pages", jsonArray);
 
-        String jsonString = "customizing-setting=" + jsonObj;
-
-        String encodedContent = commonService.makeBlob(accessToken, githubId, base64Converter.encode(jsonString));
+        String encodedContent = commonService.makeBlob(accessToken, githubId, base64Converter.encode(jsonObj.toString()));
         treeRequestList.add(new TreeRequest("customizing-setting.json", "100644", "blob", encodedContent));
 
         commonService.multiFileCommit(accessToken, githubId, treeRequestList, commit);
 
     }
-
 }
