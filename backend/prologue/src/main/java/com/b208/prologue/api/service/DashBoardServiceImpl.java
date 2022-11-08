@@ -36,7 +36,7 @@ public class DashBoardServiceImpl implements DashBoardService {
                 .retrieve()
                 .bodyToMono(PostGetListResponse[].class).block();
 
-        for (int i = list.length - 1; i > list.length - 6; i--) {
+        for (int i = list.length - 1; i > list.length - 7; i--) {
             if (i < 0) break;
             content.add(postService.setItem(url, accessToken, list[i].getPath()));
             directory.add(list[i].getName());
