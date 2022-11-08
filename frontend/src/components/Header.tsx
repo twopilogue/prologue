@@ -49,8 +49,7 @@ function Header() {
 
   const onLogin = () => {
     Axios.get(api.auth.getUri()).then((res) => {
-      console.log(res);
-      // window.location.href = res.data.uri;
+      window.location.href = res.data.uri;
     });
   };
 
@@ -109,6 +108,15 @@ function Header() {
             }}
           >
             블로그 설정
+          </NavLink>
+          <NavLink
+            to="/tmpBlog"
+            style={{
+              color: backgroudMode ? "black" : "white",
+              textDecoration: "none",
+            }}
+          >
+            (임시)블로그
           </NavLink>
 
           {auth ? (

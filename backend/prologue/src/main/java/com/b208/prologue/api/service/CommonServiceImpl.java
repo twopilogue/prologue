@@ -84,15 +84,12 @@ public class CommonServiceImpl implements CommonService {
 
     @Override
     public GetRepoContentResponse getDetailContent(String accessToken, String githubId, String path) throws Exception {
-        GetRepoContentResponse postResponse = webClient.get()
+        return webClient.get()
                 .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/" + path)
                 .headers(h -> h.setBearerAuth(accessToken))
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToMono(GetRepoContentResponse.class).block();
-        String tmp = postResponse.getContent().replace("\n", "");
-        postResponse.setContent(base64Converter.decode(tmp));
-        return postResponse;
     }
 
     @Override

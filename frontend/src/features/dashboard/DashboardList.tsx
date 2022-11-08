@@ -1,8 +1,26 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "features/dashboard/Dashboard.module.css";
 import Text from "components/Text";
+import { useSelector } from "react-redux";
+import { rootState } from "app/store";
+import api from "api/Api";
+import Axios from "api/JsonAxios";
 
 function DashboardList() {
+  const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
+
+  useEffect(() => {
+    getNewPost();
+  }, []);
+
+  async function getNewPost() {
+    await Axios.get(api.dashboard.getNewPost(accessToken, githubId))
+      .then((res) => {
+        console.log("최신글 받기", res.data);
+      })
+      .catch((err) => [console.error("최신글 받기", err)]);
+  }
+
   const list = [
     {
       title: "[백준] 2525번 : 오븐 시계 - [C++]",
@@ -38,7 +56,7 @@ function DashboardList() {
 
   return (
     <div className={`${styles.container} ${styles.list}`}>
-      <div >
+      <div>
         <div>
           <div className={`${styles.flexRow} ${styles.listAll}`}>
             <Text value="최신글 보기" color="blue_5" bold />
