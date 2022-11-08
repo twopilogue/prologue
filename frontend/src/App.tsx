@@ -27,7 +27,7 @@ function App() {
   };
 
   return (
-    <div style={(location.pathname === "/dashboard" && dashboardStyle) || (location.pathname === "/" && landingStyle)}>
+    <div style={location.pathname === "/dashboard" ? dashboardStyle : location.pathname === "/" ? landingStyle : {}}>
       <Header />
       <div
         style={{
