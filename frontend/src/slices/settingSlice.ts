@@ -33,6 +33,24 @@ interface LayoutConfig {
   componentList: ComponentConfig[];
 
   checkList: ComponentCheckConfig;
+
+  blogSettingInfo: blogInfoConfig;
+}
+
+export interface blogInfoConfig {
+  siteMetadata: {
+    author: {
+      name: string;
+      summary: string;
+    };
+    description: string;
+    siteUrl: string;
+    social: {
+      twitter: string;
+    };
+    title: string;
+  };
+  profileImg: string;
 }
 
 const initialState: LayoutConfig = {
@@ -61,6 +79,22 @@ const initialState: LayoutConfig = {
     page: true,
     title: true,
     contents: true,
+  },
+
+  blogSettingInfo: {
+    siteMetadata: {
+      author: {
+        name: "",
+        summary: "",
+      },
+      description: "",
+      siteUrl: "",
+      social: {
+        twitter: "",
+      },
+      title: "",
+    },
+    profileImg: "",
   },
 };
 
@@ -98,6 +132,10 @@ const settingSlice = createSlice({
     setCheckList: (state, { payload: { logo, category, profile, page, title, contents } }) => {
       state.checkList = { logo, category, profile, page, title, contents };
     },
+    setBlogSettingInfo: (state, { payload: { siteMetadata, profileImg } }) => {
+      state.blogSettingInfo.siteMetadata = siteMetadata;
+      state.blogSettingInfo.profileImg = profileImg;
+    },
   },
 });
 export const {
@@ -109,6 +147,7 @@ export const {
   setComponentList,
   setComponentLayoutList,
   setCheckList,
+  setBlogSettingInfo,
 } = settingSlice.actions;
 
 export const selectCategoryLayoutList = (state: rootState) => state.setting.categoryLayoutList;
@@ -123,6 +162,8 @@ export const selectComponentLayoutList = (state: rootState) => state.setting.com
 export const selectComponentList = (state: rootState) => state.setting.componentList;
 
 export const selectCheckList = (state: rootState) => state.setting.checkList;
+
+export const selectBlogSettingInfo = (state: rootState) => state.setting.blogSettingInfo;
 
 export default settingSlice.reducer;
 

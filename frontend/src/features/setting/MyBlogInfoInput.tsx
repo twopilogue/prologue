@@ -2,11 +2,15 @@ import React from "react";
 import styles from "./Setting.module.css";
 import Text from "components/Text";
 import Input from "components/Input";
-import { FormControl, MenuItem, OutlinedInput, Select } from "@mui/material";
-import { Theme, useTheme } from "@mui/material/styles";
 import SelectInput from "features/setting/SelectInput";
+import { selectBlogSettingInfo } from "slices/settingSlice";
+import { useAppSelector } from "app/hooks";
 
 const MyBlogInfoInput = () => {
+  const blogInfo = useAppSelector(selectBlogSettingInfo);
+  console.log(blogInfo.profileImg);
+  console.log(blogInfo.siteMetadata);
+
   return (
     <div>
       <div className={styles.textPadding}>
@@ -17,7 +21,7 @@ const MyBlogInfoInput = () => {
           <div className={styles.inputTag}>
             <Text value="블로그명" type="text" />
             <div style={{ width: "40vw" }}>
-              <Input placeholder="블로그명을 입력하세요." />
+              <Input value={blogInfo.siteMetadata.title} />
             </div>
           </div>
         </div>
@@ -26,6 +30,7 @@ const MyBlogInfoInput = () => {
             <Text value="블로그 소개" type="text" />
             <div style={{ width: "40vw" }}>
               <Input
+                value={blogInfo.siteMetadata.description}
                 placeholder="블로그 소개글을 입력하세요."
                 multiline
                 rows={4}
