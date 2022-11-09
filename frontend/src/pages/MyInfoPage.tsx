@@ -20,6 +20,7 @@ export interface myInfoProps {
 export interface myBlogInfoProps {
   title: string;
   description: string;
+  social: object;
 }
 
 const MyInfoPage = () => {
@@ -34,7 +35,7 @@ const MyInfoPage = () => {
   const [myBlogInfo, setMyBlogInfo] = useState<myBlogInfoProps>({
     title: "",
     description: "",
-    // social: "",
+    social: [],
   });
 
   const getBlogInfo = async () => {
@@ -48,6 +49,7 @@ const MyInfoPage = () => {
         const test = "return (" + teststring + ")";
         const st: blogInfoConfig = new Function(test)();
         setOldString(st);
+        console.log(st);
         dispatch(setBlogSettingInfo({ siteMetadata: st.siteMetadata, profileImg: res.data.profileImg }));
         setMyInfo({
           name: st.siteMetadata.author.name,
@@ -57,6 +59,7 @@ const MyInfoPage = () => {
         setMyBlogInfo({
           title: st.siteMetadata.title,
           description: st.siteMetadata.description,
+          social: st.siteMetadata.social,
         });
       })
       .catch((err: any) => {
