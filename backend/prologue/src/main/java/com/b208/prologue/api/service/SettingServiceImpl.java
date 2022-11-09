@@ -150,6 +150,9 @@ public class SettingServiceImpl implements SettingService {
         JSONArray jsonArray = new JSONArray();
         jsonArray.add("전체보기");
         for (int i = 0; i < category.size(); i++) {
+            if(category.get(i).equals("전체보기")){
+                throw new Exception("해당 이름은 생성할 수 없습니다.");
+            }
             jsonArray.add(category.get(i));
         }
 
