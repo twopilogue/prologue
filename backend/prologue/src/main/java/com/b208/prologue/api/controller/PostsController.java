@@ -40,7 +40,7 @@ public class PostsController {
         try {
             Map<String, Object> result = postService.getList(accessToken, githubId, page);
 
-            List<Map<String, String>> images = postService.getListImagese(accessToken, githubId, (List<String>) result.get("directory"));
+            List<Map<String, String>> images = postService.getListImagese(accessToken, githubId, (List<String>) result.get("Directory"));
             return ResponseEntity.status(200).body(PostListResponse.of(result, images, 200, "게시물 목록 조회 성공"));
         } catch (Exception e) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "게시글 목록 조회에 실패하였습니다."));
