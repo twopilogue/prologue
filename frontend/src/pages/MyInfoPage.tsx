@@ -18,8 +18,8 @@ const MyInfoPage = () => {
       .get(api.setting.getBlog(accessToken, githubId))
       .then((res: any) => {
         // console.log(res.data.profileImg);
-        let teststring: string = res.data.setting;
-        teststring = teststring.replaceAll("${__dirname}", "dirname_Change");
+        const originString: string = res.data.setting;
+        const teststring = originString.replaceAll("${__dirname}", "dirname_Change");
 
         const test = "return (" + teststring + ")";
         const st: blogInfoConfig = new Function(test)();
