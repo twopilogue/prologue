@@ -1,5 +1,6 @@
 package com.b208.prologue.api.service;
 
+import com.b208.prologue.api.request.PostRequest;
 import com.b208.prologue.api.request.github.*;
 import com.b208.prologue.api.response.ImageResponse;
 import com.b208.prologue.api.response.github.PostGetListResponse;
@@ -32,10 +33,7 @@ public class PostServiceImpl implements PostService {
 
         Map<String, Object> result = new HashMap<>();
         List<String> temp = new ArrayList<>();
-        List<String> content = new ArrayList<>();
-        List<String> title = new ArrayList<>();
-        List<String> date = new ArrayList<>();
-        List<String> directory = new ArrayList<>();
+        List<PostRequest> postRequests = new ArrayList<>();
 
         String url = "/repos/" + githubId + "/" + githubId + ".github.io" + "/contents/";
 
@@ -47,15 +45,16 @@ public class PostServiceImpl implements PostService {
                 .bodyToMono(PostGetListResponse[].class).block();
 
         for (int i = 6 * page; i < list.length; i++) {
-
             if(i >= 6 * (page+1)){
                 break;
             }
+            PostRequest postRequest = new PostRequest();
 
             if(isNumeric(list[i].getName()) == false && list[i].getName().length() != 13) {
                 String post = setItem(url, accessToken, list[i].getPath());
                 temp.add(post);
-                directory.add(list[i].getName());
+                postRequest.setDirectory(list[i].getName());
+                postRequest.setImgUrl(getImage(accessToken, githubId, list[i].getName()));
 
                 StringTokenizer st = new StringTokenizer(post, "\n");
                 int cnt = st.countTokens();
@@ -71,23 +70,24 @@ public class PostServiceImpl implements PostService {
                         String[] tmp = tempDate.split("T");
                         tempDate = tmp[0];
 
-                        date.add(tempDate);
+                        postRequest.setDate(tempDate);
                         break;
                     }
                 }
                 if(flag == false){
-                    date.add("No Date");
-                    continue;
+                    postRequest.setDate("No Date");
                 }
             }else{
                 temp.add(setItem(url, accessToken, list[i].getPath()));
-                directory.add(list[i].getName());
+                postRequest.setDirectory(list[i].getName());
+                postRequest.setImgUrl(getImage(accessToken, githubId, list[i].getName()));
 
                 Date tempDate = new Date(Long.parseLong(list[i].getName()));
                 SimpleDateFormat dateFormat = new SimpleDateFormat ("yyyy-MM-dd");
 
-                date.add(String.valueOf(dateFormat.format(tempDate)));
+                postRequest.setDate(String.valueOf(dateFormat.format(tempDate)));
             }
+            postRequests.add(postRequest);
         }
 
         for(int i = 0; i < temp.size(); i++){
@@ -97,29 +97,26 @@ public class PostServiceImpl implements PostService {
             for(int j = 0; j < cnt; j++){
                 String line = st.nextToken();
                 if(line.contains("title")){
-                    title.add(line.substring(line.indexOf(": ") + 1));
+                    postRequests.get(i).setTitle(line.substring(line.indexOf(": ") + 1));
                     break;
                 }
                 if(j == (cnt-1)){
-                    title.add("No Title");
+                    postRequests.get(i).setTitle("No Title");
                 }
             }
 
             if (temp.get(i).contains("---")){
                 String tempContent[] = temp.get(i).split("---");
-                content.add(tempContent[2].substring(2));
+                postRequests.get(i).setContent(tempContent[2].substring(2));
             }else {
-                content.add(temp.get(i));
+                postRequests.get(i).setContent(temp.get(i));
             }
 
         }
 
         int cnt = list.length;
         result.put("PostCount", cnt);
-        result.put("Title", title);
-        result.put("Date", date);
-        result.put("Content", content);
-        result.put("Directory", directory);
+        result.put("Post", postRequests);
 
         return result;
     }
@@ -133,30 +130,21 @@ public class PostServiceImpl implements PostService {
         }
     }
 
-    @Override
-    public List<Map<String, String>> getListImagese(String encodedAccessToken, String githubId, List<String> directories) throws Exception {
-        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
+    public String getImage(String accessToken, String githubId, String directory) throws Exception {
+        GetRepoContentResponse[] responses = commonService.getContentList(accessToken, githubId, "content/blog/" + directory);
 
-        List<Map<String, String>> result = new ArrayList<>();
-        Map<String, String> image;
+        String imgUrl = "No Image";
 
-        for (String directory:directories) {
-            GetRepoContentResponse[] responses = commonService.getContentList(accessToken, githubId, "content/blog/" + directory);
-            image = new HashMap<>();
-
-            for (int i = 0; i < responses.length; i++) {
-                if (!responses[i].getName().equals("index.md")) {
-                    image.put(directory, responses[i].getUrl());
-                    break;
-                }else{
-                    continue;
-                }
+        for (int i = 0; i < responses.length; i++) {
+            if (!responses[i].getName().equals("index.md")) {
+                imgUrl = responses[i].getUrl();
+                break;
+            }else{
+                continue;
             }
-
-            result.add(image);
         }
 
-        return result;
+        return imgUrl;
     }
 
 
