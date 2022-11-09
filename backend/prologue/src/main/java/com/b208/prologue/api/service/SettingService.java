@@ -13,4 +13,5 @@ public interface SettingService {
     void updateBlogCategory(String encodedAccessToken, String githubId, List<String> category) throws Exception;
     JSONObject[] getBlogPages(String encodedAccessToken, String githubId) throws Exception;
     void updateBlogPages(String encodedAccessToken, String githubId, List<Map<String,String>> pages) throws Exception;
+    String getBlogLayout(String encodedAccessToken, String githubId) throws Exception;
 }

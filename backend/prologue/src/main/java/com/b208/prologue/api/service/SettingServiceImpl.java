@@ -272,4 +272,19 @@ public class SettingServiceImpl implements SettingService {
         commonService.multiFileCommit(accessToken, githubId, treeRequestList, commit);
 
     }
+
+    @Override
+    public String getBlogLayout(String encodedAccessToken, String githubId) throws Exception{
+        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
+
+        GetRepoContentResponse getRepoContentResponse = commonService.getDetailContent(accessToken, githubId, "src/pages/index.js");
+        String content = base64Converter.decode(getRepoContentResponse.getContent().replace("\n", ""));
+
+        int startIndex = content.lastIndexOf("return");
+        startIndex = content.indexOf(">",startIndex);
+        int endIndex = content.lastIndexOf("Layout");
+        endIndex = content.lastIndexOf("<",endIndex);
+
+        return content.substring(startIndex+1,endIndex);
+    }
 }
