@@ -7,10 +7,13 @@ import { useNavigate } from "react-router-dom";
 import BlogDashboardMoveModal from "features/blog/BlogDashboardMoveModal";
 import Axios from "api/JsonAxios";
 import api from "api/Api";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { rootState } from "app/store";
+import { authActions } from "slices/authSlice";
+import axios from "axios";
 
 const LandingPage = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [isStepNumber, setStepNumber] = React.useState(0);
@@ -24,14 +27,52 @@ const LandingPage = () => {
   };
   const layoutSetting = () => {
     console.log(radioValue);
-    if (radioValue === "GatsbyLayout") navigate("/create/gatsby");
     if (radioValue === "CustomLayout") {
-      setStepNumber(2);
-      setTimeout(() => {
-        // 블로그 생성시 필요한 것
-      }, 2000);
+      Axios.put(api.auth.setAuthFile(), {
+        accessToken: accessToken,
+        githubId: githubId,
+        blogType: 0,
+      }).then((res) => {
+        dispatch(authActions.blogType({ blogType: res.data.blogType }));
+        Axios.post(api.blog.chooseTemplate(), {
+          accessToken: accessToken,
+          githubId: githubId,
+          template: "prologue-template",
+        }).then((res) => {
+          console.log("기본테마 적용", res.data);
+          // setStepNumber(2);
+          distributeRepo();
+        })
+      });
+    } else if (radioValue === "GatsbyLayout") {
+      Axios.put(api.auth.setAuthFile(), {
+        accessToken: accessToken,
+        githubId: githubId,
+        blogType: 1,
+      }).then((res) => {
+        dispatch(authActions.blogType({ blogType: res.data.blogType }));
+        navigate("/create/gatsby");
+      });
     }
   };
+
+    async function distributeRepo() {
+      axios
+        .all([
+          Axios.put(api.blog.changeBranch(accessToken, githubId)),
+          Axios.post(api.blog.setGitWorkflow(accessToken, githubId)),
+          Axios.put(api.auth.setSecretRepo(accessToken, githubId)),
+        ])
+        .then(
+          axios.spread((res1, res2,res3) => {
+            console.log("배포 브랜치 변경", res1.data);
+            console.log("Repo secrets 생성", res2.data);
+            console.log("Workflow 생성", res3.data);
+          }),
+      ).catch((err)=>{
+        console.error("배포 err",err);
+        });
+    }
 
   return (
     <div style={{ paddingTop: "5%" }}>

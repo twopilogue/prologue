@@ -10,10 +10,10 @@ import java.util.Map;
 
 @Getter
 @Setter
-@ApiModel("PostListResponse")
+@ApiModel("DashBoardListResponse")
 public class DashBoardListResponse extends BaseResponseBody{
 
-    @ApiModelProperty(name = "게시글,디렉토리 리스트")
+    @ApiModelProperty(name = "제목, 날짜, 디렉토리 리스트")
     Map<String, List<String>> result;
 
     public static DashBoardListResponse of(Map<String, List<String>> result, Integer statusCode, String message ) {

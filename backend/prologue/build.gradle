@@ -29,7 +29,8 @@ dependencies {
 
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
-	implementation "com.goterl:lazysodium-java:5.1.1"
+	implementation files("libs/lazysodium-java-5.1.2.jar")
+	implementation 'com.goterl:resource-loader:2.0.2'
 	implementation "net.java.dev.jna:jna:5.11.0"
 	
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation'
