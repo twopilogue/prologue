@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Text from "components/Text";
 import styles from "./Setting.module.css";
 import ButtonStyled from "components/Button";
@@ -6,16 +6,37 @@ import { useDispatch, useSelector } from "react-redux";
 import { rootState } from "app/store";
 import { authActions } from "slices/authSlice";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { blogInfoConfig, setBlogSettingInfo } from "slices/settingSlice";
+import api from "api/Api";
 
 const MyGitInfo = () => {
-  const { githubId, githubImage } = useSelector((state: rootState) => state.auth);
+  const { githubId, githubImage, accessToken } = useSelector((state: rootState) => state.auth);
   const dispatch = useDispatch();
   const navigator = useNavigate();
+
+  const getBlogInfo = async () => {
+    await axios
+      .get(api.setting.getBlog(accessToken, githubId))
+      .then((res: any) => {
+        // console.log(res.data.profileImg);
+        const test = "return (" + res.data.setting + ")";
+        const st: blogInfoConfig = new Function(test)();
+        dispatch(setBlogSettingInfo({ siteMetadata: st.siteMetadata, profileImg: res.data.profileImg }));
+      })
+      .catch((err: any) => {
+        console.log(err);
+      });
+  };
 
   const logout = () => {
     dispatch(authActions.logout());
     navigator("/");
   };
+
+  useEffect(() => {
+    getBlogInfo();
+  }, []);
 
   return (
     <div>
