@@ -6,7 +6,7 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import Tag from "components/Tag";
 import { useAppDispatch } from "app/hooks";
-import { setPostCategory, setPostTag, setPostTitle } from "slices/postSlice";
+import { setPostCategory, setPostTagList, setPostTitle } from "slices/postSlice";
 import axios from "api/JsonAxios";
 import api from "api/Api";
 import { useSelector } from "react-redux";
@@ -76,7 +76,7 @@ const PostWriteTitle = () => {
   }, []);
 
   useEffect(() => {
-    dispatch(setPostTag(tagList));
+    dispatch(setPostTagList(tagList));
   }, [tagList]);
 
   return (
