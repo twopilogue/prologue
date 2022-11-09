@@ -61,7 +61,7 @@ public class SettingServiceImpl implements SettingService {
         result.add(Line);
 
         GetRepoContentResponse[] getRepoContentResponse = webClient.get()
-                .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/images")
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/src/images")
                 .headers(h -> h.setBearerAuth(accessToken))
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
@@ -95,7 +95,7 @@ public class SettingServiceImpl implements SettingService {
             String path = "images/";
 
             GetRepoContentResponse[] getRepoContentResponse = webClient.get()
-                    .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/images")
+                    .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/src/images")
                     .headers(h -> h.setBearerAuth(accessToken))
                     .accept(MediaType.APPLICATION_JSON)
                     .retrieve()
