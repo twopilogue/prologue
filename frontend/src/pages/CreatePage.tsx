@@ -41,6 +41,7 @@ const LandingPage = () => {
         }).then((res) => {
           console.log("기본테마 적용", res.data);
           // setStepNumber(2);
+          navigate("/create/custom");
           distributeRepo();
         });
       });
@@ -69,10 +70,7 @@ const LandingPage = () => {
           console.log("Repo secrets 생성", res2.data);
           console.log("Workflow 생성", res3.data);
         }),
-      )
-      .catch((err) => {
-        console.error("배포 err", err);
-      });
+      );
   }
 
   return (
