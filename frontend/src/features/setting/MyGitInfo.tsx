@@ -20,8 +20,12 @@ const MyGitInfo = () => {
       .get(api.setting.getBlog(accessToken, githubId))
       .then((res: any) => {
         // console.log(res.data.profileImg);
-        const test = "return (" + res.data.setting + ")";
+        let teststring: string = res.data.setting;
+        teststring = teststring.replaceAll("${__dirname}", "dirname_Change");
+
+        const test = "return (" + teststring + ")";
         const st: blogInfoConfig = new Function(test)();
+        console.log("됨", st);
         dispatch(setBlogSettingInfo({ siteMetadata: st.siteMetadata, profileImg: res.data.profileImg }));
       })
       .catch((err: any) => {

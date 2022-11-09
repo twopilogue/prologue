@@ -8,8 +8,6 @@ import { useAppSelector } from "app/hooks";
 
 const MyBlogInfoInput = () => {
   const blogInfo = useAppSelector(selectBlogSettingInfo);
-  console.log(blogInfo.profileImg);
-  console.log(blogInfo.siteMetadata);
 
   return (
     <div>
