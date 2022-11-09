@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./Setting.module.css";
+import styles from "../Setting.module.css";
 import Text from "components/Text";
 import Input from "components/Input";
 import SelectInput from "features/setting/SelectInput";
@@ -8,8 +8,6 @@ import { useAppSelector } from "app/hooks";
 
 const MyBlogInfoInput = () => {
   const blogInfo = useAppSelector(selectBlogSettingInfo);
-  console.log(blogInfo.profileImg);
-  console.log(blogInfo.siteMetadata);
 
   return (
     <div>
