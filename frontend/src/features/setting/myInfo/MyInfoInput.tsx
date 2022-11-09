@@ -1,13 +1,14 @@
 import Input from "components/Input";
 import Text from "components/Text";
 import React, { Profiler } from "react";
-import styles from "./Setting.module.css";
+import styles from "../Setting.module.css";
 import ModeIcon from "@mui/icons-material/Mode";
 import { useAppSelector } from "app/hooks";
 import { selectBlogSettingInfo } from "slices/settingSlice";
 
 const MemberInfoInput = () => {
   const blogInfo = useAppSelector(selectBlogSettingInfo);
+  console.log(blogInfo);
   return (
     <div style={{ width: "100%" }}>
       <div className={styles.textPadding}>
