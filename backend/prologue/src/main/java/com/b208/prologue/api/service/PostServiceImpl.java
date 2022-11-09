@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.sql.Timestamp;
 
@@ -31,6 +32,8 @@ public class PostServiceImpl implements PostService {
 
         Map<String, Object> result = new HashMap<>();
         List<String> content = new ArrayList<>();
+        List<String> title = new ArrayList<>();
+        List<String> date = new ArrayList<>();
         List<String> directory = new ArrayList<>();
 
         String url = "/repos/" + githubId + "/" + githubId + ".github.io" + "/contents/";
@@ -47,6 +50,45 @@ public class PostServiceImpl implements PostService {
             if(i >= 6 * (page+1)){
                 break;
             }
+            ////////////////////
+
+//            if(isNumeric(list[i].getName()) == false && list[i].getName().length() != 13) {
+//                String post = postService.setItem(url, accessToken, list[i].getPath());
+//                temp.add(post);
+//                directory.add(list[i].getName());
+//
+//                StringTokenizer st = new StringTokenizer(post, "\n");
+//                int cnt = st.countTokens();
+//
+//                boolean flag = false;
+//                for(int j = 0; j < cnt; j++){
+//                    String line = st.nextToken();
+//
+//                    if(line.contains("date")){
+//                        flag = true;
+//
+//                        String tempDate = line.substring(line.indexOf("\"") + 1);
+//                        String[] tmp = tempDate.split("T");
+//                        tempDate = tmp[0];
+//
+//                        date.add(tempDate);
+//                        break;
+//                    }
+//                }
+//                if(flag == false){
+//                    continue;
+//                }
+//            }else{
+//                temp.add(postService.setItem(url, accessToken, list[i].getPath()));
+//                directory.add(list[i].getName());
+//
+//                Date tempDate = new Date(Long.parseLong(list[i].getName()));
+//                SimpleDateFormat dateFormat = new SimpleDateFormat ("yyyy-MM-dd");
+//
+//                date.add(String.valueOf(dateFormat.format(tempDate)));
+//            }
+
+            ////////////////////
             content.add(setItem(url, accessToken, list[i].getPath()));
             directory.add(list[i].getName());
         }
@@ -56,6 +98,15 @@ public class PostServiceImpl implements PostService {
         result.put("directory", directory);
         result.put("postCount", cnt);
         return result;
+    }
+
+    public static boolean isNumeric(String s) {
+        try {
+            Long.parseLong(s);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     @Override
