@@ -1,14 +1,17 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import styles from "../Setting.module.css";
 import Text from "components/Text";
 import Input from "components/Input";
 import SelectInput from "features/setting/SelectInput";
-import { selectBlogSettingInfo } from "slices/settingSlice";
-import { useAppSelector } from "app/hooks";
+import { blogInfoConfig } from "slices/settingSlice";
+import { myBlogInfoProps } from "pages/MyInfoPage";
 
-const MyBlogInfoInput = () => {
-  const blogInfo = useAppSelector(selectBlogSettingInfo);
+interface Props {
+  myBlogInfo: myBlogInfoProps;
+  setMyBlogInfo: Dispatch<SetStateAction<myBlogInfoProps>>;
+}
 
+const MyBlogInfoInput = ({ myBlogInfo, setMyBlogInfo }: Props) => {
   return (
     <div>
       <div className={styles.textPadding}>
@@ -19,7 +22,16 @@ const MyBlogInfoInput = () => {
           <div className={styles.inputTag}>
             <Text value="블로그명" type="text" />
             <div style={{ width: "40vw" }}>
-              <Input value={blogInfo.siteMetadata.title} />
+              <Input
+                value={myBlogInfo.title}
+                placeholder="블로그명을 입력하세요."
+                onChange={(e: any) => {
+                  setMyBlogInfo({
+                    ...myBlogInfo,
+                    title: e.target.value,
+                  });
+                }}
+              />
             </div>
           </div>
         </div>
@@ -28,10 +40,16 @@ const MyBlogInfoInput = () => {
             <Text value="블로그 소개" type="text" />
             <div style={{ width: "40vw" }}>
               <Input
-                value={blogInfo.siteMetadata.description}
+                value={myBlogInfo.description}
                 placeholder="블로그 소개글을 입력하세요."
                 multiline
                 rows={4}
+                onChange={(e: any) => {
+                  setMyBlogInfo({
+                    ...myBlogInfo,
+                    description: e.target.value,
+                  });
+                }}
               />
             </div>
           </div>
