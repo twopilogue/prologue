@@ -61,7 +61,7 @@ public class SettingServiceImpl implements SettingService {
         result.add(Line);
 
         GetRepoContentResponse[] getRepoContentResponse = webClient.get()
-                .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/images")
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/src/images")
                 .headers(h -> h.setBearerAuth(accessToken))
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
@@ -95,7 +95,7 @@ public class SettingServiceImpl implements SettingService {
             String path = "images/";
 
             GetRepoContentResponse[] getRepoContentResponse = webClient.get()
-                    .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/images")
+                    .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/src/images")
                     .headers(h -> h.setBearerAuth(accessToken))
                     .accept(MediaType.APPLICATION_JSON)
                     .retrieve()
@@ -150,6 +150,9 @@ public class SettingServiceImpl implements SettingService {
         JSONArray jsonArray = new JSONArray();
         jsonArray.add("전체보기");
         for (int i = 0; i < category.size(); i++) {
+            if(category.get(i).equals("전체보기")){
+                throw new Exception("해당 이름은 생성할 수 없습니다.");
+            }
             jsonArray.add(category.get(i));
         }
 

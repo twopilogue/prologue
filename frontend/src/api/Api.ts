@@ -58,7 +58,7 @@ const api: apiInterface = {
     getUri: () => HOST + AUTH + "uri",
     login: (code: string) => HOST + AUTH + "login?code=" + code,
     setSecretRepo: (accessToken: string, githubId: string) =>
-      HOST + AUTH + "secret?accessToken=" + accessToken + "&githubId=" + githubId,
+      HOST + AUTH + "secrets?accessToken=" + accessToken + "&githubId=" + githubId,
     getAuthFile: (accessToken: string, githubId: string) =>
       HOST + AUTH + "check?accessToken=" + accessToken + "&githubId=" + githubId,
     setAuthFile: () => HOST + AUTH + "check",
