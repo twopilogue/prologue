@@ -36,6 +36,7 @@ const BlogIndex = ({ data, location }) => {
       <div className="display_row">
         <div className="display_column">
           <Profile />
+          <Category />
         </div>
         <div className="display_column">
           <Title />
@@ -63,6 +64,7 @@ export const pageQuery = graphql`
       }
     }
     allMarkdownRemark(sort: { fields: [frontmatter___date], order: DESC }) {
+      categoryList: distinct(field: frontmatter___category)
       nodes {
         excerpt
         fields {

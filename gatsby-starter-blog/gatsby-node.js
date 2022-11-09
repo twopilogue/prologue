@@ -81,7 +81,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
     })
   }
 
-  const categoryPosts = path.resolve("./src/components/category.js")
+  const categoryPosts = path.resolve("./src/templates/category-posts.js")
   const categories = result.data.allMarkdownRemark.categoryList
   categories.forEach(category => {
     createPage({
