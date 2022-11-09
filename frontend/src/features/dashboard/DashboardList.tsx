@@ -1,34 +1,46 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "features/dashboard/Dashboard.module.css";
 import Text from "components/Text";
 import { useSelector } from "react-redux";
 import { rootState } from "app/store";
 import api from "api/Api";
 import Axios from "api/JsonAxios";
+import { Link } from "@mui/material";
 
 function DashboardList() {
   const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
+  const [newPost, setNewPost] = useState({
+    title: [],
+    date: [],
+    directory: [],
+  });
 
   useEffect(() => {
     getNewPost();
   }, []);
 
   async function getNewPost() {
-    await Axios.get(api.dashboard.getNewPost(accessToken, githubId))
-      .then((res) => {
-        console.log("최신글 받기", res.data);
-      })
-      .catch((err) => [console.error("최신글 받기", err)]);
+    await Axios.get(api.dashboard.getNewPost(accessToken, githubId)).then((res) => {
+      console.log("최신글 받기", res.data);
+      setNewPost({
+        ...newPost,
+        title: res.data.title,
+        date: res.data.date,
+        directory: res.data.directory,
+      });
+    });
   }
 
   const list = [
     {
-      title: "[백준] 2525번 : 오븐 시계 - [C++]",
-      date: "2022.12.13",
+      title: "New Beginnings",
+      date: "2015-05-28",
+      directory: "new-beginnings",
     },
     {
-      title: "아이패드 10세대, 아이패드 프로 6세대, 애플 TV 4K 3세대 공개",
-      date: "2022.12.11",
+      title: "My Second Post!",
+      date: "2015-05-06",
+      directory: "my-second-post",
     },
     {
       title: "3D 프린터로 하루만에 집 짓기 (Apis Cor)",
@@ -64,7 +76,9 @@ function DashboardList() {
           </div>
           {list.map((value, index) => (
             <div className={`${styles.flexRow} ${styles.listOne}`} key={index}>
-              <Text value={textLimit(value.title)} />
+              <Link href={`https://${githubId}.github.io/${value.directory}`} underline="none" color="inherit">
+                <Text value={textLimit(value.title)} />
+              </Link>
               <Text value={value.date} type="caption" />
             </div>
           ))}
