@@ -33,7 +33,17 @@ const Category = () => {
           <nav>
             {CATEGORY_ITEM.map(category => (
               <li key={category}>
-                <Link to={`/${category}/`}>{category}</Link>
+                <Link
+                  to={
+                    category === "전체보기"
+                      ? `/all-posts`
+                      : data.allMarkdownRemark.categoryList.includes(category)
+                      ? `/${category}/`
+                      : `/empty-posts`
+                  }
+                >
+                  {category}
+                </Link>
               </li>
             ))}
           </nav>
