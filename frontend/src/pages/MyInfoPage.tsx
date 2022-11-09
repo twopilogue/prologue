@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import styles from "features/setting/Setting.module.css";
-import MyGitInfo from "features/setting/myInfo/MyGitInfo";
-import MyInfoInput from "features/setting/myInfo/MyInfoInput";
-import MyBlogInfoInput from "features/setting/myInfo/MyBlogInfoInput";
+import MyGitInfo from "features/setting/myinfo/MyGitInfo";
+import MyInfoInput from "features/setting/myinfo/MyInfoInput";
+import MyBlogInfoInput from "features/setting/myinfo/MyBlogInfoInput";
 import axios from "axios";
 import api from "api/Api";
 import { useDispatch, useSelector } from "react-redux";
