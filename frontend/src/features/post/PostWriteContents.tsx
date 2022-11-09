@@ -4,7 +4,7 @@ import Text from "components/Text";
 import { Editor } from "@toast-ui/react-editor";
 import "@toast-ui/editor/dist/toastui-editor.css";
 import { useAppDispatch } from "app/hooks";
-import { setPostContents } from "slices/postSlice";
+import { setPostContent, setPostFileList } from "slices/postSlice";
 
 const PostWriteContents = () => {
   const dispatch = useAppDispatch();
@@ -15,8 +15,12 @@ const PostWriteContents = () => {
   const editorRef = useRef<Editor>();
 
   useEffect(() => {
-    // dispatch(setPostContents());
-  }, [editorRef]);
+    dispatch(setPostContent(editorRef.current?.getInstance().getMarkdown()));
+  }, []);
+
+  useEffect(() => {
+    dispatch(setPostFileList(fileList));
+  }, [fileList]);
 
   return (
     <div className={styles.postWriteContents}>

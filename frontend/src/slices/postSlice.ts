@@ -4,15 +4,17 @@ import { rootState } from "app/store";
 interface postConfig {
   title: string;
   category: string;
-  tag: [];
-  contents: string;
+  tagList: [];
+  content: string;
+  fileList: [];
 }
 
 const initialState: postConfig = {
   title: "",
   category: "",
-  tag: [],
-  contents: "",
+  tagList: [],
+  content: "",
+  fileList: [],
 };
 
 const postSlice = createSlice({
@@ -25,19 +27,23 @@ const postSlice = createSlice({
     setPostCategory: (state, { payload }) => {
       state.category = payload;
     },
-    setPostTag: (state, { payload }) => {
-      state.tag = payload;
+    setPostTagList: (state, { payload }) => {
+      state.tagList = payload;
     },
-    setPostContents: (state, { payload }) => {
-      state.contents = payload;
+    setPostContent: (state, { payload }) => {
+      state.content = payload;
+    },
+    setPostFileList: (state, { payload }) => {
+      state.fileList = payload;
     },
   },
 });
-export const { setPostTitle, setPostCategory, setPostTag, setPostContents } = postSlice.actions;
+export const { setPostTitle, setPostCategory, setPostTagList, setPostContent, setPostFileList } = postSlice.actions;
 
 export const selectPostTitle = (state: rootState) => state.posts.title;
-export const selectPostCategory = (state: rootState) => state.posts.tag;
-export const selectPostTag = (state: rootState) => state.posts.tag;
-export const selectPostContents = (state: rootState) => state.posts.contents;
+export const selectPostCategory = (state: rootState) => state.posts.category;
+export const selectPostTagList = (state: rootState) => state.posts.tagList;
+export const selectPostContent = (state: rootState) => state.posts.content;
+export const selectPostFileList = (state: rootState) => state.posts.fileList;
 
 export default postSlice.reducer;
