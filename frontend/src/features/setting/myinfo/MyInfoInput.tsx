@@ -1,6 +1,6 @@
 import Input from "components/Input";
 import Text from "components/Text";
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useCallback, useRef, useState } from "react";
 import styles from "../Setting.module.css";
 import ModeIcon from "@mui/icons-material/Mode";
 import { useAppSelector } from "app/hooks";
@@ -13,6 +13,28 @@ interface Props {
 }
 
 const MemberInfoInput = ({ myInfo, setMyInfo }: Props) => {
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const [imgPreview, setImgPreview] = useState(null);
+
+  const onUploadImage = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) {
+      return;
+    }
+    console.log(e.target.files[0].name);
+
+    const reader = new FileReader();
+    reader.readAsDataURL(e.target.files[0]);
+    console.log(reader);
+    reader.onloadend = () => {
+      setImgPreview(reader.result);
+    };
+  }, []);
+
+  const handleImageUpload = useCallback(() => {
+    if (!inputRef.current) return;
+    inputRef.current.click();
+  }, []);
+
   return (
     <div style={{ width: "100%" }}>
       <div className={styles.textPadding}>
@@ -58,8 +80,13 @@ const MemberInfoInput = ({ myInfo, setMyInfo }: Props) => {
           <div className={styles.textMargin}>
             <Text value="프로필 사진" type="text" />
             <div className={styles.profile_img_container}>
-              <img className={styles.profile_img} src={myInfo.profileImg} alt="프로필 사진" />
-              <div className={styles.profile_editBtn}>
+              <img
+                className={styles.profile_img}
+                src={myInfo.profileImg && !imgPreview ? myInfo.profileImg : imgPreview}
+                alt="프로필 사진"
+              />
+              <input type="file" style={{ display: "none" }} ref={inputRef} onChange={onUploadImage} />
+              <div className={styles.profile_editBtn} onClick={handleImageUpload}>
                 <ModeIcon className={styles.profile_editBtn_icon} />
                 <div className={styles.profile_editBtn_text}>
                   <Text value="Edit" type="caption" />
