@@ -1,6 +1,7 @@
 package com.b208.prologue.api.controller;
 
 import com.b208.prologue.api.request.ModifyBlogCategoryRequest;
+import com.b208.prologue.api.request.ModifyBlogLayoutRequest;
 import com.b208.prologue.api.request.ModifyBlogPagesRequest;
 import com.b208.prologue.api.request.ModifyBlogSettingRequest;
 import com.b208.prologue.api.response.*;
@@ -139,6 +140,22 @@ public class SettingConroller {
             return ResponseEntity.status(200).body(BlogLayoutResponse.of(layout, 200, "레이아웃 설정 조회에 성공하였습니다."));
         } catch (Exception e) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "레이아웃 설정 조회에 실패하였습니다."));
+        }
+    }
+
+    @PutMapping("/layout")
+    @ApiOperation(value = "레이아웃 설정 수정", notes = "레이아웃 설정을 수정한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "레이아웃 설정 수정 성공", response = BaseResponseBody.class),
+            @ApiResponse(code = 400, message = "레이아웃 설정 수정 실패", response = BaseResponseBody.class),
+            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<? extends BaseResponseBody> modifyBlogLayout(@Valid @RequestBody ModifyBlogLayoutRequest modifyBlogLayoutRequest) {
+        try {
+            settingService.updateBlogLayout(modifyBlogLayoutRequest.getAccessToken(), modifyBlogLayoutRequest.getGithubId(), modifyBlogLayoutRequest.getLayout());
+            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "레이아웃 설정 수정에 성공하였습니다."));
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "레이아웃 설정 수정에 실패하였습니다."));
         }
     }
 }
