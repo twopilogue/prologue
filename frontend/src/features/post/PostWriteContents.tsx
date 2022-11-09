@@ -1,14 +1,22 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "features/post/PostWrite.module.css";
 import Text from "components/Text";
 import { Editor } from "@toast-ui/react-editor";
 import "@toast-ui/editor/dist/toastui-editor.css";
+import { useAppDispatch } from "app/hooks";
+import { setPostContents } from "slices/postSlice";
 
 const PostWriteContents = () => {
+  const dispatch = useAppDispatch();
+
   const [showImages, setShowImages] = useState([]);
   const [fileList, setFileList] = useState([]);
 
   const editorRef = useRef<Editor>();
+
+  useEffect(() => {
+    // dispatch(setPostContents());
+  }, [editorRef]);
 
   return (
     <div className={styles.postWriteContents}>
