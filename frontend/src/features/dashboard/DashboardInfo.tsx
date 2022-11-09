@@ -33,9 +33,10 @@ function DashboardInfo() {
       .all([
         Axios.get(api.dashboard.getNewBuildTime(accessToken, githubId)),
         Axios.get(api.dashboard.getRepoSize(accessToken, githubId)),
+        Axios.get(api.dashboard.getTotalPost(accessToken, githubId)),
       ])
       .then(
-        axios.spread((res1, res2) => {
+        axios.spread((res1, res2, res3) => {
           const value = res1.data.latestBuildTime;
           setInfo({
             ...info,
@@ -45,8 +46,8 @@ function DashboardInfo() {
               time: moment(value).format("HH:SS"),
             },
             volume: res2.data.size,
+            postNum: res3.data.total,
           });
-          console.log("사용량", res2.data);
         }),
       );
   }
@@ -61,7 +62,7 @@ function DashboardInfo() {
                 <Text value="게시글 수" bold />
               </div>
               <div className={styles.infoValue}>
-                <Text value={String(7)} type="pageTitle" bold />
+                <Text value={info.postNum} type="pageTitle" bold />
               </div>
             </div>
             <div>
@@ -91,8 +92,10 @@ function DashboardInfo() {
                 </Tooltip>
               </div>
               <div className={styles.infoValue}>
-                <Text value={info.volume} type="pageTitle" bold />
-                <Text value={"MB"} type="groupTitle" bold />
+                <span>
+                  <Text value={info.volume} type="pageTitle" bold />
+                  <Text value={"MB"} type="caption" bold />
+                </span>
               </div>
             </div>
           </div>
