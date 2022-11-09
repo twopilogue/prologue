@@ -1,10 +1,6 @@
 package com.b208.prologue.api.controller;
 
-import com.b208.prologue.api.response.BaseResponseBody;
-import com.b208.prologue.api.response.DateListResponse;
-import com.b208.prologue.api.response.LatestBuildTimeResponse;
-import com.b208.prologue.api.response.PostListResponse;
-import com.b208.prologue.api.response.RepositorySizeResponse;
+import com.b208.prologue.api.response.*;
 import com.b208.prologue.api.service.DashBoardService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -27,7 +23,7 @@ public class DashBoardController {
     private final DashBoardService dashBoardService;
 
     @GetMapping("/list")
-    @ApiOperation(value = "최신게시물 5개 조회", notes = "최신게시물 조회를 위해 Git 통신")
+    @ApiOperation(value = "최신게시글 5개 조회", notes = "최신게시물 조회를 위해 Git 통신")
     @ApiResponses({
             @ApiResponse(code = 200, message = "목록 조회 성공", response = PostListResponse.class),
             @ApiResponse(code = 400, message = "게시글 목록 조회 실패", response = BaseResponseBody.class),
@@ -35,10 +31,8 @@ public class DashBoardController {
     })
     public ResponseEntity<? extends BaseResponseBody> getCurrentPost(@RequestParam String accessToken, @RequestParam String githubId) {
         try {
-            Map<String, Object> result = dashBoardService.getList(accessToken, githubId);
-
-            List<Map<String, String>> images = dashBoardService.getListImagese(accessToken, githubId, (List<String>) result.get("directory"));
-            return ResponseEntity.status(200).body(PostListResponse.of(result, images, 200, "게시물 목록 조회 성공"));
+            Map<String, List<String>> result = dashBoardService.getList(accessToken, githubId);
+            return ResponseEntity.status(200).body(DashBoardListResponse.of(result, 200, "게시글 목록 조회 성공"));
         } catch (Exception e) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "게시글 목록 조회에 실패하였습니다."));
         }
@@ -68,9 +62,9 @@ public class DashBoardController {
         try {
             Set<String> result = dashBoardService.getDateList(accessToken, githubId);
 
-            return ResponseEntity.status(200).body(DateListResponse.of(result, 200, "게시물 목록 조회 성공"));
+            return ResponseEntity.status(200).body(DateListResponse.of(result, 200, "게시글 날짜목록 조회 성공"));
         } catch (Exception e){
-            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "게시글 목록 조회에 실패하였습니다."));
+            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "게시글 날짜목록 조회에 실패하였습니다."));
         }
     }
 
@@ -89,5 +83,23 @@ public class DashBoardController {
             e.printStackTrace();
         }
         return ResponseEntity.status(200).body(BaseResponseBody.of(400, "최근 빌드 시간 조회 실패"));
+    }
+
+    @GetMapping("/total")
+    @ApiOperation(value = "게시글 수 조회", notes = "게시글 수 조회")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "전체 게시글 수 조회 성공", response = DateListResponse.class),
+            @ApiResponse(code = 400, message = "전체 게시글 수 조회 실패", response = BaseResponseBody.class),
+            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<? extends  BaseResponseBody> getTotalPostCount(@RequestParam String accessToken, @RequestParam String githubId) {
+
+        try {
+            int result = dashBoardService.getTotalCount(accessToken, githubId);
+
+            return ResponseEntity.status(200).body(GetTotalCountResponse.of(result, 200, "전체 게시글 수 조회 성공"));
+        } catch (Exception e){
+            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "전체 게시글 수 조회에 실패하였습니다."));
+        }
     }
 }
