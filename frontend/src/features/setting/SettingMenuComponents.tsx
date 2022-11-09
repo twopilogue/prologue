@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import styles from "./Setting.module.css";
 
 import CategoryLayout from "./CategoryLayout";
 import ConfirmButton from "./ConfirmButton";
@@ -8,12 +9,16 @@ import LayoutSelector from "./layout/LayoutSelector";
 import LayoutSample from "./layout/LayoutSample";
 import DetailSelector from "./DetailSelector";
 import DetailSetting from "./DetailSetting";
-import MyInfoSetting from "./myinfo/MyInfoSetting";
+import MyInfoPage from "pages/MyInfoPage";
 
 export const blogTabs = [
   {
     label: "블로그 정보 설정",
-    Component: <MyInfoSetting />,
+    Component: (
+      <div>
+        <MyInfoPage />
+      </div>
+    ),
   },
   {
     label: "카테고리 설정",
