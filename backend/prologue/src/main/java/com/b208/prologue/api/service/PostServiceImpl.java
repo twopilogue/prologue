@@ -31,6 +31,7 @@ public class PostServiceImpl implements PostService {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
         Map<String, Object> result = new HashMap<>();
+        List<String> temp = new ArrayList<>();
         List<String> content = new ArrayList<>();
         List<String> title = new ArrayList<>();
         List<String> date = new ArrayList<>();
@@ -50,53 +51,76 @@ public class PostServiceImpl implements PostService {
             if(i >= 6 * (page+1)){
                 break;
             }
-            ////////////////////
 
-//            if(isNumeric(list[i].getName()) == false && list[i].getName().length() != 13) {
-//                String post = postService.setItem(url, accessToken, list[i].getPath());
-//                temp.add(post);
-//                directory.add(list[i].getName());
-//
-//                StringTokenizer st = new StringTokenizer(post, "\n");
-//                int cnt = st.countTokens();
-//
-//                boolean flag = false;
-//                for(int j = 0; j < cnt; j++){
-//                    String line = st.nextToken();
-//
-//                    if(line.contains("date")){
-//                        flag = true;
-//
-//                        String tempDate = line.substring(line.indexOf("\"") + 1);
-//                        String[] tmp = tempDate.split("T");
-//                        tempDate = tmp[0];
-//
-//                        date.add(tempDate);
-//                        break;
-//                    }
-//                }
-//                if(flag == false){
-//                    continue;
-//                }
-//            }else{
-//                temp.add(postService.setItem(url, accessToken, list[i].getPath()));
-//                directory.add(list[i].getName());
-//
-//                Date tempDate = new Date(Long.parseLong(list[i].getName()));
-//                SimpleDateFormat dateFormat = new SimpleDateFormat ("yyyy-MM-dd");
-//
-//                date.add(String.valueOf(dateFormat.format(tempDate)));
-//            }
+            if(isNumeric(list[i].getName()) == false && list[i].getName().length() != 13) {
+                String post = setItem(url, accessToken, list[i].getPath());
+                temp.add(post);
+                directory.add(list[i].getName());
 
-            ////////////////////
-            content.add(setItem(url, accessToken, list[i].getPath()));
-            directory.add(list[i].getName());
+                StringTokenizer st = new StringTokenizer(post, "\n");
+                int cnt = st.countTokens();
+
+                boolean flag = false;
+                for(int j = 0; j < cnt; j++){
+                    String line = st.nextToken();
+
+                    if(line.contains("date")){
+                        flag = true;
+
+                        String tempDate = line.substring(line.indexOf("\"") + 1);
+                        String[] tmp = tempDate.split("T");
+                        tempDate = tmp[0];
+
+                        date.add(tempDate);
+                        break;
+                    }
+                }
+                if(flag == false){
+                    date.add("No Date");
+                    continue;
+                }
+            }else{
+                temp.add(setItem(url, accessToken, list[i].getPath()));
+                directory.add(list[i].getName());
+
+                Date tempDate = new Date(Long.parseLong(list[i].getName()));
+                SimpleDateFormat dateFormat = new SimpleDateFormat ("yyyy-MM-dd");
+
+                date.add(String.valueOf(dateFormat.format(tempDate)));
+            }
+        }
+
+        for(int i = 0; i < temp.size(); i++){
+            StringTokenizer st = new StringTokenizer(temp.get(i), "\n");
+            int cnt = st.countTokens();
+
+            for(int j = 0; j < cnt; j++){
+                String line = st.nextToken();
+                if(line.contains("title")){
+                    title.add(line.substring(line.indexOf(": ") + 1));
+                    break;
+                }
+                if(j == (cnt-1)){
+                    title.add("No Title");
+                }
+            }
+
+            if (temp.get(i).contains("---")){
+                String tempContent[] = temp.get(i).split("---");
+                content.add(tempContent[2].substring(2));
+            }else {
+                content.add(temp.get(i));
+            }
+
         }
 
         int cnt = list.length;
-        result.put("content", content);
-        result.put("directory", directory);
-        result.put("postCount", cnt);
+        result.put("PostCount", cnt);
+        result.put("Title", title);
+        result.put("Date", date);
+        result.put("Content", content);
+        result.put("Directory", directory);
+
         return result;
     }
 
