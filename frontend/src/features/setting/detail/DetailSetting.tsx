@@ -1,8 +1,8 @@
 import Text from "components/Text";
 import React, { useState } from "react";
 import DetailSelector from "./DetailSelector";
-import LayoutSample from "./layout/LayoutSample";
-import styles from "./Setting.module.css";
+import LayoutSample from "../layout/LayoutSample";
+import styles from "../Setting.module.css";
 import SettingLayout from "./SettingLayout";
 
 export interface colorsConfig {
@@ -15,6 +15,10 @@ export interface colorsConfig {
     text: string;
   };
   page: {
+    background: string;
+    text: string;
+  };
+  profile: {
     background: string;
     text: string;
   };
@@ -31,6 +35,10 @@ const DetailSetting = () => {
       text: "darkgray",
     },
     page: {
+      background: "#d3d3eb",
+      text: "darkgray",
+    },
+    profile: {
       background: "#d3d3eb",
       text: "darkgray",
     },
