@@ -29,7 +29,7 @@ const PostWritePage = () => {
 
   const savePost = () => {
     const formData = new FormData();
-
+    console.log(fileList);
     for (let i = 0; i < fileList.length; i++) {
       formData.append("files", fileList[i]);
     }
@@ -43,7 +43,7 @@ const PostWritePage = () => {
       category +
       "\ntag: " +
       tagList +
-      "\n---";
+      "\n---\n";
 
     const writeDetailPostRequest = {
       accessToken: accessToken,

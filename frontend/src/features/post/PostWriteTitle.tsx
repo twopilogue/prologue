@@ -25,12 +25,13 @@ const PostWriteTitle = () => {
 
   const titleChange = (event: any) => {
     setTitle(event.target.value);
-    dispatch(setPostTitle(title));
+    console.log("제목 : ", event.target.value);
+    dispatch(setPostTitle(event.target.value));
   };
 
   const categoryChange = (event: SelectChangeEvent) => {
     setCategory(event.target.value);
-    dispatch(setPostCategory(category));
+    dispatch(setPostCategory(event.target.value));
   };
 
   const getCategoryList = () => {
