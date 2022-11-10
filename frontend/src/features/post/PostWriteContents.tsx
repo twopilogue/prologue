@@ -3,6 +3,9 @@ import styles from "features/post/PostWrite.module.css";
 import Text from "components/Text";
 import { Editor } from "@toast-ui/react-editor";
 import "@toast-ui/editor/dist/toastui-editor.css";
+import "tui-color-picker/dist/tui-color-picker.css";
+import "@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css";
+import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
 import { useAppDispatch } from "app/hooks";
 import { setPostContent, setPostFileList } from "slices/postSlice";
 
@@ -14,13 +17,10 @@ const PostWriteContents = () => {
 
   const editorRef = useRef<Editor>();
 
-  useEffect(() => {
+  const contentChange = () => {
     dispatch(setPostContent(editorRef.current?.getInstance().getMarkdown()));
-  }, []);
-
-  useEffect(() => {
     dispatch(setPostFileList(fileList));
-  }, [fileList]);
+  };
 
   return (
     <div className={styles.postWriteContents}>
@@ -32,6 +32,8 @@ const PostWriteContents = () => {
         previewStyle="vertical"
         height="70vh"
         initialEditType="markdown"
+        plugins={[colorSyntax]}
+        onChange={contentChange}
         hooks={{
           addImageBlobHook: (blob, callback) => {
             const uploadFileLists = [...fileList];
