@@ -95,6 +95,8 @@
   background-color: lightgray;
   padding-left: 20px;
   padding-right: 20px;
+  margin-top: 40px;
+  margin-bottom: 40px;
   box-sizing: border-box;
 }
 
@@ -113,7 +115,7 @@
 
 .inputTagThree {
   display: grid;
-  grid-template-columns: 100px 150px 30.3vw;
+  grid-template-columns: 100px 150px 30.3vw 5vw;
   margin: 10px;
   width: 100%;
 }
@@ -134,7 +136,7 @@
   position: relative;
 }
 
-.profile_img{
+.profile_img {
   width: 220px;
   height: 220px;
   border-radius: 50%;
@@ -268,6 +270,16 @@
   height: 30vh;
 
   padding: 20px;
+}
+
+.addButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin-left: 10px;
+  padding: 20px;
+  border: 2px solid gray;
 }
 
 /* 세부 설정 ---------------------------------- */
