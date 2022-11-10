@@ -272,4 +272,51 @@ public class SettingServiceImpl implements SettingService {
         commonService.multiFileCommit(accessToken, githubId, treeRequestList, commit);
 
     }
+
+    @Override
+    public String getBlogLayout(String encodedAccessToken, String githubId) throws Exception{
+        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
+
+        GetRepoContentResponse getRepoContentResponse = commonService.getDetailContent(accessToken, githubId, "src/pages/index.js");
+        String content = base64Converter.decode(getRepoContentResponse.getContent().replace("\n", ""));
+
+        int startIndex = content.lastIndexOf("return");
+        startIndex = content.indexOf(">",startIndex);
+        int endIndex = content.lastIndexOf("Layout");
+        endIndex = content.lastIndexOf("<",endIndex);
+
+        return content.substring(startIndex+1,endIndex);
+    }
+
+    @Override
+    public void updateBlogLayout(String encodedAccessToken, String githubId, String layout) throws Exception{
+        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
+        String path = "src/pages/index.js";
+
+        GetRepoContentResponse getRepoContentResponse = commonService.getDetailContent(accessToken, githubId, path);
+        String content = base64Converter.decode(getRepoContentResponse.getContent().replace("\n", ""));
+
+        int startIndex = content.indexOf("display_row");
+        startIndex = content.indexOf(">",startIndex);
+        int endIndex = content.lastIndexOf("Layout");
+        endIndex = content.lastIndexOf("div",endIndex);
+        endIndex = content.lastIndexOf("<",endIndex);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(content.substring(0,startIndex+1)).append("\n");
+        sb.append(layout).append("\n");
+        sb.append(content.substring(endIndex));
+
+        UpdateContentRequest updateContentRequest = new UpdateContentRequest(
+                "modify: 레이아웃 설정 변경", base64Converter.encode(sb.toString()), getRepoContentResponse.getSha());
+
+        webClient.put()
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/" + path)
+                .headers(h -> h.setBearerAuth(accessToken))
+                .body(Mono.just(updateContentRequest), UpdateContentRequest.class)
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+    }
 }
