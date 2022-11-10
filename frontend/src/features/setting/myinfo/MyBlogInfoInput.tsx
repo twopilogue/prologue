@@ -10,6 +10,7 @@ import ButtonStyled from "components/Button";
 interface Props {
   myBlogInfo: myBlogInfoProps;
   setMyBlogInfo: Dispatch<SetStateAction<myBlogInfoProps>>;
+  setSocialList: Dispatch<SetStateAction<object[]>>;
 }
 
 export interface linkConfig {
@@ -17,8 +18,8 @@ export interface linkConfig {
   url: string;
 }
 
-const MyBlogInfoInput = ({ myBlogInfo, setMyBlogInfo }: Props) => {
-  const [link, setLink] = useState({
+const MyBlogInfoInput = ({ myBlogInfo, setMyBlogInfo, setSocialList }: Props) => {
+  const [link, setLink] = useState<linkConfig>({
     site: "",
     url: "",
   });
@@ -34,6 +35,8 @@ const MyBlogInfoInput = ({ myBlogInfo, setMyBlogInfo }: Props) => {
         [link.site]: link.url,
       },
     });
+
+    setSocialList([{ ...myBlogInfo.social, [link.site]: link.url }]);
   };
 
   return (
