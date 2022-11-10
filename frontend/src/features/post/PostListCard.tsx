@@ -2,27 +2,39 @@ import React from "react";
 import styles from "features/post/Post.module.css";
 import Text from "components/Text";
 
-const PostListCard = () => {
+interface PostListCardProps {
+  title: string;
+  date: string;
+  tag: [];
+  category: string;
+  content: string;
+}
+
+const PostListCard = ({ title, date, tag, category, content }: PostListCardProps) => {
   return (
     <div className={styles.postListCard}>
       <div className={styles.postTitle}>
-        <Text value="블로그 제목" type="groupTitle" bold />
+        <Text value={title} type="groupTitle" bold />
       </div>
       <div className={styles.postDate}>
-        <Text value="날짜" type="caption" />
+        <Text value={date} type="caption" />
       </div>
       <br />
 
       <div className={styles.postTag}>
-        <Text value="#태그" type="caption" />
+        {tag.map((value, key) => (
+          <div key={key}>
+            <Text value={`#${value}`} type="caption" /> &nbsp;
+          </div>
+        ))}
       </div>
       <div className={styles.postCategory}>
-        <Text value="카테고리" type="caption" />
+        <Text value={category} type="caption" />
       </div>
       <br />
 
       <div className={styles.postText}>
-        <Text value="텍스트" type="text" />
+        <Text value={content} type="text" />
       </div>
 
       <div className={styles.postCardImg}></div>

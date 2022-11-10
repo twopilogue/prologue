@@ -94,6 +94,7 @@
   position: absolute;
   top: 45%;
   transform: translate(0%, -45%);
+  display: flex;
 }
 
 .postCategory {
