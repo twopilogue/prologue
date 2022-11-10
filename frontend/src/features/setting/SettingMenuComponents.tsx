@@ -45,7 +45,7 @@ export const layoutTabs = [
     Component: (
       <div>
         <LayoutSelector />
-        <LayoutSample />
+        {/* <LayoutSample /> */}
       </div>
     ),
   },

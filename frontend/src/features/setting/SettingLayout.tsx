@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./Setting.module.css";
 import { Layout } from "react-grid-layout";
 import GridLayout from "react-grid-layout";
@@ -15,13 +15,20 @@ import { useGettingWidth } from "./layout/LayoutSample";
 import Text from "components/Text";
 import DragHandleIcon from "@mui/icons-material/DragHandle";
 
-const SettingLayout = (props: any) => {
+interface Props {
+  titleColor: string;
+}
+
+// 세부 레이아웃 설정 컴포넌트
+
+const SettingLayout = ({ titleColor }: Props) => {
   const [componentLayoutList, setComponentLayoutList] = useState<Layout[]>(useAppSelector(selectComponentLayoutList));
   const [componentList, setComponentList] = useState<ComponentConfig[]>(useAppSelector(selectComponentList));
   const [checkList, setCheckList] = useState<ComponentCheckConfig>(useAppSelector(selectCheckList));
   const [layoutWidth, layoutContainer] = useGettingWidth();
+  const logoColor = "red";
+  const colorRef = useRef();
 
-  console.log(props.titleColor);
   useEffect(() => {
     const tmpLayoutList: Layout[] = [];
     const layoutLength = componentLayoutList.length;
@@ -34,6 +41,12 @@ const SettingLayout = (props: any) => {
     }
     setComponentLayoutList(tmpLayoutList);
   }, []);
+
+  // useEffect(() => {
+  //   if (colorRef.current) {
+  //     colorRef.current.style.backgroundColor = "red";
+  //   }
+  // });
 
   return (
     <div>
@@ -51,7 +64,13 @@ const SettingLayout = (props: any) => {
           {componentList.map((item: ComponentConfig) => {
             {
               return checkList[item.id] ? (
-                <div className={styles.display_logo} key={item.key}>
+                <div
+                  ref={colorRef}
+                  className={styles.display_logo}
+                  style={{ backgroundColor: `${titleColor}` }}
+                  key={item.key}
+                >
+                  <div>{item.id + "Color"}</div>
                   <div style={{ marginTop: "15px" }}></div>
                   <div className={styles.innerText}>
                     <Text value={item.key} type="caption" color="gray" />

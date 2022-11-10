@@ -6,7 +6,7 @@ import styles from "./Setting.module.css";
 import SettingLayout from "./SettingLayout";
 
 const DetailSetting = () => {
-  const [titleColor, setTitleColor] = useState("red");
+  const [titleColor, setTitleColor] = useState("#d3d3eb");
 
   return (
     <div>
