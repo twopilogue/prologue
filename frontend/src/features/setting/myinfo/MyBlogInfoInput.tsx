@@ -1,10 +1,11 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction, useRef, useState } from "react";
 import styles from "../Setting.module.css";
 import Text from "components/Text";
 import Input from "components/Input";
 import SelectInput from "features/setting/SelectInput";
 import { blogInfoConfig } from "slices/settingSlice";
 import { myBlogInfoProps } from "pages/MyInfoPage";
+import ButtonStyled from "components/Button";
 
 interface Props {
   myBlogInfo: myBlogInfoProps;
@@ -95,32 +96,29 @@ const MyBlogInfoInput = ({ myBlogInfo, setMyBlogInfo }: Props) => {
                 }}
               />
             </div>
-            <div className={styles.addButton} onClick={addSocial}></div>
+            <div className={styles.addLinkBtn}>
+              <ButtonStyled label="추가" color="blue" onClick={addSocial} />
+            </div>
           </div>
         </div>
 
         <div className={styles.textMargin}>
-          <div className={styles.inputTagThree}>
+          <div className={styles.inputTag}>
             <div></div>
             <div style={{ marginRight: "10px" }}>
               {myBlogInfo.social ? (
                 <>
                   {Object.entries(myBlogInfo.social).map(([key, value], index: number) => (
-                    <div key={index}>
-                      <div>{key}</div>
-                    </div>
-                  ))}
-                </>
-              ) : (
-                <></>
-              )}
-            </div>
-            <div>
-              {myBlogInfo.social ? (
-                <>
-                  {Object.entries(myBlogInfo.social).map(([key, value], index: number) => (
-                    <div key={index}>
-                      <div>{value}</div>
+                    <div className={styles.linkBox} key={index}>
+                      <div className={styles.linkBoxSite}>
+                        <img
+                          className={styles.socialIcon}
+                          src={require(`assets/setting/icons/${key}.png`)}
+                          alt="이미지"
+                        />
+                        <div>{key}</div>
+                      </div>
+                      <div className={styles.linkBoxLink}>{value}</div>
                     </div>
                   ))}
                 </>
