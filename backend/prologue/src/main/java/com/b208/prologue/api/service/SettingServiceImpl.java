@@ -56,7 +56,7 @@ public class SettingServiceImpl implements SettingService {
         Line = base64Converter.decode(sb.toString());
 
         int idx = Line.indexOf("=");
-        Line = Line.substring(idx+1);
+        Line = Line.substring(idx + 1);
 
         result.add(Line);
 
@@ -68,8 +68,8 @@ public class SettingServiceImpl implements SettingService {
                 .bodyToMono(GetRepoContentResponse[].class).block();
 
         String imageUrl = "";
-        for (int i = 0; i < getRepoContentResponse.length; i++){
-            if(getRepoContentResponse[i].getName().contains("profile-pic")){
+        for (int i = 0; i < getRepoContentResponse.length; i++) {
+            if (getRepoContentResponse[i].getName().contains("profile-pic")) {
                 imageUrl = getRepoContentResponse[i].getUrl();
                 break;
             }
@@ -114,29 +114,26 @@ public class SettingServiceImpl implements SettingService {
         Line = Line.replace(modified.get("description").get(0), modified.get("description").get(1));
 
         String tempLine[] = Line.split("social: \\{");
-        st= new StringTokenizer(tempLine[1], "\n");
+        st = new StringTokenizer(tempLine[1], "\n");
         int cnt = st.countTokens();
         for (int i = 0; i < 4; i++) {
             String line = st.nextToken();
 
-            if(line.contains("github")) {
-                Line = Line.replace(line.substring(line.indexOf(":")+2), "`"+social.get("github")+"`,");
-            }
-            else if(line.contains("gmail")) {
-                Line = Line.replace(line.substring(line.indexOf(":")+2), "`"+social.get("gmail")+"`,");
-            }
-            else if(line.contains("instagram")) {
-                Line = Line.replace(line.substring(line.indexOf(":")+2), "`"+social.get("instagram")+"`,");
-            }
-            else if(line.contains("twitter")) {
-                Line = Line.replace(line.substring(line.indexOf(":")+2), "`"+social.get("twitter")+"`,");
+            if (line.contains("github")) {
+                Line = Line.replace(line.substring(line.indexOf(":") + 2), "`" + social.get("github") + "`,");
+            } else if (line.contains("gmail")) {
+                Line = Line.replace(line.substring(line.indexOf(":") + 2), "`" + social.get("gmail") + "`,");
+            } else if (line.contains("instagram")) {
+                Line = Line.replace(line.substring(line.indexOf(":") + 2), "`" + social.get("instagram") + "`,");
+            } else if (line.contains("twitter")) {
+                Line = Line.replace(line.substring(line.indexOf(":") + 2), "`" + social.get("twitter") + "`,");
             }
         }
 
         String encodedContent = commonService.makeBlob(accessToken, githubId, base64Converter.encode(Line));
         treeRequestList.add(new TreeRequest("gatsby-config.js", "100644", "blob", encodedContent));
 
-        if(imageFile != null){
+        if (imageFile != null) {
             String path = "src/images/";
 
             GetRepoContentResponse[] getRepoContentResponse = webClient.get()
@@ -147,8 +144,8 @@ public class SettingServiceImpl implements SettingService {
                     .bodyToMono(GetRepoContentResponse[].class).block();
 
             String fileName = "";
-            for (int i = 0; i < getRepoContentResponse.length; i++){
-                if(getRepoContentResponse[i].getName().contains("profile-pic")){
+            for (int i = 0; i < getRepoContentResponse.length; i++) {
+                if (getRepoContentResponse[i].getName().contains("profile-pic")) {
                     fileName = getRepoContentResponse[i].getName();
                     treeRequestList.add(new TreeRequest(path + getRepoContentResponse[i].getName(), "100644", "blob", null));
                     break;
@@ -199,7 +196,7 @@ public class SettingServiceImpl implements SettingService {
         JSONArray jsonArray = new JSONArray();
         jsonArray.add("전체보기");
         for (int i = 0; i < category.size(); i++) {
-            if(category.get(i).equals("전체보기")){
+            if (category.get(i).equals("전체보기")) {
                 throw new Exception("해당 이름은 생성할 수 없습니다.");
             }
             jsonArray.add(category.get(i));
@@ -251,7 +248,7 @@ public class SettingServiceImpl implements SettingService {
     }
 
     @Override
-    public void updateBlogPages(String encodedAccessToken, String githubId, List<Map<String,String>> pages) throws Exception {
+    public void updateBlogPages(String encodedAccessToken, String githubId, List<Map<String, String>> pages) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
         String commit = "modify: 페이지 목록 수정";
 
@@ -266,8 +263,8 @@ public class SettingServiceImpl implements SettingService {
             Map page = pages.get(i);
             String directory = page.get("label").toString().toLowerCase();
 
-            if(page.get("type").equals("deleted")){
-                if(Boolean.parseBoolean(page.get("posts").toString())){
+            if (page.get("type").equals("deleted")) {
+                if (Boolean.parseBoolean(page.get("posts").toString())) {
                     throw new Exception("posts는 삭제할 수 없습니다.");
                 }
                 GetRepoContentResponse[] repoContentResponses = commonService.getContentList(accessToken, githubId, path + directory);
@@ -276,8 +273,8 @@ public class SettingServiceImpl implements SettingService {
                     treeRequestList.add(new TreeRequest(getRepoContentResponse.getPath(), "100644", "blob", null));
                 }
                 continue;
-            }else if(page.get("type").equals("changing")){
-                if(!Boolean.parseBoolean(page.get("posts").toString())&&(directory.equals("post") || directory.equals("posts") || directory.equals("blog"))){
+            } else if (page.get("type").equals("changing")) {
+                if (!Boolean.parseBoolean(page.get("posts").toString()) && (directory.equals("post") || directory.equals("posts") || directory.equals("blog"))) {
                     throw new Exception("해당 이름으로 변경할 수 없습니다.");
                 }
                 GetRepoContentResponse[] repoContentResponses = commonService.getContentList(accessToken, githubId, path + page.get("oldName").toString().toLowerCase());
@@ -287,19 +284,19 @@ public class SettingServiceImpl implements SettingService {
                     addedTreeRequestList.add(new TreeRequest(path + directory + "/" + response.getName(), "100644", "blob", encodedContent));
                     treeRequestList.add(new TreeRequest(getRepoContentResponse.getPath(), "100644", "blob", null));
                 }
-            }else if(page.get("type").equals("new")){
-                if(directory.equals("post") || directory.equals("posts") || directory.equals("blog")){
+            } else if (page.get("type").equals("new")) {
+                if (directory.equals("post") || directory.equals("posts") || directory.equals("blog")) {
                     throw new Exception("해당 이름은 생성할 수 없습니다.");
                 }
                 String encodedContent = commonService.makeBlob(accessToken, githubId, base64Converter.encode(defaultContent));
                 addedTreeRequestList.add(new TreeRequest(path + directory + "/index.md", "100644", "blob", encodedContent));
             }
 
-            String url = Boolean.parseBoolean(page.get("posts").toString())? "/blog" : "/"+directory+"/";
+            String url = Boolean.parseBoolean(page.get("posts").toString()) ? "/blog" : "/" + directory + "/";
 
             JSONObject jsonObj = new JSONObject();
-            jsonObj.put("label",page.get("label"));
-            jsonObj.put("url",url);
+            jsonObj.put("label", page.get("label"));
+            jsonObj.put("url", url);
             jsonArray.add(jsonObj);
         }
 
@@ -323,22 +320,22 @@ public class SettingServiceImpl implements SettingService {
     }
 
     @Override
-    public String getBlogLayout(String encodedAccessToken, String githubId) throws Exception{
+    public String getBlogLayout(String encodedAccessToken, String githubId) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
         GetRepoContentResponse getRepoContentResponse = commonService.getDetailContent(accessToken, githubId, "src/pages/index.js");
         String content = base64Converter.decode(getRepoContentResponse.getContent().replace("\n", ""));
 
         int startIndex = content.lastIndexOf("return");
-        startIndex = content.indexOf(">",startIndex);
+        startIndex = content.indexOf(">", startIndex);
         int endIndex = content.lastIndexOf("Layout");
-        endIndex = content.lastIndexOf("<",endIndex);
+        endIndex = content.lastIndexOf("<", endIndex);
 
-        return content.substring(startIndex+1,endIndex);
+        return content.substring(startIndex + 1, endIndex);
     }
 
     @Override
-    public void updateBlogLayout(String encodedAccessToken, String githubId, String layout) throws Exception{
+    public void updateBlogLayout(String encodedAccessToken, String githubId, String layout) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
         String path = "src/pages/index.js";
 
@@ -346,13 +343,13 @@ public class SettingServiceImpl implements SettingService {
         String content = base64Converter.decode(getRepoContentResponse.getContent().replace("\n", ""));
 
         int startIndex = content.indexOf("display_row");
-        startIndex = content.indexOf(">",startIndex);
+        startIndex = content.indexOf(">", startIndex);
         int endIndex = content.lastIndexOf("Layout");
-        endIndex = content.lastIndexOf("div",endIndex);
-        endIndex = content.lastIndexOf("<",endIndex);
+        endIndex = content.lastIndexOf("div", endIndex);
+        endIndex = content.lastIndexOf("<", endIndex);
 
         StringBuilder sb = new StringBuilder();
-        sb.append(content.substring(0,startIndex+1)).append("\n");
+        sb.append(content.substring(0, startIndex + 1)).append("\n");
         sb.append(layout).append("\n");
         sb.append(content.substring(endIndex));
 
@@ -380,5 +377,32 @@ public class SettingServiceImpl implements SettingService {
         targetIndex = content.indexOf("/", targetIndex);
 
         return content.substring(targetIndex + 1);
+    }
+
+    @Override
+    public void updateBlogLayoutCss(String encodedAccessToken, String githubId, String css) throws Exception {
+        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
+        String path = "src/style.css";
+
+        GetRepoContentResponse getRepoContentResponse = commonService.getDetailContent(accessToken, githubId, path);
+        String content = base64Converter.decode(getRepoContentResponse.getContent().replace("\n", ""));
+
+        int targetIndex = content.lastIndexOf("CustomCSS");
+        targetIndex = content.indexOf("/", targetIndex);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(content.substring(0, targetIndex+1)).append("\n").append(css);
+
+        UpdateContentRequest updateContentRequest = new UpdateContentRequest(
+                "modify: 레이아웃 세부 설정 변경", base64Converter.encode(sb.toString()), getRepoContentResponse.getSha());
+
+        webClient.put()
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/" + path)
+                .headers(h -> h.setBearerAuth(accessToken))
+                .body(Mono.just(updateContentRequest), UpdateContentRequest.class)
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
     }
 }
