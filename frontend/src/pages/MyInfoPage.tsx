@@ -29,6 +29,8 @@ const MyInfoPage = () => {
   const [oldString, setOldString] = useState<blogInfoConfig>(null);
   const [oldPic, setOldPic] = useState("");
   const [newPic, setNewPic] = useState<Blob>(null);
+  const [socialList, setSocialList] = useState([]);
+  const [flag, setFlag] = useState<boolean>(false);
   const [myInfo, setMyInfo] = useState<myInfoProps>({
     name: "",
     summary: "",
@@ -39,29 +41,15 @@ const MyInfoPage = () => {
     description: "",
     social: [],
   });
-  const [payload, setPayload] = useState({
-    name: {
-      old: "",
-      new: "",
+  const [payload, setPayload] = useState([
+    {
+      nickName: [],
+      summary: [],
+      profileImg: [],
+      title: [],
+      description: [],
     },
-    summary: {
-      old: "",
-      new: "",
-    },
-    profileImg: {
-      old: "",
-      new: null,
-    },
-    title: {
-      old: "",
-      new: "",
-    },
-    description: {
-      old: "",
-      new: "",
-    },
-    social: {},
-  });
+  ]);
 
   const getBlogInfo = async () => {
     await axios
@@ -97,32 +85,18 @@ const MyInfoPage = () => {
     console.log("저장?");
     console.log("오리지널", oldString);
     console.log("수정된 내 정보", myInfo);
-    const tmpPayload = {
-      name: {
-        old: oldString.siteMetadata.author.name,
-        new: myInfo.name,
+    const tmpPayload = [
+      {
+        nickName: [oldString.siteMetadata.author.name, myInfo.name],
+        summary: [oldString.siteMetadata.author.summary, myInfo.summary],
+        profileImg: [`../src/images/profile-pic.png`],
+        title: [oldString.siteMetadata.title, myBlogInfo.title],
+        description: [oldString.siteMetadata.description, myBlogInfo.description],
       },
-      summary: {
-        old: oldString.siteMetadata.author.summary,
-        new: myInfo.summary,
-      },
-      profileImg: {
-        old: oldPic,
-        new: myInfo.profileImg,
-      },
-      title: {
-        old: oldString.siteMetadata.title,
-        new: myBlogInfo.title,
-      },
-      description: {
-        old: oldString.siteMetadata.description,
-        new: myBlogInfo.description,
-      },
-      social: myBlogInfo.social,
-    };
+    ];
     setPayload(tmpPayload);
+    setFlag(true);
     console.log("결과: ", tmpPayload);
-    sendBlogInfo();
   };
 
   const sendBlogInfo = async () => {
@@ -130,8 +104,11 @@ const MyInfoPage = () => {
     const result = {
       accessToken: accessToken,
       githubId: githubId,
-      modified: payload,
+      result: payload,
+      social: socialList,
     };
+
+    console.log("리퀘스트: ", result);
     // formData.append("imgFile", new Blob([newPic], { type: "multipart/form-data" }));
 
     formData.append("imgFile", newPic);
@@ -151,8 +128,11 @@ const MyInfoPage = () => {
 
   useEffect(() => {
     getBlogInfo();
-    console.log(payload);
-  }, [payload]);
+  }, []);
+
+  useEffect(() => {
+    sendBlogInfo();
+  }, [flag]);
 
   return (
     <div>
@@ -160,7 +140,7 @@ const MyInfoPage = () => {
       <div className={styles.hr}></div>
       <MyInfoInput myInfo={myInfo} setMyInfo={setMyInfo} setNewPic={setNewPic} />
       <div className={styles.hr}></div>
-      <MyBlogInfoInput myBlogInfo={myBlogInfo} setMyBlogInfo={setMyBlogInfo} />
+      <MyBlogInfoInput myBlogInfo={myBlogInfo} setMyBlogInfo={setMyBlogInfo} setSocialList={setSocialList} />
       <div>
         <div className={styles.confirmButton}>
           <div style={{ margin: "10px" }}>
