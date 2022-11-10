@@ -158,4 +158,21 @@ public class SettingConroller {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "레이아웃 설정 수정에 실패하였습니다."));
         }
     }
+
+    @GetMapping("/css")
+    @ApiOperation(value = "레이아웃 세부 설정 조회", notes = "레이아웃 세부 설정을 조회한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "레이아웃 세부 설정 조회 성공", response = BlogLayoutCssResponse.class),
+            @ApiResponse(code = 400, message = "레이아웃 세부 설정 조회 실패", response = BaseResponseBody.class),
+            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<? extends BaseResponseBody> getBlogLayoutCss(@RequestParam String accessToken, @RequestParam String githubId) {
+
+        try {
+            String css = settingService.getBlogLayoutCss(accessToken, githubId);
+            return ResponseEntity.status(200).body(BlogLayoutCssResponse.of(css, 200, "레이아웃 세부 설정 조회에 성공하였습니다."));
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "레이아웃 세부 설정 조회에 실패하였습니다."));
+        }
+    }
 }
