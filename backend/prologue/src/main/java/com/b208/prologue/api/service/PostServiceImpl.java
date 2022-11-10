@@ -1,5 +1,6 @@
 package com.b208.prologue.api.service;
 
+import com.b208.prologue.api.request.DashBoardPostRequest;
 import com.b208.prologue.api.request.PostRequest;
 import com.b208.prologue.api.request.github.*;
 import com.b208.prologue.api.response.ImageResponse;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.sql.Timestamp;
@@ -44,8 +46,9 @@ public class PostServiceImpl implements PostService {
                 .retrieve()
                 .bodyToMono(PostGetListResponse[].class).block();
 
-        for (int i = 6 * page; i < list.length; i++) {
-            if(i >= 6 * (page+1)){
+
+        for (int i = (list.length - 1) - (6 * page); i >= (list.length - 1) - (6 * (page+1)); i--) {
+            if(i < 0){
                 break;
             }
             PostRequest postRequest = new PostRequest();
@@ -114,6 +117,8 @@ public class PostServiceImpl implements PostService {
 
         }
 
+        Collections.sort(postRequests, new Comparator().reversed());
+
         int cnt = list.length;
         result.put("PostCount", cnt);
         result.put("Post", postRequests);
@@ -127,6 +132,25 @@ public class PostServiceImpl implements PostService {
             return true;
         } catch (NumberFormatException e) {
             return false;
+        }
+    }
+
+    public class Comparator implements java.util.Comparator<PostRequest> {
+        @Override
+        public int compare(PostRequest val1, PostRequest val2) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+            Date date1 = null;
+            Date date2 = null;
+            try {
+                date1 = sdf.parse(val1.getDate());
+                date2 = sdf.parse(val2.getDate());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            return Long.valueOf(date1.getTime())
+                    .compareTo(date2.getTime());
         }
     }
 
