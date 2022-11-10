@@ -10,7 +10,7 @@ import ButtonStyled from "components/Button";
 interface Props {
   myBlogInfo: myBlogInfoProps;
   setMyBlogInfo: Dispatch<SetStateAction<myBlogInfoProps>>;
-  setSocialList: Dispatch<SetStateAction<object[]>>;
+  setSocialList: Dispatch<SetStateAction<object>>;
 }
 
 export interface linkConfig {
@@ -36,7 +36,7 @@ const MyBlogInfoInput = ({ myBlogInfo, setMyBlogInfo, setSocialList }: Props) =>
       },
     });
 
-    setSocialList([{ ...myBlogInfo.social, [link.site]: link.url }]);
+    setSocialList({ ...myBlogInfo.social, [link.site]: link.url });
   };
 
   return (

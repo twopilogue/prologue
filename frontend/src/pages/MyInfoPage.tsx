@@ -8,7 +8,6 @@ import api from "api/Api";
 import { useDispatch, useSelector } from "react-redux";
 import { rootState } from "app/store";
 import { blogInfoConfig, setBlogSettingInfo } from "slices/settingSlice";
-import ConfirmButton from "features/setting/ConfirmButton";
 import ButtonStyled from "components/Button";
 
 export interface myInfoProps {
@@ -29,8 +28,7 @@ const MyInfoPage = () => {
   const [oldString, setOldString] = useState<blogInfoConfig>(null);
   const [oldPic, setOldPic] = useState("");
   const [newPic, setNewPic] = useState<Blob>(null);
-  const [socialList, setSocialList] = useState([]);
-  const [flag, setFlag] = useState<boolean>(false);
+  const [socialList, setSocialList] = useState({});
   const [myInfo, setMyInfo] = useState<myInfoProps>({
     name: "",
     summary: "",
@@ -41,15 +39,13 @@ const MyInfoPage = () => {
     description: "",
     social: [],
   });
-  const [payload, setPayload] = useState([
-    {
-      nickName: [],
-      summary: [],
-      profileImg: [],
-      title: [],
-      description: [],
-    },
-  ]);
+  const [payload, setPayload] = useState({
+    nickName: [],
+    summary: [],
+    profileImg: [],
+    title: [],
+    description: [],
+  });
 
   const getBlogInfo = async () => {
     await axios
@@ -75,7 +71,9 @@ const MyInfoPage = () => {
           description: st.siteMetadata.description,
           social: st.siteMetadata.social,
         });
+        console.log(st.siteMetadata.social);
       })
+
       .catch((err: any) => {
         console.log(err);
       });
@@ -85,18 +83,16 @@ const MyInfoPage = () => {
     console.log("저장?");
     console.log("오리지널", oldString);
     console.log("수정된 내 정보", myInfo);
-    const tmpPayload = [
-      {
-        nickName: [oldString.siteMetadata.author.name, myInfo.name],
-        summary: [oldString.siteMetadata.author.summary, myInfo.summary],
-        profileImg: [`../src/images/profile-pic.png`],
-        title: [oldString.siteMetadata.title, myBlogInfo.title],
-        description: [oldString.siteMetadata.description, myBlogInfo.description],
-      },
-    ];
+    const tmpPayload = {
+      nickName: [oldString.siteMetadata.author.name, myInfo.name],
+      summary: [oldString.siteMetadata.author.summary, myInfo.summary],
+      profileImg: [`../src/images/profile-pic.png`, ``],
+      title: [oldString.siteMetadata.title, myBlogInfo.title],
+      description: [oldString.siteMetadata.description, myBlogInfo.description],
+    };
     setPayload(tmpPayload);
-    setFlag(true);
     console.log("결과: ", tmpPayload);
+    return tmpPayload;
   };
 
   const sendBlogInfo = async () => {
@@ -104,11 +100,12 @@ const MyInfoPage = () => {
     const result = {
       accessToken: accessToken,
       githubId: githubId,
-      result: payload,
+      modified: handleOnEdit(),
       social: socialList,
     };
 
     console.log("리퀘스트: ", result);
+    console.log(JSON.stringify(result));
     // formData.append("imgFile", new Blob([newPic], { type: "multipart/form-data" }));
 
     formData.append("imgFile", newPic);
@@ -119,7 +116,7 @@ const MyInfoPage = () => {
         headers: { "Content-Type": `multipart/form-data` },
       })
       .then((res: any) => {
-        console.log(res);
+        console.log("됨?", res);
       })
       .catch((err: any) => {
         console.log(err);
@@ -129,10 +126,6 @@ const MyInfoPage = () => {
   useEffect(() => {
     getBlogInfo();
   }, []);
-
-  useEffect(() => {
-    sendBlogInfo();
-  }, [flag]);
 
   return (
     <div>
@@ -147,7 +140,7 @@ const MyInfoPage = () => {
             <ButtonStyled color="sky" label="취소" />
           </div>
           <div style={{ margin: "10px" }}>
-            <ButtonStyled label="저장" onClick={handleOnEdit} />
+            <ButtonStyled label="저장" onClick={sendBlogInfo} />
           </div>
         </div>
       </div>
