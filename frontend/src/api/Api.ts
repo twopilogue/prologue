@@ -95,8 +95,8 @@ const api: apiInterface = {
     modifyBlog: () => HOST + SETTING + "blog",
     getLayout: () => HOST + SETTING + "layout",
     modifyLayout: () => HOST + SETTING + "layout",
-    getLayoutDetail: () => HOST + SETTING + "layout/detail",
-    modifyLayoutDetail: () => HOST + SETTING + "layout/detail",
+    getLayoutDetail: () => HOST + SETTING + "layout/css",
+    modifyLayoutDetail: () => HOST + SETTING + "layout/css",
     getPage: (accessToken: string, githubId: string) =>
       HOST + SETTING + "pages?accessToken=" + accessToken + "&githubId=" + githubId,
     modifyPage: () => HOST + SETTING + "pages",

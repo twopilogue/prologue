@@ -1,9 +1,5 @@
 import * as React from "react";
-import {
-  FormControl,
-  FormHelperText,
-  OutlinedInput,
-} from "@mui/material";
+import { FormControl, FormHelperText, OutlinedInput } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import palette from "../styles/colorPalette";
 
@@ -19,6 +15,7 @@ interface inputInfo {
   helperText?: string;
   size?: "medium" | "small";
   onChange?: React.ChangeEventHandler<HTMLInputElement> | undefined;
+  onKeyPress?: React.KeyboardEventHandler<HTMLInputElement> | undefined;
 }
 
 const InputStyle = styled(OutlinedInput)(() => ({
@@ -30,22 +27,10 @@ const InputStyle = styled(OutlinedInput)(() => ({
 }));
 
 // rest 쪽에는 onChange, type, name, value, placeholder 등의 input 에서 사용 하는 값들을 넣어줄수 있다.
-const Input = ({
-  placeholder,
-  textBool,
-  helperText,
-  rows,
-  size,
-  ...rest
-}: inputInfo) => (
+const Input = ({ placeholder, textBool, helperText, rows, size, ...rest }: inputInfo) => (
   <div>
     <FormControl sx={{ width: "100%", height: "100%" }}>
-      <InputStyle
-        size={size ? size : "small"}
-        placeholder={placeholder}
-        {...rest}
-        rows={rows}
-      />
+      <InputStyle size={size ? size : "small"} placeholder={placeholder} {...rest} rows={rows} />
     </FormControl>
     {textBool &&
       (helperText ? (
