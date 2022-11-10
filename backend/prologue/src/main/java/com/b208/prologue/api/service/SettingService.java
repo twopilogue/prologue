@@ -8,7 +8,7 @@ import java.util.Map;
 
 public interface SettingService {
     List<String> getBlogSetting(String encodedAccessToken, String githubId) throws Exception;
-    void updateBlogSetting(String encodedAccessToken, String githubId, String modified, MultipartFile imageFile) throws Exception;
+    void updateBlogSetting(String encodedAccessToken, String githubId, Map<String, List<String>> modified, Map<String, String> social, MultipartFile imageFile) throws Exception;
     String[] getBlogCategory(String encodedAccessToken, String githubId) throws Exception;
     void updateBlogCategory(String encodedAccessToken, String githubId, List<String> category) throws Exception;
     JSONObject[] getBlogPages(String encodedAccessToken, String githubId) throws Exception;
