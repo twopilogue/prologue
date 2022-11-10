@@ -5,8 +5,36 @@ import LayoutSample from "./layout/LayoutSample";
 import styles from "./Setting.module.css";
 import SettingLayout from "./SettingLayout";
 
+export interface colorsConfig {
+  title: {
+    background: string;
+    text: string;
+  };
+  category: {
+    background: string;
+    text: string;
+  };
+  page: {
+    background: string;
+    text: string;
+  };
+}
+
 const DetailSetting = () => {
-  const [titleColor, setTitleColor] = useState("#d3d3eb");
+  const [colors, setColors] = useState<colorsConfig>({
+    title: {
+      background: "#d3d3eb",
+      text: "darkgray",
+    },
+    category: {
+      background: "#d3d3eb",
+      text: "darkgray",
+    },
+    page: {
+      background: "#d3d3eb",
+      text: "darkgray",
+    },
+  });
 
   return (
     <div>
@@ -17,8 +45,8 @@ const DetailSetting = () => {
         <Text value="레이아웃에 원하는 디자인을 선택하여 적용하세요." type="caption" />
       </div>
       <div className={styles.layoutSelectContainer}>
-        <DetailSelector titleColor={titleColor} setTitleColor={setTitleColor} />
-        <SettingLayout titleColor={titleColor} />
+        <DetailSelector colors={colors} setColors={setColors} />
+        <SettingLayout colors={colors} />
       </div>
     </div>
   );

@@ -3,18 +3,30 @@ import RadioButton from "components/RadioButton";
 import React, { Dispatch, SetStateAction, useCallback, useState } from "react";
 import styles from "./Setting.module.css";
 import { SketchPicker } from "react-color";
+import { colorsConfig } from "./DetailSetting";
 
 interface Props {
-  titleColor: string;
-  setTitleColor: Dispatch<SetStateAction<string>>;
+  colors: colorsConfig;
+  setColors: Dispatch<SetStateAction<colorsConfig>>;
 }
 
-const DetailSelector = ({ titleColor, setTitleColor }: Props) => {
+const DetailSelector = ({ colors, setColors }: Props) => {
   const handleChangeComplete = useCallback(
     (color: any, type: string) => {
-      if (type === "title") setTitleColor(color);
+      console.log("색상: ", colors);
+      switch (type) {
+        case "title":
+          setColors({ ...colors, title: { background: color, text: color } });
+          break;
+        case "category":
+          setColors({ ...colors, category: { background: color, text: color } });
+          break;
+        case "page":
+          setColors({ ...colors, page: { background: color, text: color } });
+          break;
+      }
     },
-    [titleColor],
+    [colors],
   );
 
   return (
@@ -32,7 +44,10 @@ const DetailSelector = ({ titleColor, setTitleColor }: Props) => {
         <div className={styles.detailItem}>
           <RadioButton label="색상 설정" value="color" checked />
           <div>
-            <SketchPicker color={titleColor} onChangeComplete={(color) => handleChangeComplete(color.hex, "title")} />
+            <SketchPicker
+              color={colors.title.background}
+              onChangeComplete={(color) => handleChangeComplete(color.hex, "title")}
+            />
           </div>
         </div>
         <div className={styles.detailItem}>
@@ -51,8 +66,24 @@ const DetailSelector = ({ titleColor, setTitleColor }: Props) => {
       <div className={styles.checkListTitle}>
         <Text value="카테고리" type="text" bold />
       </div>
+      <div className={styles.detailItem}>
+        <RadioButton label="색상 설정" value="color" checked />
+        <div>
+          <SketchPicker
+            color={colors.category.background}
+            onChangeComplete={(color) => handleChangeComplete(color.hex, "category")}
+          />
+        </div>
+      </div>
       <div className={styles.checkListTitle}>
         <Text value="페이지" type="text" bold />
+      </div>
+      <RadioButton label="색상 설정" value="color" checked />
+      <div>
+        <SketchPicker
+          color={colors.page.background}
+          onChangeComplete={(color) => handleChangeComplete(color.hex, "page")}
+        />
       </div>
     </div>
   );

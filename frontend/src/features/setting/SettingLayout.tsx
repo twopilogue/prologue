@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import styles from "./Setting.module.css";
 import { Layout } from "react-grid-layout";
 import GridLayout from "react-grid-layout";
@@ -14,19 +14,21 @@ import {
 import { useGettingWidth } from "./layout/LayoutSample";
 import Text from "components/Text";
 import DragHandleIcon from "@mui/icons-material/DragHandle";
-
-interface Props {
-  titleColor: string;
-}
+import { colorsConfig } from "./DetailSetting";
 
 // 세부 레이아웃 설정 컴포넌트
 
-const SettingLayout = ({ titleColor }: Props) => {
+interface Props {
+  colors: colorsConfig;
+  // setColors: Dispatch<SetStateAction<colorsConfig>>;
+}
+
+const SettingLayout = ({ colors }: Props) => {
   const [componentLayoutList, setComponentLayoutList] = useState<Layout[]>(useAppSelector(selectComponentLayoutList));
   const [componentList, setComponentList] = useState<ComponentConfig[]>(useAppSelector(selectComponentList));
   const [checkList, setCheckList] = useState<ComponentCheckConfig>(useAppSelector(selectCheckList));
   const [layoutWidth, layoutContainer] = useGettingWidth();
-  const logoColor = "red";
+
   const colorRef = useRef();
 
   useEffect(() => {
@@ -40,6 +42,7 @@ const SettingLayout = ({ titleColor }: Props) => {
       });
     }
     setComponentLayoutList(tmpLayoutList);
+    console.log(colorRef.current);
   }, []);
 
   // useEffect(() => {
@@ -65,12 +68,18 @@ const SettingLayout = ({ titleColor }: Props) => {
             {
               return checkList[item.id] ? (
                 <div
-                  ref={colorRef}
-                  className={styles.display_logo}
-                  style={{ backgroundColor: `${titleColor}` }}
+                  className={styles.layout_nonColored}
+                  style={
+                    item.id === "title"
+                      ? { backgroundColor: `${colors.title.background}`, color: `${colors.title.text}` }
+                      : item.id === "category"
+                      ? { backgroundColor: `${colors.category.background}`, color: `${colors.category.text}` }
+                      : item.id === "page"
+                      ? { backgroundColor: `${colors.page.background}`, color: `${colors.page.text}` }
+                      : { backgroundColor: "#d3d3eb" }
+                  }
                   key={item.key}
                 >
-                  <div>{item.id + "Color"}</div>
                   <div style={{ marginTop: "15px" }}></div>
                   <div className={styles.innerText}>
                     <Text value={item.key} type="caption" color="gray" />
