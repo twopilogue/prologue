@@ -37,6 +37,28 @@ const MyInfoPage = () => {
     description: "",
     social: [],
   });
+  const [payload, setPayload] = useState({
+    name: {
+      old: "",
+      new: "",
+    },
+    summary: {
+      old: "",
+      new: "",
+    },
+    profileImg: {
+      old: "",
+      new: "",
+    },
+    title: {
+      old: "",
+      new: "",
+    },
+    description: {
+      old: "",
+      new: "",
+    },
+  });
 
   const getBlogInfo = async () => {
     await axios
@@ -71,11 +93,39 @@ const MyInfoPage = () => {
     console.log("저장?");
     console.log("오리지널", oldString);
     console.log("수정된 내 정보", myInfo);
+    const tmpPayload = {
+      name: {
+        old: oldString.siteMetadata.author.name,
+        new: myInfo.name,
+      },
+      summary: {
+        old: oldString.siteMetadata.author.summary,
+        new: myInfo.summary,
+      },
+      profileImg: {
+        old: oldString.profileImg,
+        new: myInfo.profileImg,
+      },
+      title: {
+        old: oldString.siteMetadata.title,
+        new: myBlogInfo.title,
+      },
+      description: {
+        old: oldString.siteMetadata.description,
+        new: myBlogInfo.description,
+      },
+    };
+    setPayload(tmpPayload);
   };
+
+  // const setBlogInfo = async () => {
+  //   await axios.put(())
+  // }
 
   useEffect(() => {
     getBlogInfo();
-  }, []);
+    console.log(payload);
+  }, [payload]);
 
   return (
     <div>
