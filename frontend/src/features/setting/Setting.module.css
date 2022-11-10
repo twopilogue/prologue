@@ -74,10 +74,15 @@
   display: none;
 }
 
-.display_logo {
+.layout_nonColored,
+.layout_colored {
   margin: 10px;
   /* background-color: #d3d3eb; */
   border-radius: 5px;
+}
+
+.layout_colored {
+  background-color: #d3d3eb;
 }
 
 .icon {
