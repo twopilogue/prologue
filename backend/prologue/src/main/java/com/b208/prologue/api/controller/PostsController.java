@@ -7,7 +7,6 @@ import com.b208.prologue.api.response.ImageResponse;
 import com.b208.prologue.api.response.PostListResponse;
 import com.b208.prologue.api.response.github.GetRepoContentResponse;
 import com.b208.prologue.api.service.PostService;
-import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;

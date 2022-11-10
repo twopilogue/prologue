@@ -1,5 +1,6 @@
 package com.b208.prologue.api.controller;
 
+import com.b208.prologue.api.request.DashBoardPostRequest;
 import com.b208.prologue.api.response.*;
 import com.b208.prologue.api.service.DashBoardService;
 import io.swagger.annotations.ApiOperation;
@@ -31,7 +32,7 @@ public class DashBoardController {
     })
     public ResponseEntity<? extends BaseResponseBody> getCurrentPost(@RequestParam String accessToken, @RequestParam String githubId) {
         try {
-            Map<String, List<String>> result = dashBoardService.getList(accessToken, githubId);
+            List<DashBoardPostRequest> result = dashBoardService.getList(accessToken, githubId);
             return ResponseEntity.status(200).body(DashBoardListResponse.of(result, 200, "게시글 목록 조회 성공"));
         } catch (Exception e) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "게시글 목록 조회에 실패하였습니다."));
