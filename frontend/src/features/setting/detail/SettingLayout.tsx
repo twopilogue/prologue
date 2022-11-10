@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
-import styles from "./Setting.module.css";
+import styles from "../Setting.module.css";
 import { Layout } from "react-grid-layout";
 import GridLayout from "react-grid-layout";
 import { useAppSelector } from "app/hooks";
@@ -11,10 +11,10 @@ import {
   selectComponentLayoutList,
   selectComponentList,
 } from "slices/settingSlice";
-import { useGettingWidth } from "./layout/LayoutSample";
+import { useGettingWidth } from "../layout/LayoutSample";
 import Text from "components/Text";
 import DragHandleIcon from "@mui/icons-material/DragHandle";
-import { colorsConfig } from "./DetailSetting";
+import { colorsConfig } from "../detail/DetailSetting";
 
 // 세부 레이아웃 설정 컴포넌트
 
@@ -76,6 +76,8 @@ const SettingLayout = ({ colors }: Props) => {
                       ? { backgroundColor: `${colors.category.background}`, color: `${colors.category.text}` }
                       : item.id === "page"
                       ? { backgroundColor: `${colors.page.background}`, color: `${colors.page.text}` }
+                      : item.id === "profile"
+                      ? { backgroundColor: `${colors.profile.background}`, color: `${colors.profile.text}` }
                       : { backgroundColor: "#d3d3eb" }
                   }
                   key={item.key}
