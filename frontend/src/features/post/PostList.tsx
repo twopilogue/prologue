@@ -14,13 +14,16 @@ const PostList = () => {
   const [sort, setSort] = useState("");
   const [postCardList, setPostCardList] = useState([]);
 
+  const postList = useAppSelector(selectPostList);
+
   const handleChange = (event: SelectChangeEvent) => {
     setSort(event.target.value);
   };
 
-  // useEffect(() => {
-  //   setPostCardList(useAppSelector(selectPostList));
-  // }, []);
+  useEffect(() => {
+    setPostCardList(postList);
+    console.log(postCardList);
+  }, []);
 
   return (
     <div className={styles.postList}>
@@ -38,7 +41,13 @@ const PostList = () => {
       </div>
       {postCardList.map((value, key) => (
         <div key={key}>
-          <PostListCard />
+          <PostListCard
+            title={value.title}
+            date={value.date}
+            tag={value.tag}
+            category={value.category}
+            content={value.content}
+          />
         </div>
       ))}
 
