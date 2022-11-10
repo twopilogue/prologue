@@ -14,7 +14,7 @@ import ButtonStyled from "components/Button";
 export interface myInfoProps {
   name: string;
   summary: string;
-  profileImg: string;
+  profileImg: string | FormData;
 }
 
 export interface myBlogInfoProps {
@@ -27,10 +27,12 @@ const MyInfoPage = () => {
   const dispatch = useDispatch();
   const { githubId, accessToken } = useSelector((state: rootState) => state.auth);
   const [oldString, setOldString] = useState<blogInfoConfig>(null);
+  const [oldPic, setOldPic] = useState("");
+  const [newPic, setNewPic] = useState<Blob>(null);
   const [myInfo, setMyInfo] = useState<myInfoProps>({
     name: "",
     summary: "",
-    profileImg: "",
+    profileImg: null,
   });
   const [myBlogInfo, setMyBlogInfo] = useState<myBlogInfoProps>({
     title: "",
@@ -48,7 +50,7 @@ const MyInfoPage = () => {
     },
     profileImg: {
       old: "",
-      new: "",
+      new: null,
     },
     title: {
       old: "",
@@ -58,6 +60,7 @@ const MyInfoPage = () => {
       old: "",
       new: "",
     },
+    social: {},
   });
 
   const getBlogInfo = async () => {
@@ -71,12 +74,13 @@ const MyInfoPage = () => {
         const test = "return (" + teststring + ")";
         const st: blogInfoConfig = new Function(test)();
         setOldString(st);
-        console.log(st);
+        setOldPic(res.data.profileImg);
         dispatch(setBlogSettingInfo({ siteMetadata: st.siteMetadata, profileImg: res.data.profileImg }));
+
         setMyInfo({
           name: st.siteMetadata.author.name,
           summary: st.siteMetadata.author.summary,
-          profileImg: st.profileImg,
+          profileImg: res.data.profileImg,
         });
         setMyBlogInfo({
           title: st.siteMetadata.title,
@@ -103,7 +107,7 @@ const MyInfoPage = () => {
         new: myInfo.summary,
       },
       profileImg: {
-        old: oldString.profileImg,
+        old: oldPic,
         new: myInfo.profileImg,
       },
       title: {
@@ -114,13 +118,36 @@ const MyInfoPage = () => {
         old: oldString.siteMetadata.description,
         new: myBlogInfo.description,
       },
+      social: myBlogInfo.social,
     };
     setPayload(tmpPayload);
+    console.log("결과: ", tmpPayload);
+    sendBlogInfo();
   };
 
-  // const setBlogInfo = async () => {
-  //   await axios.put(())
-  // }
+  const sendBlogInfo = async () => {
+    const formData = new FormData();
+    const result = {
+      accessToken: accessToken,
+      githubId: githubId,
+      modified: payload,
+    };
+    // formData.append("imgFile", new Blob([newPic], { type: "multipart/form-data" }));
+
+    formData.append("imgFile", newPic);
+    formData.append("modifyBlogSettingRequest", new Blob([JSON.stringify(result)], { type: "application/json" }));
+
+    await axios
+      .put(api.setting.modifyBlog(), formData, {
+        headers: { "Content-Type": `multipart/form-data` },
+      })
+      .then((res: any) => {
+        console.log(res);
+      })
+      .catch((err: any) => {
+        console.log(err);
+      });
+  };
 
   useEffect(() => {
     getBlogInfo();
@@ -131,7 +158,7 @@ const MyInfoPage = () => {
     <div>
       <MyGitInfo />
       <div className={styles.hr}></div>
-      <MyInfoInput myInfo={myInfo} setMyInfo={setMyInfo} />
+      <MyInfoInput myInfo={myInfo} setMyInfo={setMyInfo} setNewPic={setNewPic} />
       <div className={styles.hr}></div>
       <MyBlogInfoInput myBlogInfo={myBlogInfo} setMyBlogInfo={setMyBlogInfo} />
       <div>
