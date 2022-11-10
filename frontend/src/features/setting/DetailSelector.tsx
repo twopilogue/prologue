@@ -1,15 +1,20 @@
 import Text from "components/Text";
 import RadioButton from "components/RadioButton";
-import React, { useCallback, useState } from "react";
+import React, { Dispatch, SetStateAction, useCallback, useState } from "react";
 import styles from "./Setting.module.css";
 import { SketchPicker } from "react-color";
 
-const DetailSelector = (props: any) => {
+interface Props {
+  titleColor: string;
+  setTitleColor: Dispatch<SetStateAction<string>>;
+}
+
+const DetailSelector = ({ titleColor, setTitleColor }: Props) => {
   const handleChangeComplete = useCallback(
-    (color: any) => {
-      props.setTitleColor(color);
+    (color: any, type: string) => {
+      if (type === "title") setTitleColor(color);
     },
-    [props.titleColor],
+    [titleColor],
   );
 
   return (
@@ -18,19 +23,16 @@ const DetailSelector = (props: any) => {
         <Text value="타이틀" type="text" bold />
       </div>
       <div className={styles.detailContents}>
-        <div className={styles.detailItem}>
+        {/* <div className={styles.detailItem}>
           <Text value="영역 설정" type="text" />
-        </div>
+        </div> */}
         <div className={styles.detailItem}>
           <Text value="높이 설정" type="text" />
         </div>
         <div className={styles.detailItem}>
           <RadioButton label="색상 설정" value="color" checked />
           <div>
-            <SketchPicker
-              color={props.titleColor}
-              onChangeComplete={(color) => handleChangeComplete(color.hex)}
-            />
+            <SketchPicker color={titleColor} onChangeComplete={(color) => handleChangeComplete(color.hex, "title")} />
           </div>
         </div>
         <div className={styles.detailItem}>
