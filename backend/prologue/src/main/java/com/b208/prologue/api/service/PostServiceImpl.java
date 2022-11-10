@@ -1,5 +1,6 @@
 package com.b208.prologue.api.service;
 
+import com.b208.prologue.api.request.DashBoardPostRequest;
 import com.b208.prologue.api.request.PostRequest;
 import com.b208.prologue.api.request.github.*;
 import com.b208.prologue.api.response.ImageResponse;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.sql.Timestamp;
@@ -44,8 +46,8 @@ public class PostServiceImpl implements PostService {
                 .retrieve()
                 .bodyToMono(PostGetListResponse[].class).block();
 
-        for (int i = 6 * page; i < list.length; i++) {
-            if(i >= 6 * (page+1)){
+        for (int i = (list.length - 1) - (6 * page); i >= (list.length - 1) - (6 * (page+1)); i--) {
+            if(i < 0){
                 break;
             }
             PostRequest postRequest = new PostRequest();
@@ -91,28 +93,38 @@ public class PostServiceImpl implements PostService {
         }
 
         for(int i = 0; i < temp.size(); i++){
-            StringTokenizer st = new StringTokenizer(temp.get(i), "\n");
-            int cnt = st.countTokens();
-
-            for(int j = 0; j < cnt; j++){
-                String line = st.nextToken();
-                if(line.contains("title")){
-                    postRequests.get(i).setTitle(line.substring(line.indexOf(": ") + 1));
-                    break;
-                }
-                if(j == (cnt-1)){
-                    postRequests.get(i).setTitle("No Title");
-                }
-            }
-
             if (temp.get(i).contains("---")){
-                String tempContent[] = temp.get(i).split("---");
-                postRequests.get(i).setContent(tempContent[2].substring(2));
+                String tempContent[] = temp.get(i).split("---\n");
+
+                StringTokenizer st = new StringTokenizer(tempContent[1], "\n");
+                int cnt = st.countTokens();
+
+                List<String> tag = new ArrayList<>();
+                for(int j = 0; j < cnt; j++){
+                    String line = st.nextToken();
+                    if(line.contains("title")){
+                        postRequests.get(i).setTitle(line.substring(line.indexOf(": ") + 1));
+                    }
+                    if(line.contains("category")){
+                        postRequests.get(i).setCategory(line.substring(line.indexOf(": ") + 1));
+                    }
+                    if(line.contains("tag")){
+                        String tagLine = line.substring(line.indexOf(": ") + 1);
+                        String[] tagArr = tagLine.split(",");
+                        for (String tagTemp:tagArr) {
+                            tag.add(tagTemp);
+                        }
+                        postRequests.get(i).setTag(tag);
+                    }
+                }
+
+                postRequests.get(i).setContent(tempContent[2]);
             }else {
                 postRequests.get(i).setContent(temp.get(i));
             }
-
         }
+
+        Collections.sort(postRequests, new Comparator().reversed());
 
         int cnt = list.length;
         result.put("PostCount", cnt);
@@ -127,6 +139,25 @@ public class PostServiceImpl implements PostService {
             return true;
         } catch (NumberFormatException e) {
             return false;
+        }
+    }
+
+    public class Comparator implements java.util.Comparator<PostRequest> {
+        @Override
+        public int compare(PostRequest val1, PostRequest val2) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+            Date date1 = null;
+            Date date2 = null;
+            try {
+                date1 = sdf.parse(val1.getDate());
+                date2 = sdf.parse(val2.getDate());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            return Long.valueOf(date1.getTime())
+                    .compareTo(date2.getTime());
         }
     }
 
