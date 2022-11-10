@@ -1,8 +1,31 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "features/post/Post.module.css";
 import Text from "components/Text";
+import { useSelector } from "react-redux";
+import { rootState } from "app/store";
+import Axios from "api/JsonAxios";
+import api from "api/Api";
 
 const PostCategoryList = () => {
+  const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
+
+  const [categoryList, setCategoryList] = useState([]);
+
+  const getCategoryList = () => {
+    Axios.get(api.setting.getCategory(accessToken, githubId))
+      .then((res: any) => {
+        console.log(res.data.category);
+        setCategoryList(res.data.category);
+      })
+      .catch((err: any) => {
+        console.log(err);
+      });
+  };
+
+  useEffect(() => {
+    getCategoryList();
+  }, []);
+
   return (
     <div className={styles.postCategoryList}>
       <div className={styles.textCategories}>
@@ -10,15 +33,11 @@ const PostCategoryList = () => {
       </div>
 
       <div className={styles.myCategoryList}>
-        <div className={styles.categoryName}>
-          <Text value="스터디" type="text" color="gray" /> <hr />
-        </div>
-        <div className={styles.categoryName}>
-          <Text value="개발" type="text" color="gray" /> <hr />
-        </div>
-        <div className={styles.categoryName}>
-          <Text value="기타" type="text" color="gray" /> <hr />
-        </div>
+        {categoryList.map((value, key) => (
+          <div key={key} className={styles.categoryName}>
+            <Text value={value} type="text" color="dark_gray" /> <hr />
+          </div>
+        ))}
       </div>
     </div>
   );
