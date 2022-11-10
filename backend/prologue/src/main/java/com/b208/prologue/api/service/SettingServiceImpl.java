@@ -122,13 +122,13 @@ public class SettingServiceImpl implements SettingService {
             if(line.contains("github")) {
                 Line = Line.replace(line.substring(line.indexOf(":")+2), "`"+social.get("github")+"`,");
             }
-            if(line.contains("gmail")) {
+            else if(line.contains("gmail")) {
                 Line = Line.replace(line.substring(line.indexOf(":")+2), "`"+social.get("gmail")+"`,");
             }
-            if(line.contains("instagram")) {
+            else if(line.contains("instagram")) {
                 Line = Line.replace(line.substring(line.indexOf(":")+2), "`"+social.get("instagram")+"`,");
             }
-            if(line.contains("twitter")) {
+            else if(line.contains("twitter")) {
                 Line = Line.replace(line.substring(line.indexOf(":")+2), "`"+social.get("twitter")+"`,");
             }
         }
