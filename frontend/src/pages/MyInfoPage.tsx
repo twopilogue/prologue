@@ -86,7 +86,7 @@ const MyInfoPage = () => {
     const tmpPayload = {
       nickName: [oldString.siteMetadata.author.name, myInfo.name],
       summary: [oldString.siteMetadata.author.summary, myInfo.summary],
-      profileImg: [`../src/images/profile-pic.png`, ``],
+      profileImg: ["../src/images/profile-pic.png", ""],
       title: [oldString.siteMetadata.title, myBlogInfo.title],
       description: [oldString.siteMetadata.description, myBlogInfo.description],
     };

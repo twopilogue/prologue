@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import { LightMode, DarkMode } from "@mui/icons-material";
-import { Avatar, Box, IconButton, Menu, MenuItem, Stack, Typography, Button, Link } from "@mui/material";
+import { Avatar, Box, IconButton, Menu, MenuItem, Stack, Typography, Button, Link, Divider } from "@mui/material";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import LogoutIcon from "@mui/icons-material/Logout";
 import styles from "./css/Header.module.css";
@@ -12,6 +12,7 @@ import { rootState } from "app/store";
 import api from "api/Api";
 import Axios from "api/JsonAxios";
 import { authActions } from "slices/authSlice";
+import Text from "./Text";
 
 const GithubButton = styled(Button)(() => ({
   margin: 3,
@@ -117,6 +118,12 @@ function Header() {
                   <AvatarStyled alt="Remy Sharp" src={githubImage} />
                 </IconButton>
                 <Menu
+                  sx={{
+                    "& .MuiList-root": {
+                      pt: 0,
+                      pb: 0,
+                    },
+                  }}
                   anchorEl={anchorElUser}
                   anchorOrigin={{
                     vertical: "bottom",
@@ -132,7 +139,7 @@ function Header() {
                     sx: {
                       overflow: "visible",
                       filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-                      mt: 1.5,
+                      mt: 1.2,
                       "& .MuiAvatar-root": {
                         width: 32,
                         height: 32,
@@ -159,15 +166,15 @@ function Header() {
                   <MenuItem onClick={handleCloseUserMenu}>
                     <Link href={`https://github.com/${githubId}`} underline="none" color="black">
                       <Stack direction="row" spacing={1}>
-                        <GitHubIcon />
-                        <Typography textAlign="center">GitHub</Typography>
+                        <GitHubIcon fontSize="small" />
+                        <Text value="GitHub" type="caption" />
                       </Stack>
                     </Link>
                   </MenuItem>
                   <MenuItem onClick={onLogout}>
                     <Stack direction="row" spacing={1}>
-                      <LogoutIcon />
-                      <Typography textAlign="center">Logout</Typography>
+                      <LogoutIcon fontSize="small" />
+                      <Text value="Logout" type="caption" />
                     </Stack>
                   </MenuItem>
                 </Menu>
