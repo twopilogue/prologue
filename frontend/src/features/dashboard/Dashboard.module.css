@@ -54,6 +54,7 @@
   height: 100%;
   border-radius: 30px;
   border: 1px solid rgba(0, 0, 0, 0.12);
+  background-color: white;
 }
 
 .previewIframe {
