@@ -9,8 +9,11 @@ import PostListImgCard from "./PostListImgCard";
 import { Stack } from "@mui/system";
 import { useAppSelector } from "app/hooks";
 import { postListConfig, selectPostList } from "slices/postSlice";
+import { useNavigate } from "react-router-dom";
 
 const PostList = () => {
+  const navigate = useNavigate();
+
   const [sort, setSort] = useState("");
   const [postCardList, setPostCardList] = useState<postListConfig[]>(useAppSelector(selectPostList));
 
@@ -64,7 +67,7 @@ const PostList = () => {
 
       <div className={styles.postDataList}>
         {postCardList.map((value, key) => (
-          <div key={key}>
+          <div key={key} className={styles.postCards} onClick={() => navigate("/post/edit/" + value.directory)}>
             <PostListCard
               title={value.title}
               date={value.date}
