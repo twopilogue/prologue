@@ -5,8 +5,17 @@ import Modal from "components/Modal";
 import BlogReset from "features/blog/BlogReset";
 import resetImg from "assets/blog/blogChoice/RepositoryReset.png";
 import manageImg from "assets/blog/blogChoice/ManageOnly.png";
+import { rootState } from "app/store";
+import api from "api/Api";
+import Axios from "api/JsonAxios";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 function BlogResetPage() {
+  const navigate = useNavigate();
+  
+  const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
+  
   const [repositoryModalOpen, setRepositoryModalOpen] = React.useState(false);
   const [ManageModalOpen, setManageModalOpen] = React.useState(false);
 
@@ -17,6 +26,13 @@ function BlogResetPage() {
   const showManageModal = () => {
     setManageModalOpen(true);
   };
+
+  async function deleteRepo() {
+    await Axios.delete(api.blog.deleteRepo(accessToken, githubId)).then((res) => {
+      console.log("레포지토리가 삭제되었습니다.")
+      navigate("/create");
+    });
+  }
 
   const context = [
     {
@@ -66,7 +82,7 @@ function BlogResetPage() {
         <Modal
           buttonNum={2}
           twoButtonCancle={() => setRepositoryModalOpen(false)}
-          twoButtonConfirm={() => console.log("Repository초기화 확인 클릭")}
+          twoButtonConfirm={deleteRepo}
           text={`Repository 초기화를 선택했습니다\ngithub.io 데이터들이 모두 삭제됩니다`}
         />
       )}

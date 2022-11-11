@@ -29,6 +29,7 @@ interface apiInterface {
     getNewBuildTime: (accessToken: string, githubId: string) => string;
     getMonthPosts: (accessToken: string, githubId: string) => string;
     getRepoSize: (accessToken: string, githubId: string) => string;
+    getTotalPost: (accessToken: string, githubId: string) => string;
   };
   setting: {
     getCategory: (accessToken: string, githubId: string) => string;
@@ -58,7 +59,7 @@ const api: apiInterface = {
     getUri: () => HOST + AUTH + "uri",
     login: (code: string) => HOST + AUTH + "login?code=" + code,
     setSecretRepo: (accessToken: string, githubId: string) =>
-      HOST + AUTH + "secret?accessToken=" + accessToken + "&githubId=" + githubId,
+      HOST + AUTH + "secrets?accessToken=" + accessToken + "&githubId=" + githubId,
     getAuthFile: (accessToken: string, githubId: string) =>
       HOST + AUTH + "check?accessToken=" + accessToken + "&githubId=" + githubId,
     setAuthFile: () => HOST + AUTH + "check",
@@ -85,6 +86,8 @@ const api: apiInterface = {
       HOST + DASHBOARD + "month-posts?accessToken=" + accessToken + "&githubId=" + githubId,
     getRepoSize: (accessToken: string, githubId: string) =>
       HOST + DASHBOARD + "size?accessToken=" + accessToken + "&githubId=" + githubId,
+    getTotalPost: (accessToken: string, githubId: string) =>
+      HOST + DASHBOARD + "total?accessToken=" + accessToken + "&githubId=" + githubId,
   },
   setting: {
     getCategory: (accessToken: string, githubId: string) =>
@@ -95,8 +98,8 @@ const api: apiInterface = {
     modifyBlog: () => HOST + SETTING + "blog",
     getLayout: () => HOST + SETTING + "layout",
     modifyLayout: () => HOST + SETTING + "layout",
-    getLayoutDetail: () => HOST + SETTING + "layout/detail",
-    modifyLayoutDetail: () => HOST + SETTING + "layout/detail",
+    getLayoutDetail: () => HOST + SETTING + "layout/css",
+    modifyLayoutDetail: () => HOST + SETTING + "layout/css",
     getPage: (accessToken: string, githubId: string) =>
       HOST + SETTING + "pages?accessToken=" + accessToken + "&githubId=" + githubId,
     modifyPage: () => HOST + SETTING + "pages",

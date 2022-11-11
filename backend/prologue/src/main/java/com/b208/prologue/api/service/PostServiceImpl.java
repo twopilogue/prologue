@@ -1,5 +1,6 @@
 package com.b208.prologue.api.service;
 
+import com.b208.prologue.api.request.PostRequest;
 import com.b208.prologue.api.request.github.*;
 import com.b208.prologue.api.response.ImageResponse;
 import com.b208.prologue.api.response.github.PostGetListResponse;
@@ -8,12 +9,17 @@ import com.b208.prologue.api.response.github.PostgetResponse;
 import com.b208.prologue.common.Base64Converter;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.sql.Timestamp;
 
@@ -30,8 +36,8 @@ public class PostServiceImpl implements PostService {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
         Map<String, Object> result = new HashMap<>();
-        List<String> content = new ArrayList<>();
-        List<String> directory = new ArrayList<>();
+        List<String> temp = new ArrayList<>();
+        List<PostRequest> postRequests = new ArrayList<>();
 
         String url = "/repos/" + githubId + "/" + githubId + ".github.io" + "/contents/";
 
@@ -42,46 +48,137 @@ public class PostServiceImpl implements PostService {
                 .retrieve()
                 .bodyToMono(PostGetListResponse[].class).block();
 
-        for (int i = 6 * page; i < list.length; i++) {
-
-            if(i >= 6 * (page+1)){
+        for (int i = (list.length - 1) - (6 * page); i > (list.length - 1) - (6 * (page + 1)); i--) {
+            if (i < 0) {
                 break;
             }
-            content.add(setItem(url, accessToken, list[i].getPath()));
-            directory.add(list[i].getName());
+            PostRequest postRequest = new PostRequest();
+
+            if (isNumeric(list[i].getName()) == false && list[i].getName().length() != 13) {
+                String post = setItem(url, accessToken, list[i].getPath());
+                temp.add(post);
+                postRequest.setDirectory(list[i].getName());
+                postRequest.setImgUrl(getImage(accessToken, githubId, list[i].getName()));
+
+                StringTokenizer st = new StringTokenizer(post, "\n");
+                int cnt = st.countTokens();
+
+                boolean flag = false;
+                for (int j = 0; j < cnt; j++) {
+                    String line = st.nextToken();
+
+                    if (line.contains("date")) {
+                        flag = true;
+
+                        String tempDate = line.substring(line.indexOf("\"") + 1);
+                        String[] tmp = tempDate.split("T");
+                        tempDate = tmp[0];
+
+                        postRequest.setDate(tempDate);
+                        break;
+                    }
+                }
+                if (flag == false) {
+                    postRequest.setDate("No Date");
+                }
+            } else {
+                temp.add(setItem(url, accessToken, list[i].getPath()));
+                postRequest.setDirectory(list[i].getName());
+                postRequest.setImgUrl(getImage(accessToken, githubId, list[i].getName()));
+
+                Date tempDate = new Date(Long.parseLong(list[i].getName()));
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+                postRequest.setDate(String.valueOf(dateFormat.format(tempDate)));
+            }
+            postRequests.add(postRequest);
         }
 
+        for (int i = 0; i < temp.size(); i++) {
+            if (temp.get(i).contains("---")) {
+                String tempContent[] = temp.get(i).split("---\n");
+
+                StringTokenizer st = new StringTokenizer(tempContent[1], "\n");
+                int cnt = st.countTokens();
+
+                List<String> tag = new ArrayList<>();
+                for (int j = 0; j < cnt; j++) {
+                    String line = st.nextToken();
+                    if (line.contains("title")) {
+                        postRequests.get(i).setTitle(line.substring(line.indexOf(": ") + 1));
+                    }
+                    if (line.contains("category")) {
+                        postRequests.get(i).setCategory(line.substring(line.indexOf(": ") + 1));
+                    }
+                    if (line.contains("tag")) {
+                        String tagLine = line.substring(line.indexOf(": ") + 1);
+                        String[] tagArr = tagLine.split(",");
+                        for (String tagTemp : tagArr) {
+                            tag.add(tagTemp);
+                        }
+                        postRequests.get(i).setTag(tag);
+                    }
+                }
+
+                if (tempContent.length < 3) continue;
+                postRequests.get(i).setContent(tempContent[2]);
+            } else {
+                postRequests.get(i).setContent(temp.get(i));
+            }
+        }
+
+        Collections.sort(postRequests, new Comparator().reversed());
+
         int cnt = list.length;
-        result.put("content", content);
-        result.put("directory", directory);
-        result.put("postCount", cnt);
+        result.put("PostCount", cnt);
+        result.put("Post", postRequests);
+
         return result;
     }
 
-    @Override
-    public List<Map<String, String>> getListImagese(String encodedAccessToken, String githubId, List<String> directories) throws Exception {
-        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
+    public static boolean isNumeric(String s) {
+        try {
+            Long.parseLong(s);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
 
-        List<Map<String, String>> result = new ArrayList<>();
-        Map<String, String> image;
+    public class Comparator implements java.util.Comparator<PostRequest> {
+        @Override
+        public int compare(PostRequest val1, PostRequest val2) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-        for (String directory:directories) {
-            GetRepoContentResponse[] responses = commonService.getContentList(accessToken, githubId, "content/blog/" + directory);
-            image = new HashMap<>();
-
-            for (int i = 0; i < responses.length; i++) {
-                if (!responses[i].getName().equals("index.md")) {
-                    image.put(directory, responses[i].getUrl());
-                    break;
-                }else{
-                    continue;
-                }
+            Date date1 = null;
+            Date date2 = null;
+            try {
+                date1 = sdf.parse(val1.getDate());
+                date2 = sdf.parse(val2.getDate());
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
 
-            result.add(image);
+            return Long.valueOf(date1.getTime())
+                    .compareTo(date2.getTime());
+        }
+    }
+
+    public String getImage(String accessToken, String githubId, String directory) throws Exception {
+        GetRepoContentResponse[] responses = commonService.getContentList(accessToken, githubId, "content/blog/" + directory);
+
+        String imgUrl = "No Image";
+
+        for (int i = 0; i < responses.length; i++) {
+            if (!responses[i].getName().equals("index.md")) {
+                imgUrl = responses[i].getUrl();
+                break;
+            } else {
+                continue;
+            }
         }
 
-        return result;
+        return imgUrl;
     }
 
 
@@ -166,7 +263,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void deleteDetailPost(String encodedAccessToken, String githubId, String directory) throws Exception{
+    public void deleteDetailPost(String encodedAccessToken, String githubId, String directory) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
         String commit = "remove: 게시글 삭제";
         String path = "content/blog/" + directory;
@@ -176,7 +273,7 @@ public class PostServiceImpl implements PostService {
         List<TreeRequest> treeRequestList = new ArrayList<>();
 
         for (int i = 0; i < responses.length; i++) {
-            treeRequestList.add(new TreeRequest(path+"/"+responses[i].getName(), "100644", "blob", null));
+            treeRequestList.add(new TreeRequest(path + "/" + responses[i].getName(), "100644", "blob", null));
         }
 
         commonService.multiFileCommit(accessToken, githubId, treeRequestList, commit);
@@ -185,7 +282,9 @@ public class PostServiceImpl implements PostService {
     @Override
     public GetRepoContentResponse getDetailPost(String encodedAccessToken, String githubId, String path) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
-        return commonService.getDetailContent(accessToken, githubId, path + "/index.md");
+        GetRepoContentResponse response = commonService.getDetailContent(accessToken, githubId, path + "/index.md");
+        response.setContent(base64Converter.decode(response.getContent().replace("\n", "")));
+        return response;
     }
 
     @Override
@@ -199,6 +298,26 @@ public class PostServiceImpl implements PostService {
             }
         }
         return images;
+    }
+
+    @Override
+    public String tempImageUpload(String encodedAccessToken, String githubId, MultipartFile file) throws Exception {
+        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
+
+        String image = new String(Base64.encodeBase64(file.getBytes()));
+        UploadTempImageRequest uploadTempImageRequest = new UploadTempImageRequest("upload tempImage", "deploy", image);
+        String response = webClient.put()
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/tempImage/" + file.getOriginalFilename())
+                .headers(h -> h.setBearerAuth(accessToken))
+                .body(Mono.just(uploadTempImageRequest), UploadTempImageRequest.class)
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(String.class).block();
+
+        JSONParser jsonParser = new JSONParser();
+        JSONObject object = (JSONObject) jsonParser.parse(response);
+        JSONObject content = (JSONObject) object.get("content");
+        return (String) content.get("download_url");
     }
 
 }

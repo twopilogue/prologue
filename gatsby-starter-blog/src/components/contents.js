@@ -12,7 +12,8 @@ const Contents = () => {
             }
           }
           allMarkdownRemark(
-            sort: { fields: [frontmatter___date], order: DESC }
+            filter: { fields: { contentType: { eq: "blog" } } }
+            sort: { order: DESC, fields: frontmatter___date }
           ) {
             nodes {
               excerpt

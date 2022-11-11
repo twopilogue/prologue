@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import styles from "./Setting.module.css";
-import MyGitInfo from "./MyGitInfo";
-import MyInfoInput from "./MyInfoInput";
-import MyBlogInfoInput from "./MyBlogInfoInput";
+
 import CategoryLayout from "./CategoryLayout";
 import ConfirmButton from "./ConfirmButton";
 import CategoryCntSetting from "./CategoryCntSetting";
@@ -11,18 +9,14 @@ import LayoutSelector from "./layout/LayoutSelector";
 import LayoutSample from "./layout/LayoutSample";
 import DetailSelector from "./DetailSelector";
 import DetailSetting from "./DetailSetting";
+import MyInfoPage from "pages/MyInfoPage";
 
 export const blogTabs = [
   {
     label: "블로그 정보 설정",
     Component: (
       <div>
-        <MyGitInfo />
-        <div className={styles.hr}></div>
-        <MyInfoInput />
-        <div className={styles.hr}></div>
-        <MyBlogInfoInput />
-        <ConfirmButton type="blogSetting" />
+        <MyInfoPage />
       </div>
     ),
   },
@@ -32,7 +26,6 @@ export const blogTabs = [
       <div>
         <CategoryLayout />
         <CategoryCntSetting />
-        <ConfirmButton type="categorySetting" />
       </div>
     ),
   },
@@ -41,7 +34,6 @@ export const blogTabs = [
     Component: (
       <div>
         <PageLayout />
-        <ConfirmButton type="categorySetting" />
       </div>
     ),
   },
@@ -54,7 +46,6 @@ export const layoutTabs = [
       <div>
         <LayoutSelector />
         <LayoutSample />
-        <ConfirmButton type="layoutSetting" />
       </div>
     ),
   },

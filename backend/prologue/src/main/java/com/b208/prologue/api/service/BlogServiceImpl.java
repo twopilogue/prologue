@@ -12,8 +12,6 @@ import reactor.core.publisher.Mono;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -21,28 +19,9 @@ public class BlogServiceImpl implements BlogService {
 
     private final WebClient webClient;
     private final Base64Converter base64Converter;
-    private final CommonService commonService;
-    static private List<TreeRequest> treeRequestList;
 
     @Override
-    public void createRepository(String encodedAccessToken, String githubId) throws Exception {
-
-        CreateRepositoryRequest createRepositoryRequest = new CreateRepositoryRequest(githubId + ".github.io");
-
-        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
-
-        webClient.post()
-                .uri("/user/repos")
-                .headers(h -> h.setBearerAuth(accessToken))
-                .body(Mono.just(createRepositoryRequest), CreateRepositoryRequest.class)
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
-    }
-
-    @Override
-    public void updateDeployBranch(String encodedAccessToken, String githubId) throws Exception{
+    public void updateDeployBranch(String encodedAccessToken, String githubId) throws Exception {
 
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
@@ -91,49 +70,29 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public void selectTemplate(String encodedAccessToken, String githubId, int templateNumber) throws Exception {
+    public void selectTemplate(String encodedAccessToken, String githubId, String template) throws Exception {
+
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
-        treeRequestList = new ArrayList<>();
-        searchTemplate(accessToken, githubId, "");
-        commonService.multiFileCommit(accessToken, githubId, treeRequestList, "template upload");
-    }
 
-    public void searchTemplate(String accessToken, String githubId, String path) {
-        GetTemplateFileResponse[] templateFileList = webClient.get()
-                .uri("/repos/" + githubId + "/gatsby-starter-blog/contents/" + path)
+        CreateRepositoryRequest createRepositoryRequest = new CreateRepositoryRequest(githubId + ".github.io");
+        webClient.post()
+                .uri("/repos/team-epilogue/" + template + "/generate")
                 .accept(MediaType.APPLICATION_JSON)
                 .headers(h -> h.setBearerAuth(accessToken))
+                .body(Mono.just(createRepositoryRequest), CreateRepositoryRequest.class)
                 .retrieve()
-                .bodyToMono(GetTemplateFileResponse[].class).block();
-        for (GetTemplateFileResponse getTemplateFileResponse : templateFileList) {
-            if (getTemplateFileResponse.getType().equals("file")) {
-                getFileContent(accessToken, githubId, getTemplateFileResponse.getPath());
-            } else {
-                searchTemplate(accessToken, githubId, getTemplateFileResponse.getPath());
-            }
-        }
-    }
-
-    public void getFileContent(String accessToken, String githubId, String path) {
-        GetFileContentResponse getFileContentResponse = webClient.get()
-                .uri("/repos/" + githubId + "/gatsby-starter-blog/contents/" + path)
-                .accept(MediaType.APPLICATION_JSON)
-                .headers(h -> h.setBearerAuth(accessToken))
-                .retrieve()
-                .bodyToMono(GetFileContentResponse.class).block();
-        String content = commonService.makeBlob(accessToken, githubId, getFileContentResponse.getContent());
-        treeRequestList.add(new TreeRequest(path, "100644", "blob", content));
+                .bodyToMono(String.class).block();
     }
 
     @Override
-    public void createWorkflow(String encodedAccessToken, String githubId) throws Exception{
+    public void createWorkflow(String encodedAccessToken, String githubId) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
         ClassPathResource resource = new ClassPathResource("deploy.yaml");
         BufferedReader br = new BufferedReader(new InputStreamReader(resource.getInputStream()));
         StringBuilder sb = new StringBuilder();
         String nullString = "";
-        while((nullString = br.readLine()) != null){
+        while ((nullString = br.readLine()) != null) {
             sb.append(nullString).append("\n");
         }
         String workflow = base64Converter.encode(sb.toString());
