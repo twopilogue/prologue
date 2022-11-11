@@ -13,6 +13,7 @@ import {
   selectComponentLayoutList,
   setCategoryLayoutList,
   setComponentLayoutList,
+  selectColors,
 } from "slices/settingSlice";
 import ComponentSelector from "../layout/ComponentSelector";
 import styles from "../Setting.module.css";
