@@ -46,7 +46,7 @@ public class PostServiceImpl implements PostService {
                 .retrieve()
                 .bodyToMono(PostGetListResponse[].class).block();
 
-        for (int i = (list.length - 1) - (6 * page); i >= (list.length - 1) - (6 * (page+1)); i--) {
+        for (int i = (list.length - 1) - (6 * page); i > (list.length - 1) - (6 * (page+1)); i--) {
             if(i < 0){
                 break;
             }
@@ -118,6 +118,7 @@ public class PostServiceImpl implements PostService {
                     }
                 }
 
+                if(tempContent.length < 3) continue;
                 postRequests.get(i).setContent(tempContent[2]);
             }else {
                 postRequests.get(i).setContent(temp.get(i));

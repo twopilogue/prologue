@@ -10,25 +10,28 @@ import { myInfoProps } from "pages/MyInfoPage";
 interface Props {
   myInfo: myInfoProps;
   setMyInfo: Dispatch<SetStateAction<myInfoProps>>;
+  setNewPic: Dispatch<SetStateAction<Blob>>;
 }
 
-const MemberInfoInput = ({ myInfo, setMyInfo }: Props) => {
+const MemberInfoInput = ({ myInfo, setMyInfo, setNewPic }: Props) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [imgPreview, setImgPreview] = useState(null);
+  const formData = new FormData();
 
-  const onUploadImage = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const onUploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("전 ", myInfo);
     if (!e.target.files) {
       return;
     }
-    console.log(e.target.files[0].name);
+    console.log(typeof e.target.files[0]);
+    setNewPic(e.target.files[0]);
 
     const reader = new FileReader();
     reader.readAsDataURL(e.target.files[0]);
-    console.log(reader);
     reader.onloadend = () => {
       setImgPreview(reader.result);
     };
-  }, []);
+  };
 
   const handleImageUpload = useCallback(() => {
     if (!inputRef.current) return;
