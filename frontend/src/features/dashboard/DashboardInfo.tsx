@@ -15,11 +15,9 @@ function DashboardInfo() {
   const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
   const [info, setInfo] = useState({
     postNum: "",
-    visitNum: "",
     bildTime: {
       year: "",
       day: "",
-      time: "",
     },
     volume: "",
   });
@@ -33,20 +31,20 @@ function DashboardInfo() {
       .all([
         Axios.get(api.dashboard.getNewBuildTime(accessToken, githubId)),
         Axios.get(api.dashboard.getRepoSize(accessToken, githubId)),
+        Axios.get(api.dashboard.getTotalPost(accessToken, githubId)),
       ])
       .then(
-        axios.spread((res1, res2) => {
+        axios.spread((res1, res2, res3) => {
           const value = res1.data.latestBuildTime;
           setInfo({
             ...info,
             bildTime: {
               year: moment(value).format("YYYY"),
-              day: moment(value).format("MM/DD"),
-              time: moment(value).format("HH:SS"),
+              day: moment(value).format("MM/DD HH:SS"),
             },
             volume: res2.data.size,
+            postNum: res3.data.total,
           });
-          console.log("사용량", res2.data);
         }),
       );
   }
@@ -55,35 +53,16 @@ function DashboardInfo() {
     <div className={`${styles.container} ${styles.info}`}>
       <div className={styles.infoOne}>
         <div>
-          <div className={styles.infoGroup}>
-            <div>
+          <div className={styles.infoGrid}>
+            <div className={styles.infoGird_item}>
               <div className={`${styles.flexColumn} ${styles.infoTitle}`}>
                 <Text value="게시글 수" bold />
               </div>
               <div className={styles.infoValue}>
-                <Text value={String(7)} type="pageTitle" bold />
+                <Text value={info.postNum} type="pageTitle" bold />
               </div>
             </div>
-            <div>
-              <div className={`${styles.flexColumn} ${styles.infoTitle}`}>
-                <Text value="방문자 수" bold />
-              </div>
-              <div className={styles.infoValue}>
-                <Text value={String(21)} type="pageTitle" bold />
-              </div>
-            </div>
-            <div>
-              <div className={`${styles.flexColumn} ${styles.infoTitle}`}>
-                <Text value="마지막 빌드 시간" bold />
-              </div>
-              <div className={`${styles.infoValue}`}>
-                <Stack>
-                  <Text value={info.bildTime.year} type="text" bold />
-                  <Text value={info.bildTime.day} type="pageTitle" bold />
-                </Stack>
-              </div>
-            </div>
-            <div>
+            <div className={styles.infoGird_item}>
               <div className={`${styles.infoTitle} ${styles.infoVolume}`}>
                 <Text value="사용량" bold />
                 <Tooltip title="깃허브 블로그는 최대 1GB를 넘을 수 없습니다" placement="top-start" arrow>
@@ -91,8 +70,23 @@ function DashboardInfo() {
                 </Tooltip>
               </div>
               <div className={styles.infoValue}>
-                <Text value={info.volume} type="pageTitle" bold />
-                <Text value={"MB"} type="groupTitle" bold />
+                <span>
+                  <Text value={info.volume} type="pageTitle" bold />
+                  <Text value={"MB"} type="caption" bold />
+                </span>
+              </div>
+            </div>
+            <div className={styles.infoGird_item}>
+              <div className={`${styles.flexColumn} ${styles.infoTitle}`}>
+                <Text value="마지막 빌드 시간" bold />
+              </div>
+              <div className={`${styles.infoValue}`}>
+                <Stack>
+                  <Text value={info.bildTime.year} type="text" bold />
+                  <div>
+                    <Text value={info.bildTime.day} type="pageTitle" bold />
+                  </div>
+                </Stack>
               </div>
             </div>
           </div>
