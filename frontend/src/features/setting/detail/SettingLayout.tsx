@@ -4,31 +4,27 @@ import { Layout } from "react-grid-layout";
 import GridLayout from "react-grid-layout";
 import { useAppSelector } from "app/hooks";
 import {
+  colorsConfig,
   ComponentCheckConfig,
   ComponentConfig,
   KeyConfig,
   selectCheckList,
+  selectColors,
   selectComponentLayoutList,
   selectComponentList,
 } from "slices/settingSlice";
 import { useGettingWidth } from "../layout/LayoutSample";
 import Text from "components/Text";
 import DragHandleIcon from "@mui/icons-material/DragHandle";
-import { colorsConfig } from "../detail/DetailSetting";
 
 // 세부 레이아웃 설정 컴포넌트
 
-interface Props {
-  colors: colorsConfig;
-  // setColors: Dispatch<SetStateAction<colorsConfig>>;
-}
-
-const SettingLayout = ({ colors }: Props) => {
+const SettingLayout = () => {
   const [componentLayoutList, setComponentLayoutList] = useState<Layout[]>(useAppSelector(selectComponentLayoutList));
   const [componentList, setComponentList] = useState<ComponentConfig[]>(useAppSelector(selectComponentList));
   const [checkList, setCheckList] = useState<ComponentCheckConfig>(useAppSelector(selectCheckList));
   const [layoutWidth, layoutContainer] = useGettingWidth();
-
+  const colors: colorsConfig = useAppSelector(selectColors);
   const colorRef = useRef();
 
   useEffect(() => {
@@ -44,12 +40,6 @@ const SettingLayout = ({ colors }: Props) => {
     setComponentLayoutList(tmpLayoutList);
     console.log(colorRef.current);
   }, []);
-
-  // useEffect(() => {
-  //   if (colorRef.current) {
-  //     colorRef.current.style.backgroundColor = "red";
-  //   }
-  // });
 
   return (
     <div>

@@ -4,46 +4,10 @@ import DetailSelector from "./DetailSelector";
 import LayoutSample from "../layout/LayoutSample";
 import styles from "../Setting.module.css";
 import SettingLayout from "./SettingLayout";
-
-export interface colorsConfig {
-  title: {
-    background: string;
-    text: string;
-  };
-  category: {
-    background: string;
-    text: string;
-  };
-  page: {
-    background: string;
-    text: string;
-  };
-  profile: {
-    background: string;
-    text: string;
-  };
-}
+import { useAppSelector } from "app/hooks";
+import { selectColors } from "slices/settingSlice";
 
 const DetailSetting = () => {
-  const [colors, setColors] = useState<colorsConfig>({
-    title: {
-      background: "#d3d3eb",
-      text: "darkgray",
-    },
-    category: {
-      background: "#d3d3eb",
-      text: "darkgray",
-    },
-    page: {
-      background: "#d3d3eb",
-      text: "darkgray",
-    },
-    profile: {
-      background: "#d3d3eb",
-      text: "darkgray",
-    },
-  });
-
   return (
     <div>
       <div className={styles.textPadding} style={{ paddingBottom: "10px" }}>
@@ -53,8 +17,8 @@ const DetailSetting = () => {
         <Text value="레이아웃에 원하는 디자인을 선택하여 적용하세요." type="caption" />
       </div>
       <div className={styles.layoutSelectContainer}>
-        <DetailSelector colors={colors} setColors={setColors} />
-        <SettingLayout colors={colors} />
+        <DetailSelector />
+        <SettingLayout />
       </div>
     </div>
   );
