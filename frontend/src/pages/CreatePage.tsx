@@ -10,9 +10,8 @@ import api from "api/Api";
 import { useDispatch, useSelector } from "react-redux";
 import { rootState } from "app/store";
 import { authActions } from "slices/authSlice";
-import axios from "axios";
 
-const LandingPage = () => {
+const CreatePage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -22,56 +21,83 @@ const LandingPage = () => {
   const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
 
   const createRepo = () => {
-    Axios.post(api.blog.setRepo(accessToken, githubId));
+    // Axios.post(api.blog.setRepo(accessToken, githubId));
     setStepNumber(1);
   };
-  const layoutSetting = () => {
+
+  const layoutSetting = async () => {
     console.log(radioValue);
     if (radioValue === "CustomLayout") {
-      Axios.put(api.auth.setAuthFile(), {
-        accessToken: accessToken,
-        githubId: githubId,
-        blogType: 0,
-      }).then((res) => {
-        dispatch(authActions.blogType({ blogType: res.data.blogType }));
-        Axios.post(api.blog.chooseTemplate(), {
-          accessToken: accessToken,
-          githubId: githubId,
-          template: "prologue-template",
-        }).then((res) => {
-          console.log("기본테마 적용", res.data);
-          // setStepNumber(2);
-          navigate("/create/custom");
-          distributeRepo();
-        });
-      });
+      dispatch(authActions.blogType({ blogType: 0 }));
+      chooseTemplate();
     } else if (radioValue === "GatsbyLayout") {
-      Axios.put(api.auth.setAuthFile(), {
-        accessToken: accessToken,
-        githubId: githubId,
-        blogType: 1,
-      }).then((res) => {
-        dispatch(authActions.blogType({ blogType: res.data.blogType }));
-        navigate("/create/gatsby");
-      });
+      dispatch(authActions.blogType({ blogType: 1 }));
+      navigate("/create/gatsby");
     }
   };
 
-  async function distributeRepo() {
-    axios
-      .all([
-        Axios.put(api.blog.changeBranch(accessToken, githubId)),
-        Axios.post(api.blog.setGitWorkflow(accessToken, githubId)),
-        Axios.put(api.auth.setSecretRepo(accessToken, githubId)),
-      ])
-      .then(
-        axios.spread((res1, res2, res3) => {
-          console.log("배포 브랜치 변경", res1.data);
-          console.log("Repo secrets 생성", res2.data);
-          console.log("Workflow 생성", res3.data);
-        }),
-      );
-  }
+  const chooseTemplate = async () => {
+    await Axios.post(api.blog.chooseTemplate(), {
+      accessToken: accessToken,
+      githubId: githubId,
+      template: "prologue-template",
+    })
+      .then(async (res) => {
+        console.log("기본 테마적용 성공", res.data);
+        setTimeout(() => [setAuthFile()], 500);
+      })
+      .catch((err) => {
+        console.error("기본 테마적용 err", err);
+      });
+  };
+
+  const setAuthFile = async () => {
+    await Axios.put(api.auth.setAuthFile(), {
+      accessToken: accessToken,
+      githubId: githubId,
+      blogType: 0,
+    })
+      .then((res) => {
+        console.log("블로그 인증 파일 생성", res.data);
+        setTimeout(() => [changeBranch()], 500);
+      })
+      .catch((err) => {
+        console.error("블로그 인증 파일 생성", err);
+      });
+  };
+
+  const changeBranch = async () => {
+    await Axios.put(api.blog.changeBranch(accessToken, githubId))
+      .then(async (res) => {
+        console.log("1. 배포 브랜치 변경", res);
+        setSecretRepo();
+      })
+      .catch((err) => {
+        console.error("1. 배포 브랜치 변경", err.data);
+      });
+  };
+
+  const setSecretRepo = async () => {
+    await Axios.put(api.auth.setSecretRepo(accessToken, githubId))
+      .then((res) => {
+        console.log("2. Repo secrets 생성", res.data);
+        setGitWorkflow();
+      })
+      .catch((err) => {
+        console.error("2. Repo secrets 생성", err);
+      });
+  };
+
+  const setGitWorkflow = async () => {
+    await Axios.post(api.blog.setGitWorkflow(accessToken, githubId))
+      .then((res) => {
+        console.log("3. Workflow 생성", res.data);
+        setStepNumber(2);
+      })
+      .catch((err) => {
+        console.error("3. Workflow 생성", err);
+      });
+  };
 
   return (
     <div style={{ paddingTop: "5%" }}>
@@ -98,4 +124,4 @@ const LandingPage = () => {
   );
 };
 
-export default LandingPage;
+export default CreatePage;
