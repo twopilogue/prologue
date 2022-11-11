@@ -368,4 +368,17 @@ public class SettingServiceImpl implements SettingService {
                 .bodyToMono(String.class)
                 .block();
     }
+
+    @Override
+    public String getBlogLayoutCss(String encodedAccessToken, String githubId) throws Exception {
+        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
+
+        GetRepoContentResponse getRepoContentResponse = commonService.getDetailContent(accessToken, githubId, "src/style.css");
+        String content = base64Converter.decode(getRepoContentResponse.getContent().replace("\n", ""));
+
+        int targetIndex = content.lastIndexOf("CustomCSS");
+        targetIndex = content.indexOf("/", targetIndex);
+
+        return content.substring(targetIndex + 1);
+    }
 }

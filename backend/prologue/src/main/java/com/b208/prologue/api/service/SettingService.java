@@ -15,4 +15,5 @@ public interface SettingService {
     void updateBlogPages(String encodedAccessToken, String githubId, List<Map<String,String>> pages) throws Exception;
     String getBlogLayout(String encodedAccessToken, String githubId) throws Exception;
     void updateBlogLayout(String encodedAccessToken, String githubId, String layout) throws Exception;
+    String getBlogLayoutCss(String encodedAccessToken, String githubId) throws Exception;
 }
