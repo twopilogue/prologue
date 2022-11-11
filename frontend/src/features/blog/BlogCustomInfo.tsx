@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Avatar, Button, Paper, Stack, styled } from "@mui/material";
+import React, { useRef, useState } from "react";
+import { Avatar, Paper, Stack } from "@mui/material";
 import ButtonCoustom from "components/Button";
 import ModeIcon from "@mui/icons-material/Mode";
 import Input from "components/Input";
@@ -9,7 +9,7 @@ import BlogDashboardMoveModal from "./BlogDashboardMoveModal";
 import api from "api/Api";
 import { useSelector } from "react-redux";
 import { rootState } from "app/store";
-import axios from "axios";
+import Axios from "api/MultipartAxios";
 
 function BlogCustomInfo() {
   const { githubId, accessToken } = useSelector((state: rootState) => state.auth);
@@ -44,10 +44,7 @@ function BlogCustomInfo() {
     formData.append("modifyBlogSettingRequest", new Blob([JSON.stringify(sorry)], { type: "application/json" }));
     formData.append("imageFile", isInfo.profile_image);
     //axois 보내기
-    await axios
-      .put(api.setting.modifyBlog(), formData, {
-        headers: { "Content-Type": `multipart/form-data` },
-      })
+    await Axios.put(api.setting.modifyBlog(), formData)
       .then((res) => {
         console.log("블로그 정보 데이터 보내기", res.data);
         openSuccessModal(true);
