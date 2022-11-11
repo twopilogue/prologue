@@ -15,6 +15,7 @@ function GatsbyLayoutCard(props: { setChoiceTheme: (arg0: string) => void }) {
   const layouts = [
     {
       idx: 1,
+      repo: "gatsby-starter-minimal-blog",
       img: gatsbyStarterMinimalBlog,
       title: "gatsby-starter-minimal-blog",
       production: "LekoArts",
@@ -22,6 +23,7 @@ function GatsbyLayoutCard(props: { setChoiceTheme: (arg0: string) => void }) {
     },
     {
       idx: 2,
+      repo: "gatsby-starter-foundation",
       img: foundation,
       title: "gatsby-starter-foundation",
       production: "stackrole",
@@ -29,6 +31,7 @@ function GatsbyLayoutCard(props: { setChoiceTheme: (arg0: string) => void }) {
     },
     {
       idx: 3,
+      repo:"gatsby-starter-blog",
       img: gatsbyStarterBlog,
       title: "Gatsby-Starter-Blog",
       production: "gatsbyjs",
@@ -36,6 +39,7 @@ function GatsbyLayoutCard(props: { setChoiceTheme: (arg0: string) => void }) {
     },
     {
       idx: 4,
+      repo: "gatsby-theme-serial-programmer",
       img: serialProgrammer,
       title: "Serial Programmer",
       production: "sharadcodes",
@@ -43,6 +47,7 @@ function GatsbyLayoutCard(props: { setChoiceTheme: (arg0: string) => void }) {
     },
     {
       idx: 5,
+      repo: "gatsby-netlifycms-starter-template",
       img: gatsbyNetlifycmsStarterTemplate,
       title: "gatsby-netlifycms-starter-template",
       production: "simarmannsingh",
@@ -50,6 +55,7 @@ function GatsbyLayoutCard(props: { setChoiceTheme: (arg0: string) => void }) {
     },
     {
       idx: 6,
+      repo: "gatsby-starter-netlify-cms",
       img: gatsbyStarterNetlifyCms,
       title: "gatsby-starter-netlify-cms",
       production: "netlify-templates",
@@ -57,6 +63,7 @@ function GatsbyLayoutCard(props: { setChoiceTheme: (arg0: string) => void }) {
     },
     {
       idx: 7,
+      repo: "gatsby-advanced-blog-system",
       img: gatsbyAdvancedBlogSystem,
       title: "Gatsby Advanced Blog System",
       production: "danilowoz",
@@ -64,6 +71,7 @@ function GatsbyLayoutCard(props: { setChoiceTheme: (arg0: string) => void }) {
     },
     {
       idx: 8,
+      repo: "gatsby-starter-glass",
       img: gatsbyStarterGlass,
       title: "Gatsby Starter Glass",
       production: "yinkakun",
@@ -94,11 +102,11 @@ function GatsbyLayoutCard(props: { setChoiceTheme: (arg0: string) => void }) {
       columns={{ xs: 4, sm: 8, md: 12 }}
       sx={{ px: 15 }}
     >
-      {layouts.map((layout) => (
-        <Grid item xs={2} sm={4} md={3} key={layout.idx}>
+      {layouts.map((layout, idx) => (
+        <Grid item xs={2} sm={4} md={3} key={idx}>
           <label>
             <input
-              {...controlProps(layout.title)}
+              {...controlProps(layout.repo)}
               style={{ visibility: "hidden" }}
             />
             <Box className={styles.GatsbyCardBox}>

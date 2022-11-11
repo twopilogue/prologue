@@ -59,7 +59,7 @@ const api: apiInterface = {
     getUri: () => HOST + AUTH + "uri",
     login: (code: string) => HOST + AUTH + "login?code=" + code,
     setSecretRepo: (accessToken: string, githubId: string) =>
-      HOST + AUTH + "secret?accessToken=" + accessToken + "&githubId=" + githubId,
+      HOST + AUTH + "secrets?accessToken=" + accessToken + "&githubId=" + githubId,
     getAuthFile: (accessToken: string, githubId: string) =>
       HOST + AUTH + "check?accessToken=" + accessToken + "&githubId=" + githubId,
     setAuthFile: () => HOST + AUTH + "check",
@@ -98,8 +98,8 @@ const api: apiInterface = {
     modifyBlog: () => HOST + SETTING + "blog",
     getLayout: () => HOST + SETTING + "layout",
     modifyLayout: () => HOST + SETTING + "layout",
-    getLayoutDetail: () => HOST + SETTING + "layout/detail",
-    modifyLayoutDetail: () => HOST + SETTING + "layout/detail",
+    getLayoutDetail: () => HOST + SETTING + "layout/css",
+    modifyLayoutDetail: () => HOST + SETTING + "layout/css",
     getPage: (accessToken: string, githubId: string) =>
       HOST + SETTING + "pages?accessToken=" + accessToken + "&githubId=" + githubId,
     modifyPage: () => HOST + SETTING + "pages",

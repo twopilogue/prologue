@@ -7,7 +7,6 @@ import com.b208.prologue.api.response.ImageResponse;
 import com.b208.prologue.api.response.PostListResponse;
 import com.b208.prologue.api.response.github.GetRepoContentResponse;
 import com.b208.prologue.api.service.PostService;
-import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -40,8 +39,7 @@ public class PostsController {
         try {
             Map<String, Object> result = postService.getList(accessToken, githubId, page);
 
-            List<Map<String, String>> images = postService.getListImagese(accessToken, githubId, (List<String>) result.get("directory"));
-            return ResponseEntity.status(200).body(PostListResponse.of(result, images, 200, "게시물 목록 조회 성공"));
+            return ResponseEntity.status(200).body(PostListResponse.of(result, 200, "게시물 목록 조회 성공"));
         } catch (Exception e) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "게시글 목록 조회에 실패하였습니다."));
         }
