@@ -4,14 +4,14 @@ import BlogLayoutSetting from "features/blog/blogCreate/BlogLayoutSetting";
 import BlogStepper from "features/blog/blogCreate/BlogStepper";
 import { Stack } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import BlogDashboardMoveModal from "features/blog/BlogDashboardMoveModal";
 import Axios from "api/JsonAxios";
 import api from "api/Api";
 import { useDispatch, useSelector } from "react-redux";
 import { rootState } from "app/store";
 import { authActions } from "slices/authSlice";
+import BlogCustomInfo from "features/blog/BlogCustomInfo";
 
-const LandingPage = () => {
+const CreatePage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -19,11 +19,6 @@ const LandingPage = () => {
   const [radioValue, setRadioValue] = React.useState("CustomLayout");
 
   const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
-
-  const createRepo = () => {
-    // Axios.post(api.blog.setRepo(accessToken, githubId));
-    setStepNumber(1);
-  };
 
   const layoutSetting = async () => {
     console.log(radioValue);
@@ -111,17 +106,17 @@ const LandingPage = () => {
         }}
       >
         {isStepNumber === 0 ? (
-          <BlogCreateBox onClick={createRepo} />
+          <BlogCreateBox onClick={() => setStepNumber(1)} />
         ) : isStepNumber === 1 ? (
           <Stack direction="column" justifyContent="center" alignItems="center" spacing={2}>
             <BlogLayoutSetting radioValue={radioValue} setValue={setRadioValue} onClick={layoutSetting} />
           </Stack>
         ) : (
-          <BlogDashboardMoveModal />
+          <BlogCustomInfo />
         )}
       </div>
     </div>
   );
 };
 
-export default LandingPage;
+export default CreatePage;
