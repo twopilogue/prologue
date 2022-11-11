@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "features/post/Post.module.css";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
@@ -8,22 +8,44 @@ import PostListCard from "./PostListCard";
 import PostListImgCard from "./PostListImgCard";
 import { Stack } from "@mui/system";
 import { useAppSelector } from "app/hooks";
-import { selectPostList } from "slices/postSlice";
+import { postListConfig, selectPostList } from "slices/postSlice";
 
 const PostList = () => {
   const [sort, setSort] = useState("");
-  const [postCardList, setPostCardList] = useState([]);
+  const [postCardList, setPostCardList] = useState<postListConfig[]>(useAppSelector(selectPostList));
 
   const postList = useAppSelector(selectPostList);
+
+  // const scrollBox = useRef(null);
+  // const [scrollY, setScrollY] = useState(0);
+  // const [scrollActive, setScrollActive] = useState(false);
 
   const handleChange = (event: SelectChangeEvent) => {
     setSort(event.target.value);
   };
 
+  // const logit = () => {
+  //   setScrollY(scrollBox.current.scrollTop);
+  //   if (scrollBox.current.scrollTop > 30) {
+  //     setScrollActive(true);
+  //   } else {
+  //     setScrollActive(false);
+  //   }
+  // };
+
   useEffect(() => {
-    setPostCardList(postList);
-    console.log(postCardList);
+    console.log("postList : ", postList);
   }, []);
+
+  // useEffect(() => {
+  //   const watchScroll = () => {
+  //     scrollBox.current.addEventListener("scroll", logit);
+  //   };
+  //   watchScroll();
+  //   return () => {
+  //     // scrollBox.current.removeEventListener('scroll', logit);
+  //   };
+  // });
 
   return (
     <div className={styles.postList}>
@@ -39,17 +61,21 @@ const PostList = () => {
           <GridViewOutlinedIcon />
         </Stack>
       </div>
-      {postCardList.map((value, key) => (
-        <div key={key}>
-          <PostListCard
-            title={value.title}
-            date={value.date}
-            tag={value.tag}
-            category={value.category}
-            content={value.content}
-          />
-        </div>
-      ))}
+
+      <div className={styles.postDataList}>
+        {postCardList.map((value, key) => (
+          <div key={key}>
+            <PostListCard
+              title={value.title}
+              date={value.date}
+              tag={value.tag}
+              category={value.category}
+              content={value.content}
+              imageUrl={value.imageUrl}
+            />
+          </div>
+        ))}
+      </div>
 
       {/* <PostListImgCard /> */}
     </div>

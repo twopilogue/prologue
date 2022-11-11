@@ -6,29 +6,47 @@ import TrendingUpOutlinedIcon from "@mui/icons-material/TrendingUpOutlined";
 import PostCategoryList from "features/post/PostCategoryList";
 import PostList from "features/post/PostList";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { rootState } from "app/store";
 import Axios from "api/JsonAxios";
 import api from "api/Api";
-import { setPostList } from "slices/postSlice";
+import { postListConfig, setPostList } from "slices/postSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { rootState } from "app/store";
 
 const PostManagementPage = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
 
-  useEffect(() => {
-    Axios.get(api.posts.getPostList(accessToken, githubId, 0))
+  const getPostList = async () => {
+    const tmpList: postListConfig[] = [];
+
+    await Axios.get(api.posts.getPostList(accessToken, githubId, 0))
       .then((res: any) => {
         console.log(res);
         for (let i = 0; i < res.data.result.Post.length; i++) {
-          dispatch(setPostList(res.data.result.Post[i]));
+          const post: postListConfig = {
+            title: res.data.result.Post[i].title,
+            date: res.data.result.Post[i].date,
+            content: res.data.result.Post[i].content,
+            category: res.data.result.Post[i].category,
+            tag: res.data.result.Post[i].tag,
+            directory: res.data.result.Post[i].directory,
+            imageUrl: res.data.result.Post[i].imgUrl,
+          };
+          tmpList.push(post);
+          console.log("저장할라 하는 post", post);
+          console.log("tmpList : ", tmpList);
         }
+        dispatch(setPostList(tmpList));
       })
       .catch((err: any) => {
         console.log(err);
       });
+  };
+
+  useEffect(() => {
+    getPostList();
   }, []);
 
   return (

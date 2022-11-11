@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { rootState } from "app/store";
 
-interface postListConfig {
+export interface postListConfig {
   title: string;
   date: string;
   content: string;
