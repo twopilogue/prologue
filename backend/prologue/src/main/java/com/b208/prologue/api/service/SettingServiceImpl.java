@@ -197,10 +197,8 @@ public class SettingServiceImpl implements SettingService {
     public String[] getBlogCategory(String encodedAccessToken, String githubId) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
-        String content = base64Converter.decode(commonService.getDetailContent(accessToken, githubId, "customizing-setting.json")
+        String content = base64Converter.decode(commonService.getDetailContent(accessToken, githubId, "src/util/customizing-setting.json")
                 .getContent().replace("\n", ""));
-        int index = content.indexOf('{');
-        content = content.substring(index);
 
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObj = (JSONObject) jsonParser.parse(content);
@@ -218,6 +216,7 @@ public class SettingServiceImpl implements SettingService {
     @Override
     public void updateBlogCategory(String encodedAccessToken, String githubId, List<String> category) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
+        String path = "src/util/customizing-setting.json";
 
         JSONArray jsonArray = new JSONArray();
         jsonArray.add("전체보기");
@@ -228,24 +227,19 @@ public class SettingServiceImpl implements SettingService {
             jsonArray.add(category.get(i));
         }
 
-        GetRepoContentResponse getRepoContentResponse = commonService.getDetailContent(accessToken, githubId, "customizing-setting.json");
+        GetRepoContentResponse getRepoContentResponse = commonService.getDetailContent(accessToken, githubId, path);
         String content = base64Converter.decode(getRepoContentResponse.getContent().replace("\n", ""));
         String sha = getRepoContentResponse.getSha();
-
-        int index = content.indexOf('{');
-        content = content.substring(index);
 
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObj = (JSONObject) jsonParser.parse(content);
         jsonObj.replace("category", jsonArray);
 
-        String jsonString = "customizing-setting=" + jsonObj;
-
         UpdateContentRequest updateContentRequest = new UpdateContentRequest(
-                "modify: 카테고리 설정", base64Converter.encode(jsonString), sha);
+                "modify: 카테고리 설정", base64Converter.encode(jsonObj.toString()), sha);
 
         webClient.put()
-                .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/customizing-setting.json")
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/"+path)
                 .headers(h -> h.setBearerAuth(accessToken))
                 .body(Mono.just(updateContentRequest), UpdateContentRequest.class)
                 .accept(MediaType.APPLICATION_JSON)
@@ -258,7 +252,7 @@ public class SettingServiceImpl implements SettingService {
     public JSONObject[] getBlogPages(String encodedAccessToken, String githubId) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
-        String content = base64Converter.decode(commonService.getDetailContent(accessToken, githubId, "customizing-setting.json")
+        String content = base64Converter.decode(commonService.getDetailContent(accessToken, githubId, "src/util/customizing-setting.json")
                 .getContent().replace("\n", ""));
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObj = (JSONObject) jsonParser.parse(content);
@@ -279,6 +273,7 @@ public class SettingServiceImpl implements SettingService {
         String commit = "modify: 페이지 목록 수정";
 
         String path = "content/pages/";
+        String settingPath = "src/util/customizing-setting.json";
         List<TreeRequest> treeRequestList = new ArrayList<>();
         List<TreeRequest> addedTreeRequestList = new ArrayList<>();
         String defaultContent = "페이지 내용 넣기";
@@ -330,7 +325,7 @@ public class SettingServiceImpl implements SettingService {
             treeRequestList.add(addedTreeRequestList.get(i));
         }
 
-        GetRepoContentResponse getRepoContentResponse = commonService.getDetailContent(accessToken, githubId, "customizing-setting.json");
+        GetRepoContentResponse getRepoContentResponse = commonService.getDetailContent(accessToken, githubId, settingPath);
         String content = base64Converter.decode(getRepoContentResponse.getContent().replace("\n", ""));
 
         JSONParser jsonParser = new JSONParser();
@@ -339,7 +334,7 @@ public class SettingServiceImpl implements SettingService {
         jsonObj.replace("pages", jsonArray);
 
         String encodedContent = commonService.makeBlob(accessToken, githubId, base64Converter.encode(jsonObj.toString()));
-        treeRequestList.add(new TreeRequest("customizing-setting.json", "100644", "blob", encodedContent));
+        treeRequestList.add(new TreeRequest(settingPath, "100644", "blob", encodedContent));
 
         commonService.multiFileCommit(accessToken, githubId, treeRequestList, commit);
 
