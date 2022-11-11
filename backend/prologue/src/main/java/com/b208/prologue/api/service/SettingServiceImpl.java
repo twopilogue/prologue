@@ -116,17 +116,43 @@ public class SettingServiceImpl implements SettingService {
         String tempLine[] = Line.split("social: \\{");
         st = new StringTokenizer(tempLine[1], "\n");
         int cnt = st.countTokens();
+
+        boolean githubFlag = social.containsKey("github");
+        boolean gmailFlag = social.containsKey("gmail");
+        boolean instagramFlag = social.containsKey("instagram");
+        boolean twitterFlag = social.containsKey("twitter");
+
         for (int i = 0; i < 4; i++) {
             String line = st.nextToken();
 
-            if (line.contains("github")) {
-                Line = Line.replace(line.substring(line.indexOf(":") + 2), "`" + social.get("github") + "`,");
-            } else if (line.contains("gmail")) {
-                Line = Line.replace(line.substring(line.indexOf(":") + 2), "`" + social.get("gmail") + "`,");
-            } else if (line.contains("instagram")) {
-                Line = Line.replace(line.substring(line.indexOf(":") + 2), "`" + social.get("instagram") + "`,");
-            } else if (line.contains("twitter")) {
-                Line = Line.replace(line.substring(line.indexOf(":") + 2), "`" + social.get("twitter") + "`,");
+            if(line.contains("github")) {
+                if (githubFlag){
+                    Line = Line.replace("github:" + line.substring(line.indexOf(":") + 1), "github: `" + social.get("github") + "`,");
+
+                }else {
+                    Line = Line.replace(line.substring(line.indexOf(":") + 2), "``,");
+                }
+            }
+            else if(line.contains("gmail")) {
+                if (gmailFlag){
+                    Line = Line.replace("gmail:" + line.substring(line.indexOf(":") + 1), "gmail: `" + social.get("gmail") + "`,");
+                }else {
+                    Line = Line.replace(line.substring(line.indexOf(":") + 2), "``,");
+                }
+            }
+            else if(line.contains("instagram")) {
+                if (instagramFlag){
+                    Line = Line.replace("instagram:" + line.substring(line.indexOf(":") + 1), "instagram: `" + social.get("instagram") + "`,");
+                }else {
+                    Line = Line.replace(line.substring(line.indexOf(":") + 2), "``,");
+                }
+            }
+            else if(line.contains("twitter")) {
+                if (twitterFlag){
+                    Line = Line.replace("twitter:" + line.substring(line.indexOf(":") + 1), "twitter: `" + social.get("twitter") + "`,");
+                }else {
+                    Line = Line.replace(line.substring(line.indexOf(":") + 2), "``,");
+                }
             }
         }
 
@@ -152,7 +178,7 @@ public class SettingServiceImpl implements SettingService {
                 }
             }
 
-            int idx = imageFile.getOriginalFilename().indexOf(".");
+            int idx = imageFile.getOriginalFilename().lastIndexOf(".");
             fileName = "profile-pic" + imageFile.getOriginalFilename().substring(idx);
 
             Line = Line.replace(modified.get("profileImg").get(0), "../src/images/" + fileName);
