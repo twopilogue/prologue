@@ -16,17 +16,18 @@ import GatsbyLayout from "pages/GatsbyLayoutPage";
 function App() {
   const location = useLocation();
 
+  const dashboardStyle = {
+    backgroundColor: "#F1F8FF",
+    height: "100vh",
+  };
+
+  const landingStyle = {
+    backgroundColor: "#F1F8FF",
+    height: "100vh",
+  };
+
   return (
-    <div
-      style={
-        location.pathname === "/dashboard"
-          ? {
-              backgroundColor: "#F1F8FF",
-              height: "100vh",
-            }
-          : {}
-      }
-    >
+    <div style={location.pathname === "/dashboard" ? dashboardStyle : location.pathname === "/" ? landingStyle : {}}>
       <Header />
       <div
         style={{
@@ -43,7 +44,6 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/setting" element={<SettingPage />} />
           <Route path="/layout" element={<SettingLayout />} />
-          <Route path="/laysample" element={<LayoutSample />} />
           <Route path="/post/*" element={<PostRouterPage />} />
 
           <Route path="/sample" element={<SamplePage />} />

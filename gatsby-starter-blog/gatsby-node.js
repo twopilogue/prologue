@@ -6,6 +6,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
 
   // Define a template for blog post
   const blogPost = path.resolve(`./src/templates/blog-post.js`)
+  const blogPage = path.resolve(`./src/templates/blog-page.js`)
 
   // Get all markdown blog posts sorted by date
   const result = await graphql(
@@ -19,6 +20,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
           nodes {
             id
             fields {
+              contentType
               slug
             }
           }
@@ -35,7 +37,15 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
     return
   }
 
-  const posts = result.data.allMarkdownRemark.nodes
+  const allMarkdownNodes = result.data.allMarkdownRemark.nodes
+
+  const posts = allMarkdownNodes.filter(
+    node => node.fields.contentType === `blog`
+  )
+
+  const pages = allMarkdownNodes.filter(
+    node => node.fields.contentType === `pages`
+  )
 
   // Create blog posts pages
   // But only if there's at least one markdown file found at "content/blog" (defined in gatsby-config.js)
@@ -58,7 +68,20 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
     })
   }
 
-  const categoryPosts = path.resolve("./src/components/category.js")
+  if (pages.length > 0) {
+    pages.forEach((page, index) => {
+      createPage({
+        path: page.fields.slug,
+        component: blogPage,
+        context: {
+          id: page.id,
+          slug: page.fields.slug,
+        },
+      })
+    })
+  }
+
+  const categoryPosts = path.resolve("./src/templates/category-posts.js")
   const categories = result.data.allMarkdownRemark.categoryList
   categories.forEach(category => {
     createPage({
@@ -73,13 +96,33 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
   const { createNodeField } = actions
 
   if (node.internal.type === `MarkdownRemark`) {
-    const value = createFilePath({ node, getNode })
-
-    createNodeField({
-      name: `slug`,
+    const relativeFilePath = createFilePath({
       node,
-      value,
+      getNode,
     })
+
+    const fileNode = getNode(node.parent)
+    createNodeField({
+      name: `contentType`,
+      node,
+      value: fileNode.sourceInstanceName,
+    })
+
+    if (fileNode.sourceInstanceName === "blog") {
+      createNodeField({
+        name: `slug`,
+        node,
+        value: `/blog${relativeFilePath}`,
+      })
+    }
+
+    if (fileNode.sourceInstanceName === "pages") {
+      createNodeField({
+        name: `slug`,
+        node,
+        value: relativeFilePath,
+      })
+    }
   }
 }
 

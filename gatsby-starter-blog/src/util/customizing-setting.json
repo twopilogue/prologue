@@ -1,0 +1,20 @@
+{
+  "pages": [
+    {
+      "label": "Posts",
+      "url": "/blog",
+      "isExternal": false
+    },
+    {
+      "label": "About",
+      "url": "/about/",
+      "isExternal": false
+    },
+    {
+      "label": "Contact",
+      "url": "/contact/",
+      "isExternal": false
+    }
+  ],
+  "category": ["전체보기", "Test1", "Test2", "Test3"]
+}

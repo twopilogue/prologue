@@ -25,18 +25,6 @@ public class ModifyBlogPagesRequest {
 
     @NotNull
     @ApiModelProperty(name = "설정한 페이지 목록", example = "페이지명", required = true)
-    List<String> pages;
-
-    @NotNull
-    @ApiModelProperty(name = "이름을 수정할 페이지 목록", example = "oldName=수정하기 전 페이지명, newName=수정한 후 페이지명", required = true)
-    List<Map<String,String>> modifiedPages;
-
-    @NotNull
-    @ApiModelProperty(name = "삭제할 페이지 목록", example = "삭제할 페이지명", required = true)
-    List<String> deletedPages;
-
-    @NotNull
-    @ApiModelProperty(name = "추가할 페이지 목록", example = "추가할 페이지명", required = true)
-    List<String> addedPages;
+    List<Map<String,String>> pages;
 
 }

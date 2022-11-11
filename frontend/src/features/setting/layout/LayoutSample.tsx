@@ -19,6 +19,7 @@ import styles from "../Setting.module.css";
 import "../../../../node_modules/react-grid-layout/css/styles.css";
 import Text from "components/Text";
 import DragHandleIcon from "@mui/icons-material/DragHandle";
+import ConfirmButton from "../ConfirmButton";
 
 export const useGettingWidth = () => {
   const [layoutWidth, setLayoutWidth] = useState(null);
@@ -26,8 +27,6 @@ export const useGettingWidth = () => {
   // ✅  useRef와 useEffect를 지우고 callback ref를 새로 작성
   const layoutContainer = useCallback((node: HTMLElement) => {
     if (node !== null) {
-      // setGridWidth(node);
-      console.log(node.offsetWidth);
       setLayoutWidth(node.offsetWidth);
     }
   }, []);
@@ -39,39 +38,39 @@ const LayoutSample = () => {
   const dispatch = useDispatch();
   const navigator = useNavigate();
 
-  const [componentLayoutList, SetComponentLayoutList] = useState<Layout[]>(useAppSelector(selectComponentLayoutList));
+  const [layoutList, setLayoutList] = useState<Layout[]>([
+    { i: "블로그 로고", x: 0, y: 0, w: 1, h: 2, isResizable: false },
+    { i: "프로필", x: 0, y: 2, w: 1, h: 3, isResizable: false },
+    { i: "카테고리", x: 0, y: 5, w: 1, h: 4, isResizable: false },
+    { i: "페이지", x: 1, y: 0, w: 4, h: 2, isResizable: false },
+
+    { i: "타이틀", x: 1, y: 2, w: 4, h: 5, static: true, isResizable: false },
+    { i: "글 목록", x: 1, y: 7, w: 4, h: 6, static: true, isResizable: false },
+  ]);
   const [componentList, setComponentList] = useState<ComponentConfig[]>(useAppSelector(selectComponentList));
   const [checkList, setCheckList] = useState<ComponentCheckConfig>(useAppSelector(selectCheckList));
 
   const [layoutWidth, layoutContainer] = useGettingWidth();
 
-  const saveLayouts = () => {
+  const handleLayoutChange = (layouts: any) => {
     const tmpLayoutList: Layout[] = [];
-    const layout = sessionStorage.getItem("grid-layout");
-    const layoutJson = JSON.parse(layout);
-    console.log("레이아웃: ", layoutJson);
-    const layoutLength = layoutJson.length;
-    for (let item = 0; item < layoutLength; item++) {
+    console.log(layouts);
+    // 변경된 레이아웃
+    for (let i = 0; i < layouts.length; i++) {
       const layout: Layout = {
-        i: layoutJson[item].i,
-        x: layoutJson[item].x,
-        y: layoutJson[item].y,
-        w: layoutJson[item].w,
-        h: layoutJson[item].h,
-        static: layoutJson[item].static,
-        isDraggable: layoutJson[item].isDraggable,
-        isResizable: layoutJson[item].isResizable,
+        i: layouts[i].i,
+        x: layouts[i].x,
+        y: layouts[i].y,
+        w: layouts[i].w,
+        h: layouts[i].h,
+        static: layouts[i].static,
+        isDraggable: layouts[i].isDraggable,
+        isResizable: layouts[i].isResizable,
       };
       tmpLayoutList.push(layout);
+      console.log("저장할라는거", layout);
     }
-    dispatch(setCategoryLayoutList(tmpLayoutList));
-    navigator("/layout");
-  };
-
-  const handleLayoutChange = (layouts: any) => {
-    console.log(componentLayoutList);
-    setComponentLayoutList(componentLayoutList);
-    dispatch(setComponentLayoutList(componentLayoutList));
+    dispatch(setComponentLayoutList(tmpLayoutList));
   };
 
   return (
@@ -95,7 +94,7 @@ const LayoutSample = () => {
           }}
         >
           <GridLayout
-            layout={componentLayoutList}
+            layout={layoutList}
             cols={6}
             rowHeight={30}
             width={layoutWidth - 10}
@@ -124,6 +123,7 @@ const LayoutSample = () => {
           </GridLayout>
         </div>
       </div>
+      <ConfirmButton type="layoutSetting" payload={{ checkList, layoutList }} />
     </div>
   );
 };

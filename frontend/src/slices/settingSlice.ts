@@ -33,6 +33,24 @@ interface LayoutConfig {
   componentList: ComponentConfig[];
 
   checkList: ComponentCheckConfig;
+
+  blogSettingInfo: blogInfoConfig;
+}
+
+export interface blogInfoConfig {
+  siteMetadata: {
+    author: {
+      name: string;
+      summary: string;
+    };
+    description: string;
+    siteUrl: string;
+    social: {
+      twitter: string;
+    };
+    title: string;
+  };
+  profileImg: string;
 }
 
 const initialState: LayoutConfig = {
@@ -44,15 +62,7 @@ const initialState: LayoutConfig = {
   pageList: [],
   pageCnt: 1,
 
-  componentLayoutList: [
-    { i: "블로그 로고", x: 0, y: 0, w: 1, h: 2, isResizable: false },
-    { i: "프로필", x: 0, y: 1, w: 1, h: 3, isResizable: false },
-    { i: "카테고리", x: 0, y: 2, w: 1, h: 4, isResizable: false },
-    { i: "페이지", x: 1, y: 0, w: 4, h: 2, isResizable: false },
-
-    { i: "타이틀", x: 1, y: 2, w: 4, h: 5, static: true, isResizable: false },
-    { i: "글 목록", x: 1, y: 7, w: 4, h: 6, static: true, isResizable: false },
-  ],
+  componentLayoutList: [],
   componentList: [
     { key: "블로그 로고", id: "logo" },
     { key: "프로필", id: "profile" },
@@ -69,6 +79,22 @@ const initialState: LayoutConfig = {
     page: true,
     title: true,
     contents: true,
+  },
+
+  blogSettingInfo: {
+    siteMetadata: {
+      author: {
+        name: "",
+        summary: "",
+      },
+      description: "",
+      siteUrl: "",
+      social: {
+        twitter: "",
+      },
+      title: "",
+    },
+    profileImg: "",
   },
 };
 
@@ -106,6 +132,10 @@ const settingSlice = createSlice({
     setCheckList: (state, { payload: { logo, category, profile, page, title, contents } }) => {
       state.checkList = { logo, category, profile, page, title, contents };
     },
+    setBlogSettingInfo: (state, { payload: { siteMetadata, profileImg } }) => {
+      state.blogSettingInfo.siteMetadata = siteMetadata;
+      state.blogSettingInfo.profileImg = profileImg;
+    },
   },
 });
 export const {
@@ -117,6 +147,7 @@ export const {
   setComponentList,
   setComponentLayoutList,
   setCheckList,
+  setBlogSettingInfo,
 } = settingSlice.actions;
 
 export const selectCategoryLayoutList = (state: rootState) => state.setting.categoryLayoutList;
@@ -131,6 +162,8 @@ export const selectComponentLayoutList = (state: rootState) => state.setting.com
 export const selectComponentList = (state: rootState) => state.setting.componentList;
 
 export const selectCheckList = (state: rootState) => state.setting.checkList;
+
+export const selectBlogSettingInfo = (state: rootState) => state.setting.blogSettingInfo;
 
 export default settingSlice.reducer;
 
