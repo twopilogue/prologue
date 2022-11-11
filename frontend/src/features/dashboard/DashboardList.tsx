@@ -9,11 +9,7 @@ import { Link } from "@mui/material";
 
 function DashboardList() {
   const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
-  const [newPost, setNewPost] = useState({
-    title: [],
-    date: [],
-    directory: [],
-  });
+  const [newPost, setNewPost] = useState([]);
 
   useEffect(() => {
     getNewPost();
@@ -21,44 +17,9 @@ function DashboardList() {
 
   async function getNewPost() {
     await Axios.get(api.dashboard.getNewPost(accessToken, githubId)).then((res) => {
-      console.log("최신글 받기", res.data);
-      setNewPost({
-        ...newPost,
-        title: res.data.title,
-        date: res.data.date,
-        directory: res.data.directory,
-      });
+      setNewPost(res.data.currentPosts);
     });
   }
-
-  const list = [
-    {
-      title: "New Beginnings",
-      date: "2015-05-28",
-      directory: "new-beginnings",
-    },
-    {
-      title: "My Second Post!",
-      date: "2015-05-06",
-      directory: "my-second-post",
-    },
-    {
-      title: "3D 프린터로 하루만에 집 짓기 (Apis Cor)",
-      date: "2022.11.21",
-    },
-    {
-      title: "객체 지향 4가지 특징과 5가지 원칙",
-      date: "2022.11.10",
-    },
-    {
-      title: "[일상] 크리스마스 준비, 트리만들기",
-      date: "2022.11.05",
-    },
-    {
-      title: "[JavaScript] 문자열 자르기 (substr, substring, slice)",
-      date: "2022.10.05",
-    },
-  ];
 
   const textLimit = (props: string) => {
     let title = props;
@@ -67,14 +28,14 @@ function DashboardList() {
   };
 
   return (
-    <div className={`${styles.container} ${styles.list}`}>
+    <div className={`${styles.newPostContainer} ${styles.list}`}>
       <div>
         <div>
           <div className={`${styles.flexRow} ${styles.listAll}`}>
             <Text value="최신글 보기" color="blue_5" bold />
             <Text value="전체보기" type="caption" />
           </div>
-          {list.map((value, index) => (
+          {newPost.map((value, index) => (
             <div className={`${styles.flexRow} ${styles.listOne}`} key={index}>
               <Link href={`https://${githubId}.github.io/${value.directory}`} underline="none" color="inherit">
                 <Text value={textLimit(value.title)} />
