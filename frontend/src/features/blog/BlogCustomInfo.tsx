@@ -1,12 +1,19 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Avatar, Button, Paper, Stack, styled } from "@mui/material";
 import ButtonCoustom from "components/Button";
 import ModeIcon from "@mui/icons-material/Mode";
 import Input from "components/Input";
 import Text from "components/Text";
 import styles from "features/blog/Blog.module.css";
+import BlogDashboardMoveModal from "./BlogDashboardMoveModal";
+import api from "api/Api";
+import { useSelector } from "react-redux";
+import { rootState } from "app/store";
+import axios from "axios";
 
 function BlogCustomInfo() {
+  const { githubId, accessToken } = useSelector((state: rootState) => state.auth);
+
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [isInfo, setInfo] = useState({
     profile_name: "",
@@ -15,36 +22,63 @@ function BlogCustomInfo() {
     blog_name: "",
     blog_summary: "",
   });
+  const [successModal, openSuccessModal] = useState(false);
 
-  const onClickNext = () => {
+  const onClickNext = async () => {
+    const formData = new FormData();
+    const modified = {
+      nickName: ["Kyle Mathews", isInfo.profile_name],
+      summary: ["who lives and works in San Francisco building useful things.", isInfo.profile_summary],
+      profileImg: ["../src/images/profile-pic.png", ""],
+      title: ["Gatsby Starter Blog", isInfo.blog_name],
+      description: ["A starter blog demonstrating what Gatsby can do.", isInfo.blog_summary],
+    };
+    const sorry = {
+      accessToken: accessToken,
+      githubId: githubId,
+      modified: modified,
+      social: {},
+    };
+    console.log("Json", sorry);
+
+    formData.append("modifyBlogSettingRequest", new Blob([JSON.stringify(sorry)], { type: "application/json" }));
+    formData.append("imageFile", isInfo.profile_image);
     //axois 보내기
+    await axios
+      .put(api.setting.modifyBlog(), formData, {
+        headers: { "Content-Type": `multipart/form-data` },
+      })
+      .then((res) => {
+        console.log("블로그 정보 데이터 보내기", res.data);
+        openSuccessModal(true);
+      })
+      .catch((err) => {
+        console.error("블로그 정보 데이터 보내기", err);
+      });
   };
 
   const profileOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInfo({ ...isInfo, [e.target.name]: e.target.value });
   };
 
-  const onUploadImage = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const onUploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) {
       return;
     }
-    console.log(e.target.files[0].name);
 
     const reader = new FileReader();
     reader.readAsDataURL(e.target.files[0]);
-    console.log(reader.result);
     reader.onloadend = () => {
       setInfo({
         ...isInfo,
         profile_image: reader.result,
       });
     };
-  }, []);
-
-  const handleImageUpload = useCallback(() => {
+  };
+  const handleImageUpload = () => {
     if (!inputRef.current) return;
     inputRef.current.click();
-  }, []);
+  };
 
   return (
     <Stack direction="column" alignItems="center" spacing={3}>
@@ -117,6 +151,7 @@ function BlogCustomInfo() {
         </Stack>
       </Paper>
       <ButtonCoustom label="Next" onClick={onClickNext} />
+      {successModal && <BlogDashboardMoveModal />}
     </Stack>
   );
 }

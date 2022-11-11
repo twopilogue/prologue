@@ -10,6 +10,7 @@ import api from "api/Api";
 import { useDispatch, useSelector } from "react-redux";
 import { rootState } from "app/store";
 import { authActions } from "slices/authSlice";
+import BlogCustomInfo from "features/blog/BlogCustomInfo";
 
 const CreatePage = () => {
   const dispatch = useDispatch();
@@ -117,7 +118,7 @@ const CreatePage = () => {
             <BlogLayoutSetting radioValue={radioValue} setValue={setRadioValue} onClick={layoutSetting} />
           </Stack>
         ) : (
-          <BlogDashboardMoveModal />
+          <BlogCustomInfo />
         )}
       </div>
     </div>
