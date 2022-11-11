@@ -178,7 +178,7 @@ public class SettingServiceImpl implements SettingService {
                 }
             }
 
-            int idx = imageFile.getOriginalFilename().indexOf(".");
+            int idx = imageFile.getOriginalFilename().lastIndexOf(".");
             fileName = "profile-pic" + imageFile.getOriginalFilename().substring(idx);
 
             Line = Line.replace(modified.get("profileImg").get(0), "../src/images/" + fileName);
