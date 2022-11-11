@@ -126,10 +126,17 @@ iframe {
   height: 90%;
 }
 
-.infoGroup {
+.infoGrid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  /* grid-template-columns: 1fr 1fr; */
+  grid-template-columns: repeat(auto-fit, minmax(45%, auto));
+  grid-template-rows: 1fr 1fr;
   gap: 12px;
+}
+
+.infoGird_item:nth-child(3) {
+  grid-column-start: 1;
+  grid-column-end: 3;
 }
 
 .infoTitle {
@@ -138,6 +145,7 @@ iframe {
   border-radius: 20px 20px 0px 0px;
   padding: 10px;
 }
+
 
 .infoVolume {
   display: flex;
