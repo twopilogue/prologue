@@ -11,7 +11,7 @@ const PostRouterPage = () => {
       <Routes>
         <Route path="/" element={<PostManagementPage />}></Route>
         <Route path="/write" element={<PostWritePage />}></Route>
-        <Route path="/edit" element={<PostEditPage />}></Route>
+        <Route path="/edit/:directory" element={<PostEditPage />}></Route>
       </Routes>
     </div>
   );

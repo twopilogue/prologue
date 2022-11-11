@@ -7,8 +7,13 @@ import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import PostWriteTitle from "../features/post/PostWriteTitle";
 import PostWriteContents from "../features/post/PostWriteContents";
+import { useSelector } from "react-redux";
+import { rootState } from "app/store";
 
-const PostEditPage = () => {
+const PostEditPage = ({ match }:string) => {
+  const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
+  const  directory  = { match.params.directory };
+
   return (
     <div className={styles.postWrite}>
       <div className={styles.textBox}>
