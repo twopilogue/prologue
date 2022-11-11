@@ -10,6 +10,7 @@ import SettingPage from "pages/SettingPage";
 import PostRouterPage from "pages/PostRouterPage";
 import BlogReset from "pages/BlogResetPage";
 import GatsbyLayout from "pages/GatsbyLayoutPage";
+import CustomLayoutPage from "pages/CustomLayoutPage";
 
 function App() {
   const location = useLocation();
@@ -38,6 +39,7 @@ function App() {
           <Route path="/" element={<Landing />} />
           <Route path="/create" element={<Create />} />
           <Route path="/create/reset" element={<BlogReset />} />
+          <Route path="/create/custom" element={<CustomLayoutPage />} />
           <Route path="/create/gatsby" element={<GatsbyLayout />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/setting" element={<SettingPage />} />
