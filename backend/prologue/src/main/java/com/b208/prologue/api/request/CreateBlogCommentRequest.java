@@ -6,14 +6,11 @@ import lombok.Data;
 import lombok.Getter;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import java.util.List;
-import java.util.Map;
 
 @Getter
 @Data
-@ApiModel("ModifyBlogSettingRequest")
-public class ModifyBlogSettingRequest {
+@ApiModel("CreateBlogCommentRequest")
+public class CreateBlogCommentRequest {
 
     @NotBlank
     @ApiModelProperty(name = "엑세스 토큰", example = "Qdsfhdf...", required = true)
@@ -23,12 +20,6 @@ public class ModifyBlogSettingRequest {
     @ApiModelProperty(name = "깃허브 아이디", example = "test1234", required = true)
     String githubId;
 
-    @NotNull
-    @ApiModelProperty(name = "수정된 내용", example = "수정된 내용", required = true)
-    Map<String, List<String>> modified;
-
-    @NotNull
-    @ApiModelProperty(name = "소셜", example = "소셜", required = true)
-    Map<String, String> social;
-
+    @ApiModelProperty(name = "레포", example = "testRepo/testRepo.github,io", required = true)
+    String repoName;
 }
