@@ -108,7 +108,7 @@ const MyInfoPage = () => {
     console.log(JSON.stringify(result));
     // formData.append("imgFile", new Blob([newPic], { type: "multipart/form-data" }));
 
-    formData.append("imgFile", newPic);
+    formData.append("imageFile", newPic);
     formData.append("modifyBlogSettingRequest", new Blob([JSON.stringify(result)], { type: "application/json" }));
 
     await axios
