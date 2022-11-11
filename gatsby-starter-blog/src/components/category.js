@@ -1,7 +1,7 @@
 import React from "react"
 import { StaticQuery, Link, graphql } from "gatsby"
 
-import setting from "/customizing-setting"
+import setting from "/src/util/customizing-setting"
 
 const CATEGORY_ITEM = setting.category
 
