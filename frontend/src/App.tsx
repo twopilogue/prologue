@@ -7,8 +7,6 @@ import Landing from "./pages/LandingPage";
 import Create from "./pages/CreatePage";
 import Dashboard from "./pages/DashboardPage";
 import SettingPage from "pages/SettingPage";
-import SettingLayout from "features/setting/SettingLayout";
-import LayoutSample from "features/setting/layout/LayoutSample";
 import PostRouterPage from "pages/PostRouterPage";
 import BlogReset from "pages/BlogResetPage";
 import GatsbyLayout from "pages/GatsbyLayoutPage";
@@ -43,7 +41,6 @@ function App() {
           <Route path="/create/gatsby" element={<GatsbyLayout />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/setting" element={<SettingPage />} />
-          <Route path="/layout" element={<SettingLayout />} />
           <Route path="/post/*" element={<PostRouterPage />} />
 
           <Route path="/sample" element={<SamplePage />} />
