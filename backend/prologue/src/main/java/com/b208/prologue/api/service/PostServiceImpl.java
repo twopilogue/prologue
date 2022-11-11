@@ -1,6 +1,5 @@
 package com.b208.prologue.api.service;
 
-import com.b208.prologue.api.request.DashBoardPostRequest;
 import com.b208.prologue.api.request.PostRequest;
 import com.b208.prologue.api.request.github.*;
 import com.b208.prologue.api.response.ImageResponse;
@@ -10,10 +9,13 @@ import com.b208.prologue.api.response.github.PostgetResponse;
 import com.b208.prologue.common.Base64Converter;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
@@ -46,13 +48,13 @@ public class PostServiceImpl implements PostService {
                 .retrieve()
                 .bodyToMono(PostGetListResponse[].class).block();
 
-        for (int i = (list.length - 1) - (6 * page); i > (list.length - 1) - (6 * (page+1)); i--) {
-            if(i < 0){
+        for (int i = (list.length - 1) - (6 * page); i > (list.length - 1) - (6 * (page + 1)); i--) {
+            if (i < 0) {
                 break;
             }
             PostRequest postRequest = new PostRequest();
 
-            if(isNumeric(list[i].getName()) == false && list[i].getName().length() != 13) {
+            if (isNumeric(list[i].getName()) == false && list[i].getName().length() != 13) {
                 String post = setItem(url, accessToken, list[i].getPath());
                 temp.add(post);
                 postRequest.setDirectory(list[i].getName());
@@ -62,10 +64,10 @@ public class PostServiceImpl implements PostService {
                 int cnt = st.countTokens();
 
                 boolean flag = false;
-                for(int j = 0; j < cnt; j++){
+                for (int j = 0; j < cnt; j++) {
                     String line = st.nextToken();
 
-                    if(line.contains("date")){
+                    if (line.contains("date")) {
                         flag = true;
 
                         String tempDate = line.substring(line.indexOf("\"") + 1);
@@ -76,51 +78,51 @@ public class PostServiceImpl implements PostService {
                         break;
                     }
                 }
-                if(flag == false){
+                if (flag == false) {
                     postRequest.setDate("No Date");
                 }
-            }else{
+            } else {
                 temp.add(setItem(url, accessToken, list[i].getPath()));
                 postRequest.setDirectory(list[i].getName());
                 postRequest.setImgUrl(getImage(accessToken, githubId, list[i].getName()));
 
                 Date tempDate = new Date(Long.parseLong(list[i].getName()));
-                SimpleDateFormat dateFormat = new SimpleDateFormat ("yyyy-MM-dd");
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
                 postRequest.setDate(String.valueOf(dateFormat.format(tempDate)));
             }
             postRequests.add(postRequest);
         }
 
-        for(int i = 0; i < temp.size(); i++){
-            if (temp.get(i).contains("---")){
+        for (int i = 0; i < temp.size(); i++) {
+            if (temp.get(i).contains("---")) {
                 String tempContent[] = temp.get(i).split("---\n");
 
                 StringTokenizer st = new StringTokenizer(tempContent[1], "\n");
                 int cnt = st.countTokens();
 
                 List<String> tag = new ArrayList<>();
-                for(int j = 0; j < cnt; j++){
+                for (int j = 0; j < cnt; j++) {
                     String line = st.nextToken();
-                    if(line.contains("title")){
+                    if (line.contains("title")) {
                         postRequests.get(i).setTitle(line.substring(line.indexOf(": ") + 1));
                     }
-                    if(line.contains("category")){
+                    if (line.contains("category")) {
                         postRequests.get(i).setCategory(line.substring(line.indexOf(": ") + 1));
                     }
-                    if(line.contains("tag")){
+                    if (line.contains("tag")) {
                         String tagLine = line.substring(line.indexOf(": ") + 1);
                         String[] tagArr = tagLine.split(",");
-                        for (String tagTemp:tagArr) {
+                        for (String tagTemp : tagArr) {
                             tag.add(tagTemp);
                         }
                         postRequests.get(i).setTag(tag);
                     }
                 }
 
-                if(tempContent.length < 3) continue;
+                if (tempContent.length < 3) continue;
                 postRequests.get(i).setContent(tempContent[2]);
-            }else {
+            } else {
                 postRequests.get(i).setContent(temp.get(i));
             }
         }
@@ -171,7 +173,7 @@ public class PostServiceImpl implements PostService {
             if (!responses[i].getName().equals("index.md")) {
                 imgUrl = responses[i].getUrl();
                 break;
-            }else{
+            } else {
                 continue;
             }
         }
@@ -261,7 +263,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void deleteDetailPost(String encodedAccessToken, String githubId, String directory) throws Exception{
+    public void deleteDetailPost(String encodedAccessToken, String githubId, String directory) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
         String commit = "remove: 게시글 삭제";
         String path = "content/blog/" + directory;
@@ -271,7 +273,7 @@ public class PostServiceImpl implements PostService {
         List<TreeRequest> treeRequestList = new ArrayList<>();
 
         for (int i = 0; i < responses.length; i++) {
-            treeRequestList.add(new TreeRequest(path+"/"+responses[i].getName(), "100644", "blob", null));
+            treeRequestList.add(new TreeRequest(path + "/" + responses[i].getName(), "100644", "blob", null));
         }
 
         commonService.multiFileCommit(accessToken, githubId, treeRequestList, commit);
@@ -296,6 +298,26 @@ public class PostServiceImpl implements PostService {
             }
         }
         return images;
+    }
+
+    @Override
+    public String tempImageUpload(String encodedAccessToken, String githubId, MultipartFile file) throws Exception {
+        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
+
+        String image = new String(Base64.encodeBase64(file.getBytes()));
+        UploadTempImageRequest uploadTempImageRequest = new UploadTempImageRequest("upload tempImage", "deploy", image);
+        String response = webClient.put()
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/tempImage/" + file.getOriginalFilename())
+                .headers(h -> h.setBearerAuth(accessToken))
+                .body(Mono.just(uploadTempImageRequest), UploadTempImageRequest.class)
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(String.class).block();
+
+        JSONParser jsonParser = new JSONParser();
+        JSONObject object = (JSONObject) jsonParser.parse(response);
+        JSONObject content = (JSONObject) object.get("content");
+        return (String) content.get("download_url");
     }
 
 }
