@@ -1,31 +1,44 @@
-import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import React, { Dispatch, MouseEventHandler, SetStateAction, useEffect, useRef, useState } from "react";
 import styles from "../Setting.module.css";
 import { Layout } from "react-grid-layout";
 import GridLayout from "react-grid-layout";
 import { useAppSelector } from "app/hooks";
 import {
   colorsConfig,
-  ComponentCheckConfig,
   ComponentConfig,
-  KeyConfig,
   selectCheckList,
   selectColors,
   selectComponentLayoutList,
   selectComponentList,
+  setClickedComp,
 } from "slices/settingSlice";
 import { useGettingWidth } from "../layout/LayoutSample";
 import Text from "components/Text";
-import DragHandleIcon from "@mui/icons-material/DragHandle";
+import { useDispatch } from "react-redux";
 
 // 세부 레이아웃 설정 컴포넌트
 
 const SettingLayout = () => {
   const [componentLayoutList, setComponentLayoutList] = useState<Layout[]>(useAppSelector(selectComponentLayoutList));
-  const [componentList, setComponentList] = useState<ComponentConfig[]>(useAppSelector(selectComponentList));
-  const [checkList, setCheckList] = useState<ComponentCheckConfig>(useAppSelector(selectCheckList));
+  const componentList = useAppSelector(selectComponentList);
+  const checkList = useAppSelector(selectCheckList);
   const [layoutWidth, layoutContainer] = useGettingWidth();
   const colors: colorsConfig = useAppSelector(selectColors);
-  const colorRef = useRef();
+
+  const dispatch = useDispatch();
+
+  const styleInfo: any = {
+    title: { backgroundColor: `${colors.title.background}`, color: `${colors.title.text}` },
+    page: { backgroundColor: `${colors.page.background}`, color: `${colors.page.text}` },
+    logo: { backgroundColor: `${colors.logo.background}`, color: `${colors.logo.text}` },
+    contents: { backgroundColor: `${colors.title.background}`, color: `${colors.title.text}` },
+    category: { backgroundColor: `${colors.category.background}`, color: `${colors.category.text}` },
+    profile: { backgroundColor: `${colors.profile.background}`, color: `${colors.profile.text}` },
+  };
+
+  const handleClick = (item: string) => {
+    dispatch(setClickedComp(item));
+  };
 
   useEffect(() => {
     const tmpLayoutList: Layout[] = [];
@@ -38,7 +51,11 @@ const SettingLayout = () => {
       });
     }
     setComponentLayoutList(tmpLayoutList);
-    console.log(colorRef.current);
+    
+    // 언마운트 시 실행
+    return () => {
+      dispatch(setClickedComp("logo"));
+    };
   }, []);
 
   return (
@@ -59,18 +76,9 @@ const SettingLayout = () => {
               return checkList[item.id] ? (
                 <div
                   className={styles.layout_nonColored}
-                  style={
-                    item.id === "title"
-                      ? { backgroundColor: `${colors.title.background}`, color: `${colors.title.text}` }
-                      : item.id === "category"
-                      ? { backgroundColor: `${colors.category.background}`, color: `${colors.category.text}` }
-                      : item.id === "page"
-                      ? { backgroundColor: `${colors.page.background}`, color: `${colors.page.text}` }
-                      : item.id === "profile"
-                      ? { backgroundColor: `${colors.profile.background}`, color: `${colors.profile.text}` }
-                      : { backgroundColor: "#d3d3eb" }
-                  }
+                  style={styleInfo[item.id]}
                   key={item.key}
+                  onClick={() => handleClick(item.id)}
                 >
                   <div style={{ marginTop: "15px" }}></div>
                   <div className={styles.innerText}>
