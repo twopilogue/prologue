@@ -20,25 +20,6 @@ export interface ComponentCheckConfig {
   contents: boolean;
 }
 
-export interface colorsConfig {
-  title: {
-    background: string;
-    text: string;
-  };
-  category: {
-    background: string;
-    text: string;
-  };
-  page: {
-    background: string;
-    text: string;
-  };
-  profile: {
-    background: string;
-    text: string;
-  };
-}
-
 export interface blogInfoConfig {
   siteMetadata: {
     author: {
@@ -53,6 +34,34 @@ export interface blogInfoConfig {
     title: string;
   };
   profileImg: string;
+}
+
+export interface colorsConfig {
+  title: {
+    background: string;
+    text: string;
+    titleHeight: number;
+  };
+  category: {
+    background: string;
+    text: string;
+  };
+  page: {
+    background: string;
+    text: string;
+  };
+  profile: {
+    background: string;
+    text: string;
+  };
+  contents: {
+    background: string;
+    text: string;
+  };
+  logo: {
+    background: string;
+    text: string;
+  };
 }
 
 interface LayoutConfig {
@@ -70,7 +79,10 @@ interface LayoutConfig {
   checkList: ComponentCheckConfig;
 
   blogSettingInfo: blogInfoConfig;
+
   colorList: colorsConfig;
+
+  clickedComp: string;
 }
 
 const initialState: LayoutConfig = {
@@ -121,6 +133,7 @@ const initialState: LayoutConfig = {
     title: {
       background: "#d3d3eb",
       text: "darkgray",
+      titleHeight: 0,
     },
     category: {
       background: "#d3d3eb",
@@ -134,7 +147,17 @@ const initialState: LayoutConfig = {
       background: "#d3d3eb",
       text: "darkgray",
     },
+    contents: {
+      background: "#d3d3eb",
+      text: "darkgray",
+    },
+    logo: {
+      background: "#d3d3eb",
+      text: "darkgray",
+    },
   },
+
+  clickedComp: "logo",
 };
 
 const settingSlice = createSlice({
@@ -178,6 +201,9 @@ const settingSlice = createSlice({
     setColors: (state, { payload }) => {
       state.colorList = payload;
     },
+    setClickedComp: (state, { payload }) => {
+      state.clickedComp = payload;
+    },
   },
 });
 export const {
@@ -191,6 +217,7 @@ export const {
   setCheckList,
   setBlogSettingInfo,
   setColors,
+  setClickedComp,
 } = settingSlice.actions;
 
 export const selectCategoryLayoutList = (state: rootState) => state.setting.categoryLayoutList;
@@ -209,6 +236,8 @@ export const selectCheckList = (state: rootState) => state.setting.checkList;
 export const selectBlogSettingInfo = (state: rootState) => state.setting.blogSettingInfo;
 
 export const selectColors = (state: rootState) => state.setting.colorList;
+
+export const selectClickedComp = (state: rootState) => state.setting.clickedComp;
 
 export default settingSlice.reducer;
 
