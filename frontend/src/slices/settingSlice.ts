@@ -86,7 +86,7 @@ interface LayoutConfig {
   clickedComp: string;
 }
 
-const initialState: LayoutConfig = {
+export const initialState: LayoutConfig = {
   categoryLayoutList: [],
   categoryList: [],
   categoryCnt: 1,
