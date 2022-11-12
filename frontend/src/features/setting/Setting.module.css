@@ -328,6 +328,14 @@
   height: 30px;
   margin-right: 10px;
 }
+
+/* 페이지 설정 */
+.pageOrder {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+}
+
 .detailItemThree {
   display: grid;
   grid-template-columns: 40px 10vw 30px;
