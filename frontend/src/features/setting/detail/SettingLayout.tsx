@@ -1,4 +1,4 @@
-import React, { Dispatch, MouseEventHandler, SetStateAction, useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "../Setting.module.css";
 import { Layout } from "react-grid-layout";
 import GridLayout from "react-grid-layout";
@@ -44,14 +44,13 @@ const SettingLayout = () => {
     const tmpLayoutList: Layout[] = [];
     const layoutLength = componentLayoutList.length;
     for (let i = 0; i < layoutLength; i++) {
-      console.log(componentLayoutList[i]);
       tmpLayoutList.push({
         ...componentLayoutList[i],
         static: true,
       });
     }
     setComponentLayoutList(tmpLayoutList);
-    
+
     // 언마운트 시 실행
     return () => {
       dispatch(setClickedComp("logo"));
