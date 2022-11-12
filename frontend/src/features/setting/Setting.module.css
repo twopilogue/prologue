@@ -291,8 +291,20 @@
   flex-direction: column;
 }
 
+.detailContainer {
+  padding: 0 0 10px 0;
+}
+
 .detailItem {
   margin: 10px;
+}
+
+.detailHr {
+  width: 100%;
+  height: 0.05rem;
+  background-color: lightgray;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 /* 링크 css  */

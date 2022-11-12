@@ -20,13 +20,15 @@ const CategorySetting = () => {
       <div className={styles.checkListTitle}>
         <Text value="카테고리" type="text" bold />
       </div>
-      <div className={styles.detailItem}>
-        <RadioButton label="색상 설정" value="color" checked />
-        <div>
-          <SketchPicker
-            color={colors.category.background}
-            onChangeComplete={(color) => handleChangeComplete(color.hex)}
-          />
+      <div className={styles.detailContainer}>
+        <div className={styles.detailItem}>
+          <RadioButton label="색상 설정" value="color" checked />
+          <div>
+            <SketchPicker
+              color={colors.category.background}
+              onChangeComplete={(color) => handleChangeComplete(color.hex)}
+            />
+          </div>
         </div>
       </div>
     </div>

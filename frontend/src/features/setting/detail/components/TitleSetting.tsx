@@ -52,7 +52,7 @@ const TitleSetting = ({ titleImg, setTitleImg }: TitleSettingProps) => {
       <div className={styles.checkListTitle}>
         <Text value="타이틀" type="text" bold />
       </div>
-      <div className={styles.detailContents}>
+      <div className={styles.detailContainer}>
         <div className={styles.detailItem}>
           <div className={styles.detailItemThree}>
             <div style={{ textAlign: "center" }}>
@@ -75,6 +75,7 @@ const TitleSetting = ({ titleImg, setTitleImg }: TitleSettingProps) => {
             <Text value="미리보기가 제공되지 않습니다." type="caption" color="dark_gray" />
           </div>
         </div>
+        <div className={styles.detailHr} />
         <div className={styles.detailItem}>
           <RadioGroup value={radioValue} onChange={radioChange}>
             <RadioButton label="색상 설정" value="titleColor" />
@@ -86,6 +87,7 @@ const TitleSetting = ({ titleImg, setTitleImg }: TitleSettingProps) => {
             />
           </div>
         </div>
+        <div className={styles.detailHr} />
         <div className={styles.detailItem}>
           <RadioGroup value={radioValue} onChange={radioChange}>
             <RadioButton label="이미지 설정" value="titleImg" />
