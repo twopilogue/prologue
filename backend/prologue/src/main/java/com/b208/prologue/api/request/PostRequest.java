@@ -10,7 +10,7 @@ import java.util.List;
 public class PostRequest {
     String title;
     String date;
-    String content;
+    String description;
     String category;
     List<String> tag;
     String directory;
