@@ -26,7 +26,7 @@ const PageSetting = () => {
       <div className={styles.checkListTitle}>
         <Text value="페이지" type="text" bold />
       </div>
-      <div className={styles.detailContents}>
+      <div className={styles.detailContainer}>
         <div className={styles.detailItem}>
           <div className={styles.textPaddingSm}>
             <Text value="정렬 선택" type="text" />
@@ -37,6 +37,9 @@ const PageSetting = () => {
               <RadioButton label="왼쪽 정렬" value="left" />
             </RadioGroup>
           </div>
+        </div>
+        <div className={styles.detailHr} />
+        <div className={styles.detailItem}>
           <div className={styles.textPaddingSm}>
             <RadioButton label="색상 설정" value="color" checked />
           </div>

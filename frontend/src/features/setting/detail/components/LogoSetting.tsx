@@ -49,35 +49,38 @@ const LogoSetting = ({ logoImg, setLogoImg }: LogoSettingProps) => {
       <div className={styles.checkListTitle}>
         <Text value="블로그 로고" type="text" bold />
       </div>
-      <div className={styles.detailItem}>
-        <RadioGroup value={radioValue} onChange={radioChange}>
-          <RadioButton label="텍스트 설정" value="logoText" />
-        </RadioGroup>
-      </div>
-      <div style={{ margin: "0 10px 0 10px" }}>
-        <Input
-          placeholder="텍스트 입력"
-          value={colors.logo.inputText}
-          onChange={(e) => handleLogoText(e.target.value)}
-        />
-      </div>
-      <div className={styles.detailItem}>
-        <RadioGroup value={radioValue} onChange={radioChange}>
-          <RadioButton label="이미지 설정" value="logoImg" />
-        </RadioGroup>
-      </div>
-      <input type="file" style={{ display: "none" }} ref={logoImgRef} onChange={(e) => handleImageUpload(e)} />
-      <div className={styles.detailItemImgBtn} onClick={() => controlImgRef(logoImgRef)}>
-        <ButtonStyled color="blue" label="이미지 첨부" />
-      </div>
-      <div>
-        {logoImg ? (
-          <div className={styles.textInfo}>
-            <Text value="이미지가 첨부되었습니다." type="caption" color="blue_4" />
-          </div>
-        ) : (
-          <></>
-        )}
+      <div className={styles.detailContainer}>
+        <div className={styles.detailItem}>
+          <RadioGroup value={radioValue} onChange={radioChange}>
+            <RadioButton label="텍스트 설정" value="logoText" />
+          </RadioGroup>
+        </div>
+        <div style={{ margin: "0 10px 0 10px" }}>
+          <Input
+            placeholder="텍스트 입력"
+            value={colors.logo.inputText}
+            onChange={(e) => handleLogoText(e.target.value)}
+          />
+        </div>
+        <div className={styles.detailHr} />
+        <div className={styles.detailItem}>
+          <RadioGroup value={radioValue} onChange={radioChange}>
+            <RadioButton label="이미지 설정" value="logoImg" />
+          </RadioGroup>
+        </div>
+        <input type="file" style={{ display: "none" }} ref={logoImgRef} onChange={(e) => handleImageUpload(e)} />
+        <div className={styles.detailItemImgBtn} onClick={() => controlImgRef(logoImgRef)}>
+          <ButtonStyled color="blue" label="이미지 첨부" />
+        </div>
+        <div>
+          {logoImg ? (
+            <div className={styles.textInfo}>
+              <Text value="이미지가 첨부되었습니다." type="caption" color="blue_4" />
+            </div>
+          ) : (
+            <></>
+          )}
+        </div>
       </div>
     </div>
   );
