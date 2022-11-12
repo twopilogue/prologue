@@ -1,4 +1,4 @@
-import React, { ChangeEvent, Dispatch, MutableRefObject, SetStateAction, useRef, useState } from "react";
+import React, { ChangeEvent, Dispatch, MutableRefObject, SetStateAction, useEffect, useRef, useState } from "react";
 import Text from "components/Text";
 import RadioButton from "components/RadioButton";
 import styles from "../../Setting.module.css";
@@ -18,6 +18,7 @@ const LogoSetting = ({ logoImg, setLogoImg }: LogoSettingProps) => {
   const logoImgRef = useRef<HTMLInputElement | null>(null);
   const colors: colorsConfig = useAppSelector(selectColors);
   const [radioValue, setRadioValue] = useState("logoText");
+  const maxTextLength = 10;
   const dispatch = useDispatch();
 
   const radioChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -25,7 +26,10 @@ const LogoSetting = ({ logoImg, setLogoImg }: LogoSettingProps) => {
   };
 
   const handleLogoText = (e: string) => {
-    dispatch(setColors({ ...colors, logo: { inputText: e } }));
+    if (e.length > maxTextLength) {
+      e = e.substring(0, maxTextLength);
+    }
+    dispatch(setColors({ ...colors, logo: { ...colors.logo, inputText: e } }));
   };
 
   const controlImgRef = (type: MutableRefObject<HTMLInputElement>) => {
