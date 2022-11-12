@@ -24,7 +24,6 @@ const SettingLayout = () => {
   const checkList = useAppSelector(selectCheckList);
   const [layoutWidth, layoutContainer] = useGettingWidth();
   const colors: colorsConfig = useAppSelector(selectColors);
-
   const dispatch = useDispatch();
 
   const styleInfo: any = {
@@ -50,11 +49,6 @@ const SettingLayout = () => {
       });
     }
     setComponentLayoutList(tmpLayoutList);
-
-    // 언마운트 시 실행
-    return () => {
-      dispatch(setClickedComp("logo"));
-    };
   }, []);
 
   return (
