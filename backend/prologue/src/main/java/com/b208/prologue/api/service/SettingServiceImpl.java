@@ -1,7 +1,9 @@
 package com.b208.prologue.api.service;
 
+import com.b208.prologue.api.request.ModifyBlogSettingRequest;
 import com.b208.prologue.api.request.github.TreeRequest;
 import com.b208.prologue.api.request.github.UpdateContentRequest;
+import com.b208.prologue.api.response.GetBlogSettingResponse;
 import com.b208.prologue.api.response.github.GetRepoContentResponse;
 import com.b208.prologue.api.response.github.GetSettingResponse;
 import com.b208.prologue.common.Base64Converter;
@@ -30,35 +32,37 @@ public class SettingServiceImpl implements SettingService {
     private final CommonService commonService;
 
     @Override
-    public List<String> getBlogSetting(String encodedAccessToken, String githubId) throws Exception {
+    public GetBlogSettingResponse getBlogSetting(String encodedAccessToken, String githubId) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
-        String url = "/repos/" + githubId + "/" + githubId + ".github.io" + "/contents/";
+        GetBlogSettingResponse getBlogSettingResponse = new GetBlogSettingResponse();
 
-        GetSettingResponse item = webClient.get()
-                .uri(url + "gatsby-config.js")
-                .headers(h -> h.setBearerAuth(accessToken))
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToMono(GetSettingResponse.class).block();
+        String content = base64Converter.decode(commonService.getDetailContent(accessToken, githubId, "src/util/site.json")
+                .getContent().replace("\n", ""));
 
-        StringTokenizer st = new StringTokenizer(item.getContent(), "\n");
-        StringBuilder sb = new StringBuilder();
+        JSONParser jsonParser = new JSONParser();
+        JSONObject jsonObj = (JSONObject) jsonParser.parse(content);
+        JSONObject meta = (JSONObject) jsonObj.get("meta");
 
-        int val = st.countTokens();
+        JSONObject social = (JSONObject) meta.get("social");
+        JSONObject author = (JSONObject) meta.get("author");
 
-        for (int i = 0; i < val; i++) {
-            sb.append(st.nextToken());
-        }
+        String nickName= author.get("name").toString();
+        String summary = author.get("summary").toString();
+        String title = meta.get("title").toString();
+        String description = meta.get("description").toString();
 
-        List<String> result = new ArrayList<>();
-        String Line = "";
-        Line = base64Converter.decode(sb.toString());
+        String[] socialArray = new String[4];
+        socialArray[0] = social.get("github").toString();
+        socialArray[1] = social.get("gmail").toString();
+        socialArray[2] = social.get("instagram").toString();
+        socialArray[3] = social.get("twitter").toString();
 
-        int idx = Line.indexOf("=");
-        Line = Line.substring(idx + 1);
-
-        result.add(Line);
+        getBlogSettingResponse.setNickName(nickName);
+        getBlogSettingResponse.setSummary(summary);
+        getBlogSettingResponse.setTitle(title);
+        getBlogSettingResponse.setDescription(description);
+        getBlogSettingResponse.setSocial(socialArray);
 
         GetRepoContentResponse[] getRepoContentResponse = webClient.get()
                 .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/src/images")
@@ -75,89 +79,59 @@ public class SettingServiceImpl implements SettingService {
             }
         }
 
-        result.add(imageUrl);
+        getBlogSettingResponse.setProfileImg(imageUrl);
 
-        return result;
+        return getBlogSettingResponse;
     }
 
     @Override
-    public void updateBlogSetting(String encodedAccessToken, String githubId, Map<String, List<String>> modified, Map<String, String> social, MultipartFile imageFile) throws Exception {
-        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
+    public void updateBlogSetting(ModifyBlogSettingRequest modifyBlogSettingRequest, MultipartFile imageFile) throws Exception {
+        String accessToken = base64Converter.decryptAES256(modifyBlogSettingRequest.getAccessToken());
+        String githubId = modifyBlogSettingRequest.getGithubId();
         String commit = "update: 블로그 설정 수정";
 
         List<TreeRequest> treeRequestList = new ArrayList<>();
 
-        String url = "/repos/" + githubId + "/" + githubId + ".github.io" + "/contents/";
+        String content = base64Converter.decode(commonService.getDetailContent(accessToken, githubId, "src/util/site.json")
+                .getContent().replace("\n", ""));
 
-        GetSettingResponse item = webClient.get()
-                .uri(url + "gatsby-config.js")
-                .headers(h -> h.setBearerAuth(accessToken))
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToMono(GetSettingResponse.class).block();
+        JSONParser jsonParser = new JSONParser();
+        JSONObject jsonObj = (JSONObject) jsonParser.parse(content);
+        JSONObject meta = (JSONObject) jsonObj.get("meta");
 
-        StringTokenizer st = new StringTokenizer(item.getContent(), "\n");
-        StringBuilder sb = new StringBuilder();
+        JSONObject social = (JSONObject) meta.get("social");
+        JSONObject author = (JSONObject) meta.get("author");
 
-        int val = st.countTokens();
+        author.put("name", modifyBlogSettingRequest.getNickName());
+        author.put("summary", modifyBlogSettingRequest.getSummary());
+        meta.put("title", modifyBlogSettingRequest.getTitle());
+        meta.put("description", modifyBlogSettingRequest.getDescription());
 
-        for (int i = 0; i < val; i++) {
-            sb.append(st.nextToken());
+        if (modifyBlogSettingRequest.getSocial().get("github") == null) {
+            social.put("github", "");
+        }else {
+            social.put("github", modifyBlogSettingRequest.getSocial().get("github"));
+        }
+        if (modifyBlogSettingRequest.getSocial().get("gmail") == null) {
+            social.put("gmail", modifyBlogSettingRequest.getSocial().get(""));
+        }else {
+            social.put("gmail", modifyBlogSettingRequest.getSocial().get("gmail"));
+        }
+        if (modifyBlogSettingRequest.getSocial().get("instagram") == null) {
+            social.put("instagram", modifyBlogSettingRequest.getSocial().get(""));
+        }else {
+            social.put("instagram", modifyBlogSettingRequest.getSocial().get("instagram"));
+        }
+        if (modifyBlogSettingRequest.getSocial().get("twitter") == null) {
+            social.put("twitter", modifyBlogSettingRequest.getSocial().get(""));
+        }else {
+            social.put("twitter", modifyBlogSettingRequest.getSocial().get("twitter"));
+
         }
 
-        String Line = "";
-        Line = base64Converter.decode(sb.toString());
-
-        Line = Line.replaceFirst(modified.get("nickName").get(0), modified.get("nickName").get(1));
-        Line = Line.replace(modified.get("summary").get(0), modified.get("summary").get(1));
-        Line = Line.replace(modified.get("title").get(0), modified.get("title").get(1));
-        Line = Line.replace(modified.get("description").get(0), modified.get("description").get(1));
-
-        String tempLine[] = Line.split("social: \\{");
-        st = new StringTokenizer(tempLine[1], "\n");
-        int cnt = st.countTokens();
-
-        boolean githubFlag = social.containsKey("github");
-        boolean gmailFlag = social.containsKey("gmail");
-        boolean instagramFlag = social.containsKey("instagram");
-        boolean twitterFlag = social.containsKey("twitter");
-
-        for (int i = 0; i < 4; i++) {
-            String line = st.nextToken();
-
-            if(line.contains("github")) {
-                if (githubFlag){
-                    Line = Line.replace("github:" + line.substring(line.indexOf(":") + 1), "github: `" + social.get("github") + "`,");
-
-                }else {
-                    Line = Line.replace(line.substring(line.indexOf(":") + 2), "``,");
-                }
-            }
-            else if(line.contains("gmail")) {
-                if (gmailFlag){
-                    Line = Line.replace("gmail:" + line.substring(line.indexOf(":") + 1), "gmail: `" + social.get("gmail") + "`,");
-                }else {
-                    Line = Line.replace(line.substring(line.indexOf(":") + 2), "``,");
-                }
-            }
-            else if(line.contains("instagram")) {
-                if (instagramFlag){
-                    Line = Line.replace("instagram:" + line.substring(line.indexOf(":") + 1), "instagram: `" + social.get("instagram") + "`,");
-                }else {
-                    Line = Line.replace(line.substring(line.indexOf(":") + 2), "``,");
-                }
-            }
-            else if(line.contains("twitter")) {
-                if (twitterFlag){
-                    Line = Line.replace("twitter:" + line.substring(line.indexOf(":") + 1), "twitter: `" + social.get("twitter") + "`,");
-                }else {
-                    Line = Line.replace(line.substring(line.indexOf(":") + 2), "``,");
-                }
-            }
-        }
-
-        String encodedContent = commonService.makeBlob(accessToken, githubId, base64Converter.encode(Line));
-        treeRequestList.add(new TreeRequest("gatsby-config.js", "100644", "blob", encodedContent));
+        jsonObj.put("meta", meta);
+        String encodedContent = commonService.makeBlob(accessToken, githubId, base64Converter.encode(jsonObj.toString()));
+        treeRequestList.add(new TreeRequest("src/util/site.json", "100644", "blob", encodedContent));
 
         if (imageFile != null) {
             String path = "src/images/";
@@ -181,9 +155,10 @@ public class SettingServiceImpl implements SettingService {
             int idx = imageFile.getOriginalFilename().lastIndexOf(".");
             fileName = "profile-pic" + imageFile.getOriginalFilename().substring(idx);
 
-            Line = Line.replace(modified.get("profileImg").get(0), "../src/images/" + fileName);
-            encodedContent = commonService.makeBlob(accessToken, githubId, base64Converter.encode(Line));
-            treeRequestList.add(new TreeRequest("gatsby-config.js", "100644", "blob", encodedContent));
+            author.put("profile", "../src/images/" + fileName);
+            jsonObj.put("meta", meta);
+            encodedContent = commonService.makeBlob(accessToken, githubId, base64Converter.encode(jsonObj.toString()));
+            treeRequestList.add(new TreeRequest("src/util/site.json", "100644", "blob", encodedContent));
 
             String image = new String(Base64.encodeBase64(imageFile.getBytes()));
             encodedContent = commonService.makeBlob(accessToken, githubId, image);

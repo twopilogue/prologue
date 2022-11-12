@@ -32,9 +32,9 @@ public class SettingConroller {
     })
     public ResponseEntity<? extends BaseResponseBody> getBlogSetting(@RequestParam String accessToken, @RequestParam String githubId) {
         try {
-            List<String> result = settingService.getBlogSetting(accessToken, githubId);
+            GetBlogSettingResponse result = settingService.getBlogSetting(accessToken, githubId);
 
-            return ResponseEntity.status(200).body(GetBlogSettingResponse.of(result.get(0), result.get(1), 200, "블로그 설정 조회에 성공하였습니다."));
+            return ResponseEntity.status(200).body(GetBlogSettingResponse.of(result, 200, "블로그 설정 조회에 성공하였습니다."));
         } catch (Exception e) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "블로그 설정 조회에 실패하였습니다."));
         }
@@ -49,7 +49,7 @@ public class SettingConroller {
     })
     public ResponseEntity<? extends BaseResponseBody> modifyBlogSetting(@Valid @RequestPart ModifyBlogSettingRequest modifyBlogSettingRequest, @RequestPart(required = false) MultipartFile imageFile) {
         try {
-            settingService.updateBlogSetting(modifyBlogSettingRequest.getAccessToken(), modifyBlogSettingRequest.getGithubId(), modifyBlogSettingRequest.getModified(), modifyBlogSettingRequest.getSocial(), imageFile);
+            settingService.updateBlogSetting(modifyBlogSettingRequest, imageFile);
             return ResponseEntity.status(200).body(BaseResponseBody.of(200, "블로그 설정 수정에 성공하였습니다."));
         } catch (Exception e) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "블로그 설정 수정에 실패하였습니다."));
