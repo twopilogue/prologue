@@ -7,7 +7,7 @@ import { SketchPicker } from "react-color";
 import ButtonStyled from "components/Button";
 import { controlImgRef } from "../DetailSelector";
 import { useAppSelector } from "app/hooks";
-import { selectColors, setColors } from "slices/settingSlice";
+import { colorsConfig, selectColors, setColors } from "slices/settingSlice";
 import { useDispatch } from "react-redux";
 
 interface TitleSettingProps {
@@ -17,7 +17,7 @@ interface TitleSettingProps {
 
 const TitleSetting = ({ titleImg, setTitleImg }: TitleSettingProps) => {
   const titleImgRef = useRef<HTMLInputElement | null>(null);
-  const colors = useAppSelector(selectColors);
+  const colors: colorsConfig = useAppSelector(selectColors);
   const dispatch = useDispatch();
 
   const handleChangeComplete = (color: any) => {
