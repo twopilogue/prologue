@@ -7,7 +7,7 @@ import { rootState } from "app/store";
 import { useSelector } from "react-redux";
 
 function DashboardCalendar() {
-  const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
+  const { githubId } = useSelector((state: rootState) => state.auth);
   return (
     <div className={`${styles.container} ${styles.calendar}`}>
       <Box width="85%" className={styles.flexColumn}>

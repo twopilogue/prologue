@@ -13,6 +13,7 @@ import {
   selectComponentLayoutList,
   setCategoryLayoutList,
   setComponentLayoutList,
+  selectColors,
 } from "slices/settingSlice";
 import ComponentSelector from "../layout/ComponentSelector";
 import styles from "../Setting.module.css";
@@ -103,7 +104,7 @@ const LayoutSample = () => {
             {componentList.map((item: ComponentConfig) => {
               {
                 return checkList[item.id] ? (
-                  <div className={styles.display_logo} key={item.key}>
+                  <div className={styles.layout_colored} key={item.key}>
                     {item.key != "타이틀" && item.key != "글 목록" ? (
                       <div className={styles.icon}>
                         <DragHandleIcon fontSize="small" sx={{ color: "white" }} />

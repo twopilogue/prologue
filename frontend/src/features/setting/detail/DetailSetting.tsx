@@ -1,13 +1,13 @@
 import Text from "components/Text";
 import React, { useState } from "react";
 import DetailSelector from "./DetailSelector";
-import LayoutSample from "./layout/LayoutSample";
-import styles from "./Setting.module.css";
+import LayoutSample from "../layout/LayoutSample";
+import styles from "../Setting.module.css";
 import SettingLayout from "./SettingLayout";
+import { useAppSelector } from "app/hooks";
+import { selectColors } from "slices/settingSlice";
 
 const DetailSetting = () => {
-  const [titleColor, setTitleColor] = useState("red");
-
   return (
     <div>
       <div className={styles.textPadding} style={{ paddingBottom: "10px" }}>
@@ -17,8 +17,8 @@ const DetailSetting = () => {
         <Text value="레이아웃에 원하는 디자인을 선택하여 적용하세요." type="caption" />
       </div>
       <div className={styles.layoutSelectContainer}>
-        <DetailSelector titleColor={titleColor} setTitleColor={setTitleColor} />
-        <SettingLayout titleColor={titleColor} />
+        <DetailSelector />
+        <SettingLayout />
       </div>
     </div>
   );

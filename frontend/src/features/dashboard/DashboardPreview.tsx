@@ -8,14 +8,14 @@ import { rootState } from "app/store";
 import { useSelector } from "react-redux";
 
 function DashboardPreview() {
-  const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
+  const { githubId } = useSelector((state: rootState) => state.auth);
 
   const blogLink = `https://${githubId}.github.io/`;
 
   return (
     <div className={styles.container}>
       <Box className={styles.preview}>
-        <Link href={blogLink} underline="none">
+        <Link href={blogLink} target="_blank">
           <div className={styles.previewIframe} />
           <iframe src={blogLink} scrolling="no" />
         </Link>
