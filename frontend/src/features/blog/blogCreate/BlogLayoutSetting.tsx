@@ -34,7 +34,7 @@ function BlogLayoutSetting({ radioValue, setValue, onClick }: Props) {
             <Stack spacing={0.5}>
               <RadioButton label="직접 레이아웃 세팅" value="CustomLayout" />
               <Box sx={{ pl: 2.5 }}>
-                <Text value="원하는 레이아웃을 선택하고 테마를 꾸밀 수 있습니다." />
+                <Text value="높은 자유도로 레이아웃을 배치하고 테마를 꾸밀 수 있습니다." />
               </Box>
             </Stack>
             <Stack spacing={0.5}>

@@ -13,16 +13,12 @@ import java.util.Map;
 @ApiModel("PostListResponse")
 public class PostListResponse extends BaseResponseBody {
 
-    @ApiModelProperty(name = "게시글,디렉토리 리스트")
+    @ApiModelProperty(name = "제목, 날짜, 컨텐츠, 디렉토리 리스트")
     Map<String, Object> result;
 
-    @ApiModelProperty(name = "디렉토리별 이미지")
-    List<Map<String, String>> images;
-
-    public static PostListResponse of(Map<String, Object> result, List<Map<String, String>> images, Integer statusCode, String message){
+    public static PostListResponse of(Map<String, Object> result, Integer statusCode, String message){
         PostListResponse res = new PostListResponse();
         res.setResult(result);
-        res.setImages(images);
         res.setStatusCode(statusCode);
         res.setMessage(message);
         return res;

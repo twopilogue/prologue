@@ -25,6 +25,10 @@ public class ModifyBlogSettingRequest {
 
     @NotNull
     @ApiModelProperty(name = "수정된 내용", example = "수정된 내용", required = true)
-    String modified;
+    Map<String, List<String>> modified;
+
+    @NotNull
+    @ApiModelProperty(name = "소셜", example = "소셜", required = true)
+    Map<String, String> social;
 
 }
