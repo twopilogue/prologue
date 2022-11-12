@@ -12,7 +12,7 @@ const CategorySetting = () => {
   const dispatch = useDispatch();
 
   const handleChangeComplete = (color: any) => {
-    dispatch(setColors({ ...colors, category: { background: color } }));
+    dispatch(setColors({ ...colors, category: { ...colors.category, background: color } }));
   };
 
   return (

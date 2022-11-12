@@ -27,7 +27,7 @@ const TitleSetting = ({ titleImg, setTitleImg }: TitleSettingProps) => {
   };
 
   const handleChangeComplete = (color: string) => {
-    dispatch(setColors({ ...colors, title: { background: color } }));
+    dispatch(setColors({ ...colors, title: { ...colors.title, background: color } }));
   };
 
   const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {

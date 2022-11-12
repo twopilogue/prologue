@@ -18,7 +18,7 @@ const PageSetting = () => {
   };
 
   const handleChangeComplete = (color: any) => {
-    dispatch(setColors({ ...colors, page: { background: color } }));
+    dispatch(setColors({ ...colors, page: { ...colors.page, background: color } }));
   };
 
   return (
