@@ -113,17 +113,17 @@ public class SettingServiceImpl implements SettingService {
             social.put("github", modifyBlogSettingRequest.getSocial().get("github"));
         }
         if (modifyBlogSettingRequest.getSocial().get("gmail") == null) {
-            social.put("gmail", modifyBlogSettingRequest.getSocial().get(""));
+            social.put("gmail", "");
         }else {
             social.put("gmail", modifyBlogSettingRequest.getSocial().get("gmail"));
         }
         if (modifyBlogSettingRequest.getSocial().get("instagram") == null) {
-            social.put("instagram", modifyBlogSettingRequest.getSocial().get(""));
+            social.put("instagram", "");
         }else {
             social.put("instagram", modifyBlogSettingRequest.getSocial().get("instagram"));
         }
         if (modifyBlogSettingRequest.getSocial().get("twitter") == null) {
-            social.put("twitter", modifyBlogSettingRequest.getSocial().get(""));
+            social.put("twitter", "");
         }else {
             social.put("twitter", modifyBlogSettingRequest.getSocial().get("twitter"));
 
