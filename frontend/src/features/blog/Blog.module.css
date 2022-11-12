@@ -90,3 +90,55 @@
     border-radius: 0px 0px 7px 7px;
     padding: 4px 8px;
 }
+
+/* 블로그, 프로필 정보 받기 */
+.customInfo_container {
+    width: 650px
+}
+
+.flexRow {
+    display: flex;
+    flex-direction: row;
+}
+
+.infoTitle {
+    width: 130px;
+    padding: 5px 0px;
+}
+
+.infoInput {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+}
+
+.profile_img_container {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-left: 30px;
+    position: relative;
+}
+
+.buttonImg {
+    border-radius: 50%;
+}
+
+.profile_editBtn {
+    box-sizing: border-box;
+    position: absolute;
+    width: 65px;
+    height: 30.58px;
+    left: 100px;
+    top: 120px;
+
+    background: #ffffff;
+    border: 2px solid #e8e8e8;
+    border-radius: 10px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+}

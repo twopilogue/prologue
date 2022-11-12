@@ -20,21 +20,23 @@ export interface ComponentCheckConfig {
   contents: boolean;
 }
 
-interface LayoutConfig {
-  categoryLayoutList: Layout[];
-  categoryList: KeyConfig[];
-  categoryCnt: number;
-
-  pageLayoutList: Layout[];
-  pageList: KeyConfig[];
-  pageCnt: number;
-
-  componentLayoutList: Layout[];
-  componentList: ComponentConfig[];
-
-  checkList: ComponentCheckConfig;
-
-  blogSettingInfo: blogInfoConfig;
+export interface colorsConfig {
+  title: {
+    background: string;
+    text: string;
+  };
+  category: {
+    background: string;
+    text: string;
+  };
+  page: {
+    background: string;
+    text: string;
+  };
+  profile: {
+    background: string;
+    text: string;
+  };
 }
 
 export interface blogInfoConfig {
@@ -51,6 +53,24 @@ export interface blogInfoConfig {
     title: string;
   };
   profileImg: string;
+}
+
+interface LayoutConfig {
+  categoryLayoutList: Layout[];
+  categoryList: KeyConfig[];
+  categoryCnt: number;
+
+  pageLayoutList: Layout[];
+  pageList: KeyConfig[];
+  pageCnt: number;
+
+  componentLayoutList: Layout[];
+  componentList: ComponentConfig[];
+
+  checkList: ComponentCheckConfig;
+
+  blogSettingInfo: blogInfoConfig;
+  colorList: colorsConfig;
 }
 
 const initialState: LayoutConfig = {
@@ -96,6 +116,25 @@ const initialState: LayoutConfig = {
     },
     profileImg: "",
   },
+
+  colorList: {
+    title: {
+      background: "#d3d3eb",
+      text: "darkgray",
+    },
+    category: {
+      background: "#d3d3eb",
+      text: "darkgray",
+    },
+    page: {
+      background: "#d3d3eb",
+      text: "darkgray",
+    },
+    profile: {
+      background: "#d3d3eb",
+      text: "darkgray",
+    },
+  },
 };
 
 const settingSlice = createSlice({
@@ -136,6 +175,9 @@ const settingSlice = createSlice({
       state.blogSettingInfo.siteMetadata = siteMetadata;
       state.blogSettingInfo.profileImg = profileImg;
     },
+    setColors: (state, { payload }) => {
+      state.colorList = payload;
+    },
   },
 });
 export const {
@@ -148,6 +190,7 @@ export const {
   setComponentLayoutList,
   setCheckList,
   setBlogSettingInfo,
+  setColors,
 } = settingSlice.actions;
 
 export const selectCategoryLayoutList = (state: rootState) => state.setting.categoryLayoutList;
@@ -164,6 +207,8 @@ export const selectComponentList = (state: rootState) => state.setting.component
 export const selectCheckList = (state: rootState) => state.setting.checkList;
 
 export const selectBlogSettingInfo = (state: rootState) => state.setting.blogSettingInfo;
+
+export const selectColors = (state: rootState) => state.setting.colorList;
 
 export default settingSlice.reducer;
 
