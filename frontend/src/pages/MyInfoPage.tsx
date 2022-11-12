@@ -68,7 +68,6 @@ const MyInfoPage = () => {
           description: st.siteMetadata.description,
           social: st.siteMetadata.social,
         });
-        console.log(st.siteMetadata.social);
       })
 
       .catch((err: any) => {
