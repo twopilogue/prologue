@@ -85,6 +85,10 @@
   background-color: #d3d3eb;
 }
 
+.layout_nonColored {
+  cursor: pointer;
+}
+
 .icon {
   display: flex;
   justify-content: center;
@@ -291,15 +295,14 @@
   margin: 10px;
 }
 
-
 /* 링크 css  */
 .linkBox {
   display: flex;
   align-items: center;
 
-  width: 45vw ;
+  width: 45vw;
   height: 40px;
-  border: 1px solid #ECECEC;
+  border: 1px solid #ececec;
   border-radius: 10px;
   margin-bottom: 5px;
 }
@@ -339,4 +342,9 @@
 
 .textInfo {
   margin-left: 5px;
+}
+
+.textPaddingSm {
+  margin-top: 10px;
+  margin-bottom: 10px;
 }

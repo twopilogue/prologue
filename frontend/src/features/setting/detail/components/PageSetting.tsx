@@ -20,9 +20,18 @@ const PageSetting = () => {
       <div className={styles.checkListTitle}>
         <Text value="페이지" type="text" bold />
       </div>
-      <RadioButton label="색상 설정" value="color" checked />
-      <div>
-        <SketchPicker color={colors.page.background} onChangeComplete={(color) => handleChangeComplete(color.hex)} />
+      <div className={styles.detailContents}>
+        <div className={styles.detailItem}>
+          <div className={styles.textPaddingSm}>
+            <RadioButton label="색상 설정" value="color" checked />
+          </div>
+          <div>
+            <SketchPicker
+              color={colors.page.background}
+              onChangeComplete={(color) => handleChangeComplete(color.hex)}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

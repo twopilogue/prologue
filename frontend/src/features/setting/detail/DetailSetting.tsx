@@ -10,7 +10,7 @@ import { selectColors } from "slices/settingSlice";
 const DetailSetting = () => {
   return (
     <div>
-      <div className={styles.textPadding} style={{ paddingBottom: "10px" }}>
+      <div className={styles.textPadding} style={{ paddingTop: "0", paddingBottom: "10px" }}>
         <Text value="세부 레이아웃 설정" type="groupTitle" bold />
       </div>
       <div style={{ paddingLeft: "20px" }}>

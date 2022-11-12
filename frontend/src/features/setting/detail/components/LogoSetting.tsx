@@ -30,9 +30,6 @@ const LogoSetting = ({ logoImg, setLogoImg }: LogoSettingProps) => {
         <Text value="블로그 로고" type="text" bold />
       </div>
       <div className={styles.detailItem}>
-        <RadioButton label="색상 설정" value="color" checked />
-      </div>
-      <div className={styles.detailItem}>
         <RadioButton label="이미지 설정" value="color" checked />
       </div>
       <input type="file" style={{ display: "none" }} ref={logoImgRef} onChange={(e) => handleImageUpload(e)} />

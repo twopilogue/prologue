@@ -20,15 +20,25 @@ const TitleSetting = ({ titleImg, setTitleImg }: TitleSettingProps) => {
   const colors: colorsConfig = useAppSelector(selectColors);
   const dispatch = useDispatch();
 
-  const handleChangeComplete = (color: any) => {
+  const handleChangeComplete = (color: string) => {
     dispatch(setColors({ ...colors, title: { background: color } }));
   };
 
-  const handleImageUpload = (e: ChangeEvent<HTMLInputElement>, type: string, func: any) => {
+  const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) {
       return;
     }
     setTitleImg(e.target.files[0]);
+  };
+
+  const handleTitleHeight = (e: any) => {
+    if (!e.target.value) return;
+    if (typeof e.target.value != "number") {
+      alert("숫자만 입력 가능.");
+      e.target.value = 0;
+    }
+
+    setColors({ ...colors, title: { titleHeight: e.target.value } });
   };
 
   return (
@@ -44,7 +54,11 @@ const TitleSetting = ({ titleImg, setTitleImg }: TitleSettingProps) => {
             </div>
             <div style={{ display: "flex", justifyContent: "end" }}>
               <div style={{ width: "7vw", marginRight: "10px" }}>
-                <Input placeholder="숫자 입력" />
+                <Input 
+                  placeholder="숫자 입력"
+                  value={colors.title.titleHeight}
+                  onChange={(e) => handleTitleHeight(e)}
+                />
               </div>
             </div>
             <div style={{ textAlign: "left" }}>
@@ -67,12 +81,7 @@ const TitleSetting = ({ titleImg, setTitleImg }: TitleSettingProps) => {
         <div className={styles.detailItem}>
           <RadioButton label="이미지 설정" value="color" checked />
         </div>
-        <input
-          type="file"
-          style={{ display: "none" }}
-          ref={titleImgRef}
-          onChange={(e) => handleImageUpload(e, "title", setTitleImg)}
-        />
+        <input type="file" style={{ display: "none" }} ref={titleImgRef} onChange={(e) => handleImageUpload(e)} />
         <div className={styles.detailItemImgBtn} onClick={() => controlImgRef(titleImgRef)}>
           <ButtonStyled color="blue" label="이미지 첨부" />
         </div>
