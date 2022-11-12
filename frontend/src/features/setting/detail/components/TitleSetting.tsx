@@ -1,4 +1,4 @@
-import React, { ChangeEvent, Dispatch, SetStateAction, useRef } from "react";
+import React, { ChangeEvent, Dispatch, SetStateAction, useRef, useState } from "react";
 import Text from "components/Text";
 import RadioButton from "components/RadioButton";
 import styles from "../../Setting.module.css";
@@ -9,6 +9,7 @@ import { controlImgRef } from "../DetailSelector";
 import { useAppSelector } from "app/hooks";
 import { colorsConfig, selectColors, setColors } from "slices/settingSlice";
 import { useDispatch } from "react-redux";
+import { RadioGroup } from "@mui/material";
 
 interface TitleSettingProps {
   titleImg: File;
@@ -18,7 +19,12 @@ interface TitleSettingProps {
 const TitleSetting = ({ titleImg, setTitleImg }: TitleSettingProps) => {
   const titleImgRef = useRef<HTMLInputElement | null>(null);
   const colors: colorsConfig = useAppSelector(selectColors);
+  const [radioValue, setRadioValue] = useState("titleColor");
   const dispatch = useDispatch();
+
+  const radioChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setRadioValue((event.target as HTMLInputElement).value);
+  };
 
   const handleChangeComplete = (color: string) => {
     dispatch(setColors({ ...colors, title: { background: color } }));
@@ -54,7 +60,7 @@ const TitleSetting = ({ titleImg, setTitleImg }: TitleSettingProps) => {
             </div>
             <div style={{ display: "flex", justifyContent: "end" }}>
               <div style={{ width: "7vw", marginRight: "10px" }}>
-                <Input 
+                <Input
                   placeholder="숫자 입력"
                   value={colors.title.titleHeight}
                   onChange={(e) => handleTitleHeight(e)}
@@ -70,7 +76,9 @@ const TitleSetting = ({ titleImg, setTitleImg }: TitleSettingProps) => {
           </div>
         </div>
         <div className={styles.detailItem}>
-          <RadioButton label="색상 설정" value="color" checked />
+          <RadioGroup value={radioValue} onChange={radioChange}>
+            <RadioButton label="색상 설정" value="titleColor" />
+          </RadioGroup>
           <div>
             <SketchPicker
               color={colors.title.background}
@@ -79,7 +87,9 @@ const TitleSetting = ({ titleImg, setTitleImg }: TitleSettingProps) => {
           </div>
         </div>
         <div className={styles.detailItem}>
-          <RadioButton label="이미지 설정" value="color" checked />
+          <RadioGroup value={radioValue} onChange={radioChange}>
+            <RadioButton label="이미지 설정" value="titleImg" />
+          </RadioGroup>
         </div>
         <input type="file" style={{ display: "none" }} ref={titleImgRef} onChange={(e) => handleImageUpload(e)} />
         <div className={styles.detailItemImgBtn} onClick={() => controlImgRef(titleImgRef)}>

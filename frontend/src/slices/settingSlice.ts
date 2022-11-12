@@ -61,6 +61,7 @@ export interface colorsConfig {
   logo: {
     background: string;
     text: string;
+    inputText: string;
   };
 }
 
@@ -154,6 +155,7 @@ const initialState: LayoutConfig = {
     logo: {
       background: "#d3d3eb",
       text: "darkgray",
+      inputText: "",
     },
   },
 
