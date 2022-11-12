@@ -107,10 +107,13 @@ public class PostServiceImpl implements PostService {
                     if (line.contains("title")) {
                         postRequests.get(i).setTitle(line.substring(line.indexOf(": ") + 1));
                     }
-                    if (line.contains("category")) {
+                    else if (line.contains("description")) {
+                        postRequests.get(i).setDescription(line.substring(line.indexOf(": ") + 1));
+                    }
+                    else if (line.contains("category")) {
                         postRequests.get(i).setCategory(line.substring(line.indexOf(": ") + 1));
                     }
-                    if (line.contains("tag")) {
+                    else if (line.contains("tag")) {
                         String tagLine = line.substring(line.indexOf(": ") + 1);
                         String[] tagArr = tagLine.split(",");
                         for (String tagTemp : tagArr) {
@@ -119,11 +122,6 @@ public class PostServiceImpl implements PostService {
                         postRequests.get(i).setTag(tag);
                     }
                 }
-
-                if (tempContent.length < 3) continue;
-                postRequests.get(i).setContent(tempContent[2]);
-            } else {
-                postRequests.get(i).setContent(temp.get(i));
             }
         }
 
