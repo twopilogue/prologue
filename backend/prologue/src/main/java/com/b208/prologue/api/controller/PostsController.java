@@ -165,11 +165,10 @@ public class PostsController {
             @ApiResponse(code = 400, message = "임시 이미지 업로드 실패", response = BaseResponseBody.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
-    public ResponseEntity<? extends BaseResponseBody> tempImageUpload(@RequestParam @ApiParam(value = "accessToken", required = true) String accessToken,
-                                                                      @RequestParam @ApiParam(value = "사용자 깃허브 아이디", required = true) String githubId,
-                                                                      @RequestParam @ApiParam(value = "임시 업로드 이미지", required = true) MultipartFile file) {
+    public ResponseEntity<? extends BaseResponseBody> tempImageUpload(@Valid @RequestPart TempImageUploadRequest tempImageUploadRequest,
+                                                                      @RequestPart(required = false) MultipartFile file) {
         try {
-            String tempImageUrl = postService.tempImageUpload(accessToken, githubId, file);
+            String tempImageUrl = postService.tempImageUpload(tempImageUploadRequest.getAccessToken(), tempImageUploadRequest.getGithubId(), file);
             return ResponseEntity.status(200).body(GetTempImageResponse.of(tempImageUrl, 200, "임시 이미지 업로드에 성공하였습니다."));
         } catch (Exception e) {
             e.printStackTrace();
