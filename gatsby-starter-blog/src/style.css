@@ -248,7 +248,7 @@ a:focus {
   padding: var(--spacing-10) var(--spacing-5);
 }
 
-.global-wrapper[data-is-root-path="true"] .bio {
+.global-wrapper[data-is-root-path="true"] .profile {
   /* margin-bottom: var(--spacing-20); */
 }
 
@@ -289,46 +289,27 @@ a:focus {
   font-size: var(--fontSize-2);
 }
 
-.bio {
-  /* margin-bottom: var(--spacing-16); */
-  padding-top: var(--spacing-4);
-  margin-bottom: var(--spacing-4);
-  margin-right: var(--spacing-4);
-  background-color: #ececec;
-  border-radius: 10px;
-}
-
-.bio p {
+.profile p {
   margin-top: var(--spacing-2);
   margin-bottom: var(--spacing-2);
   margin-left: var(--spacing-2);
 }
 
-.bio .name {
+.profile .name {
   text-align: center;
   font-size: var(--fontSize-2);
 }
 
-.bio div {
+.profile div {
   max-width: 250px;
 }
 
-.bio-avatar {
+.profile-avatar {
   margin-right: var(--spacing-4);
   margin-left: var(--spacing-4);
   margin-bottom: var(--spacing-0);
   min-width: 200px;
   border-radius: 100%;
-}
-
-.category {
-  margin-bottom: var(--spacing-4);
-  margin-right: var(--spacing-4);
-
-  padding: var(--spacing-4);
-
-  background-color: #ececec;
-  border-radius: 10px;
 }
 
 .blog-post header h1 {
@@ -373,3 +354,21 @@ a:focus {
 
 /* CustomCSS */
 
+.category {
+  margin-bottom: var(--spacing-4);
+  margin-right: var(--spacing-4);
+
+  padding: var(--spacing-4);
+
+  background-color: #ececec;
+  border-radius: 10px;
+}
+
+.profile {
+  /* margin-bottom: var(--spacing-16); */
+  padding-top: var(--spacing-4);
+  margin-bottom: var(--spacing-4);
+  margin-right: var(--spacing-4);
+  background-color: #ececec;
+  border-radius: 10px;
+}

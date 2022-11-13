@@ -73,8 +73,8 @@ const PostList = () => {
               date={value.date}
               tag={value.tag}
               category={value.category}
-              content={value.content}
-              imageUrl={value.imageUrl}
+              description={value.description}
+              imgUrl={value.imgUrl}
             />
           </div>
         ))}
