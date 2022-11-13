@@ -38,6 +38,20 @@ const PostEditPage = () => {
     setLoading(false);
   }, [loading]);
 
+  const editPost = () => {
+    const formData = new FormData();
+
+    const frontMatter = "";
+
+    const modifyDetailPostRequest = {
+      accessToken: accessToken,
+      githubId: githubId,
+      directory: directory,
+      content: frontMatter + content,
+      deletedFiles: "",
+    };
+  };
+
   return (
     <div className={styles.postWrite}>
       <div className={styles.textBox}>
