@@ -7,11 +7,11 @@ interface PostListCardProps {
   date: string;
   tag: [];
   category: string;
-  content: string;
-  imageUrl: string;
+  description: string;
+  imgUrl: string;
 }
 
-const PostListCard = ({ title, date, tag, category, content, imageUrl }: PostListCardProps) => {
+const PostListCard = ({ title, date, tag, category, description, imgUrl }: PostListCardProps) => {
   const [tagList, setTagList] = useState<[]>(tag);
 
   return (
@@ -38,17 +38,12 @@ const PostListCard = ({ title, date, tag, category, content, imageUrl }: PostLis
         <br />
 
         <div className={styles.postText}>
-          <Text value={content.substring(0, 100)} type="text" />
+          <Text value={description} type="text" />
         </div>
       </div>
 
       <div>
-        <img
-          src={imageUrl}
-          alt=""
-          // onError={(event) => (event.target.style.display = "none")}
-          className={styles.postCardImg}
-        />
+        <img src={imgUrl} alt="" className={styles.postCardImg} />
       </div>
     </div>
   );
