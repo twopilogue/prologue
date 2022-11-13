@@ -1,9 +1,9 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, MouseEvent } from "react";
 import { Layout, Responsive, WidthProvider } from "react-grid-layout";
 import GridLayout from "react-grid-layout";
 import styles from "../Setting.module.css";
+import "../../../../node_modules/react-grid-layout/css/styles.css";
 import Text from "components/Text";
-
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useAppSelector } from "app/hooks";
@@ -43,10 +43,23 @@ const CategoryLayout = () => {
       w: 1,
       h: 2,
       isResizable: false,
+      static: true,
     });
     setTmpCategoryList(tmpCategoryList);
     setTmpLayoutList(tmpLayoutList);
     setTmpCategoryCnt(tmpCategoryCnt + 1);
+  };
+
+  const handleEdit = (item: any) => {
+    // tmpCategoryList.((item, i) => {});
+  };
+
+  const handleDele = (item: any) => {
+    console.log("삭제버튼");
+
+    // const newCategoryList: KeyConfig[] = ;
+    setTmpCategoryList(tmpCategoryList.filter((it) => it.key !== item));
+    setTmpCategoryCnt(tmpCategoryCnt - 1);
   };
 
   const saveCategoryList = () => {
@@ -74,14 +87,6 @@ const CategoryLayout = () => {
 
   const [gridWidth, gridAddRef] = useGettingWidth();
 
-  // useCallback(() => {
-  //   setGridWidth(gridAddRef.current);
-  //   if (gridAddRef.current) {
-  //     setGridWidth(gridAddRef.current.offsetWidth);
-  //     console.log(gridWidth);
-  //   }
-  // }, []);
-
   return (
     <div>
       <div className={styles.textPadding} style={{ paddingTop: "0", paddingBottom: "10px" }}>
@@ -93,20 +98,19 @@ const CategoryLayout = () => {
 
       <div className={styles.gridContainer}>
         {tmpCategoryList.length != 0 ? (
-          <GridLayout
-            className="layout"
-            layout={tmpLayoutList}
-            rowHeight={45}
-            margin={[5, 5]}
-            cols={1}
-            width={gridWidth + 10}
-          >
+          <GridLayout className="layout" layout={tmpLayoutList} rowHeight={45} cols={1} width={gridWidth + 10}>
             {tmpCategoryList.map((item: any, i: number) => {
               return (
                 <div key={i}>
                   <div className={styles.gridCategoryItem} key={item.key}>
                     <MenuIcon fontSize="small" sx={{ p: 1 }} />
                     <Text value={item.key} type="caption" />
+                    <div className={styles.gridCategoryEditBtn} onClick={() => handleEdit(item.key)}>
+                      <Text value="수정" type="caption" />
+                    </div>
+                    <div className={styles.gridCategoryDeleBtn} onClick={() => handleDele(item.key)}>
+                      <Text value="삭제" type="caption" />
+                    </div>
                   </div>
                 </div>
               );
