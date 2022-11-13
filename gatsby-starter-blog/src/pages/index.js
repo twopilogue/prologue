@@ -64,6 +64,7 @@ export const pageQuery = graphql`
       }
     }
     allMarkdownRemark(sort: { fields: [frontmatter___date], order: DESC }) {
+      categoryList: distinct(field: frontmatter___category)
       nodes {
         excerpt
         fields {

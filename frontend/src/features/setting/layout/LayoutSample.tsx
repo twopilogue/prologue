@@ -13,6 +13,7 @@ import {
   selectComponentLayoutList,
   setCategoryLayoutList,
   setComponentLayoutList,
+  selectColors,
 } from "slices/settingSlice";
 import ComponentSelector from "../layout/ComponentSelector";
 import styles from "../Setting.module.css";
@@ -54,7 +55,6 @@ const LayoutSample = () => {
 
   const handleLayoutChange = (layouts: any) => {
     const tmpLayoutList: Layout[] = [];
-    console.log(layouts);
     // 변경된 레이아웃
     for (let i = 0; i < layouts.length; i++) {
       const layout: Layout = {
@@ -68,7 +68,6 @@ const LayoutSample = () => {
         isResizable: layouts[i].isResizable,
       };
       tmpLayoutList.push(layout);
-      console.log("저장할라는거", layout);
     }
     dispatch(setComponentLayoutList(tmpLayoutList));
   };
@@ -103,7 +102,7 @@ const LayoutSample = () => {
             {componentList.map((item: ComponentConfig) => {
               {
                 return checkList[item.id] ? (
-                  <div className={styles.display_logo} key={item.key}>
+                  <div className={styles.layout_colored} key={item.key}>
                     {item.key != "타이틀" && item.key != "글 목록" ? (
                       <div className={styles.icon}>
                         <DragHandleIcon fontSize="small" sx={{ color: "white" }} />

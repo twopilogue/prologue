@@ -1,14 +1,23 @@
-import React from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import { styled } from "@mui/material/styles";
 import palette from "../../styles/colorPalette";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { FormControl, InputLabel, MenuItem } from "@mui/material";
+import { linkConfig } from "./myinfo/MyBlogInfoInput";
 
-const SelectInput = () => {
-  const [site, setSite] = React.useState("");
-  const handleChange = (event: SelectChangeEvent) => {
-    setSite(event.target.value);
+interface Props {
+  link: linkConfig;
+  setLink: Dispatch<SetStateAction<linkConfig>>;
+}
+
+const SelectInput = ({ link, setLink }: Props) => {
+  const handleChange = (e: SelectChangeEvent) => {
+    setLink({
+      site: e.target.value,
+      url: "",
+    });
   };
+
   return (
     <div>
       <FormControl sx={{ width: "100%", height: "100%" }}>
@@ -17,7 +26,7 @@ const SelectInput = () => {
           id="demo-select-small"
           onChange={handleChange}
           placeholder="사이트를 선택"
-          value={site}
+          value={link.site}
         >
           <MenuItem disabled value="">
             <em>사이트를 선택하세요.</em>
