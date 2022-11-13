@@ -28,7 +28,6 @@ const CategoryLayoutItem = ({ isEdit, item, newName, onChangeEdit, handleSave, h
               onChangeEdit(e);
             }}
           />
-          <Text value={isEdit[item.id].id.toString()} type="caption" />
           <div className={styles.gridCategoryDeleBtn} onClick={() => handleSave(item.id)}>
             <Text value="저장" type="caption" />
           </div>
