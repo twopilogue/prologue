@@ -8,10 +8,10 @@ import "@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-sy
 import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
 import { useAppDispatch } from "app/hooks";
 import { setPostContent, setPostFileList } from "slices/postSlice";
-import Axios from "api/MultipartAxios";
 import api from "api/Api";
 import { useSelector } from "react-redux";
 import { rootState } from "app/store";
+import Axios from "api/MultipartAxios";
 
 const PostWriteContents = () => {
   const dispatch = useAppDispatch();
@@ -46,8 +46,15 @@ const PostWriteContents = () => {
             const imageUrlLists = [...showImages];
 
             // const currentImageUrl = URL.createObjectURL(blob);
-            const currentImageUrl = await Axios.put(api.posts.getImgUrl(accessToken, githubId, blob))
+            const formData = new FormData();
+            formData.append("accessToken", new Blob([JSON.stringify(accessToken)], { type: "application/json" }));
+            formData.append("githubId", new Blob([JSON.stringify(githubId)], { type: "application/json" }));
+            formData.append("file", blob);
+
+            console.log("blob : ", blob);
+            const currentImageUrl = await Axios.put(api.posts.getImgUrl(), formData)
               .then((res: any) => {
+                console.log(formData);
                 console.log(res);
               })
               .catch((err: any) => {
