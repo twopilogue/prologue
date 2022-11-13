@@ -245,7 +245,7 @@
   align-items: center;
   background-color: white;
   padding: 0;
-  height: 100%;
+  height: 110%;
   position: relative;
 }
 
@@ -267,6 +267,15 @@
 
 .gridCategorySaveBtn:hover {
   background-color: #e0e0e0;
+}
+
+.gridCategoryInput {
+  width: 30%;
+  height: 30px;
+  margin-left: 10px;
+  padding-left: 10px;
+  border-radius: 0;
+  border: 1px solid #e0e0e0;
 }
 
 .gridAddButton {

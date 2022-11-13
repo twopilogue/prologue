@@ -10,6 +10,7 @@ import LayoutSample from "./layout/LayoutSample";
 import DetailSelector from "./detail/DetailSelector";
 import DetailSetting from "./detail/DetailSetting";
 import MyInfoPage from "pages/MyInfoPage";
+import CategoryPage from "pages/CategoryPage";
 
 export const blogTabs = [
   {
@@ -24,8 +25,7 @@ export const blogTabs = [
     label: "카테고리 설정",
     Component: (
       <div>
-        <CategoryLayout />
-        <CategoryCntSetting />
+        <CategoryPage />
       </div>
     ),
   },
