@@ -4,7 +4,7 @@ import styles from "../Setting.module.css";
 import TitleSetting from "./components/TitleSetting";
 import LogoSetting from "./components/LogoSetting";
 import PageSetting from "./components/PageSetting";
-import CategoryCntSetting from "../CategoryCntSetting";
+import CategoryCntSetting from "../category/CategoryCntSetting";
 import { useAppSelector } from "app/hooks";
 import { colorsConfig, selectBlogSettingInfo, selectClickedComp, selectColors, setColors } from "slices/settingSlice";
 import { useDispatch } from "react-redux";

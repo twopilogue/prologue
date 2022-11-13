@@ -20,7 +20,7 @@ const PageLayout = () => {
 
   const addBox = () => {
     const pageName = "새 페이지 " + tmpPageCnt;
-    tmpPageList.push({ key: pageName });
+    tmpPageList.push({ key: pageName, id: tmpPageCnt + 1 });
     tmpPageLayout.push({
       i: pageName,
       x: tmpPageCnt + 1,
