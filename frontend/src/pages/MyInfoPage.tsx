@@ -7,8 +7,9 @@ import axios from "axios";
 import api from "api/Api";
 import { useDispatch, useSelector } from "react-redux";
 import { rootState } from "app/store";
-import { blogInfoConfig, setBlogSettingInfo } from "slices/settingSlice";
+import { blogInfoConfig, selectColors, selectComponentList, setBlogSettingInfo, setColors } from "slices/settingSlice";
 import ButtonStyled from "components/Button";
+import { useAppSelector } from "app/hooks";
 
 export interface myInfoProps {
   name: string;
@@ -26,7 +27,6 @@ const MyInfoPage = () => {
   const dispatch = useDispatch();
   const { githubId, accessToken } = useSelector((state: rootState) => state.auth);
   const [oldString, setOldString] = useState<blogInfoConfig>(null);
-  const [oldPic, setOldPic] = useState("");
   const [newPic, setNewPic] = useState<Blob>(null);
   const [socialList, setSocialList] = useState({});
   const [myInfo, setMyInfo] = useState<myInfoProps>({
@@ -51,14 +51,12 @@ const MyInfoPage = () => {
     await axios
       .get(api.setting.getBlog(accessToken, githubId))
       .then((res: any) => {
-        // console.log(res.data.profileImg);
         const originString: string = res.data.setting;
         const teststring = originString.replaceAll("${__dirname}", "dirname_Change");
 
         const test = "return (" + teststring + ")";
         const st: blogInfoConfig = new Function(test)();
         setOldString(st);
-        setOldPic(res.data.profileImg);
         dispatch(setBlogSettingInfo({ siteMetadata: st.siteMetadata, profileImg: res.data.profileImg }));
 
         setMyInfo({
@@ -106,7 +104,6 @@ const MyInfoPage = () => {
 
     console.log("리퀘스트: ", result);
     console.log(JSON.stringify(result));
-    // formData.append("imgFile", new Blob([newPic], { type: "multipart/form-data" }));
 
     formData.append("imageFile", newPic);
     formData.append("modifyBlogSettingRequest", new Blob([JSON.stringify(result)], { type: "application/json" }));

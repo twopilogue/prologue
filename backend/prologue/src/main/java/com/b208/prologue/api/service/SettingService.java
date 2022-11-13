@@ -1,5 +1,7 @@
 package com.b208.prologue.api.service;
 
+import com.b208.prologue.api.request.ModifyBlogSettingRequest;
+import com.b208.prologue.api.response.GetBlogSettingResponse;
 import org.json.simple.JSONObject;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -7,8 +9,8 @@ import java.util.List;
 import java.util.Map;
 
 public interface SettingService {
-    List<String> getBlogSetting(String encodedAccessToken, String githubId) throws Exception;
-    void updateBlogSetting(String encodedAccessToken, String githubId, Map<String, List<String>> modified, Map<String, String> social, MultipartFile imageFile) throws Exception;
+    GetBlogSettingResponse getBlogSetting(String encodedAccessToken, String githubId) throws Exception;
+    void updateBlogSetting(ModifyBlogSettingRequest modifyBlogSettingRequest, MultipartFile imageFile) throws Exception;
     String[] getBlogCategory(String encodedAccessToken, String githubId) throws Exception;
     void updateBlogCategory(String encodedAccessToken, String githubId, List<String> category) throws Exception;
     JSONObject[] getBlogPages(String encodedAccessToken, String githubId) throws Exception;

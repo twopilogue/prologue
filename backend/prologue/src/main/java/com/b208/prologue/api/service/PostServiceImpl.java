@@ -107,10 +107,13 @@ public class PostServiceImpl implements PostService {
                     if (line.contains("title")) {
                         postRequests.get(i).setTitle(line.substring(line.indexOf(": ") + 1));
                     }
-                    if (line.contains("category")) {
+                    else if (line.contains("description")) {
+                        postRequests.get(i).setDescription(line.substring(line.indexOf(": ") + 1));
+                    }
+                    else if (line.contains("category")) {
                         postRequests.get(i).setCategory(line.substring(line.indexOf(": ") + 1));
                     }
-                    if (line.contains("tag")) {
+                    else if (line.contains("tag")) {
                         String tagLine = line.substring(line.indexOf(": ") + 1);
                         String[] tagArr = tagLine.split(",");
                         for (String tagTemp : tagArr) {
@@ -119,11 +122,6 @@ public class PostServiceImpl implements PostService {
                         postRequests.get(i).setTag(tag);
                     }
                 }
-
-                if (tempContent.length < 3) continue;
-                postRequests.get(i).setContent(tempContent[2]);
-            } else {
-                postRequests.get(i).setContent(temp.get(i));
             }
         }
 
@@ -280,11 +278,18 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public GetRepoContentResponse getDetailPost(String encodedAccessToken, String githubId, String path) throws Exception {
+    public String getDetailPost(String encodedAccessToken, String githubId, String path) throws Exception {
+        String content = getDetailPage(encodedAccessToken, githubId, path);
+        int index = content.indexOf("date");
+        index = content.indexOf("---", index);
+        return content.substring(index + 4);
+    }
+
+    @Override
+    public String getDetailPage(String encodedAccessToken, String githubId, String path) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
         GetRepoContentResponse response = commonService.getDetailContent(accessToken, githubId, path + "/index.md");
-        response.setContent(base64Converter.decode(response.getContent().replace("\n", "")));
-        return response;
+        return base64Converter.decode(response.getContent().replace("\n", ""));
     }
 
     @Override
