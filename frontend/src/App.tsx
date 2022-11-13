@@ -21,7 +21,6 @@ function App() {
   };
 
   const landingStyle = {
-    backgroundColor: "#F1F8FF",
     height: "100vh",
   };
 
@@ -30,9 +29,9 @@ function App() {
       <Header />
       <div
         style={{
-          width: "83vw",
+          width: location.pathname != "/" && "83vw",
           margin: "0 auto",
-          paddingTop: "47px",
+          paddingTop: location.pathname != "/" && "47px",
         }}
       >
         <Routes>
