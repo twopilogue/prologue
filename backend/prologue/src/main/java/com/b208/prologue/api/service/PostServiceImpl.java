@@ -278,11 +278,18 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public GetRepoContentResponse getDetailPost(String encodedAccessToken, String githubId, String path) throws Exception {
+    public String getDetailPost(String encodedAccessToken, String githubId, String path) throws Exception {
+        String content = getDetailPage(encodedAccessToken, githubId, path);
+        int index = content.indexOf("date");
+        index = content.indexOf("---", index);
+        return content.substring(index + 4);
+    }
+
+    @Override
+    public String getDetailPage(String encodedAccessToken, String githubId, String path) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
         GetRepoContentResponse response = commonService.getDetailContent(accessToken, githubId, path + "/index.md");
-        response.setContent(base64Converter.decode(response.getContent().replace("\n", "")));
-        return response;
+        return base64Converter.decode(response.getContent().replace("\n", ""));
     }
 
     @Override
