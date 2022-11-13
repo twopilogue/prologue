@@ -85,6 +85,10 @@
   background-color: #d3d3eb;
 }
 
+.layout_nonColored {
+  cursor: pointer;
+}
+
 .icon {
   display: flex;
   justify-content: center;
@@ -287,19 +291,29 @@
   flex-direction: column;
 }
 
+.detailContainer {
+  /* padding: 0 0 0px 0; */
+}
+
 .detailItem {
   margin: 10px;
 }
 
+.detailHr {
+  width: 100%;
+  height: 0.05rem;
+  background-color: lightgray;
+  margin-bottom: 10px;
+}
 
 /* 링크 css  */
 .linkBox {
   display: flex;
   align-items: center;
 
-  width: 45vw ;
+  width: 45vw;
   height: 40px;
-  border: 1px solid #ECECEC;
+  border: 1px solid #ececec;
   border-radius: 10px;
   margin-bottom: 5px;
 }
@@ -325,6 +339,14 @@
   height: 30px;
   margin-right: 10px;
 }
+
+/* 페이지 설정 */
+.pageOrder {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+}
+
 .detailItemThree {
   display: grid;
   grid-template-columns: 40px 10vw 30px;
@@ -339,4 +361,9 @@
 
 .textInfo {
   margin-left: 5px;
+}
+
+.textPaddingSm {
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
