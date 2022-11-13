@@ -4,11 +4,11 @@ import { rootState } from "app/store";
 export interface postListConfig {
   title: string;
   date: string;
-  content: string;
+  description: string;
   category: string;
   tag: [];
   directory: string;
-  imageUrl: string;
+  imgUrl: string;
 }
 
 interface postConfig {
@@ -54,10 +54,20 @@ const postSlice = createSlice({
     setPostList: (state, { payload }) => {
       state.postList = payload;
     },
+    setPostCount: (state, { payload }) => {
+      state.postCount = payload;
+    },
   },
 });
-export const { setPostTitle, setPostCategory, setPostTagList, setPostContent, setPostFileList, setPostList } =
-  postSlice.actions;
+export const {
+  setPostTitle,
+  setPostCategory,
+  setPostTagList,
+  setPostContent,
+  setPostFileList,
+  setPostList,
+  setPostCount,
+} = postSlice.actions;
 
 export const selectPostTitle = (state: rootState) => state.posts.title;
 export const selectPostCategory = (state: rootState) => state.posts.category;
@@ -65,5 +75,6 @@ export const selectPostTagList = (state: rootState) => state.posts.tagList;
 export const selectPostContent = (state: rootState) => state.posts.content;
 export const selectPostFileList = (state: rootState) => state.posts.fileList;
 export const selectPostList = (state: rootState) => state.posts.postList;
+export const selectPostCount = (state: rootState) => state.posts.postCount;
 
 export default postSlice.reducer;
