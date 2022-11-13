@@ -42,6 +42,8 @@ interface apiInterface {
     modifyLayoutDetail: () => string;
     getPage: (accessToken: string, githubId: string) => string;
     modifyPage: () => string;
+    getDetail: (accessToken: string, githubId: string) => string;
+    modifyDetail: () => string;
   };
   posts: {
     writePost: () => string;
@@ -103,6 +105,9 @@ const api: apiInterface = {
     getPage: (accessToken: string, githubId: string) =>
       HOST + SETTING + "pages?accessToken=" + accessToken + "&githubId=" + githubId,
     modifyPage: () => HOST + SETTING + "pages",
+    getDetail: (accessToken: string, githubId: string) =>
+      HOST + SETTING + "css?accessToken=" + accessToken + "&githubId=" + githubId,
+    modifyDetail: () => HOST + SETTING + "css",
   },
   posts: {
     writePost: () => HOST + POSTS,

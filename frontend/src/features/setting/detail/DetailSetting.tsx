@@ -6,14 +6,55 @@ import SettingLayout from "./SettingLayout";
 import { useAppSelector } from "app/hooks";
 import { colorsConfig, initialState, selectColors, setClickedComp, setColors } from "slices/settingSlice";
 import ButtonStyled from "components/Button";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { DetailSettingStyles } from "./DetailSettingStyles";
+import Axios from "api/JsonAxios";
+import { rootState } from "app/store";
+import api from "api/Api";
+import { toJSON } from "cssjson";
+import { ChangeHistory } from "@mui/icons-material";
 
 const DetailSetting = () => {
+  const { githubId, accessToken } = useSelector((state: rootState) => state.auth);
   const colors: colorsConfig = useAppSelector(selectColors);
   const dispatch = useDispatch();
-  const handleOnSave = () => {
-    console.log(colors);
+
+  const getDetailSetting = async () => {
+    await Axios.get(api.setting.getDetail(accessToken, githubId))
+      .then((res) => {
+        console.log(res);
+        const removedResult = res.data.css.replaceAll(".", "");
+        const result = toJSON(removedResult);
+        console.log("변환 결과: ", result.children.category.attributes);
+        const result2 = result.children.category.attributes;
+        console.log("배경 색: ", result2["background-color"]);
+        const categoryBack = result2["background-color"];
+        dispatch(setColors({ ...colors, category: { ...colors.category, background: categoryBack } }));
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
+
+  const handleOnSave = async () => {
+    // console.log(colors);
+    const modified = DetailSettingStyles(colors);
+    await Axios.put(api.setting.modifyDetail(), {
+      accessToken: accessToken,
+      githubId: githubId,
+      css: modified,
+    })
+      .then((res: any) => {
+        console.log("됨? ", res);
+      })
+      .catch((err: any) => {
+        console.log(err);
+      });
+  };
+
+  useEffect(() => {
+    getDetailSetting();
+  }, []);
 
   // 언마운트 시 초기화 실행
   useEffect(() => {
