@@ -1,14 +1,11 @@
 package com.b208.prologue.api.controller;
 
 import com.b208.prologue.api.request.*;
-import com.b208.prologue.api.response.BaseResponseBody;
-import com.b208.prologue.api.response.DetailPostResponse;
-import com.b208.prologue.api.response.ImageResponse;
-import com.b208.prologue.api.response.PostListResponse;
+import com.b208.prologue.api.response.*;
 import com.b208.prologue.api.response.github.GetRepoContentResponse;
 import com.b208.prologue.api.service.PostService;
-import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
@@ -40,8 +37,7 @@ public class PostsController {
         try {
             Map<String, Object> result = postService.getList(accessToken, githubId, page);
 
-            List<Map<String, String>> images = postService.getListImagese(accessToken, githubId, (List<String>) result.get("directory"));
-            return ResponseEntity.status(200).body(PostListResponse.of(result, images, 200, "게시물 목록 조회 성공"));
+            return ResponseEntity.status(200).body(PostListResponse.of(result, 200, "게시물 목록 조회 성공"));
         } catch (Exception e) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "게시글 목록 조회에 실패하였습니다."));
         }
@@ -58,9 +54,9 @@ public class PostsController {
 
         String path = "content/blog/" + directory;
         try {
-            GetRepoContentResponse getRepoContentResponse = postService.getDetailPost(accessToken, githubId, path);
+            String content = postService.getDetailPost(accessToken, githubId, path);
             List<ImageResponse> images = postService.getImages(accessToken, githubId, path);
-            return ResponseEntity.status(200).body(DetailPostResponse.of(getRepoContentResponse, images, 200, "게시글 상세 조회에 성공하였습니다."));
+            return ResponseEntity.status(200).body(DetailPostResponse.of(content, images, 200, "게시글 상세 조회에 성공하였습니다."));
         } catch (Exception e) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "게시글 상세 조회에 실패하였습니다."));
         }
@@ -97,7 +93,7 @@ public class PostsController {
         String path = "content/blog/" + modifyDetailPostRequest.getDirectory();
         try {
             postService.updateDetailPost(modifyDetailPostRequest.getAccessToken(), modifyDetailPostRequest.getGithubId(),
-                    path , modifyDetailPostRequest.getContent(), files, modifyDetailPostRequest.getDeletedFiles());
+                    path, modifyDetailPostRequest.getContent(), files, modifyDetailPostRequest.getDeletedFiles());
             return ResponseEntity.status(200).body(BaseResponseBody.of(200, "게시글 수정에 성공하였습니다."));
         } catch (Exception e) {
             e.printStackTrace();
@@ -134,9 +130,9 @@ public class PostsController {
 
         String path = "content/pages/" + pageName;
         try {
-            GetRepoContentResponse getRepoContentResponse = postService.getDetailPost(accessToken, githubId, path);
+            String content = postService.getDetailPage(accessToken, githubId, path);
             List<ImageResponse> images = postService.getImages(accessToken, githubId, path);
-            return ResponseEntity.status(200).body(DetailPostResponse.of(getRepoContentResponse, images, 200, "페이지 글 조회에 성공하였습니다."));
+            return ResponseEntity.status(200).body(DetailPostResponse.of(content, images, 200, "페이지 글 조회에 성공하였습니다."));
         } catch (Exception e) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "페이지 글 조회에 실패하였습니다."));
         }
@@ -159,6 +155,25 @@ public class PostsController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "페이지 글 수정에 실패하였습니다."));
+        }
+    }
+
+    @PutMapping("/temp-image")
+    @ApiOperation(value = "임시 이미지 업로드", notes = "임시 이미지를 업로드한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "임시 이미지 업로드 성공", response = GetTempImageResponse.class),
+            @ApiResponse(code = 400, message = "임시 이미지 업로드 실패", response = BaseResponseBody.class),
+            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<? extends BaseResponseBody> tempImageUpload(@RequestParam @ApiParam(value = "accessToken", required = true) String accessToken,
+                                                                      @RequestParam @ApiParam(value = "사용자 깃허브 아이디", required = true) String githubId,
+                                                                      @RequestParam @ApiParam(value = "임시 업로드 이미지", required = true) MultipartFile file) {
+        try {
+            String tempImageUrl = postService.tempImageUpload(accessToken, githubId, file);
+            return ResponseEntity.status(200).body(GetTempImageResponse.of(tempImageUrl, 200, "임시 이미지 업로드에 성공하였습니다."));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "임시 이미지 업로드에 실패하였습니다."));
         }
     }
 }

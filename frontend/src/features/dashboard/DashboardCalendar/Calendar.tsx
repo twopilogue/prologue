@@ -56,7 +56,6 @@ const CalendarStyled = styled(Calendar)(() => ({
 function CalenderCustom() {
   const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
 
-  const [value, onChange] = useState(new Date());
   const [marks, setMark] = useState(["2022-10-30", "2022-11-01", "2022-11-04", "2022-11-10", "2022-11-21"]);
 
   useEffect(() => {
@@ -64,17 +63,14 @@ function CalenderCustom() {
   }, []);
 
   async function getMonthPosts() {
-    await Axios.get(api.dashboard.getMonthPosts(accessToken, githubId))
-      .then((res) => {
-        console.log("날짜 받기", res.data);
-      })
-      .catch((err) => [console.error("포스팅 일자 받기 실패", err)]);
+    await Axios.get(api.dashboard.getMonthPosts(accessToken, githubId)).then((res) => {
+      setMark(res.data.dateList);
+    });
   }
 
   return (
     <div>
       <CalendarStyled
-        onChange={onChange}
         formatDay={(locale, date) => date.toLocaleString("en", { day: "numeric" })}
         selectRange={false}
         next2Label={null}
