@@ -10,6 +10,7 @@ import api from "api/Api";
 import Axios from "api/JsonAxios";
 import { Stack } from "@mui/material";
 import axios from "axios";
+import Moment from "moment";
 
 function DashboardInfo() {
   const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
@@ -35,12 +36,24 @@ function DashboardInfo() {
       ])
       .then(
         axios.spread((res1, res2, res3) => {
-          const value = res1.data.latestBuildTime;
+          let value = res1.data.latestBuildTime;
+          const startTime = new Date(value);
+          const nowTime = Date.now();
+          if (nowTime - startTime.getDate() < 60000) {
+            value = startTime.getDate() - nowTime;
+            console.log("6초전", value);
+          } else if (nowTime - startTime.getDate() < 86400000) {
+            value = startTime.getDate() - nowTime;
+            console.log("24시간전", value);
+          } else if (nowTime - startTime.getDate() > 86400000) {
+            value = res1.data.latestBuildTime;
+            console.log("24시간 이후", value);
+          }
           setInfo({
             ...info,
             bildTime: {
               year: moment(value).format("YYYY"),
-              day: moment(value).format("MM/DD HH:SS"),
+              day: moment(value).format("MM/DD HH:mm"),
             },
             volume: res2.data.size,
             postNum: res3.data.total,
