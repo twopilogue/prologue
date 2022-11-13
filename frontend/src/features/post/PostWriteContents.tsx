@@ -45,23 +45,29 @@ const PostWriteContents = () => {
             const uploadFileLists = [...fileList];
             const imageUrlLists = [...showImages];
 
-            // const currentImageUrl = URL.createObjectURL(blob);
             const formData = new FormData();
-            formData.append("accessToken", new Blob([JSON.stringify(accessToken)], { type: "application/json" }));
-            formData.append("githubId", new Blob([JSON.stringify(githubId)], { type: "application/json" }));
+
+            const tempImageUploadRequest = {
+              accessToken: accessToken,
+              githubId: githubId,
+            };
+            formData.append(
+              "tempImageUploadRequest",
+              new Blob([JSON.stringify(tempImageUploadRequest)], { type: "application/json" }),
+            );
             formData.append("file", blob);
 
-            console.log("blob : ", blob);
-            const currentImageUrl = await Axios.put(api.posts.getImgUrl(), formData)
+            let imageUrl;
+            await Axios.put(api.posts.getImgUrl(), formData)
               .then((res: any) => {
-                console.log(formData);
                 console.log(res);
+                imageUrl = res.data.tempImageUrl;
               })
               .catch((err: any) => {
                 console.log(err);
               });
 
-            imageUrlLists.push(currentImageUrl);
+            imageUrlLists.push(imageUrl);
             uploadFileLists.push(blob);
 
             setShowImages(imageUrlLists);
@@ -71,7 +77,7 @@ const PostWriteContents = () => {
             console.log(uploadFileLists);
             console.log(fileList);
 
-            // callback(currentImageUrl);
+            callback(imageUrl);
             return false;
           },
         }}
