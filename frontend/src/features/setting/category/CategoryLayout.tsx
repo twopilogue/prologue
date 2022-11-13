@@ -6,8 +6,7 @@ import styles from "../Setting.module.css";
 import Text from "components/Text";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import CategoryLayoutItem from "./CategoryLayoutItem";
-import ButtonStyled from "components/Button";
-import MenuIcon from "@mui/icons-material/Menu";
+
 import { KeyConfig } from "slices/settingSlice";
 
 export interface editList {
@@ -20,20 +19,23 @@ interface Props {
   categoryList: KeyConfig[];
   layoutList: Layout[];
   categoryCnt: number;
+  isEdit: editList[];
   setCategoryList: Dispatch<React.SetStateAction<KeyConfig[]>>;
   setLayoutList: Dispatch<React.SetStateAction<Layout[]>>;
   setCategoryCnt: Dispatch<React.SetStateAction<number>>;
+  setIsEdit: Dispatch<React.SetStateAction<editList[]>>;
 }
 
 const CategoryLayout = ({
   categoryList,
   layoutList,
   categoryCnt,
+  isEdit,
   setCategoryList,
   setLayoutList,
   setCategoryCnt,
+  setIsEdit,
 }: Props) => {
-  const [isEdit, setIsEdit] = useState<editList[]>([]);
   const [newName, setNewName] = useState<string>("");
 
   const addBox = () => {
@@ -44,13 +46,12 @@ const CategoryLayout = ({
     setCategoryCnt(categoryCnt + 1);
   };
 
-  const saveCategoryList = () => {
-    console.log("카테고리", categoryList);
-    console.log("레이아웃", layoutList);
-  };
-
   const handleEdit = (item: any) => {
     console.log(item);
+    console.log("카테고리", categoryList);
+    console.log("레이아웃", layoutList);
+    console.log("개수", categoryCnt);
+    console.log("수정", isEdit);
     setNewName(item.key); // 이름으로 placeholder
     setIsEdit(
       isEdit.map((it: any) => {
@@ -112,8 +113,6 @@ const CategoryLayout = ({
     // ✅  useRef와 useEffect를 지우고 callback ref를 새로 작성
     const gridAddRef = useCallback((node: HTMLElement) => {
       if (node !== null) {
-        // setGridWidth(node);
-        console.log(node.offsetWidth);
         setGridWidth(node.offsetWidth);
       }
     }, []);
@@ -124,17 +123,15 @@ const CategoryLayout = ({
   const [gridWidth, gridAddRef] = useGettingWidth();
 
   useEffect(() => {
-    setIsEdit(
-      categoryList.map((it) => {
-        return { key: it.key, id: it.id, editable: false };
-      }),
-    );
+    if (categoryList) {
+      setIsEdit(
+        categoryList.map((it) => {
+          console.log("what?");
+          return { key: it.key, id: it.id, editable: false };
+        }),
+      );
+    }
   }, []);
-
-  useEffect(() => {
-    console.log("수정여부", isEdit);
-    console.log("카테고리", categoryList);
-  }, [isEdit]);
 
   return (
     <div>
@@ -180,14 +177,6 @@ const CategoryLayout = ({
         <div ref={gridAddRef} className={styles.gridAddButton} onClick={addBox}>
           <AddCircleOutlineIcon fontSize="small" sx={{ p: 1, color: "gray" }} />
           <Text value="카테고리 추가하기" type="caption" />
-        </div>
-      </div>
-      <div className={styles.confirmButton}>
-        <div style={{ margin: "10px" }}>
-          <ButtonStyled color="sky" label="취소" />
-        </div>
-        <div style={{ margin: "10px" }}>
-          <ButtonStyled label="저장" onClick={saveCategoryList} />
         </div>
       </div>
     </div>
