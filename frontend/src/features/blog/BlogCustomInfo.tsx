@@ -27,21 +27,17 @@ function BlogCustomInfo() {
   const onClickNext = async () => {
     const formData = new FormData();
     const modified = {
-      nickName: ["Kyle Mathews", isInfo.profile_name],
-      summary: ["who lives and works in San Francisco building useful things.", isInfo.profile_summary],
-      profileImg: ["../src/images/profile-pic.png", ""],
-      title: ["Gatsby Starter Blog", isInfo.blog_name],
-      description: ["A starter blog demonstrating what Gatsby can do.", isInfo.blog_summary],
-    };
-    const sorry = {
       accessToken: accessToken,
       githubId: githubId,
-      modified: modified,
+      title: isInfo.blog_name,
+      summary: isInfo.profile_summary,
+      nickName: isInfo.profile_name,
+      description: isInfo.blog_summary,
       social: {},
     };
-    console.log("Json", sorry);
+    console.log("Json", modified);
 
-    formData.append("modifyBlogSettingRequest", new Blob([JSON.stringify(sorry)], { type: "application/json" }));
+    formData.append("modifyBlogSettingRequest", new Blob([JSON.stringify(modified)], { type: "application/json" }));
     formData.append("imageFile", isInfo.profile_image);
     //axois 보내기
     await Axios.put(api.setting.modifyBlog(), formData)
