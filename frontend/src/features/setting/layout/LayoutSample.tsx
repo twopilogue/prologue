@@ -55,7 +55,6 @@ const LayoutSample = () => {
 
   const handleLayoutChange = (layouts: any) => {
     const tmpLayoutList: Layout[] = [];
-    console.log(layouts);
     // 변경된 레이아웃
     for (let i = 0; i < layouts.length; i++) {
       const layout: Layout = {
@@ -69,7 +68,6 @@ const LayoutSample = () => {
         isResizable: layouts[i].isResizable,
       };
       tmpLayoutList.push(layout);
-      console.log("저장할라는거", layout);
     }
     dispatch(setComponentLayoutList(tmpLayoutList));
   };

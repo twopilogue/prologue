@@ -7,9 +7,8 @@ import axios from "axios";
 import api from "api/Api";
 import { useDispatch, useSelector } from "react-redux";
 import { rootState } from "app/store";
-import { blogInfoConfig, selectColors, selectComponentList, setBlogSettingInfo, setColors } from "slices/settingSlice";
+import { blogInfoConfig, setBlogSettingInfo } from "slices/settingSlice";
 import ButtonStyled from "components/Button";
-import { useAppSelector } from "app/hooks";
 
 export interface myInfoProps {
   name: string;
@@ -69,7 +68,6 @@ const MyInfoPage = () => {
           description: st.siteMetadata.description,
           social: st.siteMetadata.social,
         });
-        console.log(st.siteMetadata.social);
       })
 
       .catch((err: any) => {
