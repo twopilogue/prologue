@@ -10,7 +10,9 @@ import landingMainImg2 from "assets/landing/landingMainImg2.png";
 import landingMainImg3 from "assets/landing/landingMainImg3.png";
 import landingMainImg4 from "assets/landing/landingMainImg4.png";
 import { Paper } from "@mui/material";
-import waveSvg from "assets/landing/wave.svg" 
+import waveSvg from "assets/landing/wave.svg";
+import Axios from "api/JsonAxios";
+import api from "api/Api";
 
 function LandingMain() {
   const [state, setState] = useState({ height: 0 });
@@ -54,10 +56,16 @@ function LandingMain() {
     updateDimensions(); //최초로 한번 실행하기
   };
 
+  const githubOnClick = () => {
+    Axios.get(api.auth.getUri()).then((res) => {
+      window.location.href = res.data.uri;
+    });
+  };
+
   return (
     <Box className={styles.mainBox}>
       <div className={styles.mainImgGradient} />
-      <img src={waveSvg} className={styles.mainWaveSvg}/>
+      <img src={waveSvg} className={styles.mainWaveSvg} />
       <Stack direction="row" alignItems="center" spacing={30} sx={{ ml: 5, position: "absolute" }}>
         <Box className={styles.mainLeftBox}>
           <Text value="깃허브 블로그를 편리하게" type="groupTitle" />
@@ -68,6 +76,7 @@ function LandingMain() {
           </Stack>
           <Button
             startIcon={<GitHubIcon />}
+            onClick={githubOnClick}
             sx={{
               backgroundColor: "#2f2f2f",
               color: "white",
