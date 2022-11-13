@@ -36,6 +36,7 @@ const BlogIndex = ({ data, location }) => {
       <div className="display_row">
         <div className="display_column">
           <Profile />
+          <Category />
         </div>
         <div className="display_column">
           <Title />
