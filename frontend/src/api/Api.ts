@@ -29,6 +29,7 @@ interface apiInterface {
     getNewBuildTime: (accessToken: string, githubId: string) => string;
     getMonthPosts: (accessToken: string, githubId: string) => string;
     getRepoSize: (accessToken: string, githubId: string) => string;
+    getTotalPost: (accessToken: string, githubId: string) => string;
   };
   setting: {
     getCategory: (accessToken: string, githubId: string) => string;
@@ -41,6 +42,8 @@ interface apiInterface {
     modifyLayoutDetail: () => string;
     getPage: (accessToken: string, githubId: string) => string;
     modifyPage: () => string;
+    getDetail: (accessToken: string, githubId: string) => string;
+    modifyDetail: () => string;
   };
   posts: {
     writePost: () => string;
@@ -86,6 +89,8 @@ const api: apiInterface = {
       HOST + DASHBOARD + "month-posts?accessToken=" + accessToken + "&githubId=" + githubId,
     getRepoSize: (accessToken: string, githubId: string) =>
       HOST + DASHBOARD + "size?accessToken=" + accessToken + "&githubId=" + githubId,
+    getTotalPost: (accessToken: string, githubId: string) =>
+      HOST + DASHBOARD + "total?accessToken=" + accessToken + "&githubId=" + githubId,
   },
   setting: {
     getCategory: (accessToken: string, githubId: string) =>
@@ -96,11 +101,14 @@ const api: apiInterface = {
     modifyBlog: () => HOST + SETTING + "blog",
     getLayout: () => HOST + SETTING + "layout",
     modifyLayout: () => HOST + SETTING + "layout",
-    getLayoutDetail: () => HOST + SETTING + "layout/detail",
-    modifyLayoutDetail: () => HOST + SETTING + "layout/detail",
+    getLayoutDetail: () => HOST + SETTING + "layout/css",
+    modifyLayoutDetail: () => HOST + SETTING + "layout/css",
     getPage: (accessToken: string, githubId: string) =>
       HOST + SETTING + "pages?accessToken=" + accessToken + "&githubId=" + githubId,
     modifyPage: () => HOST + SETTING + "pages",
+    getDetail: (accessToken: string, githubId: string) =>
+      HOST + SETTING + "css?accessToken=" + accessToken + "&githubId=" + githubId,
+    modifyDetail: () => HOST + SETTING + "css",
   },
   posts: {
     writePost: () => HOST + POSTS,

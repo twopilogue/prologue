@@ -74,10 +74,19 @@
   display: none;
 }
 
-.display_logo {
+.layout_nonColored,
+.layout_colored {
   margin: 10px;
-  background-color: #d3d3eb;
+  /* background-color: #d3d3eb; */
   border-radius: 5px;
+}
+
+.layout_colored {
+  background-color: #d3d3eb;
+}
+
+.layout_nonColored {
+  cursor: pointer;
 }
 
 .icon {
@@ -100,7 +109,7 @@
   box-sizing: border-box;
 }
 
-/* -------------------------------------------- */
+/* 카테고리 -------------------------------------------- */
 .grid_container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -272,14 +281,8 @@
   padding: 20px;
 }
 
-.addButton {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  margin-left: 10px;
-  padding: 20px;
-  border: 2px solid gray;
+.addLinkBtn {
+  margin-left: 5px;
 }
 
 /* 세부 설정 ---------------------------------- */
@@ -288,6 +291,79 @@
   flex-direction: column;
 }
 
+.detailContainer {
+  /* padding: 0 0 0px 0; */
+}
+
 .detailItem {
   margin: 10px;
+}
+
+.detailHr {
+  width: 100%;
+  height: 0.05rem;
+  background-color: lightgray;
+  margin-bottom: 10px;
+}
+
+/* 링크 css  */
+.linkBox {
+  display: flex;
+  align-items: center;
+
+  width: 45vw;
+  height: 40px;
+  border: 1px solid #ececec;
+  border-radius: 10px;
+  margin-bottom: 5px;
+}
+
+.linkBoxSite {
+  display: flex;
+  align-items: center;
+  width: 140px;
+  margin-right: 10px;
+  padding-left: 10px;
+  box-sizing: border-box;
+}
+
+.linkBoxLink {
+  width: 30.3vw;
+  padding-left: 10px;
+  box-sizing: border-box;
+}
+
+.socialIcon {
+  border: 100%;
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+}
+
+/* 페이지 설정 */
+.pageOrder {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+}
+
+.detailItemThree {
+  display: grid;
+  grid-template-columns: 40px 10vw 30px;
+  align-items: center;
+}
+
+.detailItemImgBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.textInfo {
+  margin-left: 5px;
+}
+
+.textPaddingSm {
+  margin-top: 10px;
+  margin-bottom: 10px;
 }

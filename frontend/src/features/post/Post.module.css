@@ -67,9 +67,22 @@
   margin-bottom: 1%;
 }
 
+.postDataList {
+  width: 100%;
+  height: 88%;
+  /* display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  overflow-y: auto;
+  gap: 2%; */
+  overflow: scroll;
+}
+
 /* PostListCard */
 .postListCard {
-  position: absolute;
+  position: relative;
   width: 62vw;
   height: 17vh;
   background-color: #ffffff;
@@ -94,6 +107,7 @@
   position: absolute;
   top: 45%;
   transform: translate(0%, -45%);
+  display: flex;
 }
 
 .postCategory {
@@ -116,8 +130,8 @@
   top: 52%;
   left: 97%;
   transform: translate(-97%, -52%);
-  background-color: #ececec;
   border-radius: 10px;
+  z-index: 10;
 }
 
 /* PostListImgCard */
