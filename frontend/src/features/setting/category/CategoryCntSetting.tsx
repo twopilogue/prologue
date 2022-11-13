@@ -1,6 +1,6 @@
 import Text from "components/Text";
 import React, { useState } from "react";
-import styles from "./Setting.module.css";
+import styles from "../Setting.module.css";
 import SwitchButton from "components/SwitchButton";
 
 const CategoryCntSetting = () => {

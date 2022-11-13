@@ -245,7 +245,37 @@
   align-items: center;
   background-color: white;
   padding: 0;
-  height: 100%;
+  height: 110%;
+  position: relative;
+}
+
+.gridCategoryEditBtn,
+.gridCategoryDeleBtn {
+  position: absolute;
+  border: 1px solid #e0e0e0;
+  padding: 5px 10px 5px 10px;
+  cursor: pointer;
+}
+
+.gridCategoryEditBtn {
+  right: 70px;
+}
+
+.gridCategoryDeleBtn {
+  right: 20px;
+}
+
+.gridCategorySaveBtn:hover {
+  background-color: #e0e0e0;
+}
+
+.gridCategoryInput {
+  width: 30%;
+  height: 30px;
+  margin-left: 10px;
+  padding-left: 10px;
+  border-radius: 0;
+  border: 1px solid #e0e0e0;
 }
 
 .gridAddButton {
