@@ -1,14 +1,14 @@
-import React, { useState, useCallback, ChangeEvent, useEffect } from "react";
+import React, { useState, useCallback, ChangeEvent, useEffect, Dispatch } from "react";
 import { Layout } from "react-grid-layout";
 import GridLayout from "react-grid-layout";
 import styles from "../Setting.module.css";
 // import "../../../../node_modules/react-grid-layout/css/styles.css";
 import Text from "components/Text";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import { KeyConfig } from "slices/settingSlice";
 import CategoryLayoutItem from "./CategoryLayoutItem";
 import ButtonStyled from "components/Button";
 import MenuIcon from "@mui/icons-material/Menu";
+import { KeyConfig } from "slices/settingSlice";
 
 export interface editList {
   key: string;
@@ -16,24 +16,37 @@ export interface editList {
   editable: boolean;
 }
 
-const CategoryLayout = () => {
-  const [tmpCategoryList, setTmpCategoryList] = useState<KeyConfig[]>([]);
-  const [tmpLayoutList, setTmpLayoutList] = useState<Layout[]>([]);
-  const [tmpCategoryCnt, setTmpCategoryCnt] = useState<number>(0);
+interface Props {
+  categoryList: KeyConfig[];
+  layoutList: Layout[];
+  categoryCnt: number;
+  setCategoryList: Dispatch<React.SetStateAction<KeyConfig[]>>;
+  setLayoutList: Dispatch<React.SetStateAction<Layout[]>>;
+  setCategoryCnt: Dispatch<React.SetStateAction<number>>;
+}
+
+const CategoryLayout = ({
+  categoryList,
+  layoutList,
+  categoryCnt,
+  setCategoryList,
+  setLayoutList,
+  setCategoryCnt,
+}: Props) => {
   const [isEdit, setIsEdit] = useState<editList[]>([]);
   const [newName, setNewName] = useState<string>("");
 
   const addBox = () => {
-    const categoryName: string = "새 카테고리 " + (tmpCategoryCnt + 1).toString();
+    const categoryName: string = "새 카테고리 " + (categoryCnt + 1).toString();
 
-    setTmpCategoryList(tmpCategoryList.concat({ key: categoryName, id: tmpCategoryCnt }));
-    setIsEdit(isEdit.concat({ key: categoryName, id: tmpCategoryCnt, editable: false }));
-    setTmpCategoryCnt(tmpCategoryCnt + 1);
+    setCategoryList(categoryList.concat({ key: categoryName, id: categoryCnt }));
+    setIsEdit(isEdit.concat({ key: categoryName, id: categoryCnt, editable: false }));
+    setCategoryCnt(categoryCnt + 1);
   };
 
   const saveCategoryList = () => {
-    console.log("카테고리", tmpCategoryList);
-    console.log("레이아웃", tmpLayoutList);
+    console.log("카테고리", categoryList);
+    console.log("레이아웃", layoutList);
   };
 
   const handleEdit = (item: any) => {
@@ -49,15 +62,15 @@ const CategoryLayout = () => {
   };
 
   const handleDele = (item: number) => {
-    setTmpCategoryList(tmpCategoryList.filter((it) => it.id !== item));
-    // setTmpLayoutList(tmpLayoutList.filter((it) => it.y !== item));
-    setTmpCategoryCnt(tmpCategoryCnt - 1);
+    setCategoryList(categoryList.filter((it) => it.id !== item));
+    // set LayoutList( LayoutList.filter((it) => it.y !== item));
+    setCategoryCnt(categoryCnt - 1);
     setIsEdit(isEdit.filter((it) => it.id !== item));
   };
 
   const handleSave = (item: number) => {
-    setTmpCategoryList(
-      tmpCategoryList.map((it: any) => {
+    setCategoryList(
+      categoryList.map((it: any) => {
         return it.id === item ? { key: newName, id: it.id } : { key: it.key, id: it.id };
       }),
     );
@@ -75,7 +88,7 @@ const CategoryLayout = () => {
   };
 
   const handleOnLayoutChange = (layouts: any) => {
-    const tmpList: Layout[] = [];
+    const List: Layout[] = [];
     // 변경된 레이아웃
     for (let i = 0; i < layouts.length; i++) {
       const layout: Layout = {
@@ -88,9 +101,9 @@ const CategoryLayout = () => {
         isDraggable: layouts[i].isDraggable,
         isResizable: layouts[i].isResizable,
       };
-      tmpList.push(layout);
+      List.push(layout);
     }
-    setTmpLayoutList(tmpList);
+    setLayoutList(List);
   };
 
   const useGettingWidth = () => {
@@ -112,7 +125,7 @@ const CategoryLayout = () => {
 
   useEffect(() => {
     setIsEdit(
-      tmpCategoryList.map((it) => {
+      categoryList.map((it) => {
         return { key: it.key, id: it.id, editable: false };
       }),
     );
@@ -120,7 +133,7 @@ const CategoryLayout = () => {
 
   useEffect(() => {
     console.log("수정여부", isEdit);
-    console.log("카테고리", tmpCategoryList);
+    console.log("카테고리", categoryList);
   }, [isEdit]);
 
   return (
@@ -133,17 +146,17 @@ const CategoryLayout = () => {
       </div>
 
       <div className={styles.gridContainer}>
-        {tmpCategoryList.length != 0 ? (
+        {categoryList.length != 0 ? (
           <GridLayout
             className="layout"
-            layout={tmpLayoutList}
+            layout={layoutList}
             rowHeight={45}
             cols={1}
             width={gridWidth + 10}
             isResizable={false}
             onLayoutChange={handleOnLayoutChange}
           >
-            {tmpCategoryList.map((item: any, i: number) => {
+            {categoryList.map((item: any, i: number) => {
               return (
                 <div key={i}>
                   <CategoryLayoutItem
