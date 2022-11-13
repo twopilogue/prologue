@@ -74,10 +74,15 @@
   display: none;
 }
 
-.display_logo {
+.layout_nonColored,
+.layout_colored {
   margin: 10px;
-  background-color: #d3d3eb;
+  /* background-color: #d3d3eb; */
   border-radius: 5px;
+}
+
+.layout_colored {
+  background-color: #d3d3eb;
 }
 
 .icon {
@@ -100,7 +105,7 @@
   box-sizing: border-box;
 }
 
-/* -------------------------------------------- */
+/* 카테고리 -------------------------------------------- */
 .grid_container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -319,4 +324,19 @@
   width: 30px;
   height: 30px;
   margin-right: 10px;
+}
+.detailItemThree {
+  display: grid;
+  grid-template-columns: 40px 10vw 30px;
+  align-items: center;
+}
+
+.detailItemImgBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.textInfo {
+  margin-left: 5px;
 }

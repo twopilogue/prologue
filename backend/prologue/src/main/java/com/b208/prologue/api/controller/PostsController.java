@@ -54,9 +54,9 @@ public class PostsController {
 
         String path = "content/blog/" + directory;
         try {
-            GetRepoContentResponse getRepoContentResponse = postService.getDetailPost(accessToken, githubId, path);
+            String content = postService.getDetailPost(accessToken, githubId, path);
             List<ImageResponse> images = postService.getImages(accessToken, githubId, path);
-            return ResponseEntity.status(200).body(DetailPostResponse.of(getRepoContentResponse, images, 200, "게시글 상세 조회에 성공하였습니다."));
+            return ResponseEntity.status(200).body(DetailPostResponse.of(content, images, 200, "게시글 상세 조회에 성공하였습니다."));
         } catch (Exception e) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "게시글 상세 조회에 실패하였습니다."));
         }
@@ -130,9 +130,9 @@ public class PostsController {
 
         String path = "content/pages/" + pageName;
         try {
-            GetRepoContentResponse getRepoContentResponse = postService.getDetailPost(accessToken, githubId, path);
+            String content = postService.getDetailPage(accessToken, githubId, path);
             List<ImageResponse> images = postService.getImages(accessToken, githubId, path);
-            return ResponseEntity.status(200).body(DetailPostResponse.of(getRepoContentResponse, images, 200, "페이지 글 조회에 성공하였습니다."));
+            return ResponseEntity.status(200).body(DetailPostResponse.of(content, images, 200, "페이지 글 조회에 성공하였습니다."));
         } catch (Exception e) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "페이지 글 조회에 실패하였습니다."));
         }

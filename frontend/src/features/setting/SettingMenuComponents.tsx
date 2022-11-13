@@ -7,8 +7,8 @@ import CategoryCntSetting from "./CategoryCntSetting";
 import PageLayout from "./PageLayout";
 import LayoutSelector from "./layout/LayoutSelector";
 import LayoutSample from "./layout/LayoutSample";
-import DetailSelector from "./DetailSelector";
-import DetailSetting from "./DetailSetting";
+import DetailSelector from "./detail/DetailSelector";
+import DetailSetting from "./detail/DetailSetting";
 import MyInfoPage from "pages/MyInfoPage";
 
 export const blogTabs = [
