@@ -14,6 +14,7 @@ import { useAppSelector } from "app/hooks";
 import {
   selectPostCategory,
   selectPostContent,
+  selectPostDescription,
   selectPostFileList,
   selectPostTagList,
   selectPostTitle,
@@ -22,6 +23,7 @@ import {
 const PostWritePage = () => {
   const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
   const title = useAppSelector(selectPostTitle);
+  const description = useAppSelector(selectPostDescription);
   const category = useAppSelector(selectPostCategory);
   const tagList = useAppSelector(selectPostTagList);
   const content = useAppSelector(selectPostContent);
@@ -37,12 +39,14 @@ const PostWritePage = () => {
     const frontMatter =
       "---\ntitle: " +
       title +
-      "\ndate: " +
-      new Date().toISOString() +
+      "\ndescription: " +
+      description +
       "\ncategory: " +
       category +
-      "\ntag: " +
+      "\ntags: " +
       tagList +
+      "\ndate: " +
+      new Date().toISOString() +
       "\n---\n";
 
     const writeDetailPostRequest = {
