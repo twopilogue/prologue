@@ -321,16 +321,6 @@ a:focus {
   border-radius: 100%;
 }
 
-.category {
-  margin-bottom: var(--spacing-4);
-  margin-right: var(--spacing-4);
-
-  padding: var(--spacing-4);
-
-  background-color: #ececec;
-  border-radius: 10px;
-}
-
 .blog-post header h1 {
   margin: var(--spacing-0) var(--spacing-0) var(--spacing-4) var(--spacing-0);
 }
@@ -373,3 +363,12 @@ a:focus {
 
 /* CustomCSS */
 
+.category {
+  margin-bottom: var(--spacing-4);
+  margin-right: var(--spacing-4);
+
+  padding: var(--spacing-4);
+
+  background-color: #ececec;
+  border-radius: 10px;
+}
