@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from "react";
 import { Layout, Responsive, WidthProvider } from "react-grid-layout";
 import GridLayout from "react-grid-layout";
-import styles from "./Setting.module.css";
+import styles from "../Setting.module.css";
 import Text from "components/Text";
 
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";

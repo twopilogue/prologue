@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import styles from "./Setting.module.css";
 
-import CategoryLayout from "./CategoryLayout";
+import CategoryLayout from "./category/CategoryLayout";
 import ConfirmButton from "./ConfirmButton";
-import CategoryCntSetting from "./CategoryCntSetting";
+import CategoryCntSetting from "./category/CategoryCntSetting";
 import PageLayout from "./PageLayout";
 import LayoutSelector from "./layout/LayoutSelector";
 import LayoutSample from "./layout/LayoutSample";
