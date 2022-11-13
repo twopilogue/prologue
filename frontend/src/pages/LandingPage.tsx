@@ -71,15 +71,10 @@ const LandingPage = () => {
   }
 
   return (
-    <>
-      {/* <Stack justifyContent="center" alignItems="center" spacing={2}>
-        <NavLink to="/dashboard">대시보드</NavLink>
-      </Stack> */}
-      <Stack justifyContent="center" alignItems="center">
-        <LandingMain />
-        <LandingSub />
-      </Stack>
-    </>
+    <Stack justifyContent="center" alignItems="center">
+      <LandingMain />
+      <LandingSub />
+    </Stack>
   );
 };
 
