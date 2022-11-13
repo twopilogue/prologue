@@ -1,9 +1,6 @@
 package com.b208.prologue.api.controller;
 
-import com.b208.prologue.api.request.ModifyBlogCategoryRequest;
-import com.b208.prologue.api.request.ModifyBlogLayoutRequest;
-import com.b208.prologue.api.request.ModifyBlogPagesRequest;
-import com.b208.prologue.api.request.ModifyBlogSettingRequest;
+import com.b208.prologue.api.request.*;
 import com.b208.prologue.api.response.*;
 import com.b208.prologue.api.service.SettingService;
 import io.swagger.annotations.ApiOperation;
@@ -35,9 +32,9 @@ public class SettingConroller {
     })
     public ResponseEntity<? extends BaseResponseBody> getBlogSetting(@RequestParam String accessToken, @RequestParam String githubId) {
         try {
-            List<String> result = settingService.getBlogSetting(accessToken, githubId);
+            GetBlogSettingResponse result = settingService.getBlogSetting(accessToken, githubId);
 
-            return ResponseEntity.status(200).body(GetBlogSettingResponse.of(result.get(0), result.get(1), 200, "블로그 설정 조회에 성공하였습니다."));
+            return ResponseEntity.status(200).body(GetBlogSettingResponse.of(result, 200, "블로그 설정 조회에 성공하였습니다."));
         } catch (Exception e) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "블로그 설정 조회에 실패하였습니다."));
         }
@@ -50,9 +47,9 @@ public class SettingConroller {
             @ApiResponse(code = 400, message = "블로그 설정 수정 실패", response = BaseResponseBody.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
-    public ResponseEntity<? extends BaseResponseBody> modifyBlogSetting(@Valid @RequestPart ModifyBlogSettingRequest modifyBlogSettingRequest, @RequestPart(required = false) MultipartFile imgFile) {
+    public ResponseEntity<? extends BaseResponseBody> modifyBlogSetting(@Valid @RequestPart ModifyBlogSettingRequest modifyBlogSettingRequest, @RequestPart(required = false) MultipartFile imageFile) {
         try {
-            settingService.updateBlogSetting(modifyBlogSettingRequest.getAccessToken(), modifyBlogSettingRequest.getGithubId(), modifyBlogSettingRequest.getModified(), imgFile);
+            settingService.updateBlogSetting(modifyBlogSettingRequest, imageFile);
             return ResponseEntity.status(200).body(BaseResponseBody.of(200, "블로그 설정 수정에 성공하였습니다."));
         } catch (Exception e) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "블로그 설정 수정에 실패하였습니다."));
@@ -156,6 +153,39 @@ public class SettingConroller {
             return ResponseEntity.status(200).body(BaseResponseBody.of(200, "레이아웃 설정 수정에 성공하였습니다."));
         } catch (Exception e) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "레이아웃 설정 수정에 실패하였습니다."));
+        }
+    }
+
+    @GetMapping("/css")
+    @ApiOperation(value = "레이아웃 세부 설정 조회", notes = "레이아웃 세부 설정을 조회한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "레이아웃 세부 설정 조회 성공", response = BlogLayoutCssResponse.class),
+            @ApiResponse(code = 400, message = "레이아웃 세부 설정 조회 실패", response = BaseResponseBody.class),
+            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<? extends BaseResponseBody> getBlogLayoutCss(@RequestParam String accessToken, @RequestParam String githubId) {
+
+        try {
+            String css = settingService.getBlogLayoutCss(accessToken, githubId);
+            return ResponseEntity.status(200).body(BlogLayoutCssResponse.of(css, 200, "레이아웃 세부 설정 조회에 성공하였습니다."));
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "레이아웃 세부 설정 조회에 실패하였습니다."));
+        }
+    }
+
+    @PutMapping("/css")
+    @ApiOperation(value = "레이아웃 세부 설정 수정", notes = "레이아웃 세부 설정을 수정한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "레이아웃 세부 설정 수정 성공", response = BaseResponseBody.class),
+            @ApiResponse(code = 400, message = "레이아웃 세부 설정 수정 실패", response = BaseResponseBody.class),
+            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<? extends BaseResponseBody> modifyBlogLayout(@Valid @RequestBody ModifyBlogLayoutCssRequest modifyBlogLayoutCssRequest) {
+        try {
+            settingService.updateBlogLayoutCss(modifyBlogLayoutCssRequest.getAccessToken(), modifyBlogLayoutCssRequest.getGithubId(), modifyBlogLayoutCssRequest.getCss());
+            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "레이아웃 세부 설정 수정에 성공하였습니다."));
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "레이아웃 세부 설정 수정에 실패하였습니다."));
         }
     }
 }
