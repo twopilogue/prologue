@@ -5,7 +5,6 @@ import com.b208.prologue.api.request.github.TreeRequest;
 import com.b208.prologue.api.request.github.UpdateContentRequest;
 import com.b208.prologue.api.response.GetBlogSettingResponse;
 import com.b208.prologue.api.response.github.GetRepoContentResponse;
-import com.b208.prologue.api.response.github.GetSettingResponse;
 import com.b208.prologue.common.Base64Converter;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -18,10 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -52,17 +48,17 @@ public class SettingServiceImpl implements SettingService {
         String title = meta.get("title").toString();
         String description = meta.get("description").toString();
 
-        String[] socialArray = new String[4];
-        socialArray[0] = social.get("github").toString();
-        socialArray[1] = social.get("gmail").toString();
-        socialArray[2] = social.get("instagram").toString();
-        socialArray[3] = social.get("twitter").toString();
+        Map<String, String> socialMap = new HashMap<>();
+        socialMap.put("github", social.get("github").toString());
+        socialMap.put("gmail", social.get("gmail").toString());
+        socialMap.put("instagram", social.get("instagram").toString());
+        socialMap.put("twitter", social.get("twitter").toString());
 
         getBlogSettingResponse.setNickName(nickName);
         getBlogSettingResponse.setSummary(summary);
         getBlogSettingResponse.setTitle(title);
         getBlogSettingResponse.setDescription(description);
-        getBlogSettingResponse.setSocial(socialArray);
+        getBlogSettingResponse.setSocial(socialMap);
 
         GetRepoContentResponse[] getRepoContentResponse = webClient.get()
                 .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/src/images")
