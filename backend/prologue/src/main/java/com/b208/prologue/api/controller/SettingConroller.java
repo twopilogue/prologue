@@ -1,6 +1,7 @@
 package com.b208.prologue.api.controller;
 
 import com.b208.prologue.api.request.*;
+import com.b208.prologue.api.response.github.GetBlogLayoutCss;
 import com.b208.prologue.api.response.*;
 import com.b208.prologue.api.service.SettingService;
 import io.swagger.annotations.ApiOperation;
@@ -12,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
 import javax.validation.Valid;
 
 @CrossOrigin("*")
@@ -166,8 +166,8 @@ public class SettingConroller {
     public ResponseEntity<? extends BaseResponseBody> getBlogLayoutCss(@RequestParam String accessToken, @RequestParam String githubId) {
 
         try {
-            String css = settingService.getBlogLayoutCss(accessToken, githubId);
-            return ResponseEntity.status(200).body(BlogLayoutCssResponse.of(css, 200, "레이아웃 세부 설정 조회에 성공하였습니다."));
+            GetBlogLayoutCss getBlogLayoutCss = settingService.getBlogLayoutCss(accessToken, githubId);
+            return ResponseEntity.status(200).body(BlogLayoutCssResponse.of(getBlogLayoutCss, 200, "레이아웃 세부 설정 조회에 성공하였습니다."));
         } catch (Exception e) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "레이아웃 세부 설정 조회에 실패하였습니다."));
         }
