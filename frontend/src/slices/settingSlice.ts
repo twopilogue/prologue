@@ -14,10 +14,10 @@ export interface ComponentConfig {
 
 export interface ComponentCheckConfig {
   [logo: string]: boolean;
-  profile: boolean;
-  category: boolean;
-  page: boolean;
-  title: boolean;
+  profile?: boolean;
+  category?: boolean;
+  page?: boolean;
+  title?: boolean;
   contents: boolean;
 }
 
@@ -78,6 +78,7 @@ interface LayoutConfig {
   colorList: colorsConfig;
 
   clickedComp: string;
+  clickedLayoutIdx: number;
 }
 
 export const initialState: LayoutConfig = {
@@ -147,6 +148,7 @@ export const initialState: LayoutConfig = {
   },
 
   clickedComp: "logo",
+  clickedLayoutIdx: 1,
 };
 
 const settingSlice = createSlice({
@@ -192,6 +194,9 @@ const settingSlice = createSlice({
     setClickedComp: (state, { payload }) => {
       state.clickedComp = payload;
     },
+    setClickedLayoutIdx: (state, { payload }) => {
+      state.clickedLayoutIdx = payload;
+    },
   },
 });
 export const {
@@ -206,6 +211,7 @@ export const {
   setBlogSettingInfo,
   setColors,
   setClickedComp,
+  setClickedLayoutIdx,
 } = settingSlice.actions;
 
 export const selectCategoryLayoutList = (state: rootState) => state.setting.categoryLayoutList;
@@ -226,6 +232,7 @@ export const selectBlogSettingInfo = (state: rootState) => state.setting.blogSet
 export const selectColors = (state: rootState) => state.setting.colorList;
 
 export const selectClickedComp = (state: rootState) => state.setting.clickedComp;
+export const selectClickedLayoutIdx = (state: rootState) => state.setting.clickedLayoutIdx;
 
 export default settingSlice.reducer;
 
