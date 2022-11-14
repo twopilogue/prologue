@@ -13,19 +13,44 @@ import { useParams } from "react-router-dom";
 import Axios from "api/MultipartAxios";
 import api from "api/Api";
 import PostViewerContents from "features/post/PostViewerContents";
+import { useAppDispatch, useAppSelector } from "app/hooks";
+import {
+  selectPostCategory,
+  selectPostContent,
+  selectPostFileList,
+  selectPostTagList,
+  selectPostTitle,
+  setPostFileList,
+} from "slices/postSlice";
+
+interface modifyDetailPostRequestProps {
+  accessToken: string;
+  githubId: string;
+  directory: string;
+  content: string;
+  images: any[];
+}
 
 const PostEditPage = () => {
+  const dispatch = useAppDispatch();
+
   const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
   const { directory } = useParams();
 
   const [loading, setLoading] = useState(false);
-  const [content, setContent] = useState("");
+  const [contentData, setContentData] = useState("");
+
+  const title = useAppSelector(selectPostTitle);
+  const category = useAppSelector(selectPostCategory);
+  const tagList = useAppSelector(selectPostTagList);
+  const content = useAppSelector(selectPostContent);
+  const fileList = useAppSelector(selectPostFileList);
 
   const getPostDetail = async () => {
     await Axios.get(api.posts.getPostDetail(accessToken, githubId, directory))
       .then((res) => {
         console.log(res);
-        setContent(res.data.content);
+        setContentData(res.data.content);
       })
       .catch((err) => {
         console.log(err);
@@ -41,15 +66,48 @@ const PostEditPage = () => {
   const editPost = () => {
     const formData = new FormData();
 
-    const frontMatter = "";
+    const frontMatter =
+      "---\ntitle: " +
+      title +
+      "\ndate: " +
+      new Date().toISOString() +
+      "\ncategory: " +
+      category +
+      "\ntag: " +
+      tagList +
+      "\n---\n";
 
-    const modifyDetailPostRequest = {
+    const modifyDetailPostRequest: modifyDetailPostRequestProps = {
       accessToken: accessToken,
       githubId: githubId,
       directory: directory,
       content: frontMatter + content,
-      deletedFiles: "",
+      images: [],
     };
+
+    if (fileList.length) {
+      for (let i = 0; i < fileList.length; i++) {
+        const tmp = {
+          url: fileList[i].url,
+          name: fileList[i].name,
+        };
+        modifyDetailPostRequest.images.push(tmp);
+      }
+    }
+
+    formData.append(
+      "modifyDetailPostRequest",
+      new Blob([JSON.stringify(modifyDetailPostRequest)], { type: "application/json" }),
+    );
+
+    Axios.post(api.posts.modifyPage(), formData)
+      .then((res: any) => {
+        console.log(res);
+      })
+      .catch((err: any) => {
+        console.log(err);
+      });
+    dispatch(setPostFileList([]));
   };
 
   return (
@@ -61,7 +119,7 @@ const PostEditPage = () => {
         <div className={styles.postWriteButtons}>
           <Button label="돌아가기" color="sky" width="10vw" icon={<RefreshOutlinedIcon />} />
           &nbsp; &nbsp; &nbsp;
-          <Button label="작성완료" width="10vw" icon={<CheckOutlinedIcon />} />
+          <Button label="작성완료" width="10vw" icon={<CheckOutlinedIcon />} onClick={editPost} />
         </div>
         <div className={styles.postDeleteButton}>
           <Button label="삭제하기" width="10vw" icon={<CloseOutlinedIcon />} />
