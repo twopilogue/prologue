@@ -1,5 +1,5 @@
 import Text from "components/Text";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import DetailSelector from "./DetailSelector";
 import styles from "../Setting.module.css";
 import SettingLayout from "./SettingLayout";
@@ -8,15 +8,17 @@ import { colorsConfig, initialState, selectColors, setClickedComp, setColors } f
 import ButtonStyled from "components/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { DetailSettingStyles } from "./DetailSettingStyles";
-import Axios from "api/JsonAxios";
+import Axios from "api/MultipartAxios";
 import { rootState } from "app/store";
 import api from "api/Api";
 import { toJSON } from "cssjson";
-import { ChangeHistory } from "@mui/icons-material";
 
 const DetailSetting = () => {
+  const [titleImg, setTitleImg] = useState(null);
+  const [logoImg, setLogoImg] = useState(null);
   const { githubId, accessToken } = useSelector((state: rootState) => state.auth);
   const colors: colorsConfig = useAppSelector(selectColors);
+  const formData = new FormData();
   const dispatch = useDispatch();
 
   const getDetailSetting = async () => {
@@ -38,13 +40,19 @@ const DetailSetting = () => {
   };
 
   const handleOnSave = async () => {
-    // console.log(colors);
     const modified = DetailSettingStyles(colors);
-    await Axios.put(api.setting.modifyDetail(), {
+    const result = {
       accessToken: accessToken,
       githubId: githubId,
       css: modified,
-    })
+      logoText: colors.logo.inputText,
+    };
+    console.log(JSON.stringify(result));
+    formData.append("logoImage", logoImg);
+    formData.append("titleImage", titleImg);
+    formData.append("modifyBlogLayoutCssRequest", new Blob([JSON.stringify(result)], { type: "application/json" }));
+
+    await Axios.put(api.setting.modifyDetail(), formData)
       .then((res: any) => {
         console.log("됨? ", res);
       })
@@ -74,7 +82,7 @@ const DetailSetting = () => {
         <Text value="레이아웃에 원하는 디자인을 선택하여 적용하세요." type="caption" />
       </div>
       <div className={styles.layoutSelectContainer}>
-        <DetailSelector />
+        <DetailSelector titleImg={titleImg} setTitleImg={setTitleImg} logoImg={logoImg} setLogoImg={setLogoImg} />
         <SettingLayout />
       </div>
       <div className={styles.confirmButton}>
