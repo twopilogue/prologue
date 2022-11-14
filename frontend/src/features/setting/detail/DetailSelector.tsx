@@ -20,13 +20,14 @@ export const controlImgRef = (type: MutableRefObject<HTMLInputElement>) => {
 const DetailSelector = () => {
   const [titleImg, setTitleImg] = useState(null);
   const [logoImg, setLogoImg] = useState(null);
+  const [logoType, setLogoType] = useState("logoText");
   const clicked: string = useAppSelector(selectClickedComp);
   const components: any = {
     profile: <ProfileSetting />,
     page: <PageSetting />,
     title: <TitleSetting titleImg={titleImg} setTitleImg={setTitleImg} />,
     category: <CategorySetting />,
-    logo: <LogoSetting logoImg={logoImg} setLogoImg={setLogoImg} />,
+    logo: <LogoSetting logoImg={logoImg} setLogoImg={setLogoImg} logoType={logoType} setLogoType={setLogoType} />,
     contents: <ContentsSetting />,
   };
 

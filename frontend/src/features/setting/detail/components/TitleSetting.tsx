@@ -24,6 +24,7 @@ const TitleSetting = ({ titleImg, setTitleImg }: TitleSettingProps) => {
 
   const radioChange = (event: ChangeEvent<HTMLInputElement>) => {
     setRadioValue((event.target as HTMLInputElement).value);
+    dispatch(setColors({ ...colors, title: { ...colors.title, type: radioValue } }));
   };
 
   const handleChangeComplete = (color: string) => {
@@ -44,7 +45,7 @@ const TitleSetting = ({ titleImg, setTitleImg }: TitleSettingProps) => {
       e.target.value = 0;
     }
 
-    setColors({ ...colors, title: { titleHeight: e.target.value } });
+    dispatch(setColors({ ...colors, title: { titleHeight: e.target.value } }));
   };
 
   return (
