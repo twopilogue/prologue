@@ -7,7 +7,7 @@ import "tui-color-picker/dist/tui-color-picker.css";
 import "@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css";
 import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
 import { useAppDispatch, useAppSelector } from "app/hooks";
-import { selectPostFileList, setPostContent, setPostFileList } from "slices/postSlice";
+import { selectPostFileList, selectPostFiles, setPostContent, setPostFileList, setPostFiles } from "slices/postSlice";
 import api from "api/Api";
 import { useSelector } from "react-redux";
 import { rootState } from "app/store";
@@ -21,6 +21,7 @@ const PostWriteContents = () => {
   const [showImages, setShowImages] = useState([]);
   const [fileList, setFileList] = useState([]);
   const [tmpFileList, setTmpFileList] = useState<any[]>(useAppSelector(selectPostFileList));
+  const [files, setFiles] = useState([]);
 
   const editorRef = useRef<Editor>();
 
@@ -74,10 +75,13 @@ const PostWriteContents = () => {
             const newFile = { name: file.name, url: imageUrl };
             console.log("newFile : ", newFile);
 
-            const fileList = [...tmpFileList];
+            // const fileList = [...tmpFileList];
             console.log("redux fileList : ", fileList);
             fileList.push(newFile);
-            dispatch(setPostFileList(fileList));
+            dispatch(setPostFileList([...fileList, newFile]));
+
+            files.push(blob);
+            dispatch(setPostFiles([...files, blob]));
             // imageUrlLists.push(imageUrl);
             // uploadFileLists.push(blob);
 
