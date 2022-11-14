@@ -20,23 +20,6 @@ export interface ComponentCheckConfig {
   contents: boolean;
 }
 
-interface LayoutConfig {
-  categoryLayoutList: Layout[];
-  categoryList: KeyConfig[];
-  categoryCnt: number;
-
-  pageLayoutList: Layout[];
-  pageList: KeyConfig[];
-  pageCnt: number;
-
-  componentLayoutList: Layout[];
-  componentList: ComponentConfig[];
-
-  checkList: ComponentCheckConfig;
-
-  blogSettingInfo: blogInfoConfig;
-}
-
 export interface blogInfoConfig {
   siteMetadata: {
     author: {
@@ -53,7 +36,57 @@ export interface blogInfoConfig {
   profileImg: string;
 }
 
-const initialState: LayoutConfig = {
+export interface colorsConfig {
+  title: {
+    background: string;
+    text: string;
+    titleHeight: number;
+  };
+  category: {
+    background: string;
+    text: string;
+  };
+  page: {
+    background: string;
+    text: string;
+  };
+  profile: {
+    background: string;
+    text: string;
+  };
+  contents: {
+    background: string;
+    text: string;
+  };
+  logo: {
+    background: string;
+    text: string;
+    inputText: string;
+  };
+}
+
+interface LayoutConfig {
+  categoryLayoutList: Layout[];
+  categoryList: KeyConfig[];
+  categoryCnt: number;
+
+  pageLayoutList: Layout[];
+  pageList: KeyConfig[];
+  pageCnt: number;
+
+  componentLayoutList: Layout[];
+  componentList: ComponentConfig[];
+
+  checkList: ComponentCheckConfig;
+
+  blogSettingInfo: blogInfoConfig;
+
+  colorList: colorsConfig;
+
+  clickedComp: string;
+}
+
+export const initialState: LayoutConfig = {
   categoryLayoutList: [],
   categoryList: [],
   categoryCnt: 1,
@@ -96,6 +129,37 @@ const initialState: LayoutConfig = {
     },
     profileImg: "",
   },
+
+  colorList: {
+    title: {
+      background: "#d3d3eb",
+      text: "darkgray",
+      titleHeight: 0,
+    },
+    category: {
+      background: "#d3d3eb",
+      text: "darkgray",
+    },
+    page: {
+      background: "#d3d3eb",
+      text: "darkgray",
+    },
+    profile: {
+      background: "#d3d3eb",
+      text: "darkgray",
+    },
+    contents: {
+      background: "#d3d3eb",
+      text: "darkgray",
+    },
+    logo: {
+      background: "#d3d3eb",
+      text: "darkgray",
+      inputText: "",
+    },
+  },
+
+  clickedComp: "logo",
 };
 
 const settingSlice = createSlice({
@@ -136,6 +200,12 @@ const settingSlice = createSlice({
       state.blogSettingInfo.siteMetadata = siteMetadata;
       state.blogSettingInfo.profileImg = profileImg;
     },
+    setColors: (state, { payload }) => {
+      state.colorList = payload;
+    },
+    setClickedComp: (state, { payload }) => {
+      state.clickedComp = payload;
+    },
   },
 });
 export const {
@@ -148,6 +218,8 @@ export const {
   setComponentLayoutList,
   setCheckList,
   setBlogSettingInfo,
+  setColors,
+  setClickedComp,
 } = settingSlice.actions;
 
 export const selectCategoryLayoutList = (state: rootState) => state.setting.categoryLayoutList;
@@ -164,6 +236,10 @@ export const selectComponentList = (state: rootState) => state.setting.component
 export const selectCheckList = (state: rootState) => state.setting.checkList;
 
 export const selectBlogSettingInfo = (state: rootState) => state.setting.blogSettingInfo;
+
+export const selectColors = (state: rootState) => state.setting.colorList;
+
+export const selectClickedComp = (state: rootState) => state.setting.clickedComp;
 
 export default settingSlice.reducer;
 
