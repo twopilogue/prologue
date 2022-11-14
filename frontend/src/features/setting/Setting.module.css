@@ -20,13 +20,17 @@
   cursor: pointer;
 }
 
-.layoutItem:hover,
+.layoutItem:hover{
+  border: 4px solid #A2A5DC;
+  border-radius: 5px;
+}
+
 .layoutItemClicked {
   border: 4px solid #A2A5DC;
   border-radius: 5px;
 }
 
-.layoutItemClicked{
+.layoutItemClicked:hover{
   border : none;
 }
 
