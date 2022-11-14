@@ -208,7 +208,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void insertDetailPost(String encodedAccessToken, String githubId, String content, List<MultipartFile> files) throws Exception {
+    public void insertDetailPost(String encodedAccessToken, String githubId, String content, List<ImageResponse> images, List<MultipartFile> files) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
         String commit = "add: 새게시글 작성";
 
@@ -219,7 +219,12 @@ public class PostServiceImpl implements PostService {
         String directory = String.valueOf(timeStamp.getTime());
         String path = "content/blog/" + directory;
 
+        if(images!=null && !images.isEmpty()){
+            content = replaceImageUrlWithPath(content, images);
+        }
+
         String encodedContent = commonService.makeBlob(accessToken, githubId, base64Converter.encode(content));
+
         treeRequestList.add(new TreeRequest(path + "/index.md", "100644", "blob", encodedContent));
 
         if (files != null && !files.isEmpty()) {
@@ -325,4 +330,12 @@ public class PostServiceImpl implements PostService {
         return (String) content.get("download_url");
     }
 
+    @Override
+    public String replaceImageUrlWithPath(String content, List<ImageResponse> images){
+
+        for(ImageResponse image : images){
+            content=content.replace(image.getUrl(), "./"+image.getName());
+        }
+        return content;
+    }
 }
