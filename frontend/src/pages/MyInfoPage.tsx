@@ -25,7 +25,6 @@ export interface myBlogInfoProps {
 const MyInfoPage = () => {
   const dispatch = useDispatch();
   const { githubId, accessToken } = useSelector((state: rootState) => state.auth);
-  const [oldString, setOldString] = useState<blogInfoConfig>(null);
   const [newPic, setNewPic] = useState<Blob>(null);
   const [socialList, setSocialList] = useState({});
   const [myInfo, setMyInfo] = useState<myInfoProps>({
@@ -38,21 +37,12 @@ const MyInfoPage = () => {
     description: "",
     social: [],
   });
-  // const [payload, setPayload] = useState({
-  //   nickName: [],
-  //   summary: [],
-  //   profileImg: [],
-  //   title: [],
-  //   description: [],
-  // });
 
   const getBlogInfo = async () => {
     await axios
       .get(api.setting.getBlog(accessToken, githubId))
       .then((res: any) => {
-        console.log(res);
         const result: blogInfoConfig = res.data;
-        console.log(result);
 
         dispatch(setBlogSettingInfo(result));
 
@@ -75,9 +65,6 @@ const MyInfoPage = () => {
   };
 
   const handleOnEdit = () => {
-    console.log("저장?");
-    console.log("오리지널", oldString);
-    console.log("수정된 내 정보", myInfo);
     const tmpPayload = {
       accessToken: accessToken,
       githubId: githubId,
@@ -94,7 +81,6 @@ const MyInfoPage = () => {
   const sendBlogInfo = async () => {
     const formData = new FormData();
     const result = handleOnEdit();
-    console.log(JSON.stringify(result));
 
     formData.append("imageFile", newPic);
     formData.append("modifyBlogSettingRequest", new Blob([JSON.stringify(result)], { type: "application/json" }));
