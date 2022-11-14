@@ -16,6 +16,7 @@ import {
   selectPostContent,
   selectPostDescription,
   selectPostFileList,
+  selectPostFiles,
   selectPostTagList,
   selectPostTitle,
   setPostFileList,
@@ -38,15 +39,16 @@ const PostWritePage = () => {
   const tagList = useAppSelector(selectPostTagList);
   const content = useAppSelector(selectPostContent);
   const fileList = useAppSelector(selectPostFileList);
+  const files = useAppSelector(selectPostFiles);
 
   const savePost = () => {
     const formData = new FormData();
-    console.log("fileList : ", fileList);
-    // for (let i = 0; i < fileList.length; i++) {
-    //   formData.append("files", fileList[i]);
-    //   const file: File = fileList[i];
-    //   console.log("fileList[i] : ", file.name);
-    // }
+    console.log("files : ", files);
+    for (let i = 0; i < files.length; i++) {
+      formData.append("files", files[i]);
+      const file: File = files[i];
+      console.log("files[i] : ", file.name);
+    }
 
     const frontMatter =
       "---\ntitle: " +
