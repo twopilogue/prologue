@@ -11,6 +11,7 @@ import PostRouterPage from "pages/PostRouterPage";
 import BlogReset from "pages/BlogResetPage";
 import GatsbyLayout from "pages/GatsbyLayoutPage";
 import CustomLayoutPage from "pages/CustomLayoutPage";
+import PageRouterPage from "pages/PageRouterPage";
 
 function App() {
   const location = useLocation();
@@ -21,7 +22,6 @@ function App() {
   };
 
   const landingStyle = {
-    backgroundColor: "#F1F8FF",
     height: "100vh",
   };
 
@@ -30,9 +30,9 @@ function App() {
       <Header />
       <div
         style={{
-          width: "83vw",
+          width: location.pathname != "/" && "83vw",
           margin: "0 auto",
-          paddingTop: "47px",
+          paddingTop: location.pathname != "/" && "47px",
         }}
       >
         <Routes>
@@ -44,6 +44,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/setting" element={<SettingPage />} />
           <Route path="/post/*" element={<PostRouterPage />} />
+          <Route path="/page/*" element={<PageRouterPage />} />
 
           <Route path="/sample" element={<SamplePage />} />
         </Routes>

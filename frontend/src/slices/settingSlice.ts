@@ -4,6 +4,7 @@ import { Layout } from "react-grid-layout";
 
 export interface KeyConfig {
   key: string;
+  id: number;
 }
 
 export interface ComponentConfig {
