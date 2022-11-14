@@ -10,17 +10,33 @@ import lombok.Setter;
 @ApiModel("GetBlogSettingResponse")
 public class GetBlogSettingResponse extends BaseResponseBody {
 
-    @ApiModelProperty(name = "설정 부분 글")
-    String setting;
+    @ApiModelProperty(name = "name")
+    String nickName;
 
-    @ApiModelProperty(name = "프로필 이미지")
+    @ApiModelProperty(name = "summary")
+    String summary;
+
+    @ApiModelProperty(name = "title")
+    String title;
+
+    @ApiModelProperty(name = "description")
+    String description;
+
+    @ApiModelProperty(name = "social")
+    String[] social;
+
+    @ApiModelProperty(name = "profile image")
     String profileImg;
 
 
-    public static GetBlogSettingResponse of(String setting, String profileImg, Integer statusCode, String message) {
+    public static GetBlogSettingResponse of(GetBlogSettingResponse getBlogSettingResponse, Integer statusCode, String message) {
         GetBlogSettingResponse res = new GetBlogSettingResponse();
-        res.setSetting(setting);
-        res.setProfileImg(profileImg);
+        res.setNickName(getBlogSettingResponse.getNickName());
+        res.setSummary(getBlogSettingResponse.getSummary());
+        res.setTitle(getBlogSettingResponse.getTitle());
+        res.setDescription(getBlogSettingResponse.getDescription());
+        res.setSocial(getBlogSettingResponse.getSocial());
+        res.setProfileImg(getBlogSettingResponse.getProfileImg());
         res.setStatusCode(statusCode);
         res.setMessage(message);
         return res;

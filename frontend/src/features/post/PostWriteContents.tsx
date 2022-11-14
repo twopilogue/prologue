@@ -8,9 +8,15 @@ import "@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-sy
 import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
 import { useAppDispatch } from "app/hooks";
 import { setPostContent, setPostFileList } from "slices/postSlice";
+import api from "api/Api";
+import { useSelector } from "react-redux";
+import { rootState } from "app/store";
+import Axios from "api/MultipartAxios";
 
 const PostWriteContents = () => {
   const dispatch = useAppDispatch();
+
+  const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
 
   const [showImages, setShowImages] = useState([]);
   const [fileList, setFileList] = useState([]);
@@ -35,12 +41,33 @@ const PostWriteContents = () => {
         plugins={[colorSyntax]}
         onChange={contentChange}
         hooks={{
-          addImageBlobHook: (blob, callback) => {
+          addImageBlobHook: async (blob, callback) => {
             const uploadFileLists = [...fileList];
             const imageUrlLists = [...showImages];
 
-            const currentImageUrl = URL.createObjectURL(blob);
-            imageUrlLists.push(currentImageUrl);
+            const formData = new FormData();
+
+            const tempImageUploadRequest = {
+              accessToken: accessToken,
+              githubId: githubId,
+            };
+            formData.append(
+              "tempImageUploadRequest",
+              new Blob([JSON.stringify(tempImageUploadRequest)], { type: "application/json" }),
+            );
+            formData.append("file", blob);
+
+            let imageUrl;
+            await Axios.put(api.posts.getImgUrl(), formData)
+              .then((res: any) => {
+                console.log(res);
+                imageUrl = res.data.tempImageUrl;
+              })
+              .catch((err: any) => {
+                console.log(err);
+              });
+
+            imageUrlLists.push(imageUrl);
             uploadFileLists.push(blob);
 
             setShowImages(imageUrlLists);
@@ -50,7 +77,7 @@ const PostWriteContents = () => {
             console.log(uploadFileLists);
             console.log(fileList);
 
-            callback(currentImageUrl);
+            callback(imageUrl);
             return false;
           },
         }}

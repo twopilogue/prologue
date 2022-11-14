@@ -24,7 +24,23 @@ public class ModifyBlogSettingRequest {
     String githubId;
 
     @NotNull
-    @ApiModelProperty(name = "수정된 내용", example = "수정된 내용", required = true)
-    String modified;
+    @ApiModelProperty(name = "수정된 제목", example = "수정된 제목", required = true)
+    String title;
+
+    @NotNull
+    @ApiModelProperty(name = "수정된 요약", example = "수정된 요약", required = true)
+    String summary;
+
+    @NotNull
+    @ApiModelProperty(name = "수정된 이름", example = "수정된 이름", required = true)
+    String nickName;
+
+    @NotNull
+    @ApiModelProperty(name = "수정된 설명", example = "수정된 설명", required = true)
+    String description;
+
+    @NotNull
+    @ApiModelProperty(name = "소셜", example = "소셜", required = true)
+    Map<String, String> social;
 
 }
