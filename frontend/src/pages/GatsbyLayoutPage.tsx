@@ -8,15 +8,17 @@ import api from "api/Api";
 import Axios from "api/JsonAxios";
 import { useSelector } from "react-redux";
 import { rootState } from "app/store";
+import BlogLoding from "features/blog/BlogLoding";
 
 const LayoutChoicePage = () => {
   const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
 
   const [isChoiceTheme, setChoiceTheme] = useState("gatsby-starter-minimal-blog");
-
   const [nextModalOpen, setNextModalOpen] = React.useState(false);
+  const [lodingView, openLodingView] = React.useState(false);
 
   const showNextModal = () => {
+    openLodingView(true);
     Axios.post(api.blog.chooseTemplate(), {
       accessToken: accessToken,
       githubId: githubId,
@@ -32,16 +34,16 @@ const LayoutChoicePage = () => {
       });
   };
 
-    const setSecretRepo = async () => {
-      await Axios.put(api.auth.setSecretRepo(accessToken, githubId))
-        .then((res) => {
-          console.log("2. Repo secrets 생성", res.data);
-          setTimeout(() => [changeBranch()], 1000);
-        })
-        .catch((err) => {
-          console.error("2. Repo secrets 생성", err);
-        });
-    };
+  const setSecretRepo = async () => {
+    await Axios.put(api.auth.setSecretRepo(accessToken, githubId))
+      .then((res) => {
+        console.log("2. Repo secrets 생성", res.data);
+        setTimeout(() => [changeBranch()], 1000);
+      })
+      .catch((err) => {
+        console.error("2. Repo secrets 생성", err);
+      });
+  };
 
   const changeBranch = async () => {
     await Axios.put(api.blog.changeBranch(accessToken, githubId))
@@ -54,8 +56,6 @@ const LayoutChoicePage = () => {
       });
   };
 
-
-
   const setAuthFile = async () => {
     await Axios.put(api.auth.setAuthFile(), {
       accessToken: accessToken,
@@ -64,6 +64,7 @@ const LayoutChoicePage = () => {
     })
       .then((res) => {
         console.log("4. 블로그 인증 파일 생성", res.data);
+        openLodingView(false);
         setNextModalOpen(true);
       })
       .catch((err) => {
@@ -82,6 +83,7 @@ const LayoutChoicePage = () => {
         <Button label="Next" onClick={showNextModal} />
       </Stack>
       {nextModalOpen && <BlogDashboardMoveModal />}
+      {lodingView && <BlogLoding />}
     </Box>
   );
 };
