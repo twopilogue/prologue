@@ -8,7 +8,7 @@ import PostList from "features/post/PostList";
 import { useNavigate } from "react-router-dom";
 import Axios from "api/JsonAxios";
 import api from "api/Api";
-import { postListConfig, setPostList } from "slices/postSlice";
+import { postListConfig, setPostCount, setPostList } from "slices/postSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { rootState } from "app/store";
 
@@ -28,17 +28,18 @@ const PostManagementPage = () => {
           const post: postListConfig = {
             title: res.data.result.Post[i].title,
             date: res.data.result.Post[i].date,
-            content: res.data.result.Post[i].content,
+            description: res.data.result.Post[i].description,
             category: res.data.result.Post[i].category,
             tag: res.data.result.Post[i].tag,
             directory: res.data.result.Post[i].directory,
-            imageUrl: res.data.result.Post[i].imgUrl,
+            imgUrl: res.data.result.Post[i].imgUrl,
           };
           tmpList.push(post);
           console.log("저장할라 하는 post", post);
           console.log("tmpList : ", tmpList);
         }
         dispatch(setPostList(tmpList));
+        dispatch(setPostCount(res.data.result.PostCount));
       })
       .catch((err: any) => {
         console.log(err);
