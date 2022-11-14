@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Map;
+
 @Getter
 @Setter
 @ApiModel("GetBlogSettingResponse")
@@ -23,7 +25,7 @@ public class GetBlogSettingResponse extends BaseResponseBody {
     String description;
 
     @ApiModelProperty(name = "social")
-    String[] social;
+    Map<String, String> social;
 
     @ApiModelProperty(name = "profile image")
     String profileImg;
