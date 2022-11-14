@@ -1,6 +1,7 @@
 package com.b208.prologue.api.service;
 
 import com.b208.prologue.api.request.ModifyBlogSettingRequest;
+import com.b208.prologue.api.response.github.GetBlogLayoutCss;
 import com.b208.prologue.api.request.github.TreeRequest;
 import com.b208.prologue.api.request.github.UpdateContentRequest;
 import com.b208.prologue.api.response.GetBlogSettingResponse;
@@ -359,7 +360,7 @@ public class SettingServiceImpl implements SettingService {
     }
 
     @Override
-    public String getBlogLayoutCss(String encodedAccessToken, String githubId) throws Exception {
+    public GetBlogLayoutCss getBlogLayoutCss(String encodedAccessToken, String githubId) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
         GetRepoContentResponse getRepoContentResponse = commonService.getDetailContent(accessToken, githubId, "src/style.css");
@@ -368,7 +369,10 @@ public class SettingServiceImpl implements SettingService {
         int targetIndex = content.lastIndexOf("CustomCSS");
         targetIndex = content.indexOf("/", targetIndex);
 
-        return content.substring(targetIndex + 1);
+        String css = content.substring(targetIndex + 1);
+        String logoText = getLogoText(accessToken, githubId);
+
+        return new GetBlogLayoutCss(css, logoText);
     }
 
     @Override
@@ -396,5 +400,15 @@ public class SettingServiceImpl implements SettingService {
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
+    }
+
+    @Override
+    public String getLogoText(String accessToken, String githubId) throws Exception{
+        String content = base64Converter.decode(commonService.getDetailContent(accessToken, githubId, "src/util/customizing-setting.json")
+                .getContent().replace("\n", ""));
+        JSONParser jsonParser = new JSONParser();
+        JSONObject jsonObj = (JSONObject) jsonParser.parse(content);
+
+        return jsonObj.get("logo").toString();
     }
 }
