@@ -7,11 +7,11 @@ import { rootState } from "app/store";
 import { useSelector } from "react-redux";
 
 function DashboardCalendar() {
-  const { githubId } = useSelector((state: rootState) => state.auth);
+  const { githubId,githubImage } = useSelector((state: rootState) => state.auth);
   return (
     <div className={`${styles.container} ${styles.calendar}`}>
       <Box width="85%" className={styles.flexColumn}>
-        <Avatar sx={{ width: 160, height: 160, mt: 3 }} alt="blogImg" src="" />
+        <Avatar sx={{ width: 160, height: 160, mt: 3 }} alt="blogImg" src={githubImage} />
         <p className={`${styles.flexColumn} ${styles.calendarInfoText}`}>
           <Text value={githubId} type="text" />
           <Text value={`github.com/${githubId}`} type="caption" color="blue_4" />

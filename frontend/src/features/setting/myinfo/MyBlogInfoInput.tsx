@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useRef, useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import styles from "../Setting.module.css";
 import Text from "components/Text";
 import Input from "components/Input";

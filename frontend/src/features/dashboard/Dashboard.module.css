@@ -159,6 +159,10 @@ iframe {
   font-size: 1rem;
 }
 
+.icon {
+  cursor: pointer;
+}
+
 
 .infoValue {
   display: flex;
