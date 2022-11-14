@@ -10,10 +10,8 @@ import {
   selectCheckList,
   // selectCheckList,
   selectComponentList,
-  selectComponentLayoutList,
-  setCategoryLayoutList,
   setComponentLayoutList,
-  selectColors,
+  selectClickedLayoutIdx,
 } from "slices/settingSlice";
 import ComponentSelector from "../layout/ComponentSelector";
 import styles from "../Setting.module.css";
@@ -21,6 +19,7 @@ import "../../../../node_modules/react-grid-layout/css/styles.css";
 import Text from "components/Text";
 import DragHandleIcon from "@mui/icons-material/DragHandle";
 import ConfirmButton from "../ConfirmButton";
+import { DefaultLayoutList } from "./DefaultLayoutStyles";
 
 export const useGettingWidth = () => {
   const [layoutWidth, setLayoutWidth] = useState(null);
@@ -37,21 +36,17 @@ export const useGettingWidth = () => {
 
 const LayoutSample = () => {
   const dispatch = useDispatch();
-  const navigator = useNavigate();
 
-  const [layoutList, setLayoutList] = useState<Layout[]>([
-    { i: "블로그 로고", x: 0, y: 0, w: 1, h: 2, isResizable: false },
-    { i: "프로필", x: 0, y: 2, w: 1, h: 3, isResizable: false },
-    { i: "카테고리", x: 0, y: 5, w: 1, h: 4, isResizable: false },
-    { i: "페이지", x: 1, y: 0, w: 4, h: 2, isResizable: false },
-
-    { i: "타이틀", x: 1, y: 2, w: 4, h: 5, static: true, isResizable: false },
-    { i: "글 목록", x: 1, y: 7, w: 4, h: 6, static: true, isResizable: false },
-  ]);
+  const [cstLayoutList, setCstLayoutList] = useState<Layout[]>([]);
   const [componentList, setComponentList] = useState<ComponentConfig[]>(useAppSelector(selectComponentList));
   const [checkList, setCheckList] = useState<ComponentCheckConfig>(useAppSelector(selectCheckList));
-
+  const clickedIdx = useAppSelector(selectClickedLayoutIdx);
+  const [isCust, setIsCust] = useState<boolean>(false);
   const [layoutWidth, layoutContainer] = useGettingWidth();
+
+  const getLayout = () => {
+    return DefaultLayoutList[clickedIdx - 1].layout;
+  };
 
   const handleLayoutChange = (layouts: any) => {
     const tmpLayoutList: Layout[] = [];
@@ -72,6 +67,10 @@ const LayoutSample = () => {
     dispatch(setComponentLayoutList(tmpLayoutList));
   };
 
+  useEffect(() => {
+    DefaultLayoutList[clickedIdx - 1].id === 7 ? setIsCust(true) : setIsCust(false);
+  }, [clickedIdx]);
+
   return (
     <div>
       <div className={styles.textPadding} style={{ paddingBottom: "10px" }}>
@@ -80,49 +79,53 @@ const LayoutSample = () => {
       <div style={{ paddingLeft: "20px" }}>
         <Text value="드래그 앤 드롭으로 레이아웃의 위치를 자유롭게 설정하세요." type="caption" />
       </div>
-      <div className={styles.layoutSelectContainer}>
-        <ComponentSelector checkList={checkList} setCheckList={setCheckList} />
-        <div
-          ref={layoutContainer}
-          style={{
-            backgroundColor: "white",
-            border: "2px solid #ECECEC",
-            marginLeft: "5px",
-            marginRight: "5px",
-            paddingBottom: "20px",
-          }}
-        >
-          <GridLayout
-            layout={layoutList}
-            cols={6}
-            rowHeight={30}
-            width={layoutWidth - 10}
-            onLayoutChange={handleLayoutChange}
+      <div className={isCust ? `` : `${styles.layoutSelectOneContainer}`}>
+        <div className={isCust ? `${styles.layoutSelectContainer}` : `${styles.layoutSelectContainerOne}`}>
+          {isCust ? <ComponentSelector checkList={checkList} setCheckList={setCheckList} /> : <></>}
+          <div
+            ref={layoutContainer}
+            style={{
+              backgroundColor: "white",
+              border: "2px solid #ECECEC",
+              marginLeft: "5px",
+              marginRight: "5px",
+              paddingBottom: "20px",
+            }}
           >
-            {componentList.map((item: ComponentConfig) => {
-              {
-                return checkList[item.id] ? (
-                  <div className={styles.layout_colored} key={item.key}>
-                    {item.key != "타이틀" && item.key != "글 목록" ? (
-                      <div className={styles.icon}>
-                        <DragHandleIcon fontSize="small" sx={{ color: "white" }} />
+            <GridLayout
+              layout={getLayout()}
+              cols={isCust ? 6 : 5}
+              rowHeight={30}
+              width={layoutWidth - 20}
+              onLayoutChange={handleLayoutChange}
+              isDraggable={isCust}
+              isResizable={false}
+            >
+              {componentList.map((item: ComponentConfig) => {
+                {
+                  return DefaultLayoutList[clickedIdx - 1].checkList[item.id] ? (
+                    <div className={styles.layout_colored} key={item.key}>
+                      {item.key != "타이틀" && item.key != "글 목록" && isCust ? (
+                        <div className={styles.icon}>
+                          <DragHandleIcon fontSize="small" sx={{ color: "white" }} />
+                        </div>
+                      ) : (
+                        <div style={{ marginTop: "15px" }}></div>
+                      )}
+                      <div className={styles.innerText}>
+                        <Text value={item.key} type="caption" color="gray" />
                       </div>
-                    ) : (
-                      <div style={{ marginTop: "15px" }}></div>
-                    )}
-                    <div className={styles.innerText}>
-                      <Text value={item.key} type="caption" color="gray" />
                     </div>
-                  </div>
-                ) : (
-                  <></>
-                );
-              }
-            })}
-          </GridLayout>
+                  ) : (
+                    <></>
+                  );
+                }
+              })}
+            </GridLayout>
+          </div>
         </div>
       </div>
-      <ConfirmButton type="layoutSetting" payload={{ checkList, layoutList }} />
+      {/* {<ConfirmButton type="layoutSetting" payload={{ checkList, layoutList }} /> */}
     </div>
   );
 };

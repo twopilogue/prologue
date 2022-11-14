@@ -93,7 +93,7 @@ public class PostsController {
         String path = "content/blog/" + modifyDetailPostRequest.getDirectory();
         try {
             postService.updateDetailPost(modifyDetailPostRequest.getAccessToken(), modifyDetailPostRequest.getGithubId(),
-                    path, modifyDetailPostRequest.getContent(), files, modifyDetailPostRequest.getDeletedFiles());
+                    path, modifyDetailPostRequest.getContent(), files, modifyDetailPostRequest.getImages());
             return ResponseEntity.status(200).body(BaseResponseBody.of(200, "게시글 수정에 성공하였습니다."));
         } catch (Exception e) {
             e.printStackTrace();
@@ -150,7 +150,7 @@ public class PostsController {
         String path = "content/pages/" + modifyDetailPageRequest.getPageName();
         try {
             postService.updateDetailPost(modifyDetailPageRequest.getAccessToken(), modifyDetailPageRequest.getGithubId(),
-                    path, modifyDetailPageRequest.getContent(), files, modifyDetailPageRequest.getDeletedFiles());
+                    path, modifyDetailPageRequest.getContent(), files, modifyDetailPageRequest.getImages());
             return ResponseEntity.status(200).body(BaseResponseBody.of(200, "페이지 글 수정에 성공하였습니다."));
         } catch (Exception e) {
             e.printStackTrace();
