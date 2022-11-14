@@ -13,9 +13,24 @@
   border: 1px solid #ececec;
 }
 
-.layoutItem {
+
+.layoutItem,
+.layoutItemDefault {
   margin-right: 20px;
+  cursor: pointer;
 }
+
+.layoutItem:hover,
+.layoutItemClicked {
+  border: 4px solid #A2A5DC;
+  border-radius: 5px;
+}
+
+.layoutItemClicked{
+  border : none;
+}
+
+
 
 .layoutSelectContainer {
   display: grid;

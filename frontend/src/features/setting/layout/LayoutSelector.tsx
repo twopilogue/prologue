@@ -27,7 +27,7 @@ const LayoutSelector = () => {
       </div>
       <div className={styles.layoutContainer}>
         {layoutList.map((item: layoutsConfig, i: number) => {
-          return <LayoutSelectorItem key={i} index={i} />;
+          return <LayoutSelectorItem key={i} index={item.idx} layoutList={layoutList} setLayoutList={setLayoutList} />;
         })}
       </div>
     </>
