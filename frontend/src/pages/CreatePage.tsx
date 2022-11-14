@@ -39,25 +39,10 @@ const CreatePage = () => {
     })
       .then(async (res) => {
         console.log("기본 테마적용 성공", res.data);
-        setTimeout(() => [setAuthFile()], 500);
+        setTimeout(() => [changeBranch()], 1000);
       })
       .catch((err) => {
         console.error("기본 테마적용 err", err);
-      });
-  };
-
-  const setAuthFile = async () => {
-    await Axios.put(api.auth.setAuthFile(), {
-      accessToken: accessToken,
-      githubId: githubId,
-      blogType: 0,
-    })
-      .then((res) => {
-        console.log("블로그 인증 파일 생성", res.data);
-        setTimeout(() => [changeBranch()], 500);
-      })
-      .catch((err) => {
-        console.error("블로그 인증 파일 생성", err);
       });
   };
 
@@ -68,7 +53,7 @@ const CreatePage = () => {
         setSecretRepo();
       })
       .catch((err) => {
-        console.error("1. 배포 브랜치 변경", err.data);
+        console.error("1. 배포 브랜치 변경", err);
       });
   };
 
@@ -76,21 +61,26 @@ const CreatePage = () => {
     await Axios.put(api.auth.setSecretRepo(accessToken, githubId))
       .then((res) => {
         console.log("2. Repo secrets 생성", res.data);
-        setGitWorkflow();
+        setTimeout(() => [setAuthFile()], 500);
       })
       .catch((err) => {
         console.error("2. Repo secrets 생성", err);
       });
   };
 
-  const setGitWorkflow = async () => {
-    await Axios.post(api.blog.setGitWorkflow(accessToken, githubId))
+  // 인증 파일 생성
+  const setAuthFile = async () => {
+    await Axios.put(api.auth.setAuthFile(), {
+      accessToken: accessToken,
+      githubId: githubId,
+      blogType: 0,
+    })
       .then((res) => {
-        console.log("3. Workflow 생성", res.data);
+        console.log("블로그 인증 파일 생성", res.data);
         setStepNumber(2);
       })
       .catch((err) => {
-        console.error("3. Workflow 생성", err);
+        console.error("블로그 인증 파일 생성", err);
       });
   };
 
