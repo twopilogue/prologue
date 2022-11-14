@@ -23,35 +23,38 @@ const LayoutChoicePage = () => {
       template: isChoiceTheme,
     })
       .then((res) => {
-        console.log("개츠비 테마적용 성공", res.data);
-        setTimeout(() => [changeBranch()], 1000);
+        console.log("1. 개츠비 테마적용 성공", res.data);
+        // setTimeout(() => [changeBranch()], 1200);
+        setSecretRepo();
       })
       .catch((err) => {
-        console.error("개츠비 테마적용 err", err);
+        console.error("1. 개츠비 테마적용 err", err);
       });
   };
+
+    const setSecretRepo = async () => {
+      await Axios.put(api.auth.setSecretRepo(accessToken, githubId))
+        .then((res) => {
+          console.log("2. Repo secrets 생성", res.data);
+          setTimeout(() => [changeBranch()], 500);
+        })
+        .catch((err) => {
+          console.error("2. Repo secrets 생성", err);
+        });
+    };
 
   const changeBranch = async () => {
     await Axios.put(api.blog.changeBranch(accessToken, githubId))
       .then(async (res) => {
-        console.log("1. 배포 브랜치 변경", res);
-        setSecretRepo();
-      })
-      .catch((err) => {
-        console.error("1. 배포 브랜치 변경", err.data);
-      });
-  };
-
-  const setSecretRepo = async () => {
-    await Axios.put(api.auth.setSecretRepo(accessToken, githubId))
-      .then((res) => {
-        console.log("2. Repo secrets 생성", res.data);
+        console.log("3. 배포 브랜치 변경", res.data);
         setTimeout(() => [setAuthFile()], 500);
       })
       .catch((err) => {
-        console.error("2. Repo secrets 생성", err);
+        console.error("3. 배포 브랜치 변경", err);
       });
   };
+
+
 
   const setAuthFile = async () => {
     await Axios.put(api.auth.setAuthFile(), {
@@ -60,11 +63,11 @@ const LayoutChoicePage = () => {
       blogType: 1,
     })
       .then((res) => {
-        console.log("블로그 인증 파일 생성", res.data);
+        console.log("4. 블로그 인증 파일 생성", res.data);
         setNextModalOpen(true);
       })
       .catch((err) => {
-        console.error("블로그 인증 파일 생성", err);
+        console.error("4. 블로그 인증 파일 생성", err);
       });
   };
 
