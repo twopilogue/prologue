@@ -13,6 +13,7 @@ import Axios from "api/MultipartAxios";
 
 function BlogCustomInfo() {
   const { githubId, accessToken } = useSelector((state: rootState) => state.auth);
+  const [imgPreview, setImgPreview] = useState(null);
 
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [isInfo, setInfo] = useState({
@@ -33,12 +34,18 @@ function BlogCustomInfo() {
       summary: isInfo.profile_summary,
       nickName: isInfo.profile_name,
       description: isInfo.blog_summary,
-      social: {},
+      social: {
+        twitter: "",
+        instagram: "",
+        gmail: "",
+        github: "",
+      },
     };
     console.log("Json", modified);
 
     formData.append("modifyBlogSettingRequest", new Blob([JSON.stringify(modified)], { type: "application/json" }));
     formData.append("imageFile", isInfo.profile_image);
+    console.log("폼 데이터", formData);
     //axois 보내기
     await Axios.put(api.setting.modifyBlog(), formData)
       .then((res) => {
@@ -61,11 +68,13 @@ function BlogCustomInfo() {
 
     const reader = new FileReader();
     reader.readAsDataURL(e.target.files[0]);
+
     reader.onloadend = () => {
       setInfo({
         ...isInfo,
-        profile_image: reader.result,
+        profile_image: e.target.files[0],
       });
+      setImgPreview(reader.result);
     };
   };
   const handleImageUpload = () => {
@@ -104,7 +113,7 @@ function BlogCustomInfo() {
               <Stack width="180px">
                 <Text value="프로필 사진" />
                 <div className={styles.profile_img_container}>
-                  <Avatar sx={{ width: 150, height: 150 }} src={isInfo.profile_image} />
+                  <Avatar sx={{ width: 150, height: 150 }} src={imgPreview} />
                   <input type="file" hidden ref={inputRef} onChange={onUploadImage} />
                   <Stack direction="row" spacing={0.3} className={styles.profile_editBtn} onClick={handleImageUpload}>
                     <ModeIcon fontSize="small" />
