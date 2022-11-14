@@ -24,25 +24,10 @@ const LayoutChoicePage = () => {
     })
       .then((res) => {
         console.log("개츠비 테마적용 성공", res.data);
-        setTimeout(() => [setAuthFile()], 500);
+        setTimeout(() => [changeBranch()], 1000);
       })
       .catch((err) => {
         console.error("개츠비 테마적용 err", err);
-      });
-  };
-
-  const setAuthFile = async () => {
-    await Axios.put(api.auth.setAuthFile(), {
-      accessToken: accessToken,
-      githubId: githubId,
-      blogType: 1,
-    })
-      .then((res) => {
-        console.log("블로그 인증 파일 생성", res.data);
-        setTimeout(() => [changeBranch()], 500);
-      })
-      .catch((err) => {
-        console.error("블로그 인증 파일 생성", err);
       });
   };
 
@@ -61,21 +46,25 @@ const LayoutChoicePage = () => {
     await Axios.put(api.auth.setSecretRepo(accessToken, githubId))
       .then((res) => {
         console.log("2. Repo secrets 생성", res.data);
-        setGitWorkflow();
+        setTimeout(() => [setAuthFile()], 500);
       })
       .catch((err) => {
         console.error("2. Repo secrets 생성", err);
       });
   };
 
-  const setGitWorkflow = async () => {
-    await Axios.post(api.blog.setGitWorkflow(accessToken, githubId))
+  const setAuthFile = async () => {
+    await Axios.put(api.auth.setAuthFile(), {
+      accessToken: accessToken,
+      githubId: githubId,
+      blogType: 1,
+    })
       .then((res) => {
-        console.log("3. Workflow 생성", res.data);
+        console.log("블로그 인증 파일 생성", res.data);
         setNextModalOpen(true);
       })
       .catch((err) => {
-        console.error("3. Workflow 생성", err);
+        console.error("블로그 인증 파일 생성", err);
       });
   };
 
