@@ -35,7 +35,7 @@ const MyInfoPage = () => {
   const [myBlogInfo, setMyBlogInfo] = useState<myBlogInfoProps>({
     title: "",
     description: "",
-    social: [],
+    social: {},
   });
 
   const getBlogInfo = async () => {
@@ -55,7 +55,7 @@ const MyInfoPage = () => {
           title: result.title,
           description: result.description,
           /* 임시 데이터 */
-          social: { github: "github", gmail: "gmail", twitter: "twitter", instagram: "instagram" },
+          social: result.social,
         });
       })
 
@@ -73,7 +73,7 @@ const MyInfoPage = () => {
       nickName: myInfo.nickName,
       description: myBlogInfo.description,
       /* 임시 데이터 */
-      social: { github: "github", gmail: "gmail", twitter: "twitter", instagram: "instagram" },
+      social: myBlogInfo.social,
     };
     return tmpPayload;
   };
