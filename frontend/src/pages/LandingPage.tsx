@@ -1,6 +1,6 @@
 import { Stack } from "@mui/material";
 import React, { useEffect } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import api from "api/Api";
 import Axios from "api/JsonAxios";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,9 +18,11 @@ const LandingPage = () => {
 
   useEffect(() => {
     if (!auth) getAccessToken();
+    else navigate("/dashboard");
   }, []);
 
   async function getAccessToken() {
+    console.log("출력2");
     await Axios.get(api.auth.login(code)).then((res) => {
       dispatch(
         authActions.login({
@@ -71,15 +73,10 @@ const LandingPage = () => {
   }
 
   return (
-    <>
-      {/* <Stack justifyContent="center" alignItems="center" spacing={2}>
-        <NavLink to="/dashboard">대시보드</NavLink>
-      </Stack> */}
-      <Stack justifyContent="center" alignItems="center">
-        <LandingMain />
-        <LandingSub />
-      </Stack>
-    </>
+    <Stack justifyContent="center" alignItems="center">
+      <LandingMain />
+      <LandingSub />
+    </Stack>
   );
 };
 

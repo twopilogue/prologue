@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import { LightMode, DarkMode } from "@mui/icons-material";
 import { Avatar, Box, IconButton, Menu, MenuItem, Stack, Typography, Button, Link, Divider } from "@mui/material";
@@ -34,6 +34,7 @@ const AvatarStyled = styled(Avatar)(() => ({
 function Header() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { auth, githubId, githubImage } = useSelector((state: rootState) => state.auth);
 
@@ -65,7 +66,7 @@ function Header() {
       <div
         className={styles.wrapper}
         style={{
-          backgroundColor: backgroudMode ? "white" : "black",
+          backgroundColor: location.pathname === "/" ? "rgba( 255, 255, 255, 0.2 )" : backgroudMode ? "white" : "black",
           color: backgroudMode ? "black" : "white",
         }}
       >
