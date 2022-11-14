@@ -12,6 +12,7 @@ import BlogReset from "pages/BlogResetPage";
 import GatsbyLayout from "pages/GatsbyLayoutPage";
 import CustomLayoutPage from "pages/CustomLayoutPage";
 import PageRouterPage from "pages/PageRouterPage";
+import LoginOAuthHandler from "features/landing/LoginOAuthHandler";
 
 function App() {
   const location = useLocation();
@@ -26,17 +27,26 @@ function App() {
   };
 
   return (
-    <div style={location.pathname === "/dashboard" ? dashboardStyle : location.pathname === "/" ? landingStyle : {}}>
+    <div
+      style={
+        location.pathname === "/dashboard"
+          ? dashboardStyle
+          : location.pathname === "/" || location.pathname === "/login"
+          ? landingStyle
+          : {}
+      }
+    >
       <Header />
       <div
         style={{
-          width: location.pathname != "/" && "83vw",
+          width: !(location.pathname === "/login" || location.pathname === "/") && "83vw",
           margin: "0 auto",
-          paddingTop: location.pathname != "/" && "47px",
+          paddingTop: !(location.pathname === "/login" || location.pathname === "/") && "47px",
         }}
       >
         <Routes>
           <Route path="/" element={<Landing />} />
+          <Route path="/login" element={<LoginOAuthHandler />} />
           <Route path="/create" element={<Create />} />
           <Route path="/create/reset" element={<BlogReset />} />
           <Route path="/create/custom" element={<CustomLayoutPage />} />
