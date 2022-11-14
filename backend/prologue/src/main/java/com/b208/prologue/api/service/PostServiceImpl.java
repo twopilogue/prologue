@@ -283,11 +283,18 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public String getDetailPost(String encodedAccessToken, String githubId, String path) throws Exception {
+    public String getDetailPost(String encodedAccessToken, String githubId, String path, List<ImageResponse> images) throws Exception {
         String content = getDetailPage(encodedAccessToken, githubId, path);
+
         int index = content.indexOf("date");
         index = content.indexOf("---", index);
-        return content.substring(index + 4);
+
+        content = content.substring(index + 4);
+
+        if(images!=null && !images.isEmpty()){
+            content = replaceImagePathWithUrl(content, images);
+        }
+        return content;
     }
 
     @Override
@@ -332,9 +339,16 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public String replaceImageUrlWithPath(String content, List<ImageResponse> images){
-
         for(ImageResponse image : images){
             content=content.replace(image.getUrl(), "./"+image.getName());
+        }
+        return content;
+    }
+
+    @Override
+    public String replaceImagePathWithUrl(String content, List<ImageResponse> images){
+        for(ImageResponse image : images){
+            content=content.replace("./"+image.getName(), image.getUrl());
         }
         return content;
     }
