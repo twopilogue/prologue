@@ -239,20 +239,24 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void updateDetailPost(String encodedAccessToken, String githubId, String path, String content, List<MultipartFile> files, List<String> deletedFiles) throws Exception {
+    public void updateDetailPost(String encodedAccessToken, String githubId, String path, String content, List<MultipartFile> files, List<ImageResponse> images) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
         String commit = "modify: 게시글 수정";
 
         List<TreeRequest> treeRequestList = new ArrayList<>();
 
-        content = commonService.makeBlob(accessToken, githubId, base64Converter.encode(content));
-        treeRequestList.add(new TreeRequest(path + "/index.md", "100644", "blob", content));
-
-        if (deletedFiles != null && !deletedFiles.isEmpty()) {
-            for (int i = 0; i < deletedFiles.size(); i++) {
-                treeRequestList.add(new TreeRequest(path + "/" + deletedFiles.get(i), "100644", "blob", null));
+        if (images != null && !images.isEmpty()) {
+            for(ImageResponse image : images){
+                if(content.contains(image.getUrl())){
+                    content=content.replace(image.getUrl(), "./"+image.getName());
+                }else{
+                    treeRequestList.add(new TreeRequest(path + "/" + image.getName(), "100644", "blob", null));
+                }
             }
         }
+
+        content = commonService.makeBlob(accessToken, githubId, base64Converter.encode(content));
+        treeRequestList.add(new TreeRequest(path + "/index.md", "100644", "blob", content));
 
         if (files != null && !files.isEmpty()) {
             for (int i = 0; i < files.size(); i++) {
@@ -283,11 +287,18 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public String getDetailPost(String encodedAccessToken, String githubId, String path) throws Exception {
+    public String getDetailPost(String encodedAccessToken, String githubId, String path, List<ImageResponse> images) throws Exception {
         String content = getDetailPage(encodedAccessToken, githubId, path);
+
         int index = content.indexOf("date");
         index = content.indexOf("---", index);
-        return content.substring(index + 4);
+
+        content = content.substring(index + 4);
+
+        if(images!=null && !images.isEmpty()){
+            content = replaceImagePathWithUrl(content, images);
+        }
+        return content;
     }
 
     @Override
@@ -316,8 +327,15 @@ public class PostServiceImpl implements PostService {
 
         String image = new String(Base64.encodeBase64(file.getBytes()));
         UploadTempImageRequest uploadTempImageRequest = new UploadTempImageRequest("upload tempImage", "deploy", image);
+
+        String extension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+
+        Long nowDate = System.currentTimeMillis();
+        Timestamp timeStamp = new Timestamp(nowDate);
+        String imageName = String.valueOf(timeStamp.getTime())+extension;
+
         String response = webClient.put()
-                .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/tempImage/" + file.getOriginalFilename())
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/tempImage/" + imageName)
                 .headers(h -> h.setBearerAuth(accessToken))
                 .body(Mono.just(uploadTempImageRequest), UploadTempImageRequest.class)
                 .accept(MediaType.APPLICATION_JSON)
@@ -332,9 +350,16 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public String replaceImageUrlWithPath(String content, List<ImageResponse> images){
-
         for(ImageResponse image : images){
             content=content.replace(image.getUrl(), "./"+image.getName());
+        }
+        return content;
+    }
+
+    @Override
+    public String replaceImagePathWithUrl(String content, List<ImageResponse> images){
+        for(ImageResponse image : images){
+            content=content.replace("./"+image.getName(), image.getUrl());
         }
         return content;
     }
