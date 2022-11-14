@@ -49,12 +49,12 @@ const MemberInfoInput = ({ myInfo, setMyInfo, setNewPic }: Props) => {
             <div className={styles.inputTag}>
               <Text value="닉네임" type="text" />
               <Input
-                value={myInfo.name}
+                value={myInfo.nickName}
                 placeholder="닉네임을 입력하세요."
                 onChange={(e: any) => {
                   setMyInfo({
                     ...myInfo,
-                    name: e.target.value,
+                    nickName: e.target.value,
                   });
                 }}
               />
