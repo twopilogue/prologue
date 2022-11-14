@@ -8,7 +8,6 @@ import {
   ComponentCheckConfig,
   ComponentConfig,
   selectCheckList,
-  // selectCheckList,
   selectComponentList,
   setComponentLayoutList,
   selectClickedLayoutIdx,
@@ -59,8 +58,6 @@ const LayoutSample = () => {
         w: layouts[i].w,
         h: layouts[i].h,
         static: layouts[i].static,
-        isDraggable: layouts[i].isDraggable,
-        isResizable: layouts[i].isResizable,
       };
       tmpLayoutList.push(layout);
     }
