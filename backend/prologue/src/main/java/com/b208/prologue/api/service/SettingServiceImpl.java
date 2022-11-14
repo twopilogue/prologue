@@ -44,7 +44,7 @@ public class SettingServiceImpl implements SettingService {
         JSONObject social = (JSONObject) meta.get("social");
         JSONObject author = (JSONObject) meta.get("author");
 
-        String nickName= author.get("name").toString();
+        String nickName = author.get("name").toString();
         String summary = author.get("summary").toString();
         String title = meta.get("title").toString();
         String description = meta.get("description").toString();
@@ -106,22 +106,22 @@ public class SettingServiceImpl implements SettingService {
 
         if (modifyBlogSettingRequest.getSocial().get("github") == null) {
             social.put("github", "");
-        }else {
+        } else {
             social.put("github", modifyBlogSettingRequest.getSocial().get("github"));
         }
         if (modifyBlogSettingRequest.getSocial().get("gmail") == null) {
             social.put("gmail", "");
-        }else {
+        } else {
             social.put("gmail", modifyBlogSettingRequest.getSocial().get("gmail"));
         }
         if (modifyBlogSettingRequest.getSocial().get("instagram") == null) {
             social.put("instagram", "");
-        }else {
+        } else {
             social.put("instagram", modifyBlogSettingRequest.getSocial().get("instagram"));
         }
         if (modifyBlogSettingRequest.getSocial().get("twitter") == null) {
             social.put("twitter", "");
-        }else {
+        } else {
             social.put("twitter", modifyBlogSettingRequest.getSocial().get("twitter"));
 
         }
@@ -211,7 +211,7 @@ public class SettingServiceImpl implements SettingService {
                 "modify: 카테고리 설정", base64Converter.encode(jsonObj.toString()), sha);
 
         webClient.put()
-                .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/"+path)
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/" + path)
                 .headers(h -> h.setBearerAuth(accessToken))
                 .body(Mono.just(updateContentRequest), UpdateContentRequest.class)
                 .accept(MediaType.APPLICATION_JSON)
@@ -376,9 +376,12 @@ public class SettingServiceImpl implements SettingService {
     }
 
     @Override
-    public void updateBlogLayoutCss(String encodedAccessToken, String githubId, String css) throws Exception {
+    public void updateBlogLayoutCss(String encodedAccessToken, String githubId, String css, String logoText,
+                                    MultipartFile logoImage, MultipartFile titleImage) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
         String path = "src/style.css";
+        String commit = "modify: 레이아웃 세부 설정 변경";
+        List<TreeRequest> treeRequestList = new ArrayList<>();
 
         GetRepoContentResponse getRepoContentResponse = commonService.getDetailContent(accessToken, githubId, path);
         String content = base64Converter.decode(getRepoContentResponse.getContent().replace("\n", ""));
@@ -387,23 +390,36 @@ public class SettingServiceImpl implements SettingService {
         targetIndex = content.indexOf("/", targetIndex);
 
         StringBuilder sb = new StringBuilder();
-        sb.append(content.substring(0, targetIndex+1)).append("\n").append(css);
+        sb.append(content.substring(0, targetIndex + 1)).append("\n").append(css);
 
-        UpdateContentRequest updateContentRequest = new UpdateContentRequest(
-                "modify: 레이아웃 세부 설정 변경", base64Converter.encode(sb.toString()), getRepoContentResponse.getSha());
+        treeRequestList.add(new TreeRequest(path, "100644", "blob", commonService.makeBlob(accessToken, githubId, base64Converter.encode(sb.toString()))));
 
-        webClient.put()
-                .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/" + path)
-                .headers(h -> h.setBearerAuth(accessToken))
-                .body(Mono.just(updateContentRequest), UpdateContentRequest.class)
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
+        path = "src/util/customizing-setting.json";
+        getRepoContentResponse = commonService.getDetailContent(accessToken, githubId, path);
+        content = base64Converter.decode(getRepoContentResponse.getContent().replace("\n", ""));
+
+        JSONParser jsonParser = new JSONParser();
+        JSONObject jsonObj = (JSONObject) jsonParser.parse(content);
+        jsonObj.replace("logo", logoText);
+
+        treeRequestList.add(new TreeRequest(path, "100644", "blob", commonService.makeBlob(accessToken, githubId, base64Converter.encode(jsonObj.toString()))));
+
+        if (logoImage != null && !logoImage.isEmpty()) {
+            String image = new String(Base64.encodeBase64(logoImage.getBytes()));
+            String encodedContent = commonService.makeBlob(accessToken, githubId, image);
+            treeRequestList.add(new TreeRequest("src/images/gatsby-icon.png", "100644", "blob", encodedContent));
+        }
+        if (titleImage != null && !titleImage.isEmpty()) {
+            String image = new String(Base64.encodeBase64(titleImage.getBytes()));
+            String encodedContent = commonService.makeBlob(accessToken, githubId, image);
+            treeRequestList.add(new TreeRequest("src/images/background-default.png", "100644", "blob", encodedContent));
+        }
+
+        commonService.multiFileCommit(accessToken, githubId, treeRequestList, commit);
     }
 
     @Override
-    public String getLogoText(String accessToken, String githubId) throws Exception{
+    public String getLogoText(String accessToken, String githubId) throws Exception {
         String content = base64Converter.decode(commonService.getDetailContent(accessToken, githubId, "src/util/customizing-setting.json")
                 .getContent().replace("\n", ""));
         JSONParser jsonParser = new JSONParser();

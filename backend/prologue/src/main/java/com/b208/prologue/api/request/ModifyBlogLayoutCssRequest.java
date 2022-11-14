@@ -25,4 +25,8 @@ public class ModifyBlogLayoutCssRequest {
     @ApiModelProperty(name = "수정한 레이아웃 세부 설정 내용", example = "레이아웃", required = true)
     String css;
 
+    @NotNull
+    @ApiModelProperty(name = "수정한 로고 텍스트", example = "로고텍스트", required = true)
+    String logoText;
+
 }
