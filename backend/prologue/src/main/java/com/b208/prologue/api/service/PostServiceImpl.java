@@ -239,20 +239,24 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void updateDetailPost(String encodedAccessToken, String githubId, String path, String content, List<MultipartFile> files, List<String> deletedFiles) throws Exception {
+    public void updateDetailPost(String encodedAccessToken, String githubId, String path, String content, List<MultipartFile> files, List<ImageResponse> images) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
         String commit = "modify: 게시글 수정";
 
         List<TreeRequest> treeRequestList = new ArrayList<>();
 
-        content = commonService.makeBlob(accessToken, githubId, base64Converter.encode(content));
-        treeRequestList.add(new TreeRequest(path + "/index.md", "100644", "blob", content));
-
-        if (deletedFiles != null && !deletedFiles.isEmpty()) {
-            for (int i = 0; i < deletedFiles.size(); i++) {
-                treeRequestList.add(new TreeRequest(path + "/" + deletedFiles.get(i), "100644", "blob", null));
+        if (images != null && !images.isEmpty()) {
+            for(ImageResponse image : images){
+                if(content.contains(image.getUrl())){
+                    content=content.replace(image.getUrl(), "./"+image.getName());
+                }else{
+                    treeRequestList.add(new TreeRequest(path + "/" + image.getName(), "100644", "blob", null));
+                }
             }
         }
+
+        content = commonService.makeBlob(accessToken, githubId, base64Converter.encode(content));
+        treeRequestList.add(new TreeRequest(path + "/index.md", "100644", "blob", content));
 
         if (files != null && !files.isEmpty()) {
             for (int i = 0; i < files.size(); i++) {
