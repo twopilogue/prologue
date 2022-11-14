@@ -1,16 +1,11 @@
-import React, { useState } from "react";
-import styles from "./Setting.module.css";
+import React from "react";
 
-import CategoryLayout from "./category/CategoryLayout";
-import ConfirmButton from "./ConfirmButton";
-import CategoryCntSetting from "./category/CategoryCntSetting";
-import PageLayout from "./PageLayout";
 import LayoutSelector from "./layout/LayoutSelector";
 import LayoutSample from "./layout/LayoutSample";
-import DetailSelector from "./detail/DetailSelector";
 import DetailSetting from "./detail/DetailSetting";
 import MyInfoPage from "pages/MyInfoPage";
 import CategoryPage from "pages/CategoryPage";
+import PageSettingPage from "pages/PageSettingPage";
 
 export const blogTabs = [
   {
@@ -33,7 +28,7 @@ export const blogTabs = [
     label: "페이지 설정",
     Component: (
       <div>
-        <PageLayout />
+        <PageSettingPage />
       </div>
     ),
   },

@@ -7,6 +7,11 @@ export interface KeyConfig {
   id: number;
 }
 
+export interface PageConfig {
+  label: string;
+  posts: boolean;
+}
+
 export interface ComponentConfig {
   key: string;
   id: string;
@@ -67,7 +72,7 @@ interface LayoutConfig {
   categoryCnt: number;
 
   pageLayoutList: Layout[];
-  pageList: KeyConfig[];
+  pageList: PageConfig[];
   pageCnt: number;
 
   componentLayoutList: Layout[];
