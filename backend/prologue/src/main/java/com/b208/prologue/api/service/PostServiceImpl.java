@@ -327,8 +327,15 @@ public class PostServiceImpl implements PostService {
 
         String image = new String(Base64.encodeBase64(file.getBytes()));
         UploadTempImageRequest uploadTempImageRequest = new UploadTempImageRequest("upload tempImage", "deploy", image);
+
+        String extension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+
+        Long nowDate = System.currentTimeMillis();
+        Timestamp timeStamp = new Timestamp(nowDate);
+        String imageName = String.valueOf(timeStamp.getTime())+extension;
+
         String response = webClient.put()
-                .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/tempImage/" + file.getOriginalFilename())
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/tempImage/" + imageName)
                 .headers(h -> h.setBearerAuth(accessToken))
                 .body(Mono.just(uploadTempImageRequest), UploadTempImageRequest.class)
                 .accept(MediaType.APPLICATION_JSON)
