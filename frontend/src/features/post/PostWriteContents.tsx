@@ -18,9 +18,7 @@ const PostWriteContents = () => {
 
   const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
 
-  const [showImages, setShowImages] = useState([]);
   const [fileList, setFileList] = useState([]);
-  const [tmpFileList, setTmpFileList] = useState<any[]>(useAppSelector(selectPostFileList));
   const [files, setFiles] = useState([]);
 
   const editorRef = useRef<Editor>();
@@ -44,9 +42,6 @@ const PostWriteContents = () => {
         onChange={contentChange}
         hooks={{
           addImageBlobHook: async (blob, callback) => {
-            // const uploadFileLists = [...fileList];
-            // const imageUrlLists = [...showImages];
-
             const formData = new FormData();
             const file: any = blob;
             console.log(blob);
@@ -71,26 +66,15 @@ const PostWriteContents = () => {
                 console.log(err);
               });
 
-            // console.log("tempFileList : ", tempFileList);
             const newFile = { name: file.name, url: imageUrl };
             console.log("newFile : ", newFile);
 
-            // const fileList = [...tmpFileList];
             console.log("redux fileList : ", fileList);
             fileList.push(newFile);
             dispatch(setPostFileList([...fileList, newFile]));
 
             files.push(blob);
             dispatch(setPostFiles([...files, blob]));
-            // imageUrlLists.push(imageUrl);
-            // uploadFileLists.push(blob);
-
-            // setShowImages(imageUrlLists);
-            // setFileList(uploadFileLists);
-
-            // console.log(imageUrlLists);
-            // console.log(uploadFileLists);
-            // console.log(fileList);
 
             callback(imageUrl);
             return false;
