@@ -68,6 +68,7 @@ const PostWritePage = () => {
       images: [],
     };
 
+    console.log("fileList length : ", fileList.length);
     if (fileList.length) {
       for (let i = 0; i < fileList.length; i++) {
         const tmp = {
@@ -91,7 +92,7 @@ const PostWritePage = () => {
       .catch((err: any) => {
         console.log(err);
       });
-    dispatch(setPostFileList([{ url: "", name: "" }]));
+    dispatch(setPostFileList([]));
   };
 
   return (
