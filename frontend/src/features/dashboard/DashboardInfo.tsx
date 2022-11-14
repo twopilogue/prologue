@@ -3,6 +3,7 @@ import moment from "moment";
 import styles from "features/dashboard/Dashboard.module.css";
 import Text from "components/Text";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import UpdateIcon from "@mui/icons-material/Update";
 import Tooltip from "@mui/material/Tooltip";
 import { useSelector } from "react-redux";
 import { rootState } from "app/store";
@@ -82,8 +83,9 @@ function DashboardInfo() {
               </div>
             </div>
             <div className={styles.infoGird_item}>
-              <div className={`${styles.flexColumn} ${styles.infoTitle}`}>
+              <div className={`${styles.flexRow} ${styles.infoTitle}`} style={{ justifyContent: "center" }}>
                 <Text value="마지막 빌드 시간" bold />
+                <UpdateIcon className={styles.icon} fontSize="small" onClick={getInfo} />
               </div>
               <div className={`${styles.infoValue}`}>
                 <Stack>
