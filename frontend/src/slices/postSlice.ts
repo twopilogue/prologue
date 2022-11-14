@@ -17,7 +17,6 @@ interface postConfig {
   category: string;
   tagList: [];
   content: string;
-  fileNameList: [];
   fileList: any[];
   postList: postListConfig[];
   postCount: number;
@@ -29,7 +28,6 @@ const initialState: postConfig = {
   category: "",
   tagList: [],
   content: "",
-  fileNameList: [],
   fileList: [],
 
   postList: [],
@@ -55,9 +53,6 @@ const postSlice = createSlice({
     setPostContent: (state, { payload }) => {
       state.content = payload;
     },
-    setPostFileNameList: (state, { payload }) => {
-      state.fileNameList = payload;
-    },
     setPostFileList: (state, { payload }) => {
       state.fileList = payload;
     },
@@ -75,7 +70,6 @@ export const {
   setPostCategory,
   setPostTagList,
   setPostContent,
-  setPostFileNameList,
   setPostFileList,
   setPostList,
   setPostCount,
@@ -86,7 +80,6 @@ export const selectPostDescription = (state: rootState) => state.posts.descripti
 export const selectPostCategory = (state: rootState) => state.posts.category;
 export const selectPostTagList = (state: rootState) => state.posts.tagList;
 export const selectPostContent = (state: rootState) => state.posts.content;
-export const selectPostFileNameList = (state: rootState) => state.posts.fileNameList;
 export const selectPostFileList = (state: rootState) => state.posts.fileList;
 export const selectPostList = (state: rootState) => state.posts.postList;
 export const selectPostCount = (state: rootState) => state.posts.postCount;

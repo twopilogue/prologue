@@ -74,7 +74,10 @@ const PostWriteContents = () => {
             const newFile = { name: file.name, url: imageUrl };
             console.log("newFile : ", newFile);
 
-            dispatch(setPostFileList([...tmpFileList, newFile]));
+            const fileList = [...tmpFileList];
+            console.log("redux fileList : ", fileList);
+            fileList.push(newFile);
+            dispatch(setPostFileList(fileList));
             // imageUrlLists.push(imageUrl);
             // uploadFileLists.push(blob);
 
