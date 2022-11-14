@@ -22,19 +22,12 @@ export interface ComponentCheckConfig {
 }
 
 export interface blogInfoConfig {
-  siteMetadata: {
-    author: {
-      name: string;
-      summary: string;
-    };
-    description: string;
-    siteUrl: string;
-    social: {
-      twitter: string;
-    };
-    title: string;
-  };
-  profileImg: string;
+  nickName: string;
+  summary: string;
+  profileImg: string | FormData;
+  title: string;
+  description: string;
+  social: object;
 }
 
 export interface colorsConfig {
@@ -116,19 +109,12 @@ export const initialState: LayoutConfig = {
   },
 
   blogSettingInfo: {
-    siteMetadata: {
-      author: {
-        name: "",
-        summary: "",
-      },
-      description: "",
-      siteUrl: "",
-      social: {
-        twitter: "",
-      },
-      title: "",
-    },
+    nickName: "",
+    summary: "",
     profileImg: "",
+    title: "",
+    description: "",
+    social: {},
   },
 
   colorList: {
@@ -197,9 +183,8 @@ const settingSlice = createSlice({
     setCheckList: (state, { payload: { logo, category, profile, page, title, contents } }) => {
       state.checkList = { logo, category, profile, page, title, contents };
     },
-    setBlogSettingInfo: (state, { payload: { siteMetadata, profileImg } }) => {
-      state.blogSettingInfo.siteMetadata = siteMetadata;
-      state.blogSettingInfo.profileImg = profileImg;
+    setBlogSettingInfo: (state, { payload }) => {
+      state.blogSettingInfo = payload;
     },
     setColors: (state, { payload }) => {
       state.colorList = payload;

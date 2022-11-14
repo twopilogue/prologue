@@ -11,7 +11,7 @@ import { blogInfoConfig, setBlogSettingInfo } from "slices/settingSlice";
 import ButtonStyled from "components/Button";
 
 export interface myInfoProps {
-  name: string;
+  nickName: string;
   summary: string;
   profileImg: string | FormData;
 }
@@ -29,7 +29,7 @@ const MyInfoPage = () => {
   const [newPic, setNewPic] = useState<Blob>(null);
   const [socialList, setSocialList] = useState({});
   const [myInfo, setMyInfo] = useState<myInfoProps>({
-    name: "",
+    nickName: "",
     summary: "",
     profileImg: null,
   });
@@ -50,23 +50,25 @@ const MyInfoPage = () => {
     await axios
       .get(api.setting.getBlog(accessToken, githubId))
       .then((res: any) => {
-        const originString: string = res.data.setting;
-        const teststring = originString.replaceAll("${__dirname}", "dirname_Change");
+        console.log(res);
+        const result: blogInfoConfig = res.data;
+        console.log(result);
 
-        const test = "return (" + teststring + ")";
-        const st: blogInfoConfig = new Function(test)();
-        setOldString(st);
-        dispatch(setBlogSettingInfo({ siteMetadata: st.siteMetadata, profileImg: res.data.profileImg }));
+        dispatch(setBlogSettingInfo(result));
 
         setMyInfo({
-          name: st.siteMetadata.author.name,
-          summary: st.siteMetadata.author.summary,
-          profileImg: res.data.profileImg,
+          nickName: result.nickName,
+          summary: result.summary,
+          profileImg: result.profileImg,
         });
         setMyBlogInfo({
-          title: st.siteMetadata.title,
-          description: st.siteMetadata.description,
-          social: st.siteMetadata.social,
+          title: result.title,
+          description: result.description,
+          /* 임시 데이터 */
+          social: {
+            twitter: "000",
+            instagram: "000",
+          },
         });
       })
 
@@ -75,48 +77,48 @@ const MyInfoPage = () => {
       });
   };
 
-  const handleOnEdit = () => {
-    console.log("저장?");
-    console.log("오리지널", oldString);
-    console.log("수정된 내 정보", myInfo);
-    const tmpPayload = {
-      nickName: [oldString.siteMetadata.author.name, myInfo.name],
-      summary: [oldString.siteMetadata.author.summary, myInfo.summary],
-      profileImg: ["../src/images/profile-pic.png", ""],
-      title: [oldString.siteMetadata.title, myBlogInfo.title],
-      description: [oldString.siteMetadata.description, myBlogInfo.description],
-    };
-    setPayload(tmpPayload);
-    console.log("결과: ", tmpPayload);
-    return tmpPayload;
-  };
+  // const handleOnEdit = () => {
+  //   console.log("저장?");
+  //   console.log("오리지널", oldString);
+  //   console.log("수정된 내 정보", myInfo);
+  //   const tmpPayload = {
+  //     nickName: [oldString.siteMetadata.author.name, myInfo.name],
+  //     summary: [oldString.siteMetadata.author.summary, myInfo.summary],
+  //     profileImg: ["../src/images/profile-pic.png", ""],
+  //     title: [oldString.siteMetadata.title, myBlogInfo.title],
+  //     description: [oldString.siteMetadata.description, myBlogInfo.description],
+  //   };
+  //   setPayload(tmpPayload);
+  //   console.log("결과: ", tmpPayload);
+  //   return tmpPayload;
+  // };
 
-  const sendBlogInfo = async () => {
-    const formData = new FormData();
-    const result = {
-      accessToken: accessToken,
-      githubId: githubId,
-      modified: handleOnEdit(),
-      social: socialList,
-    };
+  // const sendBlogInfo = async () => {
+  //   const formData = new FormData();
+  //   const result = {
+  //     accessToken: accessToken,
+  //     githubId: githubId,
+  //     modified: handleOnEdit(),
+  //     social: socialList,
+  //   };
 
-    console.log("리퀘스트: ", result);
-    console.log(JSON.stringify(result));
+  //   console.log("리퀘스트: ", result);
+  //   console.log(JSON.stringify(result));
 
-    formData.append("imageFile", newPic);
-    formData.append("modifyBlogSettingRequest", new Blob([JSON.stringify(result)], { type: "application/json" }));
+  //   formData.append("imageFile", newPic);
+  //   formData.append("modifyBlogSettingRequest", new Blob([JSON.stringify(result)], { type: "application/json" }));
 
-    await axios
-      .put(api.setting.modifyBlog(), formData, {
-        headers: { "Content-Type": `multipart/form-data` },
-      })
-      .then((res: any) => {
-        console.log("됨?", res);
-      })
-      .catch((err: any) => {
-        console.log(err);
-      });
-  };
+  //   await axios
+  //     .put(api.setting.modifyBlog(), formData, {
+  //       headers: { "Content-Type": `multipart/form-data` },
+  //     })
+  //     .then((res: any) => {
+  //       console.log("됨?", res);
+  //     })
+  //     .catch((err: any) => {
+  //       console.log(err);
+  //     });
+  // };
 
   useEffect(() => {
     getBlogInfo();
@@ -134,9 +136,7 @@ const MyInfoPage = () => {
           <div style={{ margin: "10px" }}>
             <ButtonStyled color="sky" label="취소" />
           </div>
-          <div style={{ margin: "10px" }}>
-            <ButtonStyled label="저장" onClick={sendBlogInfo} />
-          </div>
+          <div style={{ margin: "10px" }}>{/* <ButtonStyled label="저장" onClick={sendBlogInfo} /> */}</div>
         </div>
       </div>
     </div>
