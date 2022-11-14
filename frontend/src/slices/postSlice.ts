@@ -78,6 +78,7 @@ export const {
   setPostFileNameList,
   setPostFileList,
   setPostList,
+  setPostCount,
 } = postSlice.actions;
 
 export const selectPostTitle = (state: rootState) => state.posts.title;
