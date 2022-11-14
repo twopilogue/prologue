@@ -1,5 +1,7 @@
 import Text from "components/Text";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { setClickedLayoutIdx } from "slices/settingSlice";
 import styles from "../Setting.module.css";
 import LayoutSelectorItem from "./../layout/LayoutSelectorItem";
 
@@ -9,6 +11,7 @@ export interface layoutsConfig {
 }
 
 const LayoutSelector = () => {
+  const dispatch = useDispatch();
   const [layoutList, setLayoutList] = useState<layoutsConfig[]>([
     { idx: 1, isClicked: true },
     { idx: 2, isClicked: false },
@@ -18,6 +21,11 @@ const LayoutSelector = () => {
     { idx: 6, isClicked: false },
     { idx: 7, isClicked: false },
   ]);
+
+  useEffect(() => {
+    dispatch(setClickedLayoutIdx(1));
+  }, []);
+
   return (
     <>
       <div className={styles.textPadding} style={{ paddingTop: "0", paddingBottom: "10px" }}>

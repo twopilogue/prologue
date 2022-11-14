@@ -25,10 +25,11 @@ const DetailSetting = () => {
         console.log(res);
         const removedResult = res.data.css.replaceAll(".", "");
         const result = toJSON(removedResult);
-        console.log("변환 결과: ", result.children.category.attributes);
-        const result2 = result.children.category.attributes;
-        console.log("배경 색: ", result2["background-color"]);
-        const categoryBack = result2["background-color"];
+        console.log("카테고리 변환 결과: ", result.children.category.attributes);
+        console.log("프로필 반환 결과: ", result.children.profile.attributes);
+        const categoryAtt = result.children.category.attributes;
+        console.log("배경 색: ", categoryAtt["background-color"]);
+        const categoryBack = categoryAtt["background-color"];
         dispatch(setColors({ ...colors, category: { ...colors.category, background: categoryBack } }));
       })
       .catch((err) => {
