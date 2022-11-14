@@ -18,7 +18,7 @@ interface postConfig {
   tagList: [];
   content: string;
   fileNameList: [];
-  fileList: [];
+  fileList: any[];
   postList: postListConfig[];
   postCount: number;
 }

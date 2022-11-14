@@ -6,8 +6,8 @@ import "@toast-ui/editor/dist/toastui-editor.css";
 import "tui-color-picker/dist/tui-color-picker.css";
 import "@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css";
 import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
-import { useAppDispatch } from "app/hooks";
-import { setPostContent, setPostFileList } from "slices/postSlice";
+import { useAppDispatch, useAppSelector } from "app/hooks";
+import { selectPostFileList, setPostContent, setPostFileList } from "slices/postSlice";
 import api from "api/Api";
 import { useSelector } from "react-redux";
 import { rootState } from "app/store";
@@ -20,12 +20,13 @@ const PostWriteContents = () => {
 
   const [showImages, setShowImages] = useState([]);
   const [fileList, setFileList] = useState([]);
+  const [tmpFileList, setTmpFileList] = useState<any[]>(useAppSelector(selectPostFileList));
 
   const editorRef = useRef<Editor>();
 
   const contentChange = () => {
     dispatch(setPostContent(editorRef.current?.getInstance().getMarkdown()));
-    dispatch(setPostFileList(fileList));
+    // dispatch(setPostFileList(fileList));
   };
 
   return (
@@ -42,10 +43,12 @@ const PostWriteContents = () => {
         onChange={contentChange}
         hooks={{
           addImageBlobHook: async (blob, callback) => {
-            const uploadFileLists = [...fileList];
-            const imageUrlLists = [...showImages];
+            // const uploadFileLists = [...fileList];
+            // const imageUrlLists = [...showImages];
 
             const formData = new FormData();
+            const file: any = blob;
+            console.log(blob);
 
             const tempImageUploadRequest = {
               accessToken: accessToken,
@@ -67,15 +70,20 @@ const PostWriteContents = () => {
                 console.log(err);
               });
 
-            imageUrlLists.push(imageUrl);
-            uploadFileLists.push(blob);
+            // console.log("tempFileList : ", tempFileList);
+            const newFile = { name: file.name, url: imageUrl };
+            console.log("newFile : ", newFile);
 
-            setShowImages(imageUrlLists);
-            setFileList(uploadFileLists);
+            dispatch(setPostFileList([...tmpFileList, newFile]));
+            // imageUrlLists.push(imageUrl);
+            // uploadFileLists.push(blob);
 
-            console.log(imageUrlLists);
-            console.log(uploadFileLists);
-            console.log(fileList);
+            // setShowImages(imageUrlLists);
+            // setFileList(uploadFileLists);
+
+            // console.log(imageUrlLists);
+            // console.log(uploadFileLists);
+            // console.log(fileList);
 
             callback(imageUrl);
             return false;

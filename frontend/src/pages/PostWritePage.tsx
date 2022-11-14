@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 import { rootState } from "app/store";
 import Axios from "api/MultipartAxios";
 import api from "api/Api";
-import { useAppSelector } from "app/hooks";
+import { useAppDispatch, useAppSelector } from "app/hooks";
 import {
   selectPostCategory,
   selectPostContent,
@@ -18,9 +18,19 @@ import {
   selectPostFileList,
   selectPostTagList,
   selectPostTitle,
+  setPostFileList,
 } from "slices/postSlice";
 
+interface writeDetailPostRequestProps {
+  accessToken: string;
+  githubId: string;
+  content: string;
+  images: any[];
+}
+
 const PostWritePage = () => {
+  const dispatch = useAppDispatch();
+
   const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
   const title = useAppSelector(selectPostTitle);
   const description = useAppSelector(selectPostDescription);
@@ -31,10 +41,12 @@ const PostWritePage = () => {
 
   const savePost = () => {
     const formData = new FormData();
-    console.log(fileList);
-    for (let i = 0; i < fileList.length; i++) {
-      formData.append("files", fileList[i]);
-    }
+    console.log("fileList : ", fileList);
+    // for (let i = 0; i < fileList.length; i++) {
+    //   formData.append("files", fileList[i]);
+    //   const file: File = fileList[i];
+    //   console.log("fileList[i] : ", file.name);
+    // }
 
     const frontMatter =
       "---\ntitle: " +
@@ -49,11 +61,23 @@ const PostWritePage = () => {
       new Date().toISOString() +
       "\n---\n";
 
-    const writeDetailPostRequest = {
+    const writeDetailPostRequest: writeDetailPostRequestProps = {
       accessToken: accessToken,
       githubId: githubId,
       content: frontMatter + content,
+      images: [],
     };
+
+    if (fileList.length) {
+      for (let i = 0; i < fileList.length; i++) {
+        const tmp = {
+          url: fileList[i].url,
+          name: fileList[i].name,
+        };
+        console.log("tmp : ", tmp);
+        writeDetailPostRequest.images.push(tmp);
+      }
+    }
 
     formData.append(
       "writeDetailPostRequest",
@@ -67,6 +91,7 @@ const PostWritePage = () => {
       .catch((err: any) => {
         console.log(err);
       });
+    dispatch(setPostFileList([{ url: "", name: "" }]));
   };
 
   return (
