@@ -10,46 +10,77 @@ import { useSelector } from "react-redux";
 import { rootState } from "app/store";
 import Axios from "api/MultipartAxios";
 import api from "api/Api";
-import { useAppSelector } from "app/hooks";
+import { useAppDispatch, useAppSelector } from "app/hooks";
 import {
   selectPostCategory,
   selectPostContent,
+  selectPostDescription,
   selectPostFileList,
+  selectPostFiles,
   selectPostTagList,
   selectPostTitle,
+  setPostFileList,
 } from "slices/postSlice";
 
+interface writeDetailPostRequestProps {
+  accessToken: string;
+  githubId: string;
+  content: string;
+  images: any[];
+}
+
 const PostWritePage = () => {
+  const dispatch = useAppDispatch();
+
   const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
   const title = useAppSelector(selectPostTitle);
+  const description = useAppSelector(selectPostDescription);
   const category = useAppSelector(selectPostCategory);
   const tagList = useAppSelector(selectPostTagList);
   const content = useAppSelector(selectPostContent);
   const fileList = useAppSelector(selectPostFileList);
+  const files = useAppSelector(selectPostFiles);
 
   const savePost = () => {
     const formData = new FormData();
-    console.log(fileList);
-    for (let i = 0; i < fileList.length; i++) {
-      formData.append("files", fileList[i]);
+    console.log("files : ", files);
+    for (let i = 0; i < files.length; i++) {
+      formData.append("files", files[i]);
+      const file: File = files[i];
+      console.log("files[i] : ", file.name);
     }
 
     const frontMatter =
       "---\ntitle: " +
       title +
-      "\ndate: " +
-      new Date().toISOString() +
+      "\ndescription: " +
+      description +
       "\ncategory: " +
       category +
-      "\ntag: " +
+      "\ntags: " +
       tagList +
+      "\ndate: " +
+      new Date().toISOString() +
       "\n---\n";
 
-    const writeDetailPostRequest = {
+    const writeDetailPostRequest: writeDetailPostRequestProps = {
       accessToken: accessToken,
       githubId: githubId,
       content: frontMatter + content,
+      images: [],
     };
+
+    console.log("fileList length : ", fileList.length);
+    if (fileList.length) {
+      for (let i = 0; i < fileList.length; i++) {
+        const tmp = {
+          url: fileList[i].url,
+          name: fileList[i].name,
+        };
+        console.log("tmp : ", tmp);
+        writeDetailPostRequest.images.push(tmp);
+      }
+    }
 
     formData.append(
       "writeDetailPostRequest",
@@ -63,6 +94,7 @@ const PostWritePage = () => {
       .catch((err: any) => {
         console.log(err);
       });
+    dispatch(setPostFileList([]));
   };
 
   return (

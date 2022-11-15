@@ -10,15 +10,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { rootState } from "app/store";
 import { authActions } from "slices/authSlice";
 import BlogCustomInfo from "features/blog/BlogCustomInfo";
+import BlogLoding from "features/blog/BlogLoding";
 
 const CreatePage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
 
   const [isStepNumber, setStepNumber] = React.useState(0);
   const [radioValue, setRadioValue] = React.useState("CustomLayout");
-
-  const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
+  const [lodingView, openLodingView] = React.useState(false);
 
   const layoutSetting = async () => {
     console.log(radioValue);
@@ -32,43 +33,19 @@ const CreatePage = () => {
   };
 
   const chooseTemplate = async () => {
+    openLodingView(true);
     await Axios.post(api.blog.chooseTemplate(), {
       accessToken: accessToken,
       githubId: githubId,
       template: "prologue-template",
     })
       .then(async (res) => {
-        console.log("기본 테마적용 성공", res.data);
-        setTimeout(() => [setAuthFile()], 500);
-      })
-      .catch((err) => {
-        console.error("기본 테마적용 err", err);
-      });
-  };
-
-  const setAuthFile = async () => {
-    await Axios.put(api.auth.setAuthFile(), {
-      accessToken: accessToken,
-      githubId: githubId,
-      blogType: 0,
-    })
-      .then((res) => {
-        console.log("블로그 인증 파일 생성", res.data);
-        setTimeout(() => [changeBranch()], 500);
-      })
-      .catch((err) => {
-        console.error("블로그 인증 파일 생성", err);
-      });
-  };
-
-  const changeBranch = async () => {
-    await Axios.put(api.blog.changeBranch(accessToken, githubId))
-      .then(async (res) => {
-        console.log("1. 배포 브랜치 변경", res);
+        console.log("1. 기본 테마적용 성공", res.data);
+        // setTimeout(() => [changeBranch()], 1200);
         setSecretRepo();
       })
       .catch((err) => {
-        console.error("1. 배포 브랜치 변경", err.data);
+        console.error("1. 기본 테마적용 err", err);
       });
   };
 
@@ -76,46 +53,66 @@ const CreatePage = () => {
     await Axios.put(api.auth.setSecretRepo(accessToken, githubId))
       .then((res) => {
         console.log("2. Repo secrets 생성", res.data);
-        setGitWorkflow();
+        setTimeout(() => [changeBranch()], 1000);
       })
       .catch((err) => {
         console.error("2. Repo secrets 생성", err);
       });
   };
 
-  const setGitWorkflow = async () => {
-    await Axios.post(api.blog.setGitWorkflow(accessToken, githubId))
+  const changeBranch = async () => {
+    await Axios.put(api.blog.changeBranch(accessToken, githubId))
+      .then(async (res) => {
+        console.log("3. 배포 브랜치 변경", res.data);
+        setTimeout(() => [setAuthFile()], 500);
+      })
+      .catch((err) => {
+        console.error("3. 배포 브랜치 변경", err);
+      });
+  };
+
+  // 인증 파일 생성
+  const setAuthFile = async () => {
+    await Axios.put(api.auth.setAuthFile(), {
+      accessToken: accessToken,
+      githubId: githubId,
+      blogType: 0,
+    })
       .then((res) => {
-        console.log("3. Workflow 생성", res.data);
+        console.log("4. 블로그 인증 파일 생성", res.data);
+        openLodingView(false);
         setStepNumber(2);
       })
       .catch((err) => {
-        console.error("3. Workflow 생성", err);
+        console.error("4. 블로그 인증 파일 생성", err);
       });
   };
 
   return (
-    <div style={{ paddingTop: "5%" }}>
-      <BlogStepper step={isStepNumber} />
-      <div
-        style={{
-          width: "100%",
-          display: "flex",
-          justifyContent: "center",
-          marginTop: "5%",
-        }}
-      >
-        {isStepNumber === 0 ? (
-          <BlogCreateBox onClick={() => setStepNumber(1)} />
-        ) : isStepNumber === 1 ? (
-          <Stack direction="column" justifyContent="center" alignItems="center" spacing={2}>
-            <BlogLayoutSetting radioValue={radioValue} setValue={setRadioValue} onClick={layoutSetting} />
-          </Stack>
-        ) : (
-          <BlogCustomInfo />
-        )}
+    <>
+      <div style={{ paddingTop: "5%" }}>
+        <BlogStepper step={isStepNumber} />
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "5%",
+          }}
+        >
+          {isStepNumber === 0 ? (
+            <BlogCreateBox onClick={() => setStepNumber(1)} />
+          ) : isStepNumber === 1 ? (
+            <Stack direction="column" justifyContent="center" alignItems="center" spacing={2}>
+              <BlogLayoutSetting radioValue={radioValue} setValue={setRadioValue} onClick={layoutSetting} />
+            </Stack>
+          ) : (
+            <BlogCustomInfo />
+          )}
+        </div>
       </div>
-    </div>
+      {lodingView && <BlogLoding />}
+    </>
   );
 };
 

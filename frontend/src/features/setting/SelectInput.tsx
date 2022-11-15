@@ -32,6 +32,7 @@ const SelectInput = ({ link, setLink }: Props) => {
             <em>사이트를 선택하세요.</em>
           </MenuItem>
           <MenuItem value={"github"}>Github</MenuItem>
+          <MenuItem value={"gmail"}>Gmail</MenuItem>
           <MenuItem value={"instagram"}>Instagram</MenuItem>
           <MenuItem value={"twitter"}>Twitter</MenuItem>
         </Select>
