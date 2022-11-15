@@ -51,11 +51,8 @@ function LoginOAuthHandler() {
   async function getAuthFile(accessToken: string, githubId: string) {
     await Axios.get(api.auth.getAuthFile(accessToken, githubId)).then((res) => {
       if (res.data.checkAuthFile) {
-        dispatch(
-          authActions.blogType({
-            blogType: res.data.blogType,
-          }),
-        );
+        dispatch(authActions.blogType({ blogType: res.data.blogType }));
+        dispatch(authActions.authFile({ authFile: true }));
         setTimeout(() => [setSecretRepo(accessToken, githubId)], 200);
       } else navigate("/create/reset");
     });
