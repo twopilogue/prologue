@@ -229,7 +229,7 @@ public class PostServiceImpl implements PostService {
                 MultipartFile file = files.get(i);
                 String image = new String(Base64.encodeBase64(file.getBytes()));
                 encodedContent = commonService.makeBlob(accessToken, githubId, image);
-                treeRequestList.add(new TreeRequest(path + "/" + file.getOriginalFilename(), "100644", "blob", encodedContent));
+                treeRequestList.add(new TreeRequest(path + "/" + file.getOriginalFilename().replace(' ','_'), "100644", "blob", encodedContent));
             }
         }
         commonService.multiFileCommit(accessToken, githubId, treeRequestList, commit);
@@ -244,10 +244,11 @@ public class PostServiceImpl implements PostService {
 
         if (images != null && !images.isEmpty()) {
             for (ImageResponse image : images) {
+                String imageName = image.getName().replace(' ','_');
                 if (content.contains(image.getUrl())) {
-                    content = content.replace(image.getUrl(), "./" + image.getName());
+                    content = content.replace(image.getUrl(), "./" + imageName);
                 } else {
-                    treeRequestList.add(new TreeRequest(path + "/" + image.getName(), "100644", "blob", null));
+                    treeRequestList.add(new TreeRequest(path + "/" + imageName, "100644", "blob", null));
                 }
             }
         }
@@ -260,7 +261,7 @@ public class PostServiceImpl implements PostService {
                 MultipartFile file = files.get(i);
                 String image = new String(Base64.encodeBase64(file.getBytes()));
                 String encodedContent = commonService.makeBlob(accessToken, githubId, image);
-                treeRequestList.add(new TreeRequest(path + "/" + file.getOriginalFilename(), "100644", "blob", encodedContent));
+                treeRequestList.add(new TreeRequest(path + "/" + file.getOriginalFilename().replace(' ','_'), "100644", "blob", encodedContent));
             }
         }
         commonService.multiFileCommit(accessToken, githubId, treeRequestList, commit);
@@ -348,7 +349,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public String replaceImageUrlWithPath(String content, List<ImageResponse> images) {
         for (ImageResponse image : images) {
-            content = content.replace(image.getUrl(), "./" + image.getName());
+            content = content.replace(image.getUrl(), "./" + image.getName().replace(' ','_'));
         }
         return content;
     }
@@ -356,7 +357,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public String replaceImagePathWithUrl(String content, List<ImageResponse> images) {
         for (ImageResponse image : images) {
-            content = content.replace("./" + image.getName(), image.getUrl());
+            content = content.replace("./" + image.getName().replace(' ','_'), image.getUrl());
         }
         return content;
     }
