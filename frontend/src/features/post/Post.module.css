@@ -80,6 +80,10 @@
   overflow: scroll;
 }
 
+.postCards {
+  cursor: pointer;
+}
+
 /* PostListCard */
 .postListCard {
   position: relative;

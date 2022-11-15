@@ -32,6 +32,7 @@ const PostWriteContents = () => {
     <div className={styles.postWriteContents}>
       <Text value="내용" type="text" />
       <div style={{ marginTop: "1%" }}></div>
+
       <Editor
         ref={editorRef}
         initialValue=""
