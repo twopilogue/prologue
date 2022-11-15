@@ -9,7 +9,7 @@ import PostWriteTitle from "../features/post/PostWriteTitle";
 import PostWriteContents from "../features/post/PostWriteContents";
 import { useSelector } from "react-redux";
 import { rootState } from "app/store";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Axios from "api/MultipartAxios";
 import JsonAxios from "api/JsonAxios";
 import api from "api/Api";
@@ -27,6 +27,7 @@ import {
   setPostFileList,
 } from "slices/postSlice";
 import PostDeleteModal from "features/post/modal/PostDeleteModal";
+import Modal from "components/Modal";
 
 interface modifyDetailPostRequestProps {
   accessToken: string;
@@ -38,6 +39,7 @@ interface modifyDetailPostRequestProps {
 
 const PostEditPage = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
   const { directory } = useParams();
@@ -133,6 +135,7 @@ const PostEditPage = () => {
     Axios.put(api.posts.modifyPost(), formData)
       .then((res: any) => {
         console.log(res);
+        navigate("/post");
       })
       .catch((err: any) => {
         console.log(err);
@@ -150,6 +153,7 @@ const PostEditPage = () => {
     })
       .then((res: any) => {
         console.log(res);
+        navigate("/post");
       })
       .catch((err: any) => {
         console.log(err);
@@ -175,9 +179,9 @@ const PostEditPage = () => {
         <br /> <br />
         <Text value="간편하게 깃허브 블로그 게시글을 수정해보세요." type="caption" color="dark_gray" />
         <div className={styles.postWriteButtons}>
-          <Button label="돌아가기" color="sky" width="10vw" icon={<RefreshOutlinedIcon />} />
+          <Button label="돌아가기" color="sky" width="10vw" icon={<RefreshOutlinedIcon />} onClick={showCancelModal} />
           &nbsp; &nbsp; &nbsp;
-          <Button label="작성완료" width="10vw" icon={<CheckOutlinedIcon />} onClick={editPost} />
+          <Button label="작성완료" width="10vw" icon={<CheckOutlinedIcon />} onClick={showSaveModal} />
         </div>
         <div className={styles.postDeleteButton}>
           <Button label="삭제하기" width="10vw" icon={<CloseOutlinedIcon />} onClick={showDeleteModal} />
@@ -194,8 +198,27 @@ const PostEditPage = () => {
         <PostViewerContents content={contentData} />
       </div>
 
-      {/* {cancelModalOpen && <}
-      {deleteModalOpen && <PostDeleteModal />} */}
+      {cancelModalOpen && (
+        <Modal
+          text={`정말 게시글 목록으로 돌아가시겠습니까?\n수정 중인 게시글은 사라집니다.`}
+          twoButtonCancle={() => setCancelModalOpen(false)}
+          twoButtonConfirm={() => navigate("/post")}
+        />
+      )}
+      {saveModalOpen && (
+        <Modal
+          text={`게시글 수정을 완료하시겠습니까?`}
+          twoButtonCancle={() => setSaveModalOpen(false)}
+          twoButtonConfirm={editPost}
+        />
+      )}
+      {deleteModalOpen && (
+        <Modal
+          text={`정말 해당 게시글을 삭제하시겠습니까?\n삭제한 게시물은 복구가 불가합니다.`}
+          twoButtonCancle={() => setDeleteModalOpen(false)}
+          twoButtonConfirm={deletePost}
+        />
+      )}
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "features/post/PostWrite.module.css";
 import Text from "components/Text";
 import ButtonStyled from "components/Button";
@@ -21,6 +21,8 @@ import {
   selectPostTitle,
   setPostFileList,
 } from "slices/postSlice";
+import Modal from "components/Modal";
+import { useNavigate } from "react-router-dom";
 
 interface writeDetailPostRequestProps {
   accessToken: string;
@@ -31,8 +33,13 @@ interface writeDetailPostRequestProps {
 
 const PostWritePage = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
+
+  const [cancelModalOpen, setCancelModalOpen] = useState(false);
+  const [saveModalOpen, setSaveModalOpen] = useState(false);
+
   const title = useAppSelector(selectPostTitle);
   const description = useAppSelector(selectPostDescription);
   const category = useAppSelector(selectPostCategory);
@@ -90,11 +97,20 @@ const PostWritePage = () => {
     Axios.post(api.posts.writePost(), formData)
       .then((res: any) => {
         console.log(res);
+        navigate("/post");
       })
       .catch((err: any) => {
         console.log(err);
       });
     dispatch(setPostFileList([]));
+  };
+
+  const showCancelModal = () => {
+    setCancelModalOpen(true);
+  };
+
+  const showSaveModal = () => {
+    setSaveModalOpen(true);
   };
 
   return (
@@ -106,10 +122,16 @@ const PostWritePage = () => {
         <Text value="간편하게 깃허브 블로그 게시글을 작성해보세요." type="caption" color="dark_gray" />
 
         <div className={styles.postWriteButtons}>
-          <ButtonStyled label="돌아가기" color="sky" width="10vw" icon={<RefreshOutlinedIcon />} />
+          <ButtonStyled
+            label="돌아가기"
+            color="sky"
+            width="10vw"
+            icon={<RefreshOutlinedIcon />}
+            onClick={showCancelModal}
+          />
           &nbsp; &nbsp; &nbsp;
           {/* <ButtonStyled label="미리보기" width="10vw" /> */}
-          <ButtonStyled label="작성완료" width="10vw" icon={<CheckOutlinedIcon />} onClick={savePost} />
+          <ButtonStyled label="작성완료" width="10vw" icon={<CheckOutlinedIcon />} onClick={showSaveModal} />
         </div>
       </div>
 
@@ -117,6 +139,21 @@ const PostWritePage = () => {
         <PostWriteTitle />
         <PostWriteContents />
       </div>
+
+      {cancelModalOpen && (
+        <Modal
+          text={`정말 게시글 목록으로 돌아가시겠습니까?\n작성 중인 게시글은 사라집니다.`}
+          twoButtonCancle={() => setCancelModalOpen(false)}
+          twoButtonConfirm={() => navigate("/post")}
+        />
+      )}
+      {saveModalOpen && (
+        <Modal
+          text={`게시글 작성을 완료하시겠습니까?`}
+          twoButtonCancle={() => setSaveModalOpen(false)}
+          twoButtonConfirm={savePost}
+        />
+      )}
     </div>
   );
 };
