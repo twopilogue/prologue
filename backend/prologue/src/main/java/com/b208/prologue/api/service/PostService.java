@@ -12,7 +12,7 @@ public interface PostService {
     void updateDetailPost(String encodedAccessToken, String githubId, String path, String content, List<MultipartFile> files, List<ImageResponse> images) throws Exception;
     void deleteDetailPost(String encodedAccessToken, String githubId, String directory) throws Exception;
     String getDetailPost(String encodedAccessToken, String githubId, String path, List<ImageResponse> images) throws Exception;
-    String getDetailPage(String encodedAccessToken, String githubId, String path) throws Exception;
+    String getDetailPage(String encodedAccessToken, String githubId, String path, List<ImageResponse> images) throws Exception;
     List<ImageResponse> getImages(String encodedAccessToken, String githubId, String path) throws Exception;
     String tempImageUpload(String encodedAccessToken, String githubId, MultipartFile file) throws Exception;
     String replaceImageUrlWithPath(String content, List<ImageResponse> images);
