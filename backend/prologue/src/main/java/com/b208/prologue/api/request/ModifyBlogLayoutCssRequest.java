@@ -30,11 +30,11 @@ public class ModifyBlogLayoutCssRequest {
     String logoText;
 
     @NotNull
-    @ApiModelProperty(name = "수정한 타이틀 텍스트", example = "로고텍스트", required = true)
+    @ApiModelProperty(name = "수정한 타이틀 텍스트", example = "타이틀텍스트", required = true)
     String titleText;
 
     @NotNull
-    @ApiModelProperty(name = "타이틀 색상 선택 여부", example = "로고텍스트", required = true)
+    @ApiModelProperty(name = "타이틀 색상 선택 여부", example = "true", required = true)
     boolean titleColor;
 
 }
