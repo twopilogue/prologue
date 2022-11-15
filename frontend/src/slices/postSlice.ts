@@ -11,6 +11,13 @@ export interface postListConfig {
   imgUrl: string;
 }
 
+interface editListConfig {
+  title: string;
+  description: string;
+  category: string;
+  tag: [];
+}
+
 interface postConfig {
   title: string;
   description: string;
@@ -22,6 +29,8 @@ interface postConfig {
 
   postList: postListConfig[];
   postCount: number;
+
+  editList: editListConfig;
 }
 
 const initialState: postConfig = {
@@ -35,6 +44,13 @@ const initialState: postConfig = {
 
   postList: [],
   postCount: 0,
+
+  editList: {
+    title: "",
+    description: "",
+    category: "",
+    tag: [],
+  },
 };
 
 const postSlice = createSlice({
@@ -68,6 +84,9 @@ const postSlice = createSlice({
     setPostCount: (state, { payload }) => {
       state.postCount = payload;
     },
+    setPostEditList: (state, { payload }) => {
+      state.editList = payload;
+    },
   },
 });
 export const {
@@ -80,6 +99,7 @@ export const {
   setPostFiles,
   setPostList,
   setPostCount,
+  setPostEditList,
 } = postSlice.actions;
 
 export const selectPostTitle = (state: rootState) => state.posts.title;
@@ -91,5 +111,6 @@ export const selectPostFileList = (state: rootState) => state.posts.fileList;
 export const selectPostFiles = (state: rootState) => state.posts.files;
 export const selectPostList = (state: rootState) => state.posts.postList;
 export const selectPostCount = (state: rootState) => state.posts.postCount;
+export const selectPostEditList = (state: rootState) => state.posts.editList;
 
 export default postSlice.reducer;

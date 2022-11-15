@@ -7,10 +7,14 @@ import GridViewOutlinedIcon from "@mui/icons-material/GridViewOutlined";
 import PostListCard from "./PostListCard";
 import PostListImgCard from "./PostListImgCard";
 import { Stack } from "@mui/system";
-import { useAppSelector } from "app/hooks";
-import { postListConfig, selectPostList } from "slices/postSlice";
+import { useAppDispatch, useAppSelector } from "app/hooks";
+import { postListConfig, selectPostList, setPostEditList } from "slices/postSlice";
+import { useNavigate } from "react-router-dom";
 
 const PostList = () => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   const [sort, setSort] = useState("");
   const [postCardList, setPostCardList] = useState<postListConfig[]>(useAppSelector(selectPostList));
 
@@ -64,7 +68,20 @@ const PostList = () => {
 
       <div className={styles.postDataList}>
         {postCardList.map((value, key) => (
-          <div key={key}>
+          <div
+            key={key}
+            className={styles.postCards}
+            onClick={() => {
+              const tmp = {
+                title: value.title,
+                description: value.description,
+                category: value.category,
+                tag: value.tag,
+              };
+              dispatch(setPostEditList(tmp));
+              navigate("/post/edit/" + value.directory);
+            }}
+          >
             <PostListCard
               title={value.title}
               date={value.date}

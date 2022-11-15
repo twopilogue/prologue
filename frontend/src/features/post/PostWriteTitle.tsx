@@ -12,15 +12,22 @@ import api from "api/Api";
 import { useSelector } from "react-redux";
 import { rootState } from "app/store";
 
-const PostWriteTitle = () => {
+interface PostWriteTitleProps {
+  savedTitle: string;
+  savedDescription: string;
+  savedCategory: string;
+  savedTag: [];
+}
+
+const PostWriteTitle = ({ savedTitle, savedDescription, savedCategory, savedTag }: PostWriteTitleProps) => {
   const dispatch = useAppDispatch();
 
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("");
+  const [title, setTitle] = useState(savedTitle);
+  const [description, setDescription] = useState(savedDescription);
+  const [category, setCategory] = useState(savedCategory);
   const [categoryList, setCategoryList] = useState([]);
   const [tag, setTag] = useState("");
-  const [tagList, setTagList] = useState([]);
+  const [tagList, setTagList] = useState(savedTag);
 
   const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
 
@@ -67,17 +74,17 @@ const PostWriteTitle = () => {
     console.log("태그 만들기 : ", tag);
 
     const newTagList = [...tagList];
-    newTagList.push(tag);
-    setTagList(newTagList);
+    // newTagList.push(tag);
+    // setTagList(newTagList);
     setTag("");
   };
 
-  const deletePostTag = (event: any) => {
-    console.log("삭제");
-    const deleteTag = event.target.value;
-    const filteredTagList = tagList.filter((tag) => tag !== deleteTag);
-    setTagList(filteredTagList);
-  };
+  // const deletePostTag = (event: any) => {
+  //   console.log("삭제");
+  //   const deleteTag = event.target.value;
+  //   const filteredTagList = tagList.filter((tag) => tag !== deleteTag);
+  //   setTagList(filteredTagList);
+  // };
 
   useEffect(() => {
     getCategoryList();
@@ -123,10 +130,17 @@ const PostWriteTitle = () => {
         />
       </div>
       {tagList.map((tag, index) => (
-        <Tag key={index} label={tag} onDelete={() => deletePostTag} />
+        <Tag key={index} label={tag} />
       ))}
     </div>
   );
 };
 
 export default PostWriteTitle;
+
+PostWriteTitle.defaultProps = {
+  savedTitle: "",
+  savedDescription: "",
+  savedCategory: "",
+  savedTag: [],
+};
