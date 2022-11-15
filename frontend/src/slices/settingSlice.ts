@@ -8,13 +8,22 @@ export interface KeyConfig {
 }
 
 export interface PageConfig {
+  id: number;
   label: string;
   posts: boolean;
+  type: string;
+  oldName?: string;
 }
 
 export interface ComponentConfig {
   key: string;
   id: string;
+}
+
+export interface editList {
+  key: string;
+  id: number;
+  editable: boolean;
 }
 
 export interface ComponentCheckConfig {
@@ -74,6 +83,7 @@ interface LayoutConfig {
   pageLayoutList: Layout[];
   pageList: PageConfig[];
   pageCnt: number;
+  pageDeleList: PageConfig[];
 
   componentLayoutList: Layout[];
   componentList: ComponentConfig[];
@@ -96,6 +106,7 @@ export const initialState: LayoutConfig = {
   pageLayoutList: [],
   pageList: [],
   pageCnt: 1,
+  pageDeleList: [],
 
   componentLayoutList: [],
   componentList: [
@@ -183,6 +194,9 @@ const settingSlice = createSlice({
     setPageCnt: (state, { payload }) => {
       state.pageCnt = payload;
     },
+    setPageDeleList: (state, { payload }) => {
+      state.pageDeleList = payload;
+    },
 
     setComponentLayoutList: (state, { payload }) => {
       state.componentLayoutList = payload;
@@ -214,6 +228,7 @@ export const {
   setCategoryCnt,
   setPageList,
   setPageCnt,
+  setPageDeleList,
   setComponentList,
   setComponentLayoutList,
   setCheckList,
@@ -230,6 +245,7 @@ export const selectCategoryList = (state: rootState) => state.setting.categoryLi
 export const selectPageLayoutList = (state: rootState) => state.setting.pageLayoutList;
 export const selectPageList = (state: rootState) => state.setting.pageList;
 export const selectPageCnt = (state: rootState) => state.setting.pageCnt;
+export const selectPageDeleList = (state: rootState) => state.setting.pageDeleList;
 
 export const selectComponentLayoutList = (state: rootState) => state.setting.componentLayoutList;
 export const selectComponentList = (state: rootState) => state.setting.componentList;
