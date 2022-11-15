@@ -35,7 +35,7 @@ const SettingLayout = () => {
     title: { backgroundColor: `${colors.title.background}`, color: `${colors.title.text}` },
     page: { backgroundColor: `${colors.page.background}`, color: `${colors.page.text}` },
     logo: { backgroundColor: `${colors.logo.background}`, color: `${colors.logo.text}` },
-    contents: { backgroundColor: `${colors.title.background}`, color: `${colors.title.text}` },
+    contents: { backgroundColor: `${colors.contents.background}`, color: `${colors.contents.text}` },
     category: { backgroundColor: `${colors.category.background}`, color: `${colors.category.text}` },
     profile: { backgroundColor: `${colors.profile.background}`, color: `${colors.profile.text}` },
   };
@@ -81,7 +81,7 @@ const SettingLayout = () => {
                 >
                   <div style={{ marginTop: "15px" }}></div>
                   <div className={styles.innerText}>
-                    <Text value={item.key} type="caption" color="gray" />
+                    <Text value={item.key} type="caption" color={styleInfo[item.id].text} />
                   </div>
                 </div>
               ) : (
