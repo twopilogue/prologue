@@ -2,7 +2,6 @@ import { useAppSelector } from "app/hooks";
 import React from "react";
 import { colorsConfig, selectColors } from "slices/settingSlice";
 import DetailSetting from "./DetailSetting";
-// import css from "css";
 
 export const DetailSettingStyles = (styles: colorsConfig) => {
   const result = `
@@ -17,7 +16,7 @@ export const DetailSettingStyles = (styles: colorsConfig) => {
   }
 
   .category a {
-    color: ${styles.category.text}
+    color: ${styles.category.text};
   }
 
   .profile {
@@ -25,7 +24,7 @@ export const DetailSettingStyles = (styles: colorsConfig) => {
     margin-bottom: var(--spacing-4);
     margin-right: var(--spacing-4);
     background-color: ${styles.profile.background};
-    color: ${styles.profile.text}
+    color: ${styles.profile.text};
     border-radius: 10px;
   } 
 
@@ -44,6 +43,32 @@ export const DetailSettingStyles = (styles: colorsConfig) => {
     margin-bottom: var(--spacing-2);
     margin-top: var(--spacing-0);
     color: ${styles.contents.text};
+  }
+
+  .page-container {
+    display: flex;
+    /* 페이지 배경 색상 */
+    background-color: ${styles.page.background};
+  
+    width: 100%;
+    padding-top: var(--spacing-8);
+    padding-bottom: var(--spacing-8);
+  
+    /* 페이지 정렬 */
+    /* justify-content: flex-end; */
+    /* justify-content: flex-start; */
+    justify-content: ${styles.page.sort};
+  }
+  
+  /* 페이지 설정 */
+  .page{
+    margin-left: var(--spacing-4);
+    margin-right: var(--spacing-4);
+  }
+  
+  .page a {
+    /* 페이지 텍스트 색상 */
+    color: ${styles.page.text};
   }
   
   `;
