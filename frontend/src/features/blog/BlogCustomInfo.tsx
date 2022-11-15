@@ -10,12 +10,15 @@ import api from "api/Api";
 import { useSelector } from "react-redux";
 import { rootState } from "app/store";
 import Axios from "api/MultipartAxios";
+import BlogLoding from "features/blog/BlogLoding";
 
 function BlogCustomInfo() {
   const { githubId, accessToken } = useSelector((state: rootState) => state.auth);
   const [imgPreview, setImgPreview] = useState(null);
-
+  const [lodingView, openLodingView] = React.useState(false);
+  
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const [successModal, openSuccessModal] = useState(false);
   const [isInfo, setInfo] = useState({
     profile_name: "",
     profile_summary: "",
@@ -23,9 +26,10 @@ function BlogCustomInfo() {
     blog_name: "",
     blog_summary: "",
   });
-  const [successModal, openSuccessModal] = useState(false);
 
   const onClickNext = async () => {
+    openLodingView(true);
+    
     const formData = new FormData();
     const modified = {
       accessToken: accessToken,
@@ -50,6 +54,7 @@ function BlogCustomInfo() {
     await Axios.put(api.setting.modifyBlog(), formData)
       .then((res) => {
         console.log("블로그 정보 데이터 보내기", res.data);
+        openLodingView(false);
         openSuccessModal(true);
       })
       .catch((err) => {
@@ -83,12 +88,16 @@ function BlogCustomInfo() {
   };
 
   return (
-    <Stack direction="column" alignItems="center" spacing={3}>
-      <Paper className={styles.customInfo_container} elevation={3} sx={{ mt: 3, px: 6, py: 4 }}>
+    <>
+      <Paper
+        className={`${styles.Box},${styles.customInfo_container}`}
+        elevation={3}
+        sx={{ mt: 3, px: 6, py: 4, borderRadius: 5 }}
+      >
         <Stack spacing={4}>
           <Stack spacing={2}>
             <Text value="내 프로필 정보" type="groupTitle" bold />
-            <Stack direction="row" justifyContent="space-between">
+            <Stack direction="row" justifyContent="space-between" spacing={3}>
               <div className={styles.flexRow}>
                 <div className={styles.infoTitle}>
                   <Text value="닉네임" />
@@ -124,7 +133,7 @@ function BlogCustomInfo() {
             </Stack>
           </Stack>
           <Stack spacing={2}>
-            <Stack direction="row" justifyContent="space-between">
+            <Stack direction="row" justifyContent="space-between" alignItems="flex-end">
               <div className={styles.flexRow}>
                 <Stack className={styles.infoTitle} spacing={4}>
                   <Text value="블로그명" />
@@ -147,14 +156,15 @@ function BlogCustomInfo() {
                   />
                 </Stack>
               </div>
-              <div></div>
+              {/* <div></div> */}
+              <ButtonCoustom label="Next" onClick={onClickNext} />
             </Stack>
           </Stack>
         </Stack>
       </Paper>
-      <ButtonCoustom label="Next" onClick={onClickNext} />
+      {lodingView && <BlogLoding />}
       {successModal && <BlogDashboardMoveModal />}
-    </Stack>
+    </>
   );
 }
 
