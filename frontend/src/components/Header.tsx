@@ -68,7 +68,7 @@ function Header() {
         className={styles.wrapper}
         style={{
           backgroundColor:
-            (location.pathname === "/login" || location.pathname === "/") && "rgba( 255, 255, 255, 0.2 )",
+            ["/dashboard", "/login", "/"].includes(location.pathname) && "rgba( 255, 255, 255, 0.2 )",
         }}
       >
         <Stack direction="row" spacing={6} alignItems="center">
