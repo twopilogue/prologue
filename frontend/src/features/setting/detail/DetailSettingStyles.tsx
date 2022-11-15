@@ -17,7 +17,7 @@ export const DetailSettingStyles = (styles: colorsConfig) => {
   }
 
   .category a {
-    color: ${styles.category.text}
+    color: ${styles.category.text};
   }
 
   .profile {
@@ -25,7 +25,7 @@ export const DetailSettingStyles = (styles: colorsConfig) => {
     margin-bottom: var(--spacing-4);
     margin-right: var(--spacing-4);
     background-color: ${styles.profile.background};
-    color: ${styles.profile.text}
+    color: ${styles.profile.text};
     border-radius: 10px;
   } 
 
