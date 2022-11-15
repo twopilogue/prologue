@@ -47,6 +47,7 @@ interface apiInterface {
   };
   posts: {
     writePost: () => string;
+    getImgUrl: () => string;
     getPostDetail: (accessToken: string, githubId: string, directory: string) => string;
     modifyPost: () => string;
     deletePost: () => string;
@@ -111,6 +112,7 @@ const api: apiInterface = {
   },
   posts: {
     writePost: () => HOST + POSTS,
+    getImgUrl: () => HOST + POSTS + "/temp-image",
     getPostDetail: (accessToken: string, githubId: string, directory: string) =>
       HOST + POSTS + "?accessToken=" + accessToken + "&githubId=" + githubId + "&directory=" + directory,
     modifyPost: () => HOST + POSTS,
