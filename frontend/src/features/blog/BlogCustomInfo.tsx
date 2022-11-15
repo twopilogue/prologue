@@ -16,6 +16,7 @@ function BlogCustomInfo() {
   const [imgPreview, setImgPreview] = useState(null);
 
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const [successModal, openSuccessModal] = useState(false);
   const [isInfo, setInfo] = useState({
     profile_name: "",
     profile_summary: "",
@@ -23,7 +24,6 @@ function BlogCustomInfo() {
     blog_name: "",
     blog_summary: "",
   });
-  const [successModal, openSuccessModal] = useState(false);
 
   const onClickNext = async () => {
     const formData = new FormData();
@@ -83,12 +83,16 @@ function BlogCustomInfo() {
   };
 
   return (
-    <Stack direction="column" alignItems="center" spacing={3}>
-      <Paper className={styles.customInfo_container} elevation={3} sx={{ mt: 3, px: 6, py: 4 }}>
+    <>
+      <Paper
+        className={`${styles.Box},${styles.customInfo_container}`}
+        elevation={3}
+        sx={{ mt: 3, px: 6, py: 4, borderRadius: 5 }}
+      >
         <Stack spacing={4}>
           <Stack spacing={2}>
             <Text value="내 프로필 정보" type="groupTitle" bold />
-            <Stack direction="row" justifyContent="space-between">
+            <Stack direction="row" justifyContent="space-between" spacing={3}>
               <div className={styles.flexRow}>
                 <div className={styles.infoTitle}>
                   <Text value="닉네임" />
@@ -124,7 +128,7 @@ function BlogCustomInfo() {
             </Stack>
           </Stack>
           <Stack spacing={2}>
-            <Stack direction="row" justifyContent="space-between">
+            <Stack direction="row" justifyContent="space-between" alignItems="flex-end">
               <div className={styles.flexRow}>
                 <Stack className={styles.infoTitle} spacing={4}>
                   <Text value="블로그명" />
@@ -147,14 +151,14 @@ function BlogCustomInfo() {
                   />
                 </Stack>
               </div>
-              <div></div>
+              {/* <div></div> */}
+              <ButtonCoustom label="Next" onClick={onClickNext} />
             </Stack>
           </Stack>
         </Stack>
       </Paper>
-      <ButtonCoustom label="Next" onClick={onClickNext} />
       {successModal && <BlogDashboardMoveModal />}
-    </Stack>
+    </>
   );
 }
 

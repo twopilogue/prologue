@@ -2,7 +2,7 @@ import React from "react";
 import styles from "features/blog/Blog.module.css";
 import Text from "components/Text";
 import Button from "components/Button";
-import { Stack } from "@mui/material";
+import { Paper, Stack } from "@mui/material";
 
 interface Props {
   onClick: () => void;
@@ -10,7 +10,7 @@ interface Props {
 
 function BlogCreateBox({ onClick }: Props) {
   return (
-    <div className={styles.Box}>
+    <Paper className={styles.Box} elevation={2} sx={{ mt: 5, borderRadius: 5 }}>
       <div className={styles.BlogCreateTitle}>
         <Stack direction="column" justifyContent="center" alignItems="center" spacing={0.5}>
           <Text value="GitHub 블로그 생성" type="title" bold />
@@ -18,7 +18,7 @@ function BlogCreateBox({ onClick }: Props) {
         </Stack>
       </div>
       <Button label="Github blog Create" width="50%" onClick={onClick} />
-    </div>
+    </Paper>
   );
 }
 
