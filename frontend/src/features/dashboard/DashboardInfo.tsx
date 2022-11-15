@@ -38,15 +38,16 @@ function DashboardInfo() {
       .then(
         axios.spread((res1, res2, res3) => {
           const value = res1.data.latestBuildTime;
-          const valueMoment = moment(value).format("YYYY/MM/DD HH:mm");
-          const now = moment().format("YYYY/MM/DD HH");
-          const bild = moment(value).format("YYYY/MM/DD HH");
-          const timeLag = moment(valueMoment).fromNow();
+          const valueMoment = moment(value, "YYYYMMDDHHmmss").format("YYYY/MM/DD HH:mm");
+          const now = moment().format("YYYY/MM/DD HH a");
+          const bild = moment(value, "YYYYMMDDHHmmss").format("YYYY/MM/DD HH a");
+          const timeLag = moment(valueMoment, "YYYYMMDDHHmmss").fromNow();
+          console.log(value, bild, now, bild === now);
           setInfo({
             ...info,
             bildTime: {
-              year: bild === now ? "" : moment(value).format("YYYY"),
-              day: bild === now ? timeLag : moment(value).format("MM/DD HH:mm"),
+              year: bild === now ? "" : moment(value, "YYYYMMDDHHmmss").format("YYYY"),
+              day: bild === now ? timeLag : moment(value, "YYYYMMDDHHmmss").format("MM/DD HH:mm"),
             },
             volume: res2.data.size,
             postNum: res3.data.total,
