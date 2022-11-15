@@ -111,19 +111,23 @@ const MyBlogInfoInput = ({ myBlogInfo, setMyBlogInfo, setSocialList }: Props) =>
             <div style={{ marginRight: "10px" }}>
               {myBlogInfo.social ? (
                 <>
-                  {Object.entries(myBlogInfo.social).map(([key, value], index: number) => (
-                    <div className={styles.linkBox} key={index}>
-                      <div className={styles.linkBoxSite}>
-                        <img
-                          className={styles.socialIcon}
-                          src={require(`assets/setting/icons/${key}.png`)}
-                          alt="이미지"
-                        />
-                        <div>{key}</div>
+                  {Object.entries(myBlogInfo.social).map(([key, value], index: number) =>
+                    value ? (
+                      <div className={styles.linkBox} key={index}>
+                        <div className={styles.linkBoxSite}>
+                          {/* <img
+                            className={styles.socialIcon}
+                            src={require(`assets/setting/icons/${key}.png`)}
+                            alt="이미지"
+                          /> */}
+                          <div>{key}</div>
+                        </div>
+                        <div className={styles.linkBoxLink}>{value}</div>
                       </div>
-                      <div className={styles.linkBoxLink}>{value}</div>
-                    </div>
-                  ))}
+                    ) : (
+                      <div key={index}></div>
+                    ),
+                  )}
                 </>
               ) : (
                 <></>
