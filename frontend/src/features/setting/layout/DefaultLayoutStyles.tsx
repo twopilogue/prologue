@@ -12,25 +12,25 @@ export const DefaultLayoutList: defaultLayoutConfig[] = [
   {
     id: 1,
     layout: [
-      { i: "블로그 로고", x: 0, y: 2, w: 1, h: 2 },
-      { i: "카테고리", x: 0, y: 5, w: 1, h: 6 },
-      { i: "타이틀", x: 1, y: 2, w: 6, h: 6 },
-      { i: "글 목록", x: 1, y: 7, w: 4, h: 6 },
+      { i: "블로그 로고", x: 0, y: 0, w: 1, h: 1 },
+      { i: "타이틀", x: 0, y: 1, w: 5, h: 3 },
+      { i: "카테고리", x: 0, y: 4, w: 1, h: 4 },
+      { i: "글 목록", x: 1, y: 4, w: 4, h: 4 },
     ],
     checkList: {
       logo: true,
-      category: true,
       title: true,
+      category: true,
       contents: true,
     },
   },
   {
     id: 2,
     layout: [
-      { i: "블로그 로고", x: 0, y: 2, w: 1, h: 2 },
-      { i: "카테고리", x: 4, y: 6, w: 1, h: 6 },
-      { i: "글 목록", x: 0, y: 7, w: 4, h: 6 },
-      { i: "타이틀", x: 0, y: 2, w: 6, h: 6 },
+      { i: "블로그 로고", x: 0, y: 0, w: 1, h: 1 },
+      { i: "타이틀", x: 0, y: 1, w: 5, h: 3 },
+      { i: "카테고리", x: 4, y: 4, w: 1, h: 4 },
+      { i: "글 목록", x: 0, y: 4, w: 4, h: 4 },
     ],
     checkList: {
       logo: true,
@@ -42,10 +42,10 @@ export const DefaultLayoutList: defaultLayoutConfig[] = [
   {
     id: 3,
     layout: [
-      { i: "블로그 로고", x: 0, y: 2, w: 1, h: 2 },
-      { i: "카테고리", x: 0, y: 5, w: 1, h: 9 },
-      { i: "타이틀", x: 1, y: 2, w: 4, h: 5 },
-      { i: "글 목록", x: 1, y: 7, w: 4, h: 6 },
+      { i: "블로그 로고", x: 0, y: 0, w: 1, h: 1 },
+      { i: "카테고리", x: 0, y: 1, w: 1, h: 7 },
+      { i: "타이틀", x: 1, y: 1, w: 4, h: 3 },
+      { i: "글 목록", x: 1, y: 4, w: 4, h: 4 },
     ],
     checkList: {
       logo: true,
@@ -57,10 +57,10 @@ export const DefaultLayoutList: defaultLayoutConfig[] = [
   {
     id: 4,
     layout: [
-      { i: "블로그 로고", x: 0, y: 0, w: 1, h: 2 },
-      { i: "카테고리", x: 5, y: 5, w: 1, h: 13 },
-      { i: "타이틀", x: 0, y: 2, w: 4, h: 5 },
-      { i: "글 목록", x: 0, y: 7, w: 4, h: 6 },
+      { i: "블로그 로고", x: 0, y: 0, w: 1, h: 1 },
+      { i: "카테고리", x: 4, y: 1, w: 1, h: 7 },
+      { i: "타이틀", x: 0, y: 1, w: 4, h: 3 },
+      { i: "글 목록", x: 0, y: 4, w: 4, h: 4 },
     ],
     checkList: {
       logo: true,
@@ -72,11 +72,11 @@ export const DefaultLayoutList: defaultLayoutConfig[] = [
   {
     id: 5,
     layout: [
-      { i: "블로그 로고", x: 0, y: 0, w: 1, h: 2 },
-      { i: "프로필", x: 0, y: 2, w: 1, h: 3 },
-      { i: "카테고리", x: 0, y: 5, w: 1, h: 6 },
-      { i: "타이틀", x: 1, y: 2, w: 4, h: 5 },
-      { i: "글 목록", x: 1, y: 7, w: 4, h: 6 },
+      { i: "블로그 로고", x: 0, y: 0, w: 1, h: 1 },
+      { i: "프로필", x: 0, y: 1, w: 1, h: 2 },
+      { i: "카테고리", x: 0, y: 3, w: 1, h: 5 },
+      { i: "타이틀", x: 1, y: 1, w: 4, h: 3 },
+      { i: "글 목록", x: 1, y: 4, w: 4, h: 4 },
     ],
     checkList: {
       logo: true,
@@ -89,11 +89,11 @@ export const DefaultLayoutList: defaultLayoutConfig[] = [
   {
     id: 6,
     layout: [
-      { i: "블로그 로고", x: 0, y: 0, w: 1, h: 2 },
-      { i: "프로필", x: 4, y: 2, w: 1, h: 3 },
-      { i: "카테고리", x: 4, y: 5, w: 1, h: 10 },
-      { i: "타이틀", x: 0, y: 2, w: 4, h: 5 },
-      { i: "글 목록", x: 0, y: 7, w: 4, h: 6 },
+      { i: "블로그 로고", x: 0, y: 0, w: 1, h: 1 },
+      { i: "프로필", x: 4, y: 1, w: 1, h: 2 },
+      { i: "카테고리", x: 4, y: 3, w: 1, h: 5 },
+      { i: "타이틀", x: 0, y: 1, w: 4, h: 3 },
+      { i: "글 목록", x: 0, y: 4, w: 4, h: 4 },
     ],
     checkList: {
       logo: true,

@@ -92,8 +92,10 @@ const LayoutSample = () => {
             <GridLayout
               layout={getLayout()}
               cols={isCust ? 6 : 5}
-              rowHeight={30}
+              rowHeight={50}
               width={layoutWidth - 20}
+              verticalCompact={false}
+              preventCollision
               onLayoutChange={handleLayoutChange}
               isDraggable={isCust}
               isResizable={false}
@@ -114,7 +116,7 @@ const LayoutSample = () => {
                       </div>
                     </div>
                   ) : (
-                    <div key={i}></div>
+                    <React.Fragment />
                   );
                 }
               })}
