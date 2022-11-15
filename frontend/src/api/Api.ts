@@ -19,9 +19,7 @@ interface apiInterface {
   blog: {
     chooseTemplate: () => string;
     getRepoList: (accessToken: string, githubId: string) => string;
-    // setRepo: (accessToken: string, githubId: string) => string;
     deleteRepo: (accessToken: string, githubId: string) => string;
-    // setGitWorkflow: (accessToken: string, githubId: string) => string;
     changeBranch: (accessToken: string, githubId: string) => string;
   };
   dashboard: {
@@ -71,12 +69,8 @@ const api: apiInterface = {
     chooseTemplate: () => HOST + BLOG + "template",
     getRepoList: (accessToken: string, githubId: string) =>
       HOST + BLOG + "list?accessToken=" + accessToken + "&githubId=" + githubId,
-    // setRepo: (accessToken: string, githubId: string) =>
-    //   HOST + BLOG + "repo?accessToken=" + accessToken + "&githubId=" + githubId,
     deleteRepo: (accessToken: string, githubId: string) =>
       HOST + BLOG + "repo?accessToken=" + accessToken + "&githubId=" + githubId,
-    // setGitWorkflow: (accessToken: string, githubId: string) =>
-    //   HOST + BLOG + "workflow?accessToken=" + accessToken + "&githubId=" + githubId,
     changeBranch: (accessToken: string, githubId: string) =>
       HOST + BLOG + "deploy-branch?accessToken=" + accessToken + "&githubId=" + githubId,
   },
