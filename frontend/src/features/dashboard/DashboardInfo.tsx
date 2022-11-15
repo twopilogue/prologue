@@ -15,13 +15,15 @@ import "moment/locale/ko";
 
 function DashboardInfo() {
   const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
+  const { totalPost, repoSize, buildTime } = useSelector((state: rootState) => state.dashboard);
+  
   const [info, setInfo] = useState({
-    postNum: "",
+    postNum: totalPost,
     bildTime: {
-      year: "",
-      day: "",
+      year: moment(buildTime, "YYYYMMDDHHmmss").format("YYYY"),
+      day: moment(buildTime, "YYYYMMDDHHmmss").format("MM/DD HH:mm"),
     },
-    volume: "",
+    volume: repoSize,
   });
 
   useEffect(() => {

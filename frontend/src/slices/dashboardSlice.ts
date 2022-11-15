@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface dashboardConfig {
   monthPosts: [];
-  newPosts: [];
+  newPosts: { directory: string; title: string; date: string }[];
   buildTime: string;
   repoSize: string;
   totalPost: string;
@@ -13,7 +13,7 @@ interface monthPostsConfig {
 }
 
 interface newPostsConfig {
-  newPosts: [];
+  newPosts: { directory: string; title: string; date: string }[];
 }
 
 interface blogInfoConfig {
