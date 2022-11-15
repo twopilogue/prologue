@@ -11,7 +11,7 @@ function DashboardList() {
   const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
   const { newPosts } = useSelector((state: rootState) => state.dashboard);
 
-  const [newPost, setNewPost] = useState(newPosts);
+  const [newPost, setNewPost] = useState([] || newPosts);
 
   useEffect(() => {
     getNewPost();
