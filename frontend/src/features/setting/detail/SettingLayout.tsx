@@ -7,6 +7,7 @@ import {
   colorsConfig,
   ComponentConfig,
   selectCheckList,
+  selectClickedLayoutIdx,
   selectColors,
   selectComponentLayoutList,
   selectComponentList,
@@ -15,15 +16,19 @@ import {
 import { useGettingWidth } from "../layout/LayoutSample";
 import Text from "components/Text";
 import { useDispatch } from "react-redux";
+import DefaultLayoutStyles from "../layout/DefaultLayoutStyles";
 
 // 세부 레이아웃 설정 컴포넌트
 
 const SettingLayout = () => {
   const [componentLayoutList, setComponentLayoutList] = useState<Layout[]>(useAppSelector(selectComponentLayoutList));
   const componentList = useAppSelector(selectComponentList);
-  const checkList = useAppSelector(selectCheckList);
+  const [isCust, setIsCust] = useState<boolean>(false);
+  const clickedIdx = useAppSelector(selectClickedLayoutIdx);
   const [layoutWidth, layoutContainer] = useGettingWidth();
   const colors: colorsConfig = useAppSelector(selectColors);
+  const DefaultLayoutList = DefaultLayoutStyles();
+
   const dispatch = useDispatch();
 
   const styleInfo: any = {
@@ -40,16 +45,8 @@ const SettingLayout = () => {
   };
 
   useEffect(() => {
-    const tmpLayoutList: Layout[] = [];
-    const layoutLength = componentLayoutList.length;
-    for (let i = 0; i < layoutLength; i++) {
-      tmpLayoutList.push({
-        ...componentLayoutList[i],
-        static: true,
-      });
-    }
-    setComponentLayoutList(tmpLayoutList);
-  }, []);
+    DefaultLayoutList[clickedIdx - 1].id === 7 ? setIsCust(true) : setIsCust(false);
+  }, [clickedIdx]);
 
   return (
     <div>
@@ -63,10 +60,19 @@ const SettingLayout = () => {
           paddingBottom: "20px",
         }}
       >
-        <GridLayout layout={componentLayoutList} cols={6} rowHeight={30} width={layoutWidth - 10}>
+        <GridLayout
+          layout={componentLayoutList}
+          cols={5}
+          rowHeight={50}
+          width={layoutWidth - 20}
+          verticalCompact={isCust}
+          preventCollision={!isCust}
+          isDraggable={false}
+          isResizable={false}
+        >
           {componentList.map((item: ComponentConfig) => {
             {
-              return checkList[item.id] ? (
+              return DefaultLayoutList[clickedIdx - 1].checkList[item.id] ? (
                 <div
                   className={styles.layout_nonColored}
                   style={styleInfo[item.id]}
