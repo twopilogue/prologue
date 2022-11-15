@@ -93,6 +93,9 @@ function LoginOAuthHandler() {
               width: "300px",
               borderRadius: "10px",
               zIndex: "1",
+              "&:hover": {
+                backgroundColor: "#212121",
+              },
             }}
           >
             Signup With GitHub
