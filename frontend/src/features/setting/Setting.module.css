@@ -311,7 +311,8 @@
   border: 1px solid #e0e0e0;
 }
 
-.gridAddButton {
+.gridAddButton,
+.gridNonButton {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -319,6 +320,10 @@
   margin: 5px;
   border: 1px solid #e0e0e0;
   cursor: pointer;
+}
+
+.gridNonButton{
+  cursor: default;
 }
 
 .gridAddButton:hover {
