@@ -17,7 +17,10 @@ import { useAppDispatch, useAppSelector } from "app/hooks";
 import {
   selectPostCategory,
   selectPostContent,
+  selectPostDescription,
+  selectPostEditList,
   selectPostFileList,
+  selectPostFiles,
   selectPostTagList,
   selectPostTitle,
   setPostFileList,
@@ -39,18 +42,30 @@ const PostEditPage = () => {
 
   const [loading, setLoading] = useState(false);
   const [contentData, setContentData] = useState("");
+  const [saveData, setSaveData] = useState(useAppSelector(selectPostEditList));
+  const [savedFileList, setSavedFileList] = useState([]);
 
   const title = useAppSelector(selectPostTitle);
+  const description = useAppSelector(selectPostDescription);
   const category = useAppSelector(selectPostCategory);
   const tagList = useAppSelector(selectPostTagList);
   const content = useAppSelector(selectPostContent);
   const fileList = useAppSelector(selectPostFileList);
+  const files = useAppSelector(selectPostFiles);
 
   const getPostDetail = async () => {
     await Axios.get(api.posts.getPostDetail(accessToken, githubId, directory))
       .then((res) => {
         console.log(res);
         setContentData(res.data.content);
+
+        console.log("image length : ", res.data.images.length);
+        for (let i = 0; i < res.data.images.length; i++) {
+          const image = { name: res.data.images[i].name, url: res.data.images[i].url };
+          console.log("res image : ", image);
+          savedFileList.push(image);
+          dispatch(setPostFileList([...savedFileList, image]));
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -66,15 +81,23 @@ const PostEditPage = () => {
   const editPost = () => {
     const formData = new FormData();
 
+    for (let i = 0; i < files.length; i++) {
+      formData.append("files", files[i]);
+      const file: File = files[i];
+      console.log("files[i] : ", file.name);
+    }
+
     const frontMatter =
       "---\ntitle: " +
       title +
-      "\ndate: " +
-      new Date().toISOString() +
+      "\ndescription: " +
+      description +
       "\ncategory: " +
       category +
-      "\ntag: " +
+      "\ntags: " +
       tagList +
+      "\ndate: " +
+      new Date().toISOString() +
       "\n---\n";
 
     const modifyDetailPostRequest: modifyDetailPostRequestProps = {
@@ -85,6 +108,7 @@ const PostEditPage = () => {
       images: [],
     };
 
+    console.log("fileList : ", fileList);
     if (fileList.length) {
       for (let i = 0; i < fileList.length; i++) {
         const tmp = {
@@ -99,8 +123,9 @@ const PostEditPage = () => {
       "modifyDetailPostRequest",
       new Blob([JSON.stringify(modifyDetailPostRequest)], { type: "application/json" }),
     );
+    console.log("modifyDetailPostRequest : ", modifyDetailPostRequest);
 
-    Axios.post(api.posts.modifyPage(), formData)
+    Axios.put(api.posts.modifyPost(), formData)
       .then((res: any) => {
         console.log(res);
       })
@@ -127,8 +152,13 @@ const PostEditPage = () => {
       </div>
 
       <div style={{ display: "flex", marginTop: "1%" }}>
-        <PostWriteTitle />
-        <PostViewerContents content={content} />
+        <PostWriteTitle
+          savedTitle={saveData.title}
+          savedDescription={saveData.description}
+          savedCategory={saveData.category}
+          savedTag={saveData.tag}
+        />
+        <PostViewerContents content={contentData} />
       </div>
     </div>
   );
