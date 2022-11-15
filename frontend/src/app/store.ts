@@ -1,7 +1,7 @@
 // core
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import storage from "redux-persist/lib/storage";
-import { persistReducer } from "redux-persist";
+import { persistReducer, persistStore } from "redux-persist";
 import thunk from "redux-thunk";
 import authReducer from "../slices/authSlice";
 import postReducer from "../slices/postSlice";
@@ -25,5 +25,6 @@ export const store = configureStore({
   middleware: [thunk],
 });
 
-export type rootState = ReturnType<typeof store.getState>;
+export const persistor = persistStore(store);
 export type AppDispatch = typeof store.dispatch;
+export type rootState = ReturnType<typeof store.getState>;
