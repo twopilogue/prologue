@@ -16,10 +16,12 @@ const DashboardPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
+  const { login, accessToken, githubId } = useSelector((state: rootState) => state.auth);
 
   useEffect(() => {
-    getAuthFile();
+    {
+      login && getAuthFile();
+    }
   }, []);
 
   // 서비스 인증 파일 존재 여부
