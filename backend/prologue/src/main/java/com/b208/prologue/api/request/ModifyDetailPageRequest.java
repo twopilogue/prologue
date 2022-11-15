@@ -1,5 +1,6 @@
 package com.b208.prologue.api.request;
 
+import com.b208.prologue.api.response.ImageResponse;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -30,7 +31,7 @@ public class ModifyDetailPageRequest {
     @ApiModelProperty(name = "페이지 글 내용", example = "md파일 내용...", required = true)
     String content;
 
-    @ApiModelProperty(name = "페이지 글에서 삭제할 이미지", example = "이미지 파일명")
-    List<String> deletedFiles;
+    @ApiModelProperty(name = "이미지 url, 상대경로", example = "이미지 url, 상대경로")
+    List<ImageResponse> images;
 
 }

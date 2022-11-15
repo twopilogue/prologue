@@ -14,27 +14,20 @@ export interface ComponentConfig {
 
 export interface ComponentCheckConfig {
   [logo: string]: boolean;
-  profile: boolean;
-  category: boolean;
-  page: boolean;
-  title: boolean;
+  profile?: boolean;
+  category?: boolean;
+  page?: boolean;
+  title?: boolean;
   contents: boolean;
 }
 
 export interface blogInfoConfig {
-  siteMetadata: {
-    author: {
-      name: string;
-      summary: string;
-    };
-    description: string;
-    siteUrl: string;
-    social: {
-      twitter: string;
-    };
-    title: string;
-  };
-  profileImg: string;
+  nickName: string;
+  summary: string;
+  profileImg: string | FormData;
+  title: string;
+  description: string;
+  social: object;
 }
 
 export interface colorsConfig {
@@ -85,6 +78,7 @@ interface LayoutConfig {
   colorList: colorsConfig;
 
   clickedComp: string;
+  clickedLayoutIdx: number;
 }
 
 export const initialState: LayoutConfig = {
@@ -116,19 +110,12 @@ export const initialState: LayoutConfig = {
   },
 
   blogSettingInfo: {
-    siteMetadata: {
-      author: {
-        name: "",
-        summary: "",
-      },
-      description: "",
-      siteUrl: "",
-      social: {
-        twitter: "",
-      },
-      title: "",
-    },
+    nickName: "",
+    summary: "",
     profileImg: "",
+    title: "",
+    description: "",
+    social: {},
   },
 
   colorList: {
@@ -161,6 +148,7 @@ export const initialState: LayoutConfig = {
   },
 
   clickedComp: "logo",
+  clickedLayoutIdx: 1,
 };
 
 const settingSlice = createSlice({
@@ -197,15 +185,17 @@ const settingSlice = createSlice({
     setCheckList: (state, { payload: { logo, category, profile, page, title, contents } }) => {
       state.checkList = { logo, category, profile, page, title, contents };
     },
-    setBlogSettingInfo: (state, { payload: { siteMetadata, profileImg } }) => {
-      state.blogSettingInfo.siteMetadata = siteMetadata;
-      state.blogSettingInfo.profileImg = profileImg;
+    setBlogSettingInfo: (state, { payload }) => {
+      state.blogSettingInfo = payload;
     },
     setColors: (state, { payload }) => {
       state.colorList = payload;
     },
     setClickedComp: (state, { payload }) => {
       state.clickedComp = payload;
+    },
+    setClickedLayoutIdx: (state, { payload }) => {
+      state.clickedLayoutIdx = payload;
     },
   },
 });
@@ -221,6 +211,7 @@ export const {
   setBlogSettingInfo,
   setColors,
   setClickedComp,
+  setClickedLayoutIdx,
 } = settingSlice.actions;
 
 export const selectCategoryLayoutList = (state: rootState) => state.setting.categoryLayoutList;
@@ -241,6 +232,7 @@ export const selectBlogSettingInfo = (state: rootState) => state.setting.blogSet
 export const selectColors = (state: rootState) => state.setting.colorList;
 
 export const selectClickedComp = (state: rootState) => state.setting.clickedComp;
+export const selectClickedLayoutIdx = (state: rootState) => state.setting.clickedLayoutIdx;
 
 export default settingSlice.reducer;
 

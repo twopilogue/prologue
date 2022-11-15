@@ -11,6 +11,8 @@ import PostRouterPage from "pages/PostRouterPage";
 import BlogReset from "pages/BlogResetPage";
 import GatsbyLayout from "pages/GatsbyLayoutPage";
 import CustomLayoutPage from "pages/CustomLayoutPage";
+import PageRouterPage from "pages/PageRouterPage";
+import LoginOAuthHandler from "features/landing/LoginOAuthHandler";
 
 function App() {
   const location = useLocation();
@@ -21,22 +23,30 @@ function App() {
   };
 
   const landingStyle = {
-    backgroundColor: "#F1F8FF",
     height: "100vh",
   };
 
   return (
-    <div style={location.pathname === "/dashboard" ? dashboardStyle : location.pathname === "/" ? landingStyle : {}}>
+    <div
+      style={
+        location.pathname === "/dashboard"
+          ? dashboardStyle
+          : location.pathname === "/" || location.pathname === "/login"
+          ? landingStyle
+          : {}
+      }
+    >
       <Header />
       <div
         style={{
-          width: "83vw",
+          width: !(location.pathname === "/login" || location.pathname === "/") && "83vw",
           margin: "0 auto",
-          paddingTop: "47px",
+          paddingTop: !(location.pathname === "/login" || location.pathname === "/") && "47px",
         }}
       >
         <Routes>
           <Route path="/" element={<Landing />} />
+          <Route path="/login" element={<LoginOAuthHandler />} />
           <Route path="/create" element={<Create />} />
           <Route path="/create/reset" element={<BlogReset />} />
           <Route path="/create/custom" element={<CustomLayoutPage />} />
@@ -44,6 +54,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/setting" element={<SettingPage />} />
           <Route path="/post/*" element={<PostRouterPage />} />
+          <Route path="/page/*" element={<PageRouterPage />} />
 
           <Route path="/sample" element={<SamplePage />} />
         </Routes>

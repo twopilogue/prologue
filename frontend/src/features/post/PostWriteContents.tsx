@@ -6,20 +6,26 @@ import "@toast-ui/editor/dist/toastui-editor.css";
 import "tui-color-picker/dist/tui-color-picker.css";
 import "@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css";
 import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
-import { useAppDispatch } from "app/hooks";
-import { setPostContent, setPostFileList } from "slices/postSlice";
+import { useAppDispatch, useAppSelector } from "app/hooks";
+import { selectPostFileList, selectPostFiles, setPostContent, setPostFileList, setPostFiles } from "slices/postSlice";
+import api from "api/Api";
+import { useSelector } from "react-redux";
+import { rootState } from "app/store";
+import Axios from "api/MultipartAxios";
 
 const PostWriteContents = () => {
   const dispatch = useAppDispatch();
 
-  const [showImages, setShowImages] = useState([]);
+  const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
+
   const [fileList, setFileList] = useState([]);
+  const [files, setFiles] = useState([]);
 
   const editorRef = useRef<Editor>();
 
   const contentChange = () => {
     dispatch(setPostContent(editorRef.current?.getInstance().getMarkdown()));
-    dispatch(setPostFileList(fileList));
+    // dispatch(setPostFileList(fileList));
   };
 
   return (
@@ -36,22 +42,42 @@ const PostWriteContents = () => {
         plugins={[colorSyntax]}
         onChange={contentChange}
         hooks={{
-          addImageBlobHook: (blob, callback) => {
-            const uploadFileLists = [...fileList];
-            const imageUrlLists = [...showImages];
+          addImageBlobHook: async (blob, callback) => {
+            const formData = new FormData();
+            const file: any = blob;
+            console.log(blob);
 
-            const currentImageUrl = URL.createObjectURL(blob);
-            imageUrlLists.push(currentImageUrl);
-            uploadFileLists.push(blob);
+            const tempImageUploadRequest = {
+              accessToken: accessToken,
+              githubId: githubId,
+            };
+            formData.append(
+              "tempImageUploadRequest",
+              new Blob([JSON.stringify(tempImageUploadRequest)], { type: "application/json" }),
+            );
+            formData.append("file", blob);
 
-            setShowImages(imageUrlLists);
-            setFileList(uploadFileLists);
+            let imageUrl;
+            await Axios.put(api.posts.getImgUrl(), formData)
+              .then((res: any) => {
+                console.log(res);
+                imageUrl = res.data.tempImageUrl;
+              })
+              .catch((err: any) => {
+                console.log(err);
+              });
 
-            console.log(imageUrlLists);
-            console.log(uploadFileLists);
-            console.log(fileList);
+            const newFile = { name: file.name, url: imageUrl };
+            console.log("newFile : ", newFile);
 
-            callback(currentImageUrl);
+            console.log("redux fileList : ", fileList);
+            fileList.push(newFile);
+            dispatch(setPostFileList([...fileList, newFile]));
+
+            files.push(blob);
+            dispatch(setPostFiles([...files, blob]));
+
+            callback(imageUrl);
             return false;
           },
         }}
