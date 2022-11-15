@@ -31,7 +31,7 @@ function App() {
       style={
         location.pathname === "/dashboard"
           ? dashboardStyle
-          : location.pathname === "/" || location.pathname === "/login"
+          : ["/login", "/"].includes(location.pathname)
           ? landingStyle
           : {}
       }
@@ -39,9 +39,9 @@ function App() {
       <Header />
       <div
         style={{
-          width: !(location.pathname === "/login" || location.pathname === "/") && "83vw",
+          width: !["/login", "/"].includes(location.pathname) && "83vw",
           margin: "0 auto",
-          paddingTop: !(location.pathname === "/login" || location.pathname === "/") && "47px",
+          paddingTop: !["/login", "/"].includes(location.pathname) && "47px",
         }}
       >
         <Routes>
