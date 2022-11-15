@@ -139,30 +139,30 @@ export const initialState: LayoutConfig = {
   colorList: {
     title: {
       background: "#d3d3eb",
-      text: "darkgray",
+      text: "#F7F8F8",
       titleHeight: 0,
       type: "titleColor",
     },
     category: {
       background: "#d3d3eb",
-      text: "darkgray",
+      text: "#F7F8F8",
     },
     page: {
       background: "#d3d3eb",
-      text: "darkgray",
+      text: "#F7F8F8",
       sort: "right",
     },
     profile: {
       background: "#d3d3eb",
-      text: "darkgray",
+      text: "#F7F8F8",
     },
     contents: {
       background: "#d3d3eb",
-      text: "darkgray",
+      text: "#F7F8F8",
     },
     logo: {
       background: "#d3d3eb",
-      text: "darkgray",
+      text: "#F7F8F8",
       inputText: "",
     },
   },
@@ -261,12 +261,14 @@ export const selectClickedLayoutIdx = (state: rootState) => state.setting.clicke
 
 export default settingSlice.reducer;
 
-/*
+/* 배경색 기준 텍스트 컬러 설정 */
+export const getTextColor = (hexColor: string) => {
+  const color = hexColor.slice(1); // # 제거
+  const rgb = parseInt(color, 16); // 10진수 변환
+  const r = (rgb >> 16) & 0xff;
+  const g = (rgb >> 8) & 0xff;
+  const b = (rgb >> 0) & 0xff;
+  const luma = 0.2126 * r + 0.7152 * g + 0.0722 * b;
 
-{ i: "a", x: 0, y: 0, w: 1, h: 2, static: true, isResizable: false },
-{ i: "b", x: 1, y: 0, w: 1, h: 2, isResizable: false },
-{ i: "c", x: 2, y: 0, w: 1, h: 2, isResizable: false },
-
-{ key: "a" }, { key: "b" }, { key: "c" }
-
-*/
+  return luma < 127.5 ? "#ffffff" : "#000000";
+};
