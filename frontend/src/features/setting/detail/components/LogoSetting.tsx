@@ -12,12 +12,13 @@ import { RadioGroup } from "@mui/material";
 interface LogoSettingProps {
   logoImg: File;
   setLogoImg: Dispatch<SetStateAction<File>>;
+  logoType: string;
+  setLogoType: Dispatch<SetStateAction<string>>;
 }
 
-const LogoSetting = ({ logoImg, setLogoImg }: LogoSettingProps) => {
+const LogoSetting = ({ logoImg, setLogoImg, logoType, setLogoType }: LogoSettingProps) => {
   const logoImgRef = useRef<HTMLInputElement | null>(null);
   const colors: colorsConfig = useAppSelector(selectColors);
-  const [radioValue, setRadioValue] = useState("logoText");
   const dispatch = useDispatch();
   const detailItemText = useRef<any>();
   const detailItemImg = useRef<any>();
@@ -34,7 +35,7 @@ const LogoSetting = ({ logoImg, setLogoImg }: LogoSettingProps) => {
   };
 
   const radioChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setRadioValue((event.target as HTMLInputElement).value);
+    setLogoType((event.target as HTMLInputElement).value);
   };
 
   const changeLogoHeight = (e: ChangeEvent<HTMLInputElement>) => {
@@ -78,7 +79,7 @@ const LogoSetting = ({ logoImg, setLogoImg }: LogoSettingProps) => {
       <div className={styles.detailContainer}>
         <div className={styles.detailItem}>
           <RadioGroup
-            value={radioValue}
+            value={logoType}
             onChange={(e) => {
               radioChange(e);
               changeLogoHeight(e);
@@ -97,7 +98,7 @@ const LogoSetting = ({ logoImg, setLogoImg }: LogoSettingProps) => {
         <div className={styles.detailHr} />
         <div className={styles.detailItem}>
           <RadioGroup
-            value={radioValue}
+            value={logoType}
             onChange={(e) => {
               radioChange(e);
               changeLogoHeight(e);

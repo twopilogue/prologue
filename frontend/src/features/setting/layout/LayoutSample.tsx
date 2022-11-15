@@ -8,7 +8,6 @@ import {
   ComponentCheckConfig,
   ComponentConfig,
   selectCheckList,
-  // selectCheckList,
   selectComponentList,
   setComponentLayoutList,
   selectClickedLayoutIdx,
@@ -59,8 +58,6 @@ const LayoutSample = () => {
         w: layouts[i].w,
         h: layouts[i].h,
         static: layouts[i].static,
-        isDraggable: layouts[i].isDraggable,
-        isResizable: layouts[i].isResizable,
       };
       tmpLayoutList.push(layout);
     }
@@ -101,7 +98,7 @@ const LayoutSample = () => {
               isDraggable={isCust}
               isResizable={false}
             >
-              {componentList.map((item: ComponentConfig) => {
+              {componentList.map((item: ComponentConfig, i: number) => {
                 {
                   return DefaultLayoutList[clickedIdx - 1].checkList[item.id] ? (
                     <div className={styles.layout_colored} key={item.key}>
@@ -117,7 +114,7 @@ const LayoutSample = () => {
                       </div>
                     </div>
                   ) : (
-                    <></>
+                    <div key={i}></div>
                   );
                 }
               })}
