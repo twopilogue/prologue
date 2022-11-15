@@ -56,7 +56,7 @@ function LoginOAuthHandler() {
             blogType: res.data.blogType,
           }),
         );
-        setSecretRepo(accessToken, githubId);
+        setTimeout(() => [setSecretRepo(accessToken, githubId)], 200);
       } else navigate("/create/reset");
     });
   }
