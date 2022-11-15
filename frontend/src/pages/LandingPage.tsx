@@ -9,10 +9,13 @@ import LandingSub from "features/landing/LandingSub";
 const LandingPage = () => {
   const navigate = useNavigate();
 
-  const { login } = useSelector((state: rootState) => state.auth);
+  const { login, authFile } = useSelector((state: rootState) => state.auth);
 
   useEffect(() => {
-    if (login) navigate("/dashboard");
+    if (login) {
+      if (authFile) navigate("/dashboard");
+      else navigate("/create/reset");
+    }
   }, []);
 
   return (

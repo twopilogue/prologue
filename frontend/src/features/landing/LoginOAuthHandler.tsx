@@ -54,7 +54,10 @@ function LoginOAuthHandler() {
         dispatch(authActions.blogType({ blogType: res.data.blogType }));
         dispatch(authActions.authFile({ authFile: true }));
         setTimeout(() => [setSecretRepo(accessToken, githubId)], 200);
-      } else navigate("/create/reset");
+      } else {
+        dispatch(authActions.authFile({ authFile: false }));
+        navigate("/create/reset");
+      }
     });
   }
 
