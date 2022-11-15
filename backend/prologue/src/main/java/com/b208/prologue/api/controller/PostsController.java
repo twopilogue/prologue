@@ -130,8 +130,8 @@ public class PostsController {
 
         String path = "content/pages/" + pageName;
         try {
-            String content = postService.getDetailPage(accessToken, githubId, path);
             List<ImageResponse> images = postService.getImages(accessToken, githubId, path);
+            String content = postService.getDetailPage(accessToken, githubId, path, images);
             return ResponseEntity.status(200).body(DetailPostResponse.of(content, images, 200, "페이지 글 조회에 성공하였습니다."));
         } catch (Exception e) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "페이지 글 조회에 실패하였습니다."));
