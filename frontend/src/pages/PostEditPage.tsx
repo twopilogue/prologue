@@ -26,6 +26,7 @@ import {
   selectPostTitle,
   setPostFileList,
 } from "slices/postSlice";
+import PostDeleteModal from "features/post/modal/PostDeleteModal";
 
 interface modifyDetailPostRequestProps {
   accessToken: string;
@@ -45,6 +46,9 @@ const PostEditPage = () => {
   const [contentData, setContentData] = useState("");
   const [saveData, setSaveData] = useState(useAppSelector(selectPostEditList));
   const [savedFileList, setSavedFileList] = useState([]);
+  const [cancelModalOpen, setCancelModalOpen] = useState(false);
+  const [saveModalOpen, setSaveModalOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
   const title = useAppSelector(selectPostTitle);
   const description = useAppSelector(selectPostDescription);
@@ -152,6 +156,18 @@ const PostEditPage = () => {
       });
   };
 
+  const showCancelModal = () => {
+    setCancelModalOpen(true);
+  };
+
+  const showSaveModal = () => {
+    setSaveModalOpen(true);
+  };
+
+  const showDeleteModal = () => {
+    setDeleteModalOpen(true);
+  };
+
   return (
     <div className={styles.postWrite}>
       <div className={styles.textBox}>
@@ -164,7 +180,7 @@ const PostEditPage = () => {
           <Button label="작성완료" width="10vw" icon={<CheckOutlinedIcon />} onClick={editPost} />
         </div>
         <div className={styles.postDeleteButton}>
-          <Button label="삭제하기" width="10vw" icon={<CloseOutlinedIcon />} onClick={deletePost} />
+          <Button label="삭제하기" width="10vw" icon={<CloseOutlinedIcon />} onClick={showDeleteModal} />
         </div>
       </div>
 
@@ -177,6 +193,9 @@ const PostEditPage = () => {
         />
         <PostViewerContents content={contentData} />
       </div>
+
+      {/* {cancelModalOpen && <}
+      {deleteModalOpen && <PostDeleteModal />} */}
     </div>
   );
 };
