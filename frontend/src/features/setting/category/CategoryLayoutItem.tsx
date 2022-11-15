@@ -2,7 +2,7 @@ import React, { ChangeEvent, useEffect } from "react";
 import styles from "../Setting.module.css";
 import Text from "components/Text";
 import MenuIcon from "@mui/icons-material/Menu";
-import { editList } from "./CategoryLayout";
+import { editList } from "slices/settingSlice";
 
 interface Props {
   isEdit: editList[];

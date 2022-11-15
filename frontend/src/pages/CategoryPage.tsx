@@ -1,8 +1,8 @@
 import CategoryCntSetting from "features/setting/category/CategoryCntSetting";
-import CategoryLayout, { editList } from "features/setting/category/CategoryLayout";
+import CategoryLayout from "features/setting/category/CategoryLayout";
 import React, { useEffect, useState } from "react";
 import { Layout } from "react-grid-layout";
-import { KeyConfig } from "slices/settingSlice";
+import { KeyConfig, editList } from "slices/settingSlice";
 import ButtonStyled from "components/Button";
 import styles from "features/setting/Setting.module.css";
 import Axios from "api/JsonAxios";
@@ -31,7 +31,6 @@ const CategoryPage = () => {
         if (tmpList) {
           setIsEdit(
             tmpList.map((it) => {
-              console.log("what?");
               return { key: it.key, id: it.id, editable: false };
             }),
           );
