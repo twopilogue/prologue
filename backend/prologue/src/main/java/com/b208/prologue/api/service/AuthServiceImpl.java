@@ -174,7 +174,7 @@ public class AuthServiceImpl implements AuthService {
         String githubId = createAuthFileRequest.getGithubId();
         String authFile = base64Converter.encode(base64Converter.encryptAES256(githubId + " " + createAuthFileRequest.getBlogType()));
 
-        CreateContentRequest createContentRequest = new CreateContentRequest("upload service auth file", authFile);
+        CreateContentRequest createContentRequest = new CreateContentRequest("[skip ci] upload service auth file", authFile);
 
         webClient.put()
                 .uri("/repos/" + githubId + "/" + githubId + ".github.io" + "/contents/AuthFile")

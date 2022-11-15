@@ -106,14 +106,11 @@ public class PostServiceImpl implements PostService {
                     String line = st.nextToken();
                     if (line.contains("title")) {
                         postRequests.get(i).setTitle(line.substring(line.indexOf(": ") + 1));
-                    }
-                    else if (line.contains("description")) {
+                    } else if (line.contains("description")) {
                         postRequests.get(i).setDescription(line.substring(line.indexOf(": ") + 1));
-                    }
-                    else if (line.contains("category")) {
+                    } else if (line.contains("category")) {
                         postRequests.get(i).setCategory(line.substring(line.indexOf(": ") + 1));
-                    }
-                    else if (line.contains("tag")) {
+                    } else if (line.contains("tag")) {
                         String tagLine = line.substring(line.indexOf(": ") + 1);
                         String[] tagArr = tagLine.split(",");
                         for (String tagTemp : tagArr) {
@@ -219,7 +216,7 @@ public class PostServiceImpl implements PostService {
         String directory = String.valueOf(timeStamp.getTime());
         String path = "content/blog/" + directory;
 
-        if(images!=null && !images.isEmpty()){
+        if (images != null && !images.isEmpty()) {
             content = replaceImageUrlWithPath(content, images);
         }
 
@@ -246,10 +243,10 @@ public class PostServiceImpl implements PostService {
         List<TreeRequest> treeRequestList = new ArrayList<>();
 
         if (images != null && !images.isEmpty()) {
-            for(ImageResponse image : images){
-                if(content.contains(image.getUrl())){
-                    content=content.replace(image.getUrl(), "./"+image.getName());
-                }else{
+            for (ImageResponse image : images) {
+                if (content.contains(image.getUrl())) {
+                    content = content.replace(image.getUrl(), "./" + image.getName());
+                } else {
                     treeRequestList.add(new TreeRequest(path + "/" + image.getName(), "100644", "blob", null));
                 }
             }
@@ -288,24 +285,24 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public String getDetailPost(String encodedAccessToken, String githubId, String path, List<ImageResponse> images) throws Exception {
-        String content = getDetailPage(encodedAccessToken, githubId, path);
+        String content = getDetailPage(encodedAccessToken, githubId, path, images);
 
         int index = content.indexOf("date");
         index = content.indexOf("---", index);
-
         content = content.substring(index + 4);
 
-        if(images!=null && !images.isEmpty()){
-            content = replaceImagePathWithUrl(content, images);
-        }
         return content;
     }
 
     @Override
-    public String getDetailPage(String encodedAccessToken, String githubId, String path) throws Exception {
+    public String getDetailPage(String encodedAccessToken, String githubId, String path, List<ImageResponse> images) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
         GetRepoContentResponse response = commonService.getDetailContent(accessToken, githubId, path + "/index.md");
-        return base64Converter.decode(response.getContent().replace("\n", ""));
+        String content = base64Converter.decode(response.getContent().replace("\n", ""));
+        if (images != null && !images.isEmpty()) {
+            content = replaceImagePathWithUrl(content, images);
+        }
+        return content;
     }
 
     @Override
@@ -332,7 +329,7 @@ public class PostServiceImpl implements PostService {
 
         Long nowDate = System.currentTimeMillis();
         Timestamp timeStamp = new Timestamp(nowDate);
-        String imageName = String.valueOf(timeStamp.getTime())+extension;
+        String imageName = String.valueOf(timeStamp.getTime()) + extension;
 
         String response = webClient.put()
                 .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/tempImage/" + imageName)
@@ -349,17 +346,17 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public String replaceImageUrlWithPath(String content, List<ImageResponse> images){
-        for(ImageResponse image : images){
-            content=content.replace(image.getUrl(), "./"+image.getName());
+    public String replaceImageUrlWithPath(String content, List<ImageResponse> images) {
+        for (ImageResponse image : images) {
+            content = content.replace(image.getUrl(), "./" + image.getName());
         }
         return content;
     }
 
     @Override
-    public String replaceImagePathWithUrl(String content, List<ImageResponse> images){
-        for(ImageResponse image : images){
-            content=content.replace("./"+image.getName(), image.getUrl());
+    public String replaceImagePathWithUrl(String content, List<ImageResponse> images) {
+        for (ImageResponse image : images) {
+            content = content.replace("./" + image.getName(), image.getUrl());
         }
         return content;
     }

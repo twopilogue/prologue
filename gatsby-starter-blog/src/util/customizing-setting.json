@@ -16,5 +16,6 @@
       "isExternal": false
     }
   ],
-  "category": ["전체보기", "Test1", "Test2", "Test3"]
+  "category": ["전체보기", "Test1", "Test2", "Test3"],
+  "logo": ""
 }
