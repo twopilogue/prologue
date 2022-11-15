@@ -26,7 +26,6 @@ import {
   selectPostTitle,
   setPostFileList,
 } from "slices/postSlice";
-import PostDeleteModal from "features/post/modal/PostDeleteModal";
 import Modal from "components/Modal";
 
 interface modifyDetailPostRequestProps {
