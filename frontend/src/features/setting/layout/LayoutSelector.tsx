@@ -16,6 +16,7 @@ const LayoutSelector = () => {
     { idx: 4, isClicked: false },
     { idx: 5, isClicked: false },
     { idx: 6, isClicked: false },
+    { idx: 7, isClicked: false },
   ]);
   return (
     <>

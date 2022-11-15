@@ -56,7 +56,7 @@ const CalendarStyled = styled(Calendar)(() => ({
 function CalenderCustom() {
   const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
 
-  const [marks, setMark] = useState(["2022-10-30", "2022-11-01", "2022-11-04", "2022-11-10", "2022-11-21"]);
+  const [marks, setMark] = useState([]);
 
   useEffect(() => {
     getMonthPosts();
