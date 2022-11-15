@@ -49,7 +49,8 @@ export interface colorsConfig {
     background: string;
     text: string;
     titleHeight: number;
-    type: string;
+    type: string; // 이미지 or 색
+    titleText: string;
   };
   category: {
     background: string;
@@ -142,6 +143,7 @@ export const initialState: LayoutConfig = {
       text: "darkgray",
       titleHeight: 0,
       type: "titleColor",
+      titleText: "",
     },
     category: {
       background: "#d3d3eb",
