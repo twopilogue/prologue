@@ -7,13 +7,7 @@ import Text from "components/Text";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import CategoryLayoutItem from "./CategoryLayoutItem";
 
-import { KeyConfig } from "slices/settingSlice";
-
-export interface editList {
-  key: string;
-  id: number;
-  editable: boolean;
-}
+import { editList, KeyConfig } from "slices/settingSlice";
 
 interface Props {
   categoryList: KeyConfig[];
@@ -88,23 +82,12 @@ const CategoryLayout = ({
     setNewName(e.target.value);
   };
 
-  const handleOnLayoutChange = (layouts: any) => {
-    const List: Layout[] = [];
-    // 변경된 레이아웃
-    for (let i = 0; i < layouts.length; i++) {
-      const layout: Layout = {
-        i: layouts[i].i,
-        x: layouts[i].x,
-        y: layouts[i].y,
-        w: layouts[i].w,
-        h: layouts[i].h,
-        static: layouts[i].static,
-        isDraggable: layouts[i].isDraggable,
-        isResizable: layouts[i].isResizable,
-      };
-      List.push(layout);
-    }
-    setLayoutList(List);
+  const handleLayoutChange = (layouts: Layout[]) => {
+    const tmpList: Layout[] = [];
+    layouts.map((it: Layout) => {
+      return tmpList.push({ i: it.i, x: it.x, y: it.y, w: it.w, h: it.h, static: it.static });
+    });
+    setLayoutList(tmpList);
   };
 
   const useGettingWidth = () => {
@@ -151,7 +134,7 @@ const CategoryLayout = ({
             cols={1}
             width={gridWidth + 10}
             isResizable={false}
-            onLayoutChange={handleOnLayoutChange}
+            onLayoutChange={handleLayoutChange}
           >
             {categoryList.map((item: any, i: number) => {
               return (
