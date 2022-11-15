@@ -22,7 +22,7 @@ const BoxNoneClickStyle = styled(Box)(() => ({
   width: "99.6%",
   height: "99.6%",
   color: "#89be93",
-  textShadow: "0px 1px white, 1px 0px white, 0px -0.5px white",
+  textShadow: "-1px 0px white,0px 1px white, 1px 0px white, 0px -1px white",
   webkitTextStrokeColor: "yellow",
   background: "rgba(0, 0, 0, 0.3)",
   backdropFilter: "blur(1.5px)",
