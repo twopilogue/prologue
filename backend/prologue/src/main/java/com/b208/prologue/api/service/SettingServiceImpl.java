@@ -248,7 +248,7 @@ public class SettingServiceImpl implements SettingService {
         String settingPath = "src/util/customizing-setting.json";
         List<TreeRequest> treeRequestList = new ArrayList<>();
         List<TreeRequest> addedTreeRequestList = new ArrayList<>();
-        String defaultContent = "페이지 내용 넣기";
+        String defaultContent = "자유롭게 작성해보세요";
 
         JSONArray jsonArray = new JSONArray();
 
