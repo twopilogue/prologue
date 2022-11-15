@@ -4,7 +4,7 @@ import RadioButton from "components/RadioButton";
 import styles from "../../Setting.module.css";
 import { SketchPicker } from "react-color";
 import { useAppSelector } from "app/hooks";
-import { colorsConfig, selectColors, setColors } from "slices/settingSlice";
+import { colorsConfig, getTextColor, selectColors, setColors } from "slices/settingSlice";
 import { useDispatch } from "react-redux";
 
 const CategorySetting = () => {
@@ -12,7 +12,8 @@ const CategorySetting = () => {
   const dispatch = useDispatch();
 
   const handleChangeComplete = (color: any) => {
-    dispatch(setColors({ ...colors, category: { ...colors.category, background: color } }));
+    const textColor = getTextColor(color);
+    dispatch(setColors({ ...colors, category: { background: color, text: textColor } }));
   };
 
   return (
