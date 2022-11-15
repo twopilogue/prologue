@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import { rootState } from "app/store";
 import { useParams } from "react-router-dom";
 import Axios from "api/MultipartAxios";
+import JsonAxios from "api/JsonAxios";
 import api from "api/Api";
 import PostViewerContents from "features/post/PostViewerContents";
 import { useAppDispatch, useAppSelector } from "app/hooks";
@@ -135,6 +136,22 @@ const PostEditPage = () => {
     dispatch(setPostFileList([]));
   };
 
+  const deletePost = () => {
+    JsonAxios.delete(api.posts.deletePost(), {
+      data: {
+        accessToken: accessToken,
+        githubId: githubId,
+        directory: directory,
+      },
+    })
+      .then((res: any) => {
+        console.log(res);
+      })
+      .catch((err: any) => {
+        console.log(err);
+      });
+  };
+
   return (
     <div className={styles.postWrite}>
       <div className={styles.textBox}>
@@ -147,7 +164,7 @@ const PostEditPage = () => {
           <Button label="작성완료" width="10vw" icon={<CheckOutlinedIcon />} onClick={editPost} />
         </div>
         <div className={styles.postDeleteButton}>
-          <Button label="삭제하기" width="10vw" icon={<CloseOutlinedIcon />} />
+          <Button label="삭제하기" width="10vw" icon={<CloseOutlinedIcon />} onClick={deletePost} />
         </div>
       </div>
 
