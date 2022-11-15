@@ -23,6 +23,10 @@ public class ModifyDetailPostRequest {
     @ApiModelProperty(name = "깃허브 아이디", example = "test1234", required = true)
     String githubId;
 
+    @NotNull
+    @ApiModelProperty(name = "블로그테마 타입", example = "0", required = true)
+    Integer blogType;
+
     @NotBlank
     @ApiModelProperty(name = "게시글이 저장된 폴더", example = "1666319753", required = true)
     String directory;
