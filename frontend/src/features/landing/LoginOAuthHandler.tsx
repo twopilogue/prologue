@@ -24,7 +24,6 @@ function LoginOAuthHandler() {
   }, []);
 
   async function getAccessToken() {
-    console.log("출력2");
     await Axios.get(api.auth.login(code)).then((res) => {
       dispatch(
         authActions.login({
@@ -33,7 +32,6 @@ function LoginOAuthHandler() {
           githubImage: res.data.githubImage,
         }),
       );
-      navigate("/");
       getRepoList(res.data.accessToken, res.data.githubId);
     });
   }

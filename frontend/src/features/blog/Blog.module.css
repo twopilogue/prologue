@@ -88,7 +88,8 @@
 
 .GatsbyCardText {
     border-radius: 0px 0px 7px 7px;
-    padding: 4px 8px;
+    padding: 4px 10px;
+    cursor: pointer;
 }
 
 /* 블로그, 프로필 정보 받기 */
