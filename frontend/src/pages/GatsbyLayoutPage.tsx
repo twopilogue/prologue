@@ -9,8 +9,13 @@ import Axios from "api/JsonAxios";
 import { useSelector } from "react-redux";
 import { rootState } from "app/store";
 import BlogLoding from "features/blog/BlogLoding";
+import { useDispatch } from "react-redux";
+import { dashboardActions } from "slices/dashboardSlice";
+import axios from "axios";
 
 const LayoutChoicePage = () => {
+  const dispatch = useDispatch();
+  
   const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
 
   const [isChoiceTheme, setChoiceTheme] = useState("gatsby-starter-foundation");
@@ -63,13 +68,63 @@ const LayoutChoicePage = () => {
     })
       .then((res) => {
         console.log("4. 블로그 인증 파일 생성", res.data);
-        openLodingView(false);
-        setNextModalOpen(true);
+        getDashboardInfo();
+        // openLodingView(false);
+        // setNextModalOpen(true);
       })
       .catch((err) => {
         console.error("4. 블로그 인증 파일 생성", err);
       });
   };
+
+  
+  function getDashboardInfo() {
+    getMonthPosts();
+    getNewPost();
+    getBlogInfo();
+  }
+
+  async function getMonthPosts() {
+    await Axios.get(api.dashboard.getMonthPosts(accessToken, githubId)).then((res) => {
+      dispatch(
+        dashboardActions.monthPosts({
+          monthPosts: res.data.dateList,
+        }),
+      );
+    });
+  }
+
+  async function getNewPost() {
+    await Axios.get(api.dashboard.getNewPost(accessToken, githubId)).then((res) => {
+      dispatch(
+        dashboardActions.newPosts({
+          newPosts: res.data.currentPosts,
+        }),
+      );
+    });
+  }
+
+  function getBlogInfo() {
+    axios
+      .all([
+        Axios.get(api.dashboard.getNewBuildTime(accessToken, githubId)),
+        Axios.get(api.dashboard.getRepoSize(accessToken, githubId)),
+        Axios.get(api.dashboard.getTotalPost(accessToken, githubId)),
+      ])
+      .then(
+        axios.spread((res1, res2, res3) => {
+          dispatch(
+            dashboardActions.blogInfo({
+              totalPost: res3.data.total,
+              repoSize: res2.data.size,
+              buildTime: res1.data.latestBuildTime,
+            }),
+          );
+          openLodingView(false);
+          setNextModalOpen(true);
+        }),
+      );
+  }
 
   return (
     <Box>
