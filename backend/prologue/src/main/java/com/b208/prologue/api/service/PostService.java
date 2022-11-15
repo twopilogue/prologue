@@ -10,6 +10,7 @@ public interface PostService {
     Map<String, Object> getList(String encodedAccessToken, String githubId, int page) throws Exception;
     void insertDetailPost(String encodedAccessToken, String githubId, String content, List<ImageResponse> images, List<MultipartFile> files) throws Exception;
     void updateDetailPost(String encodedAccessToken, String githubId, String path, String content, List<MultipartFile> files, List<ImageResponse> images) throws Exception;
+    void updateDetailPage(String encodedAccessToken, String githubId, String path, String content, List<MultipartFile> files, List<ImageResponse> images) throws Exception;
     void deleteDetailPost(String encodedAccessToken, String githubId, String directory) throws Exception;
     String getDetailPost(String encodedAccessToken, String githubId, String path, List<ImageResponse> images) throws Exception;
     String getDetailPage(String encodedAccessToken, String githubId, String path, List<ImageResponse> images) throws Exception;

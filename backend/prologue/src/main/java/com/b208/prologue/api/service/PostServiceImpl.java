@@ -268,6 +268,38 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public void updateDetailPage(String encodedAccessToken, String githubId, String path, String content, List<MultipartFile> files, List<ImageResponse> images) throws Exception {
+        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
+        String commit = "modify: 페이지 수정";
+
+        List<TreeRequest> treeRequestList = new ArrayList<>();
+
+        if (images != null && !images.isEmpty()) {
+            for (ImageResponse image : images) {
+                String imageName = image.getName().replace(' ','_');
+                if (content.contains(image.getUrl())) {
+                    content = content.replace(image.getUrl(), "./" + imageName);
+                } else {
+                    treeRequestList.add(new TreeRequest(path + "/" + imageName, "100644", "blob", null));
+                }
+            }
+        }
+
+        content = commonService.makeBlob(accessToken, githubId, base64Converter.encode(content));
+        treeRequestList.add(new TreeRequest(path + "/index.md", "100644", "blob", content));
+
+        if (files != null && !files.isEmpty()) {
+            for (int i = 0; i < files.size(); i++) {
+                MultipartFile file = files.get(i);
+                String image = new String(Base64.encodeBase64(file.getBytes()));
+                String encodedContent = commonService.makeBlob(accessToken, githubId, image);
+                treeRequestList.add(new TreeRequest(path + "/" + file.getOriginalFilename().replace(' ','_'), "100644", "blob", encodedContent));
+            }
+        }
+        commonService.multiFileCommit(accessToken, githubId, treeRequestList, commit);
+    }
+
+    @Override
     public void deleteDetailPost(String encodedAccessToken, String githubId, String directory) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
         String commit = "remove: 게시글 삭제";
