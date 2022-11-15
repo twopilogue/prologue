@@ -113,7 +113,7 @@ function BlogCustomInfo() {
               <Stack width="180px">
                 <Text value="프로필 사진" />
                 <div className={styles.profile_img_container}>
-                  <Avatar sx={{ width: 150, height: 150 }} src={imgPreview} />
+                  <Avatar sx={{ width: 150, height: 150, border: "0.5px solid #f5f5f5" }} src={isInfo.profile_image} />
                   <input type="file" hidden ref={inputRef} onChange={onUploadImage} />
                   <Stack direction="row" spacing={0.3} className={styles.profile_editBtn} onClick={handleImageUpload}>
                     <ModeIcon fontSize="small" />
