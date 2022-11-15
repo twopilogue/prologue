@@ -7,13 +7,7 @@ import DetailSetting from "./DetailSetting";
 export const DetailSettingStyles = (styles: colorsConfig) => {
   const result = `
   .category {
-    margin-bottom: var(--spacing-4);
-    margin-right: var(--spacing-4);
-  
-    padding: var(--spacing-4);
-  
     background-color: ${styles.category.background};
-    border-radius: 10px;
   }
 
   .category a {
@@ -21,16 +15,16 @@ export const DetailSettingStyles = (styles: colorsConfig) => {
   }
 
   .profile {
-    padding-top: var(--spacing-4);
-    margin-bottom: var(--spacing-4);
-    margin-right: var(--spacing-4);
     background-color: ${styles.profile.background};
     color: ${styles.profile.text};
-    border-radius: 10px;
   } 
 
   .title {
     background-color: ${styles.title.background};
+  }
+
+  .title h3 {
+    color: ${styles.title.text};
   }
   
   .post-list-container {
@@ -39,11 +33,19 @@ export const DetailSettingStyles = (styles: colorsConfig) => {
   }
   
   .post-list-item h2 {
-    font-size: var(--fontSize-4);
-    color: var(--color-primary);
-    margin-bottom: var(--spacing-2);
-    margin-top: var(--spacing-0);
     color: ${styles.contents.text};
+  }
+
+  .page-container {
+    background-color: ${styles.page.background};
+  
+    /* justify-content: flex-start; */
+    justify-content: ${styles.page.sort};
+    /* justify-content: center; */
+  }
+
+  .page a {
+    color: ${styles.page.text};
   }
   
   `;

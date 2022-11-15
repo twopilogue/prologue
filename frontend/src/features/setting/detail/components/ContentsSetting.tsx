@@ -2,7 +2,7 @@ import React from "react";
 import styles from "../../Setting.module.css";
 import RadioButton from "components/RadioButton";
 import Text from "components/Text";
-import { colorsConfig, selectColors, setColors } from "slices/settingSlice";
+import { colorsConfig, getTextColor, selectColors, setColors } from "slices/settingSlice";
 import { useAppSelector } from "app/hooks";
 import { useDispatch } from "react-redux";
 import { SketchPicker } from "react-color";
@@ -12,7 +12,8 @@ const ContentsSetting = () => {
   const colors: colorsConfig = useAppSelector(selectColors);
 
   const handleChangeComplete = (color: any) => {
-    dispatch(setColors({ ...colors, contents: { ...colors.contents, background: color } }));
+    const textColor = getTextColor(color);
+    dispatch(setColors({ ...colors, contents: { background: color, text: textColor } }));
   };
 
   return (
