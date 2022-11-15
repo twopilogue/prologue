@@ -6,7 +6,15 @@ function BlogLoding() {
     <div className={styles.background}>
       <div className={styles.loading_container}>
         <div className={styles.loading} />
-        <div className={styles.loading_text}>loading</div>
+        <div className={styles.loading_text}>
+          <span>l</span>
+          <span>o</span>
+          <span>a</span>
+          <span>d</span>
+          <span>i</span>
+          <span>n</span>
+          <span>g</span>
+        </div>
       </div>
     </div>
   );

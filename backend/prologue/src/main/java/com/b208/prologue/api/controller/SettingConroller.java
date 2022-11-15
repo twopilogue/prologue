@@ -180,9 +180,12 @@ public class SettingConroller {
             @ApiResponse(code = 400, message = "레이아웃 세부 설정 수정 실패", response = BaseResponseBody.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
-    public ResponseEntity<? extends BaseResponseBody> modifyBlogLayout(@Valid @RequestBody ModifyBlogLayoutCssRequest modifyBlogLayoutCssRequest) {
+    public ResponseEntity<? extends BaseResponseBody> modifyBlogLayout(@Valid @RequestPart ModifyBlogLayoutCssRequest modifyBlogLayoutCssRequest,
+                                                                       @RequestPart(required = false) MultipartFile logoImage,
+                                                                       @RequestPart(required = false) MultipartFile titleImage) {
         try {
-            settingService.updateBlogLayoutCss(modifyBlogLayoutCssRequest.getAccessToken(), modifyBlogLayoutCssRequest.getGithubId(), modifyBlogLayoutCssRequest.getCss());
+            settingService.updateBlogLayoutCss(modifyBlogLayoutCssRequest.getAccessToken(), modifyBlogLayoutCssRequest.getGithubId(), modifyBlogLayoutCssRequest.getCss(),
+                    modifyBlogLayoutCssRequest.getLogoText(), logoImage, titleImage);
             return ResponseEntity.status(200).body(BaseResponseBody.of(200, "레이아웃 세부 설정 수정에 성공하였습니다."));
         } catch (Exception e) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "레이아웃 세부 설정 수정에 실패하였습니다."));
