@@ -15,6 +15,7 @@ const PageSetting = () => {
 
   const orderChange = (e: ChangeEvent<HTMLInputElement>) => {
     setCheckOrder((e.target as HTMLInputElement).value);
+    dispatch(setColors({ ...colors, page: { ...colors.page, sort: checkOrder } }));
   };
 
   const handleChangeComplete = (color: any) => {

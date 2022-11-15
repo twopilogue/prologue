@@ -21,10 +21,6 @@ const LayoutSelectorItem = ({ index, layoutList, setLayoutList }: Props) => {
     dispatch(setClickedLayoutIdx(index));
   };
 
-  useEffect(() => {
-    dispatch(setClickedLayoutIdx(1));
-  }, []);
-
   return (
     <div className={styles.layoutItem} onClick={() => handleClicked(index)}>
       {layoutList[index - 1].isClicked ? (

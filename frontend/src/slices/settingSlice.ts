@@ -7,6 +7,11 @@ export interface KeyConfig {
   id: number;
 }
 
+export interface PageConfig {
+  label: string;
+  posts: boolean;
+}
+
 export interface ComponentConfig {
   key: string;
   id: string;
@@ -35,6 +40,7 @@ export interface colorsConfig {
     background: string;
     text: string;
     titleHeight: number;
+    type: string;
   };
   category: {
     background: string;
@@ -43,6 +49,7 @@ export interface colorsConfig {
   page: {
     background: string;
     text: string;
+    sort: string;
   };
   profile: {
     background: string;
@@ -65,7 +72,7 @@ interface LayoutConfig {
   categoryCnt: number;
 
   pageLayoutList: Layout[];
-  pageList: KeyConfig[];
+  pageList: PageConfig[];
   pageCnt: number;
 
   componentLayoutList: Layout[];
@@ -123,6 +130,7 @@ export const initialState: LayoutConfig = {
       background: "#d3d3eb",
       text: "darkgray",
       titleHeight: 0,
+      type: "titleColor",
     },
     category: {
       background: "#d3d3eb",
@@ -131,6 +139,7 @@ export const initialState: LayoutConfig = {
     page: {
       background: "#d3d3eb",
       text: "darkgray",
+      sort: "right",
     },
     profile: {
       background: "#d3d3eb",
