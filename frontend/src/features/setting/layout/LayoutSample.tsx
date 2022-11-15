@@ -98,7 +98,7 @@ const LayoutSample = () => {
               isDraggable={isCust}
               isResizable={false}
             >
-              {componentList.map((item: ComponentConfig) => {
+              {componentList.map((item: ComponentConfig, i: number) => {
                 {
                   return DefaultLayoutList[clickedIdx - 1].checkList[item.id] ? (
                     <div className={styles.layout_colored} key={item.key}>
@@ -114,7 +114,7 @@ const LayoutSample = () => {
                       </div>
                     </div>
                   ) : (
-                    <></>
+                    <div key={i}></div>
                   );
                 }
               })}
