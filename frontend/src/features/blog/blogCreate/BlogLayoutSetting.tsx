@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import styles from "features/blog/Blog.module.css";
 import Text from "components/Text";
-import { Box, FormControl, RadioGroup, Stack } from "@mui/material";
+import { Box, FormControl, Paper, RadioGroup, Stack } from "@mui/material";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import RadioButton from "./BlogRadioButton";
@@ -23,7 +23,7 @@ function BlogLayoutSetting({ radioValue, setValue, onClick }: Props) {
   };
 
   return (
-    <div className={styles.Box}>
+    <Paper className={styles.Box} elevation={2} sx={{ mt: 5, borderRadius: 5 }}>
       <div className={styles.BlogLayoutSettingTitle} data-aos="fade-left">
         <Text value="레이아웃 설정" type="title" bold />
       </div>
@@ -48,7 +48,7 @@ function BlogLayoutSetting({ radioValue, setValue, onClick }: Props) {
       </FormControl>
 
       <Button label="Next" onClick={onClick} data-aos="fade-left" />
-    </div>
+    </Paper>
   );
 }
 
