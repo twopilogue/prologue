@@ -10,11 +10,13 @@ import api from "api/Api";
 import { useSelector } from "react-redux";
 import { rootState } from "app/store";
 import Axios from "api/MultipartAxios";
+import BlogLoding from "features/blog/BlogLoding";
 
 function BlogCustomInfo() {
   const { githubId, accessToken } = useSelector((state: rootState) => state.auth);
   const [imgPreview, setImgPreview] = useState(null);
-
+  const [lodingView, openLodingView] = React.useState(false);
+  
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [successModal, openSuccessModal] = useState(false);
   const [isInfo, setInfo] = useState({
@@ -26,6 +28,8 @@ function BlogCustomInfo() {
   });
 
   const onClickNext = async () => {
+    openLodingView(true);
+    
     const formData = new FormData();
     const modified = {
       accessToken: accessToken,
@@ -50,6 +54,7 @@ function BlogCustomInfo() {
     await Axios.put(api.setting.modifyBlog(), formData)
       .then((res) => {
         console.log("블로그 정보 데이터 보내기", res.data);
+        openLodingView(false);
         openSuccessModal(true);
       })
       .catch((err) => {
@@ -157,6 +162,7 @@ function BlogCustomInfo() {
           </Stack>
         </Stack>
       </Paper>
+      {lodingView && <BlogLoding />}
       {successModal && <BlogDashboardMoveModal />}
     </>
   );
