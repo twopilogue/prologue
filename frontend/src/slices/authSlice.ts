@@ -5,6 +5,7 @@ interface authConfig {
   githubId: string;
   githubImage: string;
   login: boolean;
+  authFile: boolean;
   blogType: null | 0 | 1; // 0:직접 레이아웃 설정, 1: 게시글만 관리
 }
 
@@ -14,12 +15,12 @@ interface loginConfig {
   githubImage: string;
 }
 
-interface authFileConfig {
-  authFile: boolean;
-}
-
 interface blogTypeConfig {
   blogType: null | 0 | 1;
+}
+
+interface authFileConfig {
+  authFile: boolean;
 }
 
 const initialState: authConfig = {
@@ -27,6 +28,7 @@ const initialState: authConfig = {
   githubId: "",
   githubImage: "",
   login: false,
+  authFile: false,
   blogType: null,
 };
 
@@ -44,8 +46,12 @@ const authSlice = createSlice({
       state.githubId = "";
       state.accessToken = "";
       state.githubImage = "";
-      state.blogType = null;
       state.login = false;
+      state.authFile = false;
+      state.blogType = null;
+    },
+    authFile: (state, action: PayloadAction<authFileConfig>) => {
+      state.authFile = action.payload.authFile;
     },
     blogType: (state, action: PayloadAction<blogTypeConfig>) => {
       state.blogType = action.payload.blogType;
