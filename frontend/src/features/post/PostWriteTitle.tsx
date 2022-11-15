@@ -6,7 +6,7 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import Tag from "components/Tag";
 import { useAppDispatch } from "app/hooks";
-import { setPostCategory, setPostTagList, setPostTitle } from "slices/postSlice";
+import { setPostCategory, setPostDescription, setPostTagList, setPostTitle } from "slices/postSlice";
 import axios from "api/JsonAxios";
 import api from "api/Api";
 import { useSelector } from "react-redux";
@@ -16,6 +16,7 @@ const PostWriteTitle = () => {
   const dispatch = useAppDispatch();
 
   const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [categoryList, setCategoryList] = useState([]);
   const [tag, setTag] = useState("");
@@ -27,6 +28,12 @@ const PostWriteTitle = () => {
     setTitle(event.target.value);
     console.log("제목 : ", event.target.value);
     dispatch(setPostTitle(event.target.value));
+  };
+
+  const descriptionChange = (event: any) => {
+    setDescription(event.target.value);
+    console.log("설명 : ", event.target.value);
+    dispatch(setPostDescription(event.target.value));
   };
 
   const categoryChange = (event: SelectChangeEvent) => {
@@ -87,6 +94,12 @@ const PostWriteTitle = () => {
         <Input placeholder="제목을 입력해주세요" onChange={titleChange} value={title} />
       </div>
       <Text value="제목은 필수 입력값입니다." type="caption" color="red" />
+      <br /> <br /> <br />
+      <Text value="설명" type="text" />
+      <div style={{ marginTop: "1%" }}>
+        <Input placeholder="설명을 입력해주세요" onChange={descriptionChange} value={description} />
+      </div>
+      <Text value="설명은 필수 입력값입니다." type="caption" color="red" />
       <br /> <br /> <br />
       <Text value="카테고리" type="text" />
       <div style={{ width: "15vw" }}>
