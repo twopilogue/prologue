@@ -185,7 +185,7 @@ export const initialState: LayoutConfig = {
   },
 
   clickedComp: "logo",
-  clickedLayoutIdx: 1,
+  clickedLayoutIdx: 0,
 };
 
 const settingSlice = createSlice({
