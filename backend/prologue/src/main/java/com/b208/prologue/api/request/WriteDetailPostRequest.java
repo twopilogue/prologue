@@ -24,6 +24,10 @@ public class WriteDetailPostRequest {
     String githubId;
 
     @NotNull
+    @ApiModelProperty(name = "블로그테마 타입", example = "0", required = true)
+    Integer blogType;
+
+    @NotNull
     @ApiModelProperty(name = "게시글 내용", example = "md파일 내용...", required = true)
     String content;
 
