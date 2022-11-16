@@ -390,7 +390,7 @@ public class PostServiceImpl implements PostService {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
         String image = new String(Base64.encodeBase64(file.getBytes()));
-        UploadTempImageRequest uploadTempImageRequest = new UploadTempImageRequest("upload tempImage", "deploy", image);
+        UploadTempImageRequest uploadTempImageRequest = new UploadTempImageRequest("upload tempImage", "gh-pages", image);
 
         String extension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
 
