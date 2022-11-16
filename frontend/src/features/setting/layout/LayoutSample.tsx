@@ -17,8 +17,7 @@ import styles from "../Setting.module.css";
 import "../../../../node_modules/react-grid-layout/css/styles.css";
 import Text from "components/Text";
 import DragHandleIcon from "@mui/icons-material/DragHandle";
-import ConfirmButton from "../ConfirmButton";
-import { DefaultLayoutList } from "./DefaultLayoutStyles";
+import DefaultLayoutStyles from "./DefaultLayoutStyles";
 
 export const useGettingWidth = () => {
   const [layoutWidth, setLayoutWidth] = useState(null);
@@ -38,10 +37,10 @@ const LayoutSample = () => {
 
   const [cstLayoutList, setCstLayoutList] = useState<Layout[]>([]);
   const [componentList, setComponentList] = useState<ComponentConfig[]>(useAppSelector(selectComponentList));
-  const [checkList, setCheckList] = useState<ComponentCheckConfig>(useAppSelector(selectCheckList));
   const clickedIdx = useAppSelector(selectClickedLayoutIdx);
   const [isCust, setIsCust] = useState<boolean>(false);
   const [layoutWidth, layoutContainer] = useGettingWidth();
+  const DefaultLayoutList = DefaultLayoutStyles();
 
   const getLayout = () => {
     return DefaultLayoutList[clickedIdx - 1].layout;
@@ -78,7 +77,7 @@ const LayoutSample = () => {
       </div>
       <div className={isCust ? `` : `${styles.layoutSelectOneContainer}`}>
         <div className={isCust ? `${styles.layoutSelectContainer}` : `${styles.layoutSelectContainerOne}`}>
-          {isCust ? <ComponentSelector checkList={checkList} setCheckList={setCheckList} /> : <></>}
+          {isCust ? <ComponentSelector /> : <></>}
           <div
             ref={layoutContainer}
             style={{
@@ -92,8 +91,10 @@ const LayoutSample = () => {
             <GridLayout
               layout={getLayout()}
               cols={isCust ? 6 : 5}
-              rowHeight={30}
+              rowHeight={50}
               width={layoutWidth - 20}
+              verticalCompact={isCust}
+              preventCollision={!isCust}
               onLayoutChange={handleLayoutChange}
               isDraggable={isCust}
               isResizable={false}
@@ -114,7 +115,7 @@ const LayoutSample = () => {
                       </div>
                     </div>
                   ) : (
-                    <div key={i}></div>
+                    <React.Fragment />
                   );
                 }
               })}

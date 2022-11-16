@@ -2,8 +2,18 @@ import React from "react";
 import styles from "../Setting.module.css";
 import SwitchButton from "components/SwitchButton";
 import Text from "components/Text";
+import { useDispatch } from "react-redux";
+import { selectCheckList, selectComponentLayoutList, setCheckList, setComponentLayoutList } from "slices/settingSlice";
+import { useAppSelector } from "app/hooks";
+import { Layout } from "react-grid-layout";
+import DefaultLayoutStyles from "./DefaultLayoutStyles";
 
-const ComponentSelector = (props: any) => {
+const ComponentSelector = () => {
+  const checkList = useAppSelector(selectCheckList);
+  const layoutList = useAppSelector(selectComponentLayoutList);
+  const orginLayouts = DefaultLayoutStyles();
+  const dispatch = useDispatch();
+
   return (
     <div className={styles.checkListContainer}>
       <div className={styles.checkListTitle}>
@@ -14,11 +24,13 @@ const ComponentSelector = (props: any) => {
           <SwitchButton
             label="블로그 로고"
             name="logo"
-            checked={props.checkList.logo}
+            checked={checkList.logo}
             onChange={() => {
-              props.setCheckList({
-                ...props.checkList,
-                logo: !props.checkList.logo,
+              dispatch(setCheckList({ ...checkList, logo: !checkList.logo }));
+              layoutList.map((it: Layout) => {
+                if (it.i === "블로그 로고") {
+                  dispatch(setComponentLayoutList({ ...layoutList }));
+                }
               });
             }}
           />
@@ -27,12 +39,9 @@ const ComponentSelector = (props: any) => {
           <SwitchButton
             label="프로필"
             name="profile"
-            checked={props.checkList.profile}
+            checked={checkList.profile}
             onChange={() => {
-              props.setCheckList({
-                ...props.checkList,
-                profile: !props.checkList.profile,
-              });
+              dispatch(setCheckList({ ...checkList, profile: !checkList.profile }));
             }}
           />
         </div>
@@ -40,12 +49,9 @@ const ComponentSelector = (props: any) => {
           <SwitchButton
             label="카테고리"
             name="category"
-            checked={props.checkList.category}
+            checked={checkList.category}
             onChange={() => {
-              props.setCheckList({
-                ...props.checkList,
-                category: !props.checkList.category,
-              });
+              dispatch(setCheckList({ ...checkList, category: !checkList.category }));
             }}
           />
         </div>
@@ -53,17 +59,15 @@ const ComponentSelector = (props: any) => {
           <SwitchButton
             label="페이지"
             name="page"
-            checked={props.checkList.page}
+            checked={checkList.page}
             onChange={() => {
-              props.setCheckList({
-                ...props.checkList,
-                page: !props.checkList.page,
-              });
+              dispatch(setCheckList({ ...checkList, page: !checkList.page }));
             }}
           />
         </div>
       </div>
-      <div className={styles.checkListTitle}>
+
+      {/* <div className={styles.checkListTitle}>
         <Text value="플러그인 사용 설정" type="text" bold />
       </div>
       <div className={styles.checkListContents}>
@@ -80,7 +84,7 @@ const ComponentSelector = (props: any) => {
             }}
           />
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
