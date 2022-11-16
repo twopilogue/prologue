@@ -21,6 +21,7 @@ const TitleSetting = ({ titleImg, setTitleImg }: TitleSettingProps) => {
   const colors: colorsConfig = useAppSelector(selectColors);
   const [radioValue, setRadioValue] = useState("titleColor");
   const dispatch = useDispatch();
+  const maxLength = 15;
 
   const radioChange = (event: ChangeEvent<HTMLInputElement>) => {
     setRadioValue((event.target as HTMLInputElement).value);
@@ -46,7 +47,14 @@ const TitleSetting = ({ titleImg, setTitleImg }: TitleSettingProps) => {
       e.target.value = 0;
     }
 
-    dispatch(setColors({ ...colors, title: { titleHeight: e.target.value } }));
+    dispatch(setColors({ ...colors, title: { ...colors.title, titleHeight: e.target.value } }));
+  };
+
+  const handleTitleText = (e: any) => {
+    if (e.length > maxLength) {
+      e = e.substring(0, maxLength);
+    }
+    dispatch(setColors({ ...colors, title: { ...colors.title, titleText: e } }));
   };
 
   return (
@@ -78,6 +86,19 @@ const TitleSetting = ({ titleImg, setTitleImg }: TitleSettingProps) => {
           </div>
         </div>
         <div className={styles.detailHr} />
+
+        <div className={styles.detailItem}>
+          <Text value="텍스트 설정" type="text" />
+        </div>
+        <div>
+          <Input
+            placeholder="텍스트 입력"
+            value={colors.title.titleText}
+            onChange={(e) => handleTitleText(e.target.value)}
+          />
+        </div>
+        <div className={styles.detailHr} />
+
         <div className={styles.detailItem}>
           <RadioGroup value={radioValue} onChange={radioChange}>
             <RadioButton label="색상 설정" value="titleColor" />
