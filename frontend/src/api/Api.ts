@@ -34,7 +34,7 @@ interface apiInterface {
     modifyCategory: () => string;
     getBlog: (accessToken: string, githubId: string) => string;
     modifyBlog: () => string;
-    getLayout: () => string;
+    getLayout: (accessToken: string, githubId: string) => string;
     modifyLayout: () => string;
     getLayoutDetail: () => string;
     modifyLayoutDetail: () => string;
@@ -93,7 +93,8 @@ const api: apiInterface = {
     getBlog: (accessToken: string, githubId: string) =>
       HOST + SETTING + "blog?accessToken=" + accessToken + "&githubId=" + githubId,
     modifyBlog: () => HOST + SETTING + "blog",
-    getLayout: () => HOST + SETTING + "layout",
+    getLayout: (accessToken: string, githubId: string) =>
+      HOST + SETTING + "layout?accessToken=" + accessToken + "&githubId=" + githubId,
     modifyLayout: () => HOST + SETTING + "layout",
     getLayoutDetail: () => HOST + SETTING + "layout/css",
     modifyLayoutDetail: () => HOST + SETTING + "layout/css",
