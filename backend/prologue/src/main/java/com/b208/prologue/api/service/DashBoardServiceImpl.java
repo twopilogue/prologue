@@ -214,4 +214,26 @@ public class DashBoardServiceImpl implements DashBoardService {
 
         return list.length;
     }
+
+    @Override
+    public String getBuildState(String encodedAccessToken, String githubId) throws Exception {
+        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
+        String response = webClient.get()
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io/actions/runs")
+                .accept(MediaType.APPLICATION_JSON)
+                .headers(h -> h.setBearerAuth(accessToken))
+                .retrieve()
+                .bodyToMono(String.class).block();
+
+        JSONParser jsonParser = new JSONParser();
+        JSONObject object = (JSONObject) jsonParser.parse(response);
+        JSONArray workflow_runs = (JSONArray) jsonParser.parse(object.get("workflow_runs").toString());
+        JSONObject content = (JSONObject) workflow_runs.get(0);
+
+        String buildState = "progress";
+        if (content.get("status").equals("completed")) {
+            buildState = "completed";
+        }
+        return buildState;
+    }
 }
