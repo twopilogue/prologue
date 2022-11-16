@@ -7,16 +7,18 @@ import authReducer from "../slices/authSlice";
 import postReducer from "../slices/postSlice";
 import settingReducer from "../slices/settingSlice";
 
+const persistConfig = {
+  key: "root",
+  storage,
+  whitelist: ["auth"],
+};
+
 const rootReducer = combineReducers({
   auth: authReducer,
   posts: postReducer,
   setting: settingReducer,
 });
 
-const persistConfig = {
-  key: "root",
-  storage,
-};
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
