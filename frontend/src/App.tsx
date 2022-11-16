@@ -1,7 +1,6 @@
 import React from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
-import SamplePage from "./pages/SamplePage";
 import Header from "./components/Header";
 import Landing from "./pages/LandingPage";
 import Create from "./pages/CreatePage";
@@ -55,8 +54,6 @@ function App() {
           <Route path="/setting" element={<SettingPage />} />
           <Route path="/post/*" element={<PostRouterPage />} />
           <Route path="/page/*" element={<PageRouterPage />} />
-
-          <Route path="/sample" element={<SamplePage />} />
         </Routes>
       </div>
     </div>
