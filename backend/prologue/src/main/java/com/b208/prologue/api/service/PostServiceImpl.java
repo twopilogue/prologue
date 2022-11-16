@@ -227,8 +227,8 @@ public class PostServiceImpl implements PostService {
             sb.append("template: blog-post\n");
             sb.append("templateKey: blog-post\n");
             sb.append("slug: /").append(directory).append("\n");
-            sb.append("featuredImage: image/post-image.png\n");
-            sb.append("image: image/post-image.png\n");
+            sb.append("featuredImage: ../src/images/post-image.png\n");
+            sb.append("image: ../src/images/post-image.png\n");
             sb.append("author: ").append(githubId).append("\n");
             sb.append("featured: false\n");
             sb.append("featuredpost: false\n");
@@ -277,8 +277,8 @@ public class PostServiceImpl implements PostService {
             sb.append("template: blog-post\n");
             sb.append("templateKey: blog-post\n");
             sb.append("slug: /").append(path.substring(path.lastIndexOf("/")+1)).append("\n");
-            sb.append("featuredImage: image/post-image.png\n");
-            sb.append("image: image/post-image.png\n");
+            sb.append("featuredImage: ../src/images/post-image.png\n");
+            sb.append("image: ../src/images/post-image.png\n");
             sb.append("author: ").append(githubId).append("\n");
             sb.append("featured: false\n");
             sb.append("featuredpost: false\n");

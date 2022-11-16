@@ -8,18 +8,15 @@ const BlogPageTemplate = ({
   data: { site, markdownRemark: page },
   location,
 }) => {
-  const siteTitle = site.siteMetadata?.title || `Title`
-
   return (
-    <Layout location={location} title={siteTitle}>
+    <Layout location={location} title={site.siteMetadata.title}>
       <article
         className="blog-page"
         itemScope
         itemType="http://schema.org/Article"
       >
         <header>
-          <h1 itemProp="headline">{page.frontmatter.title}</h1>
-          <p>{page.frontmatter.date}</p>
+          <h1 itemProp="headline">{page.fields.slug}</h1>
         </header>
         <section
           dangerouslySetInnerHTML={{ __html: page.html }}
@@ -32,12 +29,7 @@ const BlogPageTemplate = ({
 }
 
 export const Head = ({ data: { markdownRemark: page } }) => {
-  return (
-    <Seo
-      title={page.frontmatter.title}
-      description={page.frontmatter.description || page.excerpt}
-    />
-  )
+  return <Seo title={page.id} description={page.excerpt} />
 }
 
 export default BlogPageTemplate
@@ -53,10 +45,8 @@ export const pageQuery = graphql`
       id
       excerpt(pruneLength: 160)
       html
-      frontmatter {
-        title
-        date(formatString: "MMMM DD, YYYY")
-        description
+      fields {
+        slug
       }
     }
   }
