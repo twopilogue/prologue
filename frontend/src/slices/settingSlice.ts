@@ -49,7 +49,7 @@ export interface colorsConfig {
     background: string;
     text: string;
     titleHeight: number;
-    type: string; // 이미지 or 색
+    type: boolean; // 이미지 or 색
     titleText: string;
   };
   category: {
@@ -72,7 +72,7 @@ export interface colorsConfig {
   logo: {
     background: string;
     text: string;
-    inputText: string;
+    logoText: string;
   };
 }
 
@@ -139,33 +139,33 @@ export const initialState: LayoutConfig = {
 
   colorList: {
     title: {
-      background: "#d3d3eb",
-      text: "#F7F8F8",
+      background: "",
+      text: "",
       titleHeight: 0,
-      type: "titleColor",
+      type: true,
       titleText: "",
     },
     category: {
-      background: "#d3d3eb",
-      text: "#F7F8F8",
+      background: "",
+      text: "",
     },
     page: {
-      background: "#d3d3eb",
-      text: "#F7F8F8",
-      sort: "right",
+      background: "",
+      text: "",
+      sort: "",
     },
     profile: {
-      background: "#d3d3eb",
-      text: "#F7F8F8",
+      background: "",
+      text: "",
     },
     contents: {
-      background: "#d3d3eb",
-      text: "#F7F8F8",
+      background: "",
+      text: "",
     },
     logo: {
-      background: "#d3d3eb",
-      text: "#F7F8F8",
-      inputText: "",
+      background: "",
+      text: "",
+      logoText: "",
     },
   },
 
