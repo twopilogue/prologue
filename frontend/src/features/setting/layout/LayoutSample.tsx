@@ -43,7 +43,7 @@ const LayoutSample = () => {
   const DefaultLayoutList = DefaultLayoutStyles();
 
   const getLayout = () => {
-    console.log(DefaultLayoutList[1].layout);
+    console.log(DefaultLayoutList[clickedIdx - 1].layout);
     return DefaultLayoutList[1].layout;
   };
 
@@ -94,7 +94,7 @@ const LayoutSample = () => {
             }}
           >
             <GridLayout
-              layout={DefaultLayoutList[1].layout}
+              layout={getLayout()}
               cols={isCust ? 6 : 5}
               rowHeight={50}
               width={layoutWidth - 20}
