@@ -34,8 +34,9 @@ const PageSetting = () => {
           </div>
           <div className={styles.pageOrder}>
             <RadioGroup value={checkOrder} onChange={orderChange}>
-              <RadioButton label="오른쪽 정렬" value="right" />
-              <RadioButton label="왼쪽 정렬" value="left" />
+              <RadioButton label="왼쪽 정렬" value="flex-start" />
+              <RadioButton label="중앙 정렬" value="center" />
+              <RadioButton label="오른쪽 정렬" value="flex-end" />
             </RadioGroup>
           </div>
         </div>

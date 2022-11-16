@@ -6,10 +6,11 @@ import { useAppSelector } from "app/hooks";
 import {
   colorsConfig,
   ComponentConfig,
-  selectCheckList,
+  initialState,
   selectClickedLayoutIdx,
   selectColors,
   selectComponentLayoutList,
+  setComponentLayoutList,
   selectComponentList,
   setClickedComp,
 } from "slices/settingSlice";
@@ -21,8 +22,8 @@ import DefaultLayoutStyles from "../layout/DefaultLayoutStyles";
 // 세부 레이아웃 설정 컴포넌트
 
 const SettingLayout = () => {
-  const [componentLayoutList, setComponentLayoutList] = useState<Layout[]>(useAppSelector(selectComponentLayoutList));
   const componentList = useAppSelector(selectComponentList);
+  const layoutList = useAppSelector(selectComponentLayoutList);
   const [isCust, setIsCust] = useState<boolean>(false);
   const clickedIdx = useAppSelector(selectClickedLayoutIdx);
   const [layoutWidth, layoutContainer] = useGettingWidth();
@@ -48,6 +49,12 @@ const SettingLayout = () => {
     DefaultLayoutList[clickedIdx - 1].id === 7 ? setIsCust(true) : setIsCust(false);
   }, [clickedIdx]);
 
+  useEffect(() => {
+    return () => {
+      dispatch(setComponentLayoutList(initialState.componentLayoutList));
+    };
+  });
+
   return (
     <div>
       <div
@@ -61,7 +68,7 @@ const SettingLayout = () => {
         }}
       >
         <GridLayout
-          layout={componentLayoutList}
+          layout={layoutList}
           cols={5}
           rowHeight={50}
           width={layoutWidth - 20}
