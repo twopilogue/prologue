@@ -43,7 +43,8 @@ const LayoutSample = () => {
   const DefaultLayoutList = DefaultLayoutStyles();
 
   const getLayout = () => {
-    return DefaultLayoutList[clickedIdx - 1].layout;
+    console.log(DefaultLayoutList[1].layout);
+    return DefaultLayoutList[1].layout;
   };
 
   const handleLayoutChange = (layouts: any) => {
@@ -67,6 +68,10 @@ const LayoutSample = () => {
     DefaultLayoutList[clickedIdx - 1].id === 7 ? setIsCust(true) : setIsCust(false);
   }, [clickedIdx]);
 
+  useEffect(() => {
+    console.log(DefaultLayoutList);
+  });
+
   return (
     <div>
       <div className={styles.textPadding} style={{ paddingBottom: "10px" }}>
@@ -89,7 +94,7 @@ const LayoutSample = () => {
             }}
           >
             <GridLayout
-              layout={getLayout()}
+              layout={DefaultLayoutList[1].layout}
               cols={isCust ? 6 : 5}
               rowHeight={50}
               width={layoutWidth - 20}
