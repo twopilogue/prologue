@@ -16,7 +16,7 @@ interface PostWriteTitleProps {
   savedTitle: string;
   savedDescription: string;
   savedCategory: string;
-  savedTag: [];
+  savedTag: string[];
 }
 
 const PostWriteTitle = ({ savedTitle, savedDescription, savedCategory, savedTag }: PostWriteTitleProps) => {
@@ -33,13 +33,11 @@ const PostWriteTitle = ({ savedTitle, savedDescription, savedCategory, savedTag 
 
   const titleChange = (event: any) => {
     setTitle(event.target.value);
-    console.log("제목 : ", event.target.value);
     dispatch(setPostTitle(event.target.value));
   };
 
   const descriptionChange = (event: any) => {
     setDescription(event.target.value);
-    console.log("설명 : ", event.target.value);
     dispatch(setPostDescription(event.target.value));
   };
 
@@ -51,32 +49,38 @@ const PostWriteTitle = ({ savedTitle, savedDescription, savedCategory, savedTag 
   const getCategoryList = () => {
     axios
       .get(api.setting.getCategory(accessToken, githubId))
-      .then((res: any) => {
+      .then((res) => {
         console.log(res.data.category);
         setCategoryList(res.data.category);
       })
-      .catch((err: any) => {
+      .catch((err) => {
         console.log(err);
       });
   };
 
   const enterKeyPress = (event: any) => {
+    const english = /[^a-z]/g;
+
     if (event.target.value.length !== 0 && event.key === "Enter") {
-      makeTagItem();
+      if (english.test(event.target.value)) {
+        event.target.value = event.target.value.replace(english, "");
+        console.log("replace : ", event.target.value);
+      }
+
+      console.log("태그 만들기 : ", tag);
+
+      const newTagList = [...tagList];
+
+      if (event.target.value.length) {
+        newTagList.push(event.target.value);
+        setTagList(newTagList);
+        setTag("");
+      }
     }
   };
 
   const tagChange = (event: any) => {
     setTag(event.target.value);
-  };
-
-  const makeTagItem = () => {
-    console.log("태그 만들기 : ", tag);
-
-    const newTagList = [...tagList];
-    // newTagList.push(tag);
-    // setTagList(newTagList);
-    setTag("");
   };
 
   // const deletePostTag = (event: any) => {
@@ -100,13 +104,13 @@ const PostWriteTitle = ({ savedTitle, savedDescription, savedCategory, savedTag 
       <div style={{ marginTop: "1%" }}>
         <Input placeholder="제목을 입력해주세요" onChange={titleChange} value={title} />
       </div>
-      <Text value="제목은 필수 입력값입니다." type="caption" color="red" />
+      {/* <Text value="제목은 필수 입력값입니다." type="caption" color="red" /> */}
       <br /> <br /> <br />
       <Text value="설명" type="text" />
       <div style={{ marginTop: "1%" }}>
         <Input placeholder="설명을 입력해주세요" onChange={descriptionChange} value={description} />
       </div>
-      <Text value="설명은 필수 입력값입니다." type="caption" color="red" />
+      {/* <Text value="설명은 필수 입력값입니다." type="caption" color="red" /> */}
       <br /> <br /> <br />
       <Text value="카테고리" type="text" />
       <div style={{ width: "15vw" }}>
