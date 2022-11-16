@@ -4,8 +4,7 @@
     height: 450px;
     flex-direction: column;
     align-items: center;
-    background: #FFFFFF;
-    border: 1px solid #D5D5D5;
+    margin-top: 24px;
     border-radius: 20px;
 }
 
@@ -94,7 +93,8 @@
 
 /* 블로그, 프로필 정보 받기 */
 .customInfo_container {
-    width: 650px
+    width: 650px;
+    border-radius: 20px;
 }
 
 .flexRow {

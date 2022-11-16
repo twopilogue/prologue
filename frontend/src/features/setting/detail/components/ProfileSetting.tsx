@@ -4,7 +4,7 @@ import RadioButton from "components/RadioButton";
 import styles from "../../Setting.module.css";
 import { SketchPicker } from "react-color";
 import { useDispatch } from "react-redux";
-import { colorsConfig, selectColors, setColors } from "slices/settingSlice";
+import { colorsConfig, getTextColor, selectColors, setColors } from "slices/settingSlice";
 import { useAppSelector } from "app/hooks";
 
 const ProfileSetting = () => {
@@ -12,7 +12,8 @@ const ProfileSetting = () => {
   const colors: colorsConfig = useAppSelector(selectColors);
 
   const handleChangeComplete = (color: any) => {
-    dispatch(setColors({ ...colors, profile: { ...colors.profile, background: color } }));
+    const textColor = getTextColor(color);
+    dispatch(setColors({ ...colors, profile: { background: color, text: textColor } }));
   };
   return (
     <div>

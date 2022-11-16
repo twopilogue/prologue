@@ -4,7 +4,14 @@ import DetailSelector from "./DetailSelector";
 import styles from "../Setting.module.css";
 import SettingLayout from "./SettingLayout";
 import { useAppSelector } from "app/hooks";
-import { colorsConfig, initialState, selectColors, setClickedComp, setColors } from "slices/settingSlice";
+import {
+  colorsConfig,
+  initialState,
+  selectClickedLayoutIdx,
+  selectColors,
+  setClickedComp,
+  setColors,
+} from "slices/settingSlice";
 import ButtonStyled from "components/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { DetailSettingStyles } from "./DetailSettingStyles";
@@ -12,12 +19,17 @@ import Axios from "api/MultipartAxios";
 import { rootState } from "app/store";
 import api from "api/Api";
 import { toJSON } from "cssjson";
+import DefaultLayoutStyles from "../layout/DefaultLayoutStyles";
+import axios from "axios";
 
 const DetailSetting = () => {
   const [titleImg, setTitleImg] = useState(null);
   const [logoImg, setLogoImg] = useState(null);
   const { githubId, accessToken } = useSelector((state: rootState) => state.auth);
   const colors: colorsConfig = useAppSelector(selectColors);
+  const layoutList = DefaultLayoutStyles();
+  const clickedIdx = useAppSelector(selectClickedLayoutIdx);
+
   const formData = new FormData();
   const dispatch = useDispatch();
 
@@ -39,7 +51,8 @@ const DetailSetting = () => {
       });
   };
 
-  const handleOnSave = async () => {
+  const handleOnSave = () => {
+    // 디테일 세팅
     const modified = DetailSettingStyles(colors);
     const result = {
       accessToken: accessToken,
@@ -47,18 +60,38 @@ const DetailSetting = () => {
       css: modified,
       logoText: colors.logo.inputText,
     };
-    console.log(JSON.stringify(result));
+    const layout = layoutList[clickedIdx - 1].struct;
+    const layoutResult = layout.replaceAll("\n", "").replaceAll("  ", "").trim();
+
     formData.append("logoImage", logoImg);
     formData.append("titleImage", titleImg);
     formData.append("modifyBlogLayoutCssRequest", new Blob([JSON.stringify(result)], { type: "application/json" }));
 
-    await Axios.put(api.setting.modifyDetail(), formData)
-      .then((res: any) => {
-        console.log("됨? ", res);
-      })
-      .catch((err: any) => {
-        console.log(err);
-      });
+    sendDetailSetting(formData, layoutResult);
+  };
+
+  const sendDetailSetting = async (formData: FormData, layoutResult: string) => {
+    await axios.all([
+      Axios.put(api.setting.modifyDetail(), formData)
+        .then((res: any) => {
+          console.log("디테일 전송됨? ", res);
+        })
+        .catch((err: any) => {
+          console.log(err);
+        }),
+      axios
+        .put(api.setting.modifyLayout(), {
+          accessToken: accessToken,
+          githubId: githubId,
+          layout: layoutResult,
+        })
+        .then((res: any) => {
+          console.log("완료", res);
+        })
+        .catch((err: any) => {
+          console.log("돌ㅇ가", err);
+        }),
+    ]);
   };
 
   useEffect(() => {
