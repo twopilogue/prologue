@@ -6,13 +6,7 @@ import DetailSetting from "./DetailSetting";
 export const DetailSettingStyles = (styles: colorsConfig) => {
   const result = `
   .category {
-    margin-bottom: var(--spacing-4);
-    margin-right: var(--spacing-4);
-  
-    padding: var(--spacing-4);
-  
     background-color: ${styles.category.background};
-    border-radius: 10px;
   }
 
   .category a {
@@ -20,16 +14,20 @@ export const DetailSettingStyles = (styles: colorsConfig) => {
   }
 
   .profile {
-    padding-top: var(--spacing-4);
-    margin-bottom: var(--spacing-4);
-    margin-right: var(--spacing-4);
     background-color: ${styles.profile.background};
     color: ${styles.profile.text};
-    border-radius: 10px;
   } 
 
   .title {
     background-color: ${styles.title.background};
+  }
+
+  .title h3 {
+    color: ${styles.title.text};
+  }
+  
+  .title h3 {
+    color: ${styles.title.text};
   }
   
   .post-list-container {
@@ -38,36 +36,18 @@ export const DetailSettingStyles = (styles: colorsConfig) => {
   }
   
   .post-list-item h2 {
-    font-size: var(--fontSize-4);
-    color: var(--color-primary);
-    margin-bottom: var(--spacing-2);
-    margin-top: var(--spacing-0);
     color: ${styles.contents.text};
   }
 
   .page-container {
-    display: flex;
-    /* 페이지 배경 색상 */
     background-color: ${styles.page.background};
   
-    width: 100%;
-    padding-top: var(--spacing-8);
-    padding-bottom: var(--spacing-8);
-  
-    /* 페이지 정렬 */
-    /* justify-content: flex-end; */
     /* justify-content: flex-start; */
     justify-content: ${styles.page.sort};
+    /* justify-content: center; */
   }
-  
-  /* 페이지 설정 */
-  .page{
-    margin-left: var(--spacing-4);
-    margin-right: var(--spacing-4);
-  }
-  
+
   .page a {
-    /* 페이지 텍스트 색상 */
     color: ${styles.page.text};
   }
   

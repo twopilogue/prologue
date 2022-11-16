@@ -88,30 +88,27 @@ const CreatePage = () => {
   };
 
   return (
-    <>
-      <div style={{ paddingTop: "5%" }}>
+    <Stack justifyContent="center" sx={{ height: "88vh" }}>
+      <div>
         <BlogStepper step={isStepNumber} />
         <div
           style={{
             width: "100%",
             display: "flex",
             justifyContent: "center",
-            marginTop: "5%",
           }}
         >
           {isStepNumber === 0 ? (
             <BlogCreateBox onClick={() => setStepNumber(1)} />
           ) : isStepNumber === 1 ? (
-            <Stack direction="column" justifyContent="center" alignItems="center" spacing={2}>
               <BlogLayoutSetting radioValue={radioValue} setValue={setRadioValue} onClick={layoutSetting} />
-            </Stack>
           ) : (
             <BlogCustomInfo />
           )}
         </div>
       </div>
       {lodingView && <BlogLoding />}
-    </>
+    </Stack>
   );
 };
 

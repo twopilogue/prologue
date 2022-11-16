@@ -1,8 +1,9 @@
 ---
 title: Hello World
-date: "2015-05-01T22:12:03.284Z"
-description: "Hello World"
-category: "Test1"
+description: Hello World
+category: category1
+tags: [hello]
+date: 2022-11-13T10:57:35.157Z
 ---
 
 This is my first post on my new fake blog! How exciting!

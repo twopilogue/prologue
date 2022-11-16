@@ -6,6 +6,7 @@ import DetailSetting from "./detail/DetailSetting";
 import MyInfoPage from "pages/MyInfoPage";
 import CategoryPage from "pages/CategoryPage";
 import PageSettingPage from "pages/PageSettingPage";
+import LayoutSettingPage from "pages/LayoutSettingPage";
 
 export const blogTabs = [
   {
@@ -39,8 +40,7 @@ export const layoutTabs = [
     label: "레이아웃 선택",
     Component: (
       <div>
-        <LayoutSelector />
-        <LayoutSample />
+        <LayoutSettingPage />
       </div>
     ),
   },

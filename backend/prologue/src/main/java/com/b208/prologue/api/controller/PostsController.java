@@ -72,7 +72,7 @@ public class PostsController {
     public ResponseEntity<? extends BaseResponseBody> writeDetailPost(@Valid @RequestPart WriteDetailPostRequest writeDetailPostRequest, @RequestPart(required = false) List<MultipartFile> files) {
 
         try {
-            postService.insertDetailPost(writeDetailPostRequest.getAccessToken(), writeDetailPostRequest.getGithubId(),
+            postService.insertDetailPost(writeDetailPostRequest.getAccessToken(), writeDetailPostRequest.getGithubId(), writeDetailPostRequest.getBlogType(),
                     writeDetailPostRequest.getContent(), writeDetailPostRequest.getImages() ,files);
             return ResponseEntity.status(200).body(BaseResponseBody.of(200, "게시글 작성에 성공하였습니다."));
         } catch (Exception e) {
@@ -92,7 +92,7 @@ public class PostsController {
 
         String path = "content/blog/" + modifyDetailPostRequest.getDirectory();
         try {
-            postService.updateDetailPost(modifyDetailPostRequest.getAccessToken(), modifyDetailPostRequest.getGithubId(),
+            postService.updateDetailPost(modifyDetailPostRequest.getAccessToken(), modifyDetailPostRequest.getGithubId(), modifyDetailPostRequest.getBlogType(),
                     path, modifyDetailPostRequest.getContent(), files, modifyDetailPostRequest.getImages());
             return ResponseEntity.status(200).body(BaseResponseBody.of(200, "게시글 수정에 성공하였습니다."));
         } catch (Exception e) {
@@ -149,7 +149,7 @@ public class PostsController {
 
         String path = "content/pages/" + modifyDetailPageRequest.getPageName();
         try {
-            postService.updateDetailPost(modifyDetailPageRequest.getAccessToken(), modifyDetailPageRequest.getGithubId(),
+            postService.updateDetailPage(modifyDetailPageRequest.getAccessToken(), modifyDetailPageRequest.getGithubId(),
                     path, modifyDetailPageRequest.getContent(), files, modifyDetailPageRequest.getImages());
             return ResponseEntity.status(200).body(BaseResponseBody.of(200, "페이지 글 수정에 성공하였습니다."));
         } catch (Exception e) {
