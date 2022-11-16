@@ -327,9 +327,12 @@ public class SettingServiceImpl implements SettingService {
     }
 
     @Override
-    public void updateBlogLayout(String encodedAccessToken, String githubId, String layout) throws Exception {
+    public void updateBlogLayout(String encodedAccessToken, String githubId, String layout, String layoutJson) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
         String path = "src/pages/index.js";
+        String settingPath = "src/util/customizing-setting.json";
+        String commit = "modify: 레이아웃 설정 변경";
+        List<TreeRequest> treeRequestList = new ArrayList<>();
 
         GetRepoContentResponse getRepoContentResponse = commonService.getDetailContent(accessToken, githubId, path);
         String content = base64Converter.decode(getRepoContentResponse.getContent().replace("\n", ""));
@@ -344,17 +347,20 @@ public class SettingServiceImpl implements SettingService {
         sb.append(layout).append("\n");
         sb.append(content.substring(endIndex));
 
-        UpdateContentRequest updateContentRequest = new UpdateContentRequest(
-                "modify: 레이아웃 설정 변경", base64Converter.encode(sb.toString()), getRepoContentResponse.getSha());
+        String encodedContent = commonService.makeBlob(accessToken, githubId, base64Converter.encode(sb.toString()));
+        treeRequestList.add(new TreeRequest(path, "100644", "blob", encodedContent));
 
-        webClient.put()
-                .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/" + path)
-                .headers(h -> h.setBearerAuth(accessToken))
-                .body(Mono.just(updateContentRequest), UpdateContentRequest.class)
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
+        content = base64Converter.decode(commonService.getDetailContent(accessToken, githubId, settingPath)
+                .getContent().replace("\n", ""));
+        JSONParser jsonParser = new JSONParser();
+        JSONObject jsonObj = (JSONObject) jsonParser.parse(content);
+        JSONObject customLayout = (JSONObject) jsonParser.parse(layoutJson);
+        jsonObj.replace("customLayout", customLayout);
+
+        encodedContent = commonService.makeBlob(accessToken, githubId, base64Converter.encode(jsonObj.toString()));
+        treeRequestList.add(new TreeRequest(settingPath, "100644", "blob", encodedContent));
+
+        commonService.multiFileCommit(accessToken, githubId, treeRequestList, commit);
     }
 
     @Override

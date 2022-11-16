@@ -25,4 +25,8 @@ public class ModifyBlogLayoutRequest {
     @ApiModelProperty(name = "수정한 레이아웃 설정 내용", example = "레이아웃", required = true)
     String layout;
 
+    @NotNull
+    @ApiModelProperty(name = "json파일 레이아웃 설정 내용", example = "json형식 내용", required = true)
+    String layoutJson;
+
 }
