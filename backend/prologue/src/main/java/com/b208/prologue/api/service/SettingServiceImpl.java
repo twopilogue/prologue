@@ -319,12 +319,12 @@ public class SettingServiceImpl implements SettingService {
         GetRepoContentResponse getRepoContentResponse = commonService.getDetailContent(accessToken, githubId, "src/pages/index.js");
         String content = base64Converter.decode(getRepoContentResponse.getContent().replace("\n", ""));
 
-        int startIndex = content.lastIndexOf("return");
-        startIndex = content.indexOf(">", startIndex);
         int endIndex = content.lastIndexOf("Layout");
         endIndex = content.lastIndexOf("<", endIndex);
+        int startIndex = content.lastIndexOf("Layout", endIndex);
+        startIndex = content.indexOf(">", startIndex);
 
-        return content.substring(startIndex + 1, endIndex);
+        return content.substring(startIndex + 2, endIndex);
     }
 
     @Override
@@ -335,14 +335,13 @@ public class SettingServiceImpl implements SettingService {
         GetRepoContentResponse getRepoContentResponse = commonService.getDetailContent(accessToken, githubId, path);
         String content = base64Converter.decode(getRepoContentResponse.getContent().replace("\n", ""));
 
-        int startIndex = content.indexOf("display_row");
-        startIndex = content.indexOf(">", startIndex);
         int endIndex = content.lastIndexOf("Layout");
-        endIndex = content.lastIndexOf("div", endIndex);
         endIndex = content.lastIndexOf("<", endIndex);
+        int startIndex = content.lastIndexOf("Layout", endIndex);
+        startIndex = content.indexOf(">", startIndex);
 
         StringBuilder sb = new StringBuilder();
-        sb.append(content.substring(0, startIndex + 1)).append("\n");
+        sb.append(content.substring(0, startIndex + 2));
         sb.append(layout).append("\n");
         sb.append(content.substring(endIndex));
 
