@@ -3,16 +3,13 @@ import styles from "../Setting.module.css";
 import SwitchButton from "components/SwitchButton";
 import Text from "components/Text";
 import { useDispatch } from "react-redux";
-import { selectCheckList, selectComponentLayoutList, setCheckList, setComponentLayoutList } from "slices/settingSlice";
+import { selectUserCheckList, selectUserComponentLayoutList, setUserCheckList } from "slices/settingSlice";
 import { useAppSelector } from "app/hooks";
 import { Layout } from "react-grid-layout";
-import DefaultLayoutStyles from "./DefaultLayoutStyles";
 
 const ComponentSelector = () => {
-  const checkList = useAppSelector(selectCheckList);
-  const layoutList = useAppSelector(selectComponentLayoutList);
-  const orginLayouts = DefaultLayoutStyles();
   const dispatch = useDispatch();
+  const checkList = useAppSelector(selectUserCheckList);
 
   return (
     <div className={styles.checkListContainer}>
@@ -26,12 +23,7 @@ const ComponentSelector = () => {
             name="logo"
             checked={checkList.logo}
             onChange={() => {
-              dispatch(setCheckList({ ...checkList, logo: !checkList.logo }));
-              layoutList.map((it: Layout) => {
-                if (it.i === "블로그 로고") {
-                  dispatch(setComponentLayoutList({ ...layoutList }));
-                }
-              });
+              dispatch(setUserCheckList({ ...checkList, logo: !checkList.logo }));
             }}
           />
         </div>
@@ -41,7 +33,7 @@ const ComponentSelector = () => {
             name="profile"
             checked={checkList.profile}
             onChange={() => {
-              dispatch(setCheckList({ ...checkList, profile: !checkList.profile }));
+              dispatch(setUserCheckList({ ...checkList, profile: !checkList.profile }));
             }}
           />
         </div>
@@ -51,7 +43,7 @@ const ComponentSelector = () => {
             name="category"
             checked={checkList.category}
             onChange={() => {
-              dispatch(setCheckList({ ...checkList, category: !checkList.category }));
+              dispatch(setUserCheckList({ ...checkList, category: !checkList.category }));
             }}
           />
         </div>
@@ -61,7 +53,7 @@ const ComponentSelector = () => {
             name="page"
             checked={checkList.page}
             onChange={() => {
-              dispatch(setCheckList({ ...checkList, page: !checkList.page }));
+              dispatch(setUserCheckList({ ...checkList, page: !checkList.page }));
             }}
           />
         </div>
@@ -77,7 +69,7 @@ const ComponentSelector = () => {
             name="naviCheck"
             checked={props.checkList.naviCheck}
             onChange={() => {
-              props.setCheckList({
+              props.setUserCheckList({
                 ...props.checkList,
                 naviCheck: !props.checkList.naviCheck,
               });
