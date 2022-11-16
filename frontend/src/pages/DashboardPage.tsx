@@ -31,7 +31,9 @@ const DashboardPage = () => {
         dispatch(authActions.authFile({ authFile: true }));
       } else {
         dispatch(authActions.authFile({ authFile: false }));
-        navigate("/create/reset");
+        Axios.get(api.blog.getRepoList(accessToken, githubId)).then((res) => {
+          !res.data.checkRepository && navigate("/create");
+        });
       }
     });
   }
