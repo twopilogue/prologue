@@ -1,7 +1,7 @@
 import { useAppSelector } from "app/hooks";
 import React from "react";
 import { colorsConfig, selectColors } from "slices/settingSlice";
-import DetailSetting from "./DetailSetting";
+import DetailSetting from "pages/DetailSettingPage";
 
 export const DetailSettingStyles = (styles: colorsConfig) => {
   const result = `
@@ -20,6 +20,7 @@ export const DetailSettingStyles = (styles: colorsConfig) => {
 
   .title {
     background-color: ${styles.title.background};
+    height: ${styles.title.titleHeight};
   }
 
   .title h3 {

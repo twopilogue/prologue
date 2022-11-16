@@ -91,7 +91,7 @@ const LogoSetting = ({ logoImg, setLogoImg, logoType, setLogoType }: LogoSetting
         <div ref={detailItemText} style={detailItemUnfolded}>
           <Input
             placeholder="텍스트 입력"
-            value={colors.logo.inputText}
+            value={colors.logo.logoText}
             onChange={(e) => handleLogoText(e.target.value)}
           />
         </div>
