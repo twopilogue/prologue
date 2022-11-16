@@ -42,7 +42,7 @@ const LayoutSample = () => {
   const DefaultLayoutList = DefaultLayoutStyles();
 
   const getLayout = () => {
-    return DefaultLayoutList[clickedIdx - 1].layout;
+    return DefaultLayoutList[clickedIdx].layout;
   };
 
   const handleLayoutChange = (layouts: any) => {
@@ -54,7 +54,7 @@ const LayoutSample = () => {
   };
 
   useEffect(() => {
-    DefaultLayoutList[clickedIdx - 1].id === 7 ? setIsCust(true) : setIsCust(false);
+    clickedIdx === 0 ? setIsCust(true) : setIsCust(false);
   }, [clickedIdx]);
 
   return (
@@ -91,7 +91,7 @@ const LayoutSample = () => {
             >
               {componentList.map((item: ComponentConfig, i: number) => {
                 {
-                  return DefaultLayoutList[clickedIdx - 1].checkList[item.id] ? (
+                  return DefaultLayoutList[clickedIdx].checkList[item.id] ? (
                     <div className={styles.layout_colored} key={item.key}>
                       {item.key != "타이틀" && item.key != "글 목록" && isCust ? (
                         <div className={styles.icon}>

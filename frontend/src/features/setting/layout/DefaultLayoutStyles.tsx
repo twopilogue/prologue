@@ -1,9 +1,9 @@
 import { useAppSelector } from "app/hooks";
 import React from "react";
 import { Layout } from "react-grid-layout";
-import { ComponentCheckConfig, selectCheckList, selectComponentLayoutList } from "slices/settingSlice";
+import { ComponentCheckConfig, selectUserCheckList, selectUserComponentLayoutList } from "slices/settingSlice";
 
-interface defaultLayoutConfig {
+export interface defaultLayoutConfig {
   id: number;
   layout: Layout[];
   checkList: ComponentCheckConfig;
@@ -11,23 +11,32 @@ interface defaultLayoutConfig {
 }
 
 const DefaultLayoutStyles = () => {
-  const custCheckList = useAppSelector(selectCheckList);
-  const custLayout = useAppSelector(selectComponentLayoutList);
+  const custLayout = useAppSelector(selectUserComponentLayoutList);
+  const custCheckList = useAppSelector(selectUserCheckList);
 
   const DefaultLayoutList: defaultLayoutConfig[] = [
+    {
+      // 사용자 설정 테마
+      id: 0,
+      layout: custLayout,
+      checkList: custCheckList,
+      struct: "",
+    },
     {
       id: 1,
       layout: [
         { i: "블로그 로고", x: 0, y: 0, w: 1, h: 1 },
-        { i: "타이틀", x: 0, y: 1, w: 5, h: 3 },
+        { i: "타이틀", x: 0, y: 1, w: 5, h: 3, static: true },
         { i: "카테고리", x: 0, y: 4, w: 1, h: 4 },
-        { i: "글 목록", x: 1, y: 4, w: 4, h: 4 },
+        { i: "글 목록", x: 1, y: 4, w: 4, h: 4, static: true },
       ],
       checkList: {
         logo: true,
         title: true,
         category: true,
         contents: true,
+        profile: false,
+        page: false,
       },
       struct: `<div className='display-row'>
         <Logo />
@@ -47,15 +56,17 @@ const DefaultLayoutStyles = () => {
       id: 2,
       layout: [
         { i: "블로그 로고", x: 0, y: 0, w: 1, h: 1 },
-        { i: "타이틀", x: 0, y: 1, w: 5, h: 3 },
+        { i: "타이틀", x: 0, y: 1, w: 5, h: 3, static: true },
         { i: "카테고리", x: 4, y: 4, w: 1, h: 4 },
-        { i: "글 목록", x: 0, y: 4, w: 4, h: 4 },
+        { i: "글 목록", x: 0, y: 4, w: 4, h: 4, static: true },
       ],
       checkList: {
         logo: true,
         category: true,
         title: true,
         contents: true,
+        profile: false,
+        page: false,
       },
       struct: `<div className='display-row'>
         <Logo />
@@ -76,14 +87,16 @@ const DefaultLayoutStyles = () => {
       layout: [
         { i: "블로그 로고", x: 0, y: 0, w: 1, h: 1 },
         { i: "카테고리", x: 0, y: 1, w: 1, h: 7 },
-        { i: "타이틀", x: 1, y: 1, w: 4, h: 3 },
-        { i: "글 목록", x: 1, y: 4, w: 4, h: 4 },
+        { i: "타이틀", x: 1, y: 1, w: 4, h: 3, static: true },
+        { i: "글 목록", x: 1, y: 4, w: 4, h: 4, static: true },
       ],
       checkList: {
         logo: true,
         category: true,
         title: true,
         contents: true,
+        profile: false,
+        page: false,
       },
       struct: `<div className='display-row'>
         <Logo />
@@ -104,14 +117,16 @@ const DefaultLayoutStyles = () => {
       layout: [
         { i: "블로그 로고", x: 0, y: 0, w: 1, h: 1 },
         { i: "카테고리", x: 4, y: 1, w: 1, h: 7 },
-        { i: "타이틀", x: 0, y: 1, w: 4, h: 3 },
-        { i: "글 목록", x: 0, y: 4, w: 4, h: 4 },
+        { i: "타이틀", x: 0, y: 1, w: 4, h: 3, static: true },
+        { i: "글 목록", x: 0, y: 4, w: 4, h: 4, static: true },
       ],
       checkList: {
         logo: true,
         category: true,
         title: true,
         contents: true,
+        profile: false,
+        page: false,
       },
       struct: `<div className='display-row'>
         <Logo />
@@ -132,8 +147,8 @@ const DefaultLayoutStyles = () => {
         { i: "블로그 로고", x: 0, y: 0, w: 1, h: 1 },
         { i: "프로필", x: 0, y: 1, w: 1, h: 2 },
         { i: "카테고리", x: 0, y: 3, w: 1, h: 5 },
-        { i: "타이틀", x: 1, y: 1, w: 4, h: 3 },
-        { i: "글 목록", x: 1, y: 4, w: 4, h: 4 },
+        { i: "타이틀", x: 1, y: 1, w: 4, h: 3, static: true },
+        { i: "글 목록", x: 1, y: 4, w: 4, h: 4, static: true },
       ],
       checkList: {
         logo: true,
@@ -141,6 +156,7 @@ const DefaultLayoutStyles = () => {
         category: true,
         title: true,
         contents: true,
+        page: false,
       },
       struct: `<div className='display-row'>
         <Logo />
@@ -165,8 +181,8 @@ const DefaultLayoutStyles = () => {
         { i: "블로그 로고", x: 0, y: 0, w: 1, h: 1 },
         { i: "프로필", x: 4, y: 1, w: 1, h: 2 },
         { i: "카테고리", x: 4, y: 3, w: 1, h: 5 },
-        { i: "타이틀", x: 0, y: 1, w: 4, h: 3 },
-        { i: "글 목록", x: 0, y: 4, w: 4, h: 4 },
+        { i: "타이틀", x: 0, y: 1, w: 4, h: 3, static: true },
+        { i: "글 목록", x: 0, y: 4, w: 4, h: 4, static: true },
       ],
       checkList: {
         logo: true,
@@ -174,6 +190,7 @@ const DefaultLayoutStyles = () => {
         category: true,
         title: true,
         contents: true,
+        page: false,
       },
       struct: `<div className='display-row'>
         <Logo />
@@ -191,13 +208,6 @@ const DefaultLayoutStyles = () => {
           </div>
         </div>
       </div>`,
-    },
-    {
-      // 사용자 설정 테마
-      id: 7,
-      layout: custLayout,
-      checkList: custCheckList,
-      struct: "",
     },
   ];
 
