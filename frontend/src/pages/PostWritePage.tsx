@@ -29,13 +29,14 @@ interface writeDetailPostRequestProps {
   githubId: string;
   content: string;
   images: any[];
+  blogType: number;
 }
 
 const PostWritePage = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
+  const { accessToken, githubId, blogType } = useSelector((state: rootState) => state.auth);
 
   const [cancelModalOpen, setCancelModalOpen] = useState(false);
   const [saveModalOpen, setSaveModalOpen] = useState(false);
@@ -75,6 +76,7 @@ const PostWritePage = () => {
       githubId: githubId,
       content: frontMatter + content,
       images: [],
+      blogType: blogType,
     };
 
     console.log("fileList length : ", fileList.length);
