@@ -106,4 +106,20 @@ public class BlogServiceImpl implements BlogService {
                 .retrieve()
                 .bodyToMono(String.class).block();
     }
+
+    @Override
+    public void updateBuildType(String encodedAccessToken, String githubId) throws Exception {
+
+        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
+
+        UpdateBuildTypeRequest UpdateBuildTypeRequest = new UpdateBuildTypeRequest("workflow");
+        webClient.put()
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io/pages")
+                .headers(h -> h.setBearerAuth(accessToken))
+                .body(Mono.just(UpdateBuildTypeRequest), UpdateBuildTypeRequest.class)
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+    }
 }
