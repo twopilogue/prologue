@@ -12,10 +12,12 @@ import BlogLoding from "features/blog/BlogLoding";
 import { useDispatch } from "react-redux";
 import { dashboardActions } from "slices/dashboardSlice";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const LayoutChoicePage = () => {
   const dispatch = useDispatch();
-  
+  const navigate = useNavigate();
+
   const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
 
   const [isChoiceTheme, setChoiceTheme] = useState("gatsby-starter-foundation");
@@ -77,11 +79,15 @@ const LayoutChoicePage = () => {
       });
   };
 
-  
   function getDashboardInfo() {
-    getMonthPosts();
-    getNewPost();
-    getBlogInfo();
+    try {
+      getMonthPosts();
+      getNewPost();
+      getBlogInfo();
+    } catch {
+      console.log("대시보드 페이지 이동 전 데이터 받기 실패");
+      navigate("/dashboard");
+    }
   }
 
   async function getMonthPosts() {
