@@ -1,8 +1,6 @@
 import React from "react";
 
-import LayoutSelector from "./layout/LayoutSelector";
-import LayoutSample from "./layout/LayoutSample";
-import DetailSetting from "./detail/DetailSetting";
+import DetailSettingPage from "pages/DetailSettingPage";
 import MyInfoPage from "pages/MyInfoPage";
 import CategoryPage from "pages/CategoryPage";
 import PageSettingPage from "pages/PageSettingPage";
@@ -48,7 +46,7 @@ export const layoutTabs = [
     label: "세부 레이아웃 설정",
     Component: (
       <div>
-        <DetailSetting />
+        <DetailSettingPage />
       </div>
     ),
   },
