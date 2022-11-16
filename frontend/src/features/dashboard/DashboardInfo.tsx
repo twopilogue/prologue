@@ -16,7 +16,7 @@ import "moment/locale/ko";
 function DashboardInfo() {
   const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
   const { totalPost, repoSize, buildTime } = useSelector((state: rootState) => state.dashboard);
-  
+
   const [info, setInfo] = useState({
     postNum: totalPost,
     bildTime: {
@@ -41,8 +41,8 @@ function DashboardInfo() {
         axios.spread((res1, res2, res3) => {
           const value = res1.data.latestBuildTime;
           const valueMoment = moment(value, "YYYYMMDDHHmmss").format("YYYY/MM/DD HH:mm");
-          const now = moment().format("YYYY/MM/DD HH a");
-          const bild = moment(value, "YYYYMMDDHHmmss").format("YYYY/MM/DD HH a");
+          const now = moment().format("YYYY/MM/DD");
+          const bild = moment(value, "YYYYMMDDHHmmss").format("YYYY/MM/DD");
           const timeLag = moment(valueMoment, "YYYYMMDDHHmmss").fromNow();
           console.log(value, bild, now, bild === now);
           setInfo({
