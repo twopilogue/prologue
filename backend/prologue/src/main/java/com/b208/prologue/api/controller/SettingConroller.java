@@ -149,7 +149,8 @@ public class SettingConroller {
     })
     public ResponseEntity<? extends BaseResponseBody> modifyBlogLayout(@Valid @RequestBody ModifyBlogLayoutRequest modifyBlogLayoutRequest) {
         try {
-            settingService.updateBlogLayout(modifyBlogLayoutRequest.getAccessToken(), modifyBlogLayoutRequest.getGithubId(), modifyBlogLayoutRequest.getLayout());
+            settingService.updateBlogLayout(modifyBlogLayoutRequest.getAccessToken(), modifyBlogLayoutRequest.getGithubId(),
+                    modifyBlogLayoutRequest.getLayout(), modifyBlogLayoutRequest.getLayoutJson());
             return ResponseEntity.status(200).body(BaseResponseBody.of(200, "레이아웃 설정 수정에 성공하였습니다."));
         } catch (Exception e) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "레이아웃 설정 수정에 실패하였습니다."));

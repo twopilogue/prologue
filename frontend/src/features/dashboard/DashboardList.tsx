@@ -9,7 +9,9 @@ import { Link } from "@mui/material";
 
 function DashboardList() {
   const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
-  const [newPost, setNewPost] = useState([]);
+  const { newPosts } = useSelector((state: rootState) => state.dashboard);
+
+  const [newPost, setNewPost] = useState([] || newPosts);
 
   useEffect(() => {
     getNewPost();

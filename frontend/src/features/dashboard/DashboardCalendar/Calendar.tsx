@@ -55,8 +55,9 @@ const CalendarStyled = styled(Calendar)(() => ({
 
 function CalenderCustom() {
   const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
+  const { monthPosts } = useSelector((state: rootState) => state.dashboard);
 
-  const [marks, setMark] = useState([]);
+  const [marks, setMark] = useState(monthPosts);
 
   useEffect(() => {
     getMonthPosts();
