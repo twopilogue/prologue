@@ -35,8 +35,7 @@ export const useGettingWidth = () => {
 const LayoutSample = () => {
   const dispatch = useDispatch();
 
-  const [cstLayoutList, setCstLayoutList] = useState<Layout[]>([]);
-  const [componentList, setComponentList] = useState<ComponentConfig[]>(useAppSelector(selectComponentList));
+  const componentList = useAppSelector(selectComponentList);
   const clickedIdx = useAppSelector(selectClickedLayoutIdx);
   const [isCust, setIsCust] = useState<boolean>(false);
   const [layoutWidth, layoutContainer] = useGettingWidth();
@@ -48,18 +47,9 @@ const LayoutSample = () => {
 
   const handleLayoutChange = (layouts: any) => {
     const tmpLayoutList: Layout[] = [];
-    // 변경된 레이아웃
-    for (let i = 0; i < layouts.length; i++) {
-      const layout: Layout = {
-        i: layouts[i].i,
-        x: layouts[i].x,
-        y: layouts[i].y,
-        w: layouts[i].w,
-        h: layouts[i].h,
-        static: layouts[i].static,
-      };
-      tmpLayoutList.push(layout);
-    }
+    layouts.map((it: Layout) => {
+      tmpLayoutList.push({ i: it.i, x: it.x, y: it.y, w: it.w, h: it.h });
+    });
     dispatch(setComponentLayoutList(tmpLayoutList));
   };
 

@@ -20,6 +20,7 @@ import DetailSelector from "features/setting/detail/DetailSelector";
 import Axios from "api/MultipartAxios";
 import api from "api/Api";
 import axios from "axios";
+import { toJSON } from "cssjson";
 
 const DetailSettingPage = () => {
   const [titleImg, setTitleImg] = useState(null);
@@ -31,6 +32,60 @@ const DetailSettingPage = () => {
 
   const formData = new FormData();
   const dispatch = useDispatch();
+
+  const getDetailSetting = async () => {
+    await Axios.get(api.setting.getDetail(accessToken, githubId))
+      .then((res) => {
+        if (res.data.css === "\n") {
+          console.log("설정 없음");
+        } else {
+          const removedResult = res.data.css.replaceAll(".", "").replaceAll(" ", "");
+          const result = toJSON(removedResult);
+          console.log(result);
+
+          console.log("카테고리 변환 결과: ", result.children.category.attributes);
+          console.log("프로필 반환 결과: ", result.children.profile.attributes);
+
+          dispatch(
+            setColors({
+              title: {
+                background: result.children.title.attributes["background-color"],
+                text: result.children.titleh3.attributes["color"],
+                // titleHeight:
+                type: res.data.titleColor, // 색이면 true, 이미지면 false
+                titleText: res.data.titleText,
+              },
+              category: {
+                background: result.children.category.attributes["background-color"],
+                text: result.children.categorya.attributes["color"],
+              },
+              page: {
+                background: result.children["page-container"].attributes["background-color"],
+                text: result.children.pagea.attributes["color"],
+                sort: result.children["page-container"].attributes["justify-content"],
+              },
+              profile: {
+                background: result.children.profile.attributes["background-color"],
+                text: result.children.profile.attributes["color"],
+              },
+              contents: {
+                background: result.children["post-list-container"].attributes["background-color"],
+                text: result.children["post-list-container"].attributes["color"],
+              },
+              logo: {
+                background: "#d3d3eb",
+                text: "#ffffff",
+                logoText: res.data.logoText,
+              },
+            }),
+          );
+        }
+        console.log("DURL?");
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
 
   const handleOnSave = () => {
     // 디테일 세팅
@@ -76,6 +131,10 @@ const DetailSettingPage = () => {
       //   }),
     ]);
   };
+
+  useEffect(() => {
+    getDetailSetting();
+  }, []);
 
   // 언마운트 시 초기화 실행
   useEffect(() => {
