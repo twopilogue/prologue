@@ -67,7 +67,7 @@ const PostList = () => {
       </div>
 
       <div className={styles.postDataList}>
-        {postCardList.map((value, key) => (
+        {postList.map((value, key) => (
           <div
             key={key}
             className={styles.postCards}
