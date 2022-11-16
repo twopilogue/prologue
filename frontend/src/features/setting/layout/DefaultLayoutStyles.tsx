@@ -13,6 +13,7 @@ interface defaultLayoutConfig {
 const DefaultLayoutStyles = () => {
   const custCheckList = useAppSelector(selectCheckList);
   const custLayout = useAppSelector(selectComponentLayoutList);
+
   const DefaultLayoutList: defaultLayoutConfig[] = [
     {
       id: 1,
