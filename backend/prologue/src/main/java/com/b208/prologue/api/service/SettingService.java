@@ -19,7 +19,7 @@ public interface SettingService {
     String getBlogLayout(String encodedAccessToken, String githubId) throws Exception;
     void updateBlogLayout(String encodedAccessToken, String githubId, String layout) throws Exception;
     GetBlogLayoutCss getBlogLayoutCss(String encodedAccessToken, String githubId) throws Exception;
-    void updateBlogLayoutCss(String encodedAccessToken, String githubId, String css, String logoText,
+    void updateBlogLayoutCss(String encodedAccessToken, String githubId, String css,
+                             String logoText, boolean titleColor, String titleText,
                              MultipartFile logoImage, MultipartFile titleImage) throws Exception;
-    String getLogoText(String accessToken, String githubId) throws Exception;
 }

@@ -8,6 +8,12 @@ import postReducer from "../slices/postSlice";
 import settingReducer from "../slices/settingSlice";
 import dashboardReducer from "../slices/dashboardSlice";
 
+const persistConfig = {
+  key: "root",
+  storage,
+  whitelist: ["auth"],
+};
+
 const rootReducer = combineReducers({
   auth: authReducer,
   posts: postReducer,
@@ -15,10 +21,6 @@ const rootReducer = combineReducers({
   dashboard: dashboardReducer,
 });
 
-const persistConfig = {
-  key: "root",
-  storage,
-};
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
