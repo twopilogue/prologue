@@ -35,13 +35,18 @@ function DashboardList() {
         <div>
           <div className={`${styles.flexRow} ${styles.listAll}`}>
             <Text value="최신글 보기" color="blue_5" bold />
-            <Link href={`https://${githubId}.github.io/blog`} underline="none" color="inherit">
+            <Link href={`https://${githubId}.github.io/blog`} underline="none" color="inherit" target="_blank">
               <Text value="전체보기" type="caption" />
             </Link>
           </div>
           {newPost.map((value, index) => (
             <div className={`${styles.flexRow} ${styles.listOne}`} key={index}>
-              <Link href={`https://${githubId}.github.io/blog/${value.directory}`} underline="none" color="inherit">
+              <Link
+                href={`https://${githubId}.github.io/blog/${value.directory}`}
+                underline="none"
+                color="inherit"
+                target="_blank"
+              >
                 <Text value={textLimit(value.title)} />
               </Link>
               <Text value={value.date} type="caption" />
