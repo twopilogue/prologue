@@ -34,13 +34,14 @@ interface modifyDetailPostRequestProps {
   directory: string;
   content: string;
   images: any[];
+  blogType: number;
 }
 
 const PostEditPage = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
+  const { accessToken, githubId, blogType } = useSelector((state: rootState) => state.auth);
   const { directory } = useParams();
 
   const [loading, setLoading] = useState(false);
@@ -112,6 +113,7 @@ const PostEditPage = () => {
       directory: directory,
       content: frontMatter + content,
       images: [],
+      blogType: blogType,
     };
 
     console.log("fileList : ", fileList);
