@@ -11,12 +11,17 @@ import { useSelector } from "react-redux";
 import { rootState } from "app/store";
 import Axios from "api/MultipartAxios";
 import BlogLoding from "features/blog/BlogLoding";
+import { useDispatch } from "react-redux";
+import { dashboardActions } from "slices/dashboardSlice";
+import axios from "axios";
 
 function BlogCustomInfo() {
+  const dispatch = useDispatch();
+
   const { githubId, accessToken } = useSelector((state: rootState) => state.auth);
   const [imgPreview, setImgPreview] = useState(null);
   const [lodingView, openLodingView] = React.useState(false);
-  
+
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [successModal, openSuccessModal] = useState(false);
   const [isInfo, setInfo] = useState({
@@ -29,7 +34,7 @@ function BlogCustomInfo() {
 
   const onClickNext = async () => {
     openLodingView(true);
-    
+
     const formData = new FormData();
     const modified = {
       accessToken: accessToken,
@@ -50,17 +55,66 @@ function BlogCustomInfo() {
     formData.append("modifyBlogSettingRequest", new Blob([JSON.stringify(modified)], { type: "application/json" }));
     formData.append("imageFile", isInfo.profile_image);
     console.log("폼 데이터", formData);
-    //axois 보내기
+
+    //axios 보내기
     await Axios.put(api.setting.modifyBlog(), formData)
       .then((res) => {
         console.log("블로그 정보 데이터 보내기", res.data);
-        openLodingView(false);
-        openSuccessModal(true);
+        getDashboardInfo();
       })
       .catch((err) => {
         console.error("블로그 정보 데이터 보내기", err);
       });
   };
+
+  function getDashboardInfo() {
+    getMonthPosts();
+    getNewPost();
+    getBlogInfo();
+  }
+
+  async function getMonthPosts() {
+    await Axios.get(api.dashboard.getMonthPosts(accessToken, githubId)).then((res) => {
+      dispatch(
+        dashboardActions.monthPosts({
+          monthPosts: res.data.dateList,
+        }),
+      );
+    });
+  }
+
+  async function getNewPost() {
+    await Axios.get(api.dashboard.getNewPost(accessToken, githubId)).then((res) => {
+      dispatch(
+        dashboardActions.newPosts({
+          newPosts: res.data.currentPosts,
+        }),
+      );
+
+    });
+  }
+
+  function getBlogInfo() {
+    axios
+      .all([
+        Axios.get(api.dashboard.getNewBuildTime(accessToken, githubId)),
+        Axios.get(api.dashboard.getRepoSize(accessToken, githubId)),
+        Axios.get(api.dashboard.getTotalPost(accessToken, githubId)),
+      ])
+      .then(
+        axios.spread((res1, res2, res3) => {
+          dispatch(
+            dashboardActions.blogInfo({
+              totalPost: res3.data.total,
+              repoSize: res2.data.size,
+              buildTime: res1.data.latestBuildTime,
+            }),
+          );
+          openLodingView(false);
+          openSuccessModal(true);
+        }),
+      );
+  }
 
   const profileOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInfo({ ...isInfo, [e.target.name]: e.target.value });

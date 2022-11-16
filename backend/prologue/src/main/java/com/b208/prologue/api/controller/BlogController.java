@@ -81,4 +81,16 @@ public class BlogController {
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "깃허브 페이지 배포 프렌치 수정을 완료했습니다."));
     }
 
+    @PutMapping("/build-type")
+    @ApiOperation(value = "깃허브 페이지 배포 타입 수정", notes = "깃허브 페이지 배포 타입을 수정한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "깃허브 페이지 배포 타입 수정", response = BaseResponseBody.class),
+            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<? extends BaseResponseBody> updateBuildType(@RequestParam @ApiParam(value = "accessToken", required = true) String accessToken,
+                                                                      @RequestParam @ApiParam(value = "사용자 깃허브 아이디", required = true) String githubId) throws Exception {
+        blogService.updateBuildType(accessToken, githubId);
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "깃허브 페이지 배포 타입 수정을 완료했습니다."));
+    }
+
 }
