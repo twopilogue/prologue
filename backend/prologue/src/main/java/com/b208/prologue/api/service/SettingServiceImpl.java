@@ -316,15 +316,14 @@ public class SettingServiceImpl implements SettingService {
     public String getBlogLayout(String encodedAccessToken, String githubId) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
-        GetRepoContentResponse getRepoContentResponse = commonService.getDetailContent(accessToken, githubId, "src/pages/index.js");
-        String content = base64Converter.decode(getRepoContentResponse.getContent().replace("\n", ""));
+        String content = base64Converter.decode(commonService.getDetailContent(accessToken, githubId, "src/util/customizing-setting.json")
+                .getContent().replace("\n", ""));
+        JSONParser jsonParser = new JSONParser();
+        JSONObject jsonObj = (JSONObject) jsonParser.parse(content);
 
-        int endIndex = content.lastIndexOf("Layout");
-        endIndex = content.lastIndexOf("<", endIndex);
-        int startIndex = content.lastIndexOf("Layout", endIndex);
-        startIndex = content.indexOf(">", startIndex);
+        String layout = jsonObj.get("customLayout").toString();
 
-        return content.substring(startIndex + 2, endIndex);
+        return layout;
     }
 
     @Override
@@ -377,7 +376,7 @@ public class SettingServiceImpl implements SettingService {
 
         String logoText = jsonObj.get("logo").toString();
 
-        JSONObject title = (JSONObject)jsonObj.get("title");
+        JSONObject title = (JSONObject) jsonObj.get("title");
         boolean titleColor = Boolean.parseBoolean(title.get("color").toString());
         String titleText = title.get("text").toString();
 
@@ -413,9 +412,9 @@ public class SettingServiceImpl implements SettingService {
         jsonObj.replace("logo", logoText);
 
         JSONObject title = new JSONObject();
-        title.put("text",titleText);
-        title.put("color",titleColor);
-        jsonObj.replace("title",title);
+        title.put("text", titleText);
+        title.put("color", titleColor);
+        jsonObj.replace("title", title);
 
         treeRequestList.add(new TreeRequest(path, "100644", "blob", commonService.makeBlob(accessToken, githubId, base64Converter.encode(jsonObj.toString()))));
 
