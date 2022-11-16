@@ -369,14 +369,25 @@ public class SettingServiceImpl implements SettingService {
         int targetIndex = content.lastIndexOf("CustomCSS");
         targetIndex = content.indexOf("/", targetIndex);
 
-        String css = content.substring(targetIndex + 1);
-        String logoText = getLogoText(accessToken, githubId);
+        String css = content.substring(targetIndex + 2);
 
-        return new GetBlogLayoutCss(css, logoText);
+        content = base64Converter.decode(commonService.getDetailContent(accessToken, githubId, "src/util/customizing-setting.json")
+                .getContent().replace("\n", ""));
+        JSONParser jsonParser = new JSONParser();
+        JSONObject jsonObj = (JSONObject) jsonParser.parse(content);
+
+        String logoText = jsonObj.get("logo").toString();
+
+        JSONObject title = (JSONObject)jsonObj.get("title");
+        boolean titleColor = Boolean.parseBoolean(title.get("color").toString());
+        String titleText = title.get("text").toString();
+
+        return new GetBlogLayoutCss(css, logoText, titleText, titleColor);
     }
 
     @Override
-    public void updateBlogLayoutCss(String encodedAccessToken, String githubId, String css, String logoText,
+    public void updateBlogLayoutCss(String encodedAccessToken, String githubId, String css,
+                                    String logoText, boolean titleColor, String titleText,
                                     MultipartFile logoImage, MultipartFile titleImage) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
         String path = "src/style.css";
@@ -402,6 +413,11 @@ public class SettingServiceImpl implements SettingService {
         JSONObject jsonObj = (JSONObject) jsonParser.parse(content);
         jsonObj.replace("logo", logoText);
 
+        JSONObject title = new JSONObject();
+        title.put("text",titleText);
+        title.put("color",titleColor);
+        jsonObj.replace("title",title);
+
         treeRequestList.add(new TreeRequest(path, "100644", "blob", commonService.makeBlob(accessToken, githubId, base64Converter.encode(jsonObj.toString()))));
 
         if (logoImage != null && !logoImage.isEmpty()) {
@@ -416,15 +432,5 @@ public class SettingServiceImpl implements SettingService {
         }
 
         commonService.multiFileCommit(accessToken, githubId, treeRequestList, commit);
-    }
-
-    @Override
-    public String getLogoText(String accessToken, String githubId) throws Exception {
-        String content = base64Converter.decode(commonService.getDetailContent(accessToken, githubId, "src/util/customizing-setting.json")
-                .getContent().replace("\n", ""));
-        JSONParser jsonParser = new JSONParser();
-        JSONObject jsonObj = (JSONObject) jsonParser.parse(content);
-
-        return jsonObj.get("logo").toString();
     }
 }

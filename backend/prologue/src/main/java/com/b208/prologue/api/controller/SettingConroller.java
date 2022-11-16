@@ -185,7 +185,7 @@ public class SettingConroller {
                                                                        @RequestPart(required = false) MultipartFile titleImage) {
         try {
             settingService.updateBlogLayoutCss(modifyBlogLayoutCssRequest.getAccessToken(), modifyBlogLayoutCssRequest.getGithubId(), modifyBlogLayoutCssRequest.getCss(),
-                    modifyBlogLayoutCssRequest.getLogoText(), logoImage, titleImage);
+                    modifyBlogLayoutCssRequest.getLogoText(), modifyBlogLayoutCssRequest.isTitleColor(), modifyBlogLayoutCssRequest.getTitleText(), logoImage, titleImage);
             return ResponseEntity.status(200).body(BaseResponseBody.of(200, "레이아웃 세부 설정 수정에 성공하였습니다."));
         } catch (Exception e) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "레이아웃 세부 설정 수정에 실패하였습니다."));
