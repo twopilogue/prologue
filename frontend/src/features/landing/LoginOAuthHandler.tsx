@@ -51,13 +51,13 @@ function LoginOAuthHandler() {
   async function getAuthFile(accessToken: string, githubId: string) {
     await Axios.get(api.auth.getAuthFile(accessToken, githubId)).then((res) => {
       if (res.data.checkAuthFile) {
-        dispatch(
-          authActions.blogType({
-            blogType: res.data.blogType,
-          }),
-        );
+        dispatch(authActions.blogType({ blogType: res.data.blogType }));
+        dispatch(authActions.authFile({ authFile: true }));
         setTimeout(() => [setSecretRepo(accessToken, githubId)], 200);
-      } else navigate("/create/reset");
+      } else {
+        dispatch(authActions.authFile({ authFile: false }));
+        navigate("/create/reset");
+      }
     });
   }
 
@@ -93,6 +93,9 @@ function LoginOAuthHandler() {
               width: "300px",
               borderRadius: "10px",
               zIndex: "1",
+              "&:hover": {
+                backgroundColor: "#212121",
+              },
             }}
           >
             Signup With GitHub

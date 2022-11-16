@@ -6,6 +6,7 @@ import thunk from "redux-thunk";
 import authReducer from "../slices/authSlice";
 import postReducer from "../slices/postSlice";
 import settingReducer from "../slices/settingSlice";
+import dashboardReducer from "../slices/dashboardSlice";
 
 const persistConfig = {
   key: "root",
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   auth: authReducer,
   posts: postReducer,
   setting: settingReducer,
+  dashboard: dashboardReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

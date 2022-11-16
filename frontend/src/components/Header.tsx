@@ -35,7 +35,7 @@ function Header() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { auth, githubId, githubImage } = useSelector((state: rootState) => state.auth);
+  const { login, githubId, githubImage } = useSelector((state: rootState) => state.auth);
   const [menuOpen, setMenuOpen] = useState(false);
 
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
@@ -67,8 +67,7 @@ function Header() {
       <div
         className={styles.wrapper}
         style={{
-          backgroundColor:
-            ["/dashboard", "/login", "/"].includes(location.pathname) && "rgba( 255, 255, 255, 0.2 )",
+          backgroundColor: ["/dashboard", "/login", "/"].includes(location.pathname) && "rgba( 255, 255, 255, 0.2 )",
         }}
       >
         <Stack direction="row" spacing={6} alignItems="center">
@@ -91,7 +90,7 @@ function Header() {
         </Stack>
 
         <Stack direction="row" spacing={2} alignItems="center">
-          {auth ? (
+          {login ? (
             <>
               <Box sx={{ flexGrow: 0 }}>
                 <ButtonBase onClick={handleOpenUserMenu} disableRipple>
