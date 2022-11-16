@@ -40,3 +40,13 @@
   height: 75vh;
   padding: 1%;
 }
+
+/* PageViewerContents */
+.pageWriteContents {
+  position: absolute;
+  border: 1px solid #a2a5dc;
+  left: -7%;
+  width: 112%;
+  height: 75vh;
+  padding: 1%;
+}
