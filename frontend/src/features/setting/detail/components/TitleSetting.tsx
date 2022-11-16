@@ -7,7 +7,7 @@ import { SketchPicker } from "react-color";
 import ButtonStyled from "components/Button";
 import { controlImgRef } from "../DetailSelector";
 import { useAppSelector } from "app/hooks";
-import { colorsConfig, selectColors, setColors } from "slices/settingSlice";
+import { colorsConfig, getTextColor, selectColors, setColors } from "slices/settingSlice";
 import { useDispatch } from "react-redux";
 import { RadioGroup } from "@mui/material";
 
@@ -28,7 +28,8 @@ const TitleSetting = ({ titleImg, setTitleImg }: TitleSettingProps) => {
   };
 
   const handleChangeComplete = (color: string) => {
-    dispatch(setColors({ ...colors, title: { ...colors.title, background: color } }));
+    const textColor = getTextColor(color);
+    dispatch(setColors({ ...colors, title: { ...colors.title, background: color, text: textColor } }));
   };
 
   const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
