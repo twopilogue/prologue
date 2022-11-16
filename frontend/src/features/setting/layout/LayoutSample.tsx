@@ -43,8 +43,7 @@ const LayoutSample = () => {
   const DefaultLayoutList = DefaultLayoutStyles();
 
   const getLayout = () => {
-    console.log(DefaultLayoutList[clickedIdx - 1].layout);
-    return DefaultLayoutList[1].layout;
+    return DefaultLayoutList[clickedIdx - 1].layout;
   };
 
   const handleLayoutChange = (layouts: any) => {
@@ -67,10 +66,6 @@ const LayoutSample = () => {
   useEffect(() => {
     DefaultLayoutList[clickedIdx - 1].id === 7 ? setIsCust(true) : setIsCust(false);
   }, [clickedIdx]);
-
-  useEffect(() => {
-    console.log(DefaultLayoutList);
-  });
 
   return (
     <div>

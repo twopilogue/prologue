@@ -1,8 +1,9 @@
-import Text from "components/Text";
 import React, { useEffect, useState } from "react";
-import DetailSelector from "./DetailSelector";
-import styles from "../Setting.module.css";
-import SettingLayout from "./SettingLayout";
+import { useDispatch, useSelector } from "react-redux";
+import { rootState } from "app/store";
+import styles from "features/setting/Setting.module.css";
+import Text from "components/Text";
+import ButtonStyled from "components/Button";
 import { useAppSelector } from "app/hooks";
 import {
   colorsConfig,
@@ -12,17 +13,15 @@ import {
   setClickedComp,
   setColors,
 } from "slices/settingSlice";
-import ButtonStyled from "components/Button";
-import { useDispatch, useSelector } from "react-redux";
-import { DetailSettingStyles } from "./DetailSettingStyles";
+import { DetailSettingStyles } from "features/setting/detail/DetailSettingStyles";
+import DefaultLayoutStyles from "features/setting/layout/DefaultLayoutStyles";
+import SettingLayout from "features/setting/detail/SettingLayout";
+import DetailSelector from "features/setting/detail/DetailSelector";
 import Axios from "api/MultipartAxios";
-import { rootState } from "app/store";
 import api from "api/Api";
-import { toJSON } from "cssjson";
-import DefaultLayoutStyles from "../layout/DefaultLayoutStyles";
 import axios from "axios";
 
-const DetailSetting = () => {
+const DetailSettingPage = () => {
   const [titleImg, setTitleImg] = useState(null);
   const [logoImg, setLogoImg] = useState(null);
   const { githubId, accessToken } = useSelector((state: rootState) => state.auth);
@@ -33,24 +32,6 @@ const DetailSetting = () => {
   const formData = new FormData();
   const dispatch = useDispatch();
 
-  const getDetailSetting = async () => {
-    await Axios.get(api.setting.getDetail(accessToken, githubId))
-      .then((res) => {
-        console.log(res);
-        const removedResult = res.data.css.replaceAll(".", "");
-        const result = toJSON(removedResult);
-        console.log("카테고리 변환 결과: ", result.children.category.attributes);
-        console.log("프로필 반환 결과: ", result.children.profile.attributes);
-        const categoryAtt = result.children.category.attributes;
-        console.log("배경 색: ", categoryAtt["background-color"]);
-        const categoryBack = categoryAtt["background-color"];
-        dispatch(setColors({ ...colors, category: { ...colors.category, background: categoryBack } }));
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
-
   const handleOnSave = () => {
     // 디테일 세팅
     const modified = DetailSettingStyles(colors);
@@ -58,7 +39,9 @@ const DetailSetting = () => {
       accessToken: accessToken,
       githubId: githubId,
       css: modified,
-      logoText: colors.logo.inputText,
+      logoText: colors.logo.logoText,
+      titleText: colors.title.titleText,
+      titleColor: true,
     };
     const layout = layoutList[clickedIdx - 1].struct;
     const layoutResult = layout.replaceAll("\n", "").replaceAll("  ", "").trim();
@@ -79,24 +62,20 @@ const DetailSetting = () => {
         .catch((err: any) => {
           console.log(err);
         }),
-      axios
-        .put(api.setting.modifyLayout(), {
-          accessToken: accessToken,
-          githubId: githubId,
-          layout: layoutResult,
-        })
-        .then((res: any) => {
-          console.log("완료", res);
-        })
-        .catch((err: any) => {
-          console.log("돌ㅇ가", err);
-        }),
+      // axios
+      //   .put(api.setting.modifyLayout(), {
+      //     accessToken: accessToken,
+      //     githubId: githubId,
+      //     layout: layoutResult,
+      //   })
+      //   .then((res: any) => {
+      //     console.log("완료", res);
+      //   })
+      //   .catch((err: any) => {
+      //     console.log("돌ㅇ가", err);
+      //   }),
     ]);
   };
-
-  useEffect(() => {
-    getDetailSetting();
-  }, []);
 
   // 언마운트 시 초기화 실행
   useEffect(() => {
@@ -130,4 +109,4 @@ const DetailSetting = () => {
   );
 };
 
-export default DetailSetting;
+export default DetailSettingPage;

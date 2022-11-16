@@ -1,7 +1,7 @@
 import Text from "components/Text";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { setClickedLayoutIdx } from "slices/settingSlice";
+import { initialState, setClickedLayoutIdx } from "slices/settingSlice";
 import styles from "../Setting.module.css";
 import LayoutSelectorItem from "./../layout/LayoutSelectorItem";
 
@@ -20,6 +20,12 @@ const LayoutSelector = () => {
     { idx: 6, isClicked: false },
     { idx: 7, isClicked: false },
   ]);
+
+  useEffect(() => {
+    return () => {
+      setClickedLayoutIdx(initialState.clickedLayoutIdx);
+    };
+  }, []);
 
   return (
     <>
