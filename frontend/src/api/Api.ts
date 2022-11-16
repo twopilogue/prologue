@@ -29,6 +29,7 @@ interface apiInterface {
     getMonthPosts: (accessToken: string, githubId: string) => string;
     getRepoSize: (accessToken: string, githubId: string) => string;
     getTotalPost: (accessToken: string, githubId: string) => string;
+    getBildState: (accessToken: string, githubId: string) => string;
   };
   setting: {
     getCategory: (accessToken: string, githubId: string) => string;
@@ -88,6 +89,8 @@ const api: apiInterface = {
       HOST + DASHBOARD + "size?accessToken=" + accessToken + "&githubId=" + githubId,
     getTotalPost: (accessToken: string, githubId: string) =>
       HOST + DASHBOARD + "total?accessToken=" + accessToken + "&githubId=" + githubId,
+    getBildState: (accessToken: string, githubId: string) =>
+      HOST + DASHBOARD + "build?accessToken=" + accessToken + "&githubId=" + githubId,
   },
   setting: {
     getCategory: (accessToken: string, githubId: string) =>
