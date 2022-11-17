@@ -90,7 +90,7 @@ function DashboardInfo() {
                 <Text value="게시글 수" bold />
               </div>
               <div className={styles.infoValue}>
-                <Text value={info.postNum} type="pageTitle" bold />
+                <Text value={info.postNum} type="textTitle" bold />
               </div>
             </div>
             <div className={styles.infoGird_item}>
@@ -106,7 +106,7 @@ function DashboardInfo() {
               </div>
               <div className={styles.infoValue}>
                 <span>
-                  <Text value={info.volume} type="pageTitle" bold />
+                  <Text value={info.volume} type="textTitle" bold />
                   <Text value={"MB"} type="caption" bold />
                 </span>
               </div>
@@ -120,7 +120,7 @@ function DashboardInfo() {
                 <Stack>
                   <Text value={info.buildTime.year} type="text" bold />
                   <div>
-                    <Text value={info.buildTime.day} type="pageTitle" bold />
+                    <Text value={info.buildTime.day} type="textTitle" bold />
                   </div>
                 </Stack>
               </div>
