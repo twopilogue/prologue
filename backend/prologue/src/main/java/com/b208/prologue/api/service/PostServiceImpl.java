@@ -236,7 +236,7 @@ public class PostServiceImpl implements PostService {
             sb.append("---\n");
             sb.append("template: blog-post\n");
             sb.append("templateKey: blog-post\n");
-            sb.append("slug: /").append(directory).append("\n");
+            sb.append("slug: /blog/").append(directory).append("\n");
             sb.append("featuredImage: ").append(featuredImage).append("\n");
             sb.append("featuredimage: ").append(featuredImage).append("\n");
             if(!featuredImage.equals("/assets/post-image.png")) {
@@ -281,7 +281,7 @@ public class PostServiceImpl implements PostService {
             sb.append("---\n");
             sb.append("template: blog-post\n");
             sb.append("templateKey: blog-post\n");
-            sb.append("slug: /").append(path.substring(path.lastIndexOf("/")+1)).append("\n");
+            sb.append("slug: /blog/").append(path.substring(path.lastIndexOf("/")+1)).append("\n");
             sb.append("featuredImage: ").append(featuredImage).append("\n");
             sb.append("featuredimage: ").append(featuredImage).append("\n");
             if(!featuredImage.equals("/assets/post-image.png")) {
