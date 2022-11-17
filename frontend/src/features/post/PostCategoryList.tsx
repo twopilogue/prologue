@@ -7,19 +7,23 @@ import Axios from "api/JsonAxios";
 import api from "api/Api";
 
 const PostCategoryList = () => {
-  const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
+  const { accessToken, githubId, blogType } = useSelector((state: rootState) => state.auth);
 
   const [categoryList, setCategoryList] = useState([]);
 
   const getCategoryList = () => {
-    Axios.get(api.setting.getCategory(accessToken, githubId))
-      .then((res: any) => {
-        console.log(res.data.category);
-        setCategoryList(res.data.category);
-      })
-      .catch((err: any) => {
-        console.log(err);
-      });
+    if (blogType == 0) {
+      Axios.get(api.setting.getCategory(accessToken, githubId))
+        .then((res: any) => {
+          console.log(res.data.category);
+          setCategoryList(res.data.category);
+        })
+        .catch((err: any) => {
+          console.log(err);
+        });
+    } else {
+      setCategoryList(["전체보기"]);
+    }
   };
 
   useEffect(() => {
