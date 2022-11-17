@@ -93,4 +93,16 @@ public class BlogController {
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "깃허브 페이지 배포 타입 수정을 완료했습니다."));
     }
 
+    @PutMapping("/workflow")
+    @ApiOperation(value = "블로그 빌드-배포 트리거 실행", notes = "블로그 빌드-배포 트리거를 실행한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "블로그 빌드-배포 트리거 실행", response = BaseResponseBody.class),
+            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<? extends BaseResponseBody> actionWorkflow(@RequestParam @ApiParam(value = "accessToken", required = true) String accessToken,
+                                                                      @RequestParam @ApiParam(value = "사용자 깃허브 아이디", required = true) String githubId) throws Exception {
+        blogService.actionWorkflow(accessToken, githubId);
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "블로그 빌드-배포 트리거를 실행했습니다."));
+    }
+
 }
