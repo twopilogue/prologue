@@ -51,8 +51,6 @@ const LayoutSettingPage = () => {
   };
 
   const handleOnSave = () => {
-    console.log("레이아웃 저장");
-    console.log("저장된 레이아웃:", layoutList);
     const layoutJson = {
       layout: DefaultLayoutList[clickedIdx].layout,
       checkList: DefaultLayoutList[clickedIdx].checkList,
@@ -72,6 +70,7 @@ const LayoutSettingPage = () => {
     await Axios.put(api.setting.modifyLayout(), result)
       .then((res: any) => {
         console.log("레이아웃 수정 완!", res);
+        alert("저장되었습니다.");
       })
       .catch((err: any) => {
         console.log("ㅡㅡ빠꾸", err);
