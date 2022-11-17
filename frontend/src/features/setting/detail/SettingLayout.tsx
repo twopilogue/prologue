@@ -6,10 +6,8 @@ import { useAppSelector } from "app/hooks";
 import {
   colorsConfig,
   ComponentConfig,
-  initialState,
   selectClickedLayoutIdx,
   selectColors,
-  setComponentLayoutList,
   setClickedComp,
   selectUserComponentList,
   selectUserComponentLayoutList,
@@ -48,11 +46,13 @@ const SettingLayout = () => {
     DefaultLayoutList[clickedIdx].id === 0 ? setIsCust(true) : setIsCust(false);
   }, [clickedIdx]);
 
-  useEffect(() => {
-    return () => {
-      dispatch(setComponentLayoutList(initialState.componentLayoutList));
-    };
-  });
+  // useEffect(() => {
+  //   return () => {
+  //     dispatch(setComponentLayoutList(initialState.componentLayoutList));
+  //     dispatch(setUserComponentLayoutList(initialState.userComponentLayoutList));
+  //     dispatch(setClickedLayoutIdx(initialState.clickedLayoutIdx));
+  //   };
+  // });
 
   return (
     <div>

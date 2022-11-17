@@ -10,45 +10,14 @@ import LayoutSelector from "features/setting/layout/LayoutSelector";
 import React, { useEffect } from "react";
 import { Layout } from "react-grid-layout";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  ComponentConfig,
-  selectClickedLayoutIdx,
-  selectComponentLayoutList,
-  setUserCheckList,
-  setUserComponentLayoutList,
-  setUserComponentList,
-} from "slices/settingSlice";
+import { selectClickedLayoutIdx } from "slices/settingSlice";
 import styles from "../features/setting/Setting.module.css";
 
 const LayoutSettingPage = () => {
   const dispatch = useDispatch();
   const clickedIdx = useAppSelector(selectClickedLayoutIdx);
   const { githubId, accessToken } = useSelector((state: rootState) => state.auth);
-  const layoutList = useAppSelector(selectComponentLayoutList);
   const DefaultLayoutList = DefaultLayoutStyles();
-
-  const getUserLayout = async () => {
-    await Axios.get(api.setting.getLayout(accessToken, githubId))
-      .then((res: any) => {
-        const response = JSON.parse(res.data.layout);
-        console.log("사용자 레이아웃 조회", response);
-        const userLayout: ComponentConfig[] = [];
-        response.layout.map((it: Layout) => {
-          if (it.i === "블로그 로고") userLayout.push({ key: "블로그 로고", id: "logo" });
-          else if (it.i === "프로필") userLayout.push({ key: "프로필", id: "profile" });
-          else if (it.i === "카테고리") userLayout.push({ key: "카테고리", id: "category" });
-          else if (it.i === "페이지") userLayout.push({ key: "페이지", id: "page" });
-          else if (it.i === "타이틀") userLayout.push({ key: "타이틀", id: "title" });
-          else if (it.i === "글 목록") userLayout.push({ key: "글 목록", id: "contents" });
-        });
-        dispatch(setUserComponentLayoutList(response.layout));
-        dispatch(setUserComponentList(userLayout));
-        dispatch(setUserCheckList(response.checkList));
-      })
-      .catch((err: any) => {
-        console.log("실패@", err);
-      });
-  };
 
   const handleOnSave = () => {
     const layoutJson = {
@@ -76,10 +45,6 @@ const LayoutSettingPage = () => {
         console.log("ㅡㅡ빠꾸", err);
       });
   };
-
-  useEffect(() => {
-    getUserLayout();
-  }, []);
 
   return (
     <>

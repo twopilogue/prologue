@@ -4,11 +4,8 @@ import SwitchButton from "components/SwitchButton";
 import Text from "components/Text";
 import { useDispatch } from "react-redux";
 import {
-  ComponentCheckConfig,
-  selectComponentLayoutList,
   selectUserCheckList,
   selectUserComponentLayoutList,
-  setComponentLayoutList,
   setUserCheckList,
   setUserComponentLayoutList,
 } from "slices/settingSlice";
@@ -18,12 +15,8 @@ import { Layout } from "react-grid-layout";
 const ComponentSelector = () => {
   const dispatch = useDispatch();
   const [unCheckedList, setUncheckedList] = useState<Layout[]>([]);
-  // const componentLayoutList = useAppSelector(selectComponentLayoutList);
   const userComponentLayoutList = useAppSelector(selectUserComponentLayoutList);
   const checkList = useAppSelector(selectUserCheckList);
-
-  // const [beforeLayout, setBeforeLayout] = useState<Layout[]>([]);
-  // const userCheckList = useAppSelector(selectUserCheckList);
 
   return (
     <div className={styles.checkListContainer}>
