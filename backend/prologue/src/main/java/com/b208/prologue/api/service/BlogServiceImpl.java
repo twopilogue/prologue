@@ -86,29 +86,6 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public void createWorkflow(String encodedAccessToken, String githubId) throws Exception {
-        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
-
-        ClassPathResource resource = new ClassPathResource("deploy.yaml");
-        BufferedReader br = new BufferedReader(new InputStreamReader(resource.getInputStream()));
-        StringBuilder sb = new StringBuilder();
-        String nullString = "";
-        while ((nullString = br.readLine()) != null) {
-            sb.append(nullString).append("\n");
-        }
-        String workflow = base64Converter.encode(sb.toString());
-
-        CreateContentRequest createContentRequest = new CreateContentRequest("upload git action workflow", workflow);
-        webClient.put()
-                .uri("/repos/" + githubId + "/" + githubId + ".github.io" + "/contents/.github/workflows/deploy.yaml")
-                .headers(h -> h.setBearerAuth(accessToken))
-                .body(Mono.just(createContentRequest), CreateContentRequest.class)
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToMono(String.class).block();
-    }
-
-    @Override
     public void updateBuildType(String encodedAccessToken, String githubId) throws Exception {
 
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
