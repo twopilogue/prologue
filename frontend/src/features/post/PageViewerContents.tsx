@@ -39,11 +39,13 @@ const PageViewerContents = ({ content }: PageViewerContentsProps) => {
 
       {content && (
         <Editor
+          usageStatistics={false}
           ref={editorRef}
           initialValue={content}
           previewStyle="vertical"
           height="70vh"
           initialEditType="markdown"
+          hideModeSwitch={true}
           plugins={[colorSyntax]}
           onChange={contentChange}
           hooks={{
