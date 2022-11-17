@@ -7,4 +7,5 @@ public interface BlogService {
     void createWorkflow(String encodedAccessToken, String githubId) throws Exception;
     void updateDeployBranch(String encodedAccessToken, String githubId) throws Exception;
     void updateBuildType(String encodedAccessToken, String githubId) throws Exception;
+    void actionWorkflow(String encodedAccessToken, String githubId) throws Exception;
 }
