@@ -13,8 +13,9 @@ import api from "api/Api";
 import Axios from "api/JsonAxios";
 import { authActions } from "slices/authSlice";
 
-const GithubButton = styled(Button)(() => ({
+const GithubButton = styled(ButtonBase)(() => ({
   margin: 3,
+  height: "30px",
   color: "black",
   backgroundColor: "transparent",
   "&:hover": {
@@ -162,8 +163,11 @@ function Header() {
               </Box>
             </>
           ) : (
-            <GithubButton startIcon={<GitHub />} onClick={onLogin}>
-              Login
+            <GithubButton onClick={onLogin}>
+              <Stack direction="row" spacing={1} alignItems="center">
+                <GitHub fontSize="small" />
+                <Text value="Login" type="text" />
+              </Stack>
             </GithubButton>
           )}
         </Stack>
