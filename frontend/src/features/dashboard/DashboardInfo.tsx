@@ -4,14 +4,20 @@ import styles from "features/dashboard/Dashboard.module.css";
 import Text from "components/Text";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import UpdateIcon from "@mui/icons-material/Update";
-import Tooltip from "@mui/material/Tooltip";
+import Tooltip, { TooltipProps } from "@mui/material/Tooltip";
 import { useSelector } from "react-redux";
 import { rootState } from "app/store";
 import api from "api/Api";
 import Axios from "api/JsonAxios";
-import { Stack } from "@mui/material";
+import { Stack, styled } from "@mui/material";
 import axios from "axios";
 import "moment/locale/ko";
+
+const CustomTooltip = styled(({ className, ...props }: TooltipProps) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))({
+  whiteSpace: "pre-line",
+});
 
 function DashboardInfo() {
   const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
@@ -74,9 +80,13 @@ function DashboardInfo() {
             <div className={styles.infoGird_item}>
               <div className={`${styles.infoTitle} ${styles.infoVolume}`}>
                 <Text value="사용량" bold />
-                <Tooltip title="깃허브 블로그는 최대 1GB를 넘을 수 없습니다" placement="top-start" arrow>
+                <CustomTooltip
+                  title={`깃허브 블로그는 최대 1GB를 넘을 수 없습니다.${"\n"}사용량은 마지막 빌드 후 1시간 뒤 갱신됩니다`}
+                  placement="top-end"
+                  arrow
+                >
                   <InfoOutlinedIcon className={styles.icon} fontSize="small" />
-                </Tooltip>
+                </CustomTooltip>
               </div>
               <div className={styles.infoValue}>
                 <span>
