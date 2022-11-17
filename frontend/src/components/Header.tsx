@@ -76,18 +76,19 @@ function Header() {
             <img width="32" height="32" src={Logo} />
             <h1>Prologue</h1>
           </NavLink>
-
-          <Stack direction="row" spacing={3}>
-            <NavLink to="/dashboard" className={styles.link}>
-              대시보드
-            </NavLink>
-            <NavLink to="/post" className={styles.link}>
-              게시글 관리
-            </NavLink>
-            <NavLink to="/setting" className={styles.link}>
-              블로그 설정
-            </NavLink>
-          </Stack>
+          {login && (
+            <Stack direction="row" spacing={3}>
+              <NavLink to="/dashboard" className={styles.link}>
+                대시보드
+              </NavLink>
+              <NavLink to="/post" className={styles.link}>
+                게시글 관리
+              </NavLink>
+              <NavLink to="/setting" className={styles.link}>
+                블로그 설정
+              </NavLink>
+            </Stack>
+          )}
         </Stack>
 
         <Stack direction="row" spacing={2} alignItems="center">
