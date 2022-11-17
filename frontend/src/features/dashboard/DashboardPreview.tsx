@@ -21,7 +21,7 @@ function DashboardPreview() {
         </Link>
         <div className={styles.previewInfo}>
           <div className={styles.flexRow}>
-            <Link href={blogLink} underline="none" color="black">
+            <Link href={blogLink} underline="none" color="black" target="_blank">
               <Text value={`${githubId}.github.io`} bold />
             </Link>
             <IconButton href="/setting">
