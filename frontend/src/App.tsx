@@ -1,5 +1,5 @@
 import React from "react";
-import { Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
 import Header from "components/Header";
 import Landing from "pages/LandingPage";
@@ -12,7 +12,6 @@ import GatsbyLayout from "pages/GatsbyLayoutPage";
 import CustomLayoutPage from "pages/CustomLayoutPage";
 import PageRouterPage from "pages/PageRouterPage";
 import LoginOAuthHandler from "features/landing/LoginOAuthHandler";
-import NotFound from "pages/NotFound";
 import AuthRoute from "./AuthRoute";
 
 function App() {
@@ -51,14 +50,14 @@ function App() {
 
           <Route path="/create" element={<AuthRoute component={<Create />} />} />
           <Route path="/create/reset" element={<AuthRoute component={<BlogReset />} />} />
-          <Route path="/create/custom"  element={<AuthRoute component={<CustomLayoutPage />} />} />
+          <Route path="/create/custom" element={<AuthRoute component={<CustomLayoutPage />} />} />
           <Route path="/create/gatsby" element={<AuthRoute component={<GatsbyLayout />} />} />
           <Route path="/dashboard" element={<AuthRoute component={<Dashboard />} />} />
           <Route path="/setting" element={<AuthRoute component={<SettingPage />} />} />
           <Route path="/post/*" element={<AuthRoute component={<PostRouterPage />} />} />
           <Route path="/page/*" element={<AuthRoute component={<PageRouterPage />} />} />
 
-          <Route path="*" element={<NotFound />} />
+          <Route path="*" element={<Landing />} />
         </Routes>
       </div>
     </div>
