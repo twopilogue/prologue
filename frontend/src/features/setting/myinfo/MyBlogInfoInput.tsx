@@ -115,11 +115,11 @@ const MyBlogInfoInput = ({ myBlogInfo, setMyBlogInfo, setSocialList }: Props) =>
                     value ? (
                       <div className={styles.linkBox} key={index}>
                         <div className={styles.linkBoxSite}>
-                          {/* <img
+                          <img
                             className={styles.socialIcon}
                             src={require(`assets/setting/icons/${key}.png`)}
                             alt="이미지"
-                          /> */}
+                          />
                           <div>{key}</div>
                         </div>
                         <div className={styles.linkBoxLink}>{value}</div>
