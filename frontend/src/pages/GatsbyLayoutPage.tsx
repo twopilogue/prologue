@@ -51,16 +51,16 @@ const LayoutChoicePage = () => {
       });
   };
 
-    const changeBuildType = async () => {
-      await Axios.put(api.blog.changeBuildType(accessToken, githubId))
-        .then(async (res) => {
-          console.log("3. 블로그 빌드타입 변경", res.data);
-          setAuthFile();
-        })
-        .catch((err) => {
-          console.error("3. 블로그 빌드타입 변경", err);
-        });
-    };
+  const changeBuildType = async () => {
+    await Axios.put(api.blog.changeBuildType(accessToken, githubId))
+      .then(async (res) => {
+        console.log("3. 블로그 빌드타입 변경", res.data);
+        setAuthFile();
+      })
+      .catch((err) => {
+        console.error("3. 블로그 빌드타입 변경", err);
+      });
+  };
 
   const setAuthFile = async () => {
     await Axios.put(api.auth.setAuthFile(), {
@@ -140,7 +140,10 @@ const LayoutChoicePage = () => {
       </Stack>
       <Stack direction="column" alignItems="center" spacing={3}>
         <GatsbyLayoutCard setChoiceTheme={setChoiceTheme} />
-        <Button label="Next" onClick={showNextModal} />
+        <Stack direction="row" spacing={3}>
+          <Button label="Back" onClick={() => navigate("/create", { state: { setStepNumber: 1 } })} color="sky" />
+          <Button label="Next" onClick={showNextModal} />
+        </Stack>
       </Stack>
       {nextModalOpen && <BlogDashboardMoveModal />}
       {lodingView && <BlogLoding />}

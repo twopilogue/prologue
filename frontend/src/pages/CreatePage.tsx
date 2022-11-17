@@ -3,7 +3,7 @@ import BlogCreateBox from "features/blog/blogCreate/BlogCreateBox";
 import BlogLayoutSetting from "features/blog/blogCreate/BlogLayoutSetting";
 import BlogStepper from "features/blog/blogCreate/BlogStepper";
 import { Stack } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Axios from "api/JsonAxios";
 import api from "api/Api";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,9 +15,11 @@ import BlogLoding from "features/blog/BlogLoding";
 const CreatePage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { state } = useLocation();
+
   const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
 
-  const [isStepNumber, setStepNumber] = React.useState(0);
+  const [isStepNumber, setStepNumber] = React.useState(state === null ? 0 : state.setStepNumber);
   const [radioValue, setRadioValue] = React.useState("CustomLayout");
   const [lodingView, openLodingView] = React.useState(false);
 
@@ -101,7 +103,7 @@ const CreatePage = () => {
           {isStepNumber === 0 ? (
             <BlogCreateBox onClick={() => setStepNumber(1)} />
           ) : isStepNumber === 1 ? (
-              <BlogLayoutSetting radioValue={radioValue} setValue={setRadioValue} onClick={layoutSetting} />
+            <BlogLayoutSetting radioValue={radioValue} setValue={setRadioValue} onClick={layoutSetting} />
           ) : (
             <BlogCustomInfo />
           )}
