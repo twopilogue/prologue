@@ -52,21 +52,21 @@ const CreatePage = () => {
     await await Axios.put(api.auth.setSecretRepo(accessToken, githubId))
       .then((res) => {
         console.log("2. Repo secrets 생성", res.data);
-        changeBranch();
+        changeBuildType();
       })
       .catch((err) => {
         console.error("2. Repo secrets 생성", err);
       });
   };
 
-  const changeBranch = async () => {
-    await Axios.put(api.blog.changeBranch(accessToken, githubId))
+  const changeBuildType = async () => {
+    await Axios.put(api.blog.changeBuildType(accessToken, githubId))
       .then(async (res) => {
-        console.log("3. 배포 브랜치 변경", res.data);
+        console.log("3. 블로그 빌드타입 변경", res.data);
         setAuthFile();
       })
       .catch((err) => {
-        console.error("3. 배포 브랜치 변경", err);
+        console.error("3. 블로그 빌드타입 변경", err);
       });
   };
 
