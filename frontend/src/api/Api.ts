@@ -20,7 +20,8 @@ interface apiInterface {
     chooseTemplate: () => string;
     getRepoList: (accessToken: string, githubId: string) => string;
     deleteRepo: (accessToken: string, githubId: string) => string;
-    changeBranch: (accessToken: string, githubId: string) => string;
+    // changeBranch: (accessToken: string, githubId: string) => string;
+    changeBuildType: (accessToken: string, githubId: string) => string;
   };
   dashboard: {
     getNewPost: (accessToken: string, githubId: string) => string;
@@ -28,6 +29,7 @@ interface apiInterface {
     getMonthPosts: (accessToken: string, githubId: string) => string;
     getRepoSize: (accessToken: string, githubId: string) => string;
     getTotalPost: (accessToken: string, githubId: string) => string;
+    getBildState: (accessToken: string, githubId: string) => string;
   };
   setting: {
     getCategory: (accessToken: string, githubId: string) => string;
@@ -71,8 +73,10 @@ const api: apiInterface = {
       HOST + BLOG + "list?accessToken=" + accessToken + "&githubId=" + githubId,
     deleteRepo: (accessToken: string, githubId: string) =>
       HOST + BLOG + "repo?accessToken=" + accessToken + "&githubId=" + githubId,
-    changeBranch: (accessToken: string, githubId: string) =>
-      HOST + BLOG + "deploy-branch?accessToken=" + accessToken + "&githubId=" + githubId,
+    // changeBranch: (accessToken: string, githubId: string) =>
+    //   HOST + BLOG + "deploy-branch?accessToken=" + accessToken + "&githubId=" + githubId,
+    changeBuildType: (accessToken: string, githubId: string) =>
+      HOST + BLOG + "build-type?accessToken=" + accessToken + "&githubId=" + githubId,
   },
   dashboard: {
     getNewPost: (accessToken: string, githubId: string) =>
@@ -85,6 +89,8 @@ const api: apiInterface = {
       HOST + DASHBOARD + "size?accessToken=" + accessToken + "&githubId=" + githubId,
     getTotalPost: (accessToken: string, githubId: string) =>
       HOST + DASHBOARD + "total?accessToken=" + accessToken + "&githubId=" + githubId,
+    getBildState: (accessToken: string, githubId: string) =>
+      HOST + DASHBOARD + "build?accessToken=" + accessToken + "&githubId=" + githubId,
   },
   setting: {
     getCategory: (accessToken: string, githubId: string) =>

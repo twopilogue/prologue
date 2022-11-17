@@ -20,7 +20,8 @@ const LandingPage = () => {
       if (authFile) navigate("/dashboard");
       else {
         Axios.get(api.blog.getRepoList(accessToken, githubId)).then((res) => {
-          !res.data.checkRepository && navigate("/create");
+          if (res.data.checkRepository) navigate("create/reset")
+          else navigate("/create");
         });
       }
     }
