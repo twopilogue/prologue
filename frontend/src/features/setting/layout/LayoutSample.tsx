@@ -11,6 +11,8 @@ import {
   selectComponentList,
   setComponentLayoutList,
   selectClickedLayoutIdx,
+  selectComponentLayoutList,
+  setUserComponentLayoutList,
 } from "slices/settingSlice";
 import ComponentSelector from "../layout/ComponentSelector";
 import styles from "../Setting.module.css";
@@ -34,7 +36,6 @@ export const useGettingWidth = () => {
 
 const LayoutSample = () => {
   const dispatch = useDispatch();
-
   const componentList = useAppSelector(selectComponentList);
   const clickedIdx = useAppSelector(selectClickedLayoutIdx);
   const [isCust, setIsCust] = useState<boolean>(false);
@@ -50,7 +51,7 @@ const LayoutSample = () => {
     layouts.map((it: Layout) => {
       tmpLayoutList.push({ i: it.i, x: it.x, y: it.y, w: it.w, h: it.h });
     });
-    dispatch(setComponentLayoutList(tmpLayoutList));
+    dispatch(setUserComponentLayoutList(tmpLayoutList));
   };
 
   useEffect(() => {
@@ -83,8 +84,8 @@ const LayoutSample = () => {
               cols={isCust ? 6 : 5}
               rowHeight={50}
               width={layoutWidth - 20}
-              verticalCompact={isCust}
-              preventCollision={!isCust}
+              verticalCompact={false}
+              preventCollision={true}
               onLayoutChange={handleLayoutChange}
               isDraggable={isCust}
               isResizable={false}
