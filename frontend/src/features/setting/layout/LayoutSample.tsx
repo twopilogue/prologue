@@ -98,6 +98,7 @@ const LayoutSample = () => {
               cols={isCust ? 6 : 5}
               rowHeight={50}
               width={layoutWidth - 20}
+              maxRows={10}
               verticalCompact={false}
               preventCollision={false}
               onLayoutChange={handleLayoutChange}
