@@ -68,6 +68,7 @@ const CategoryPage = () => {
     })
       .then((res: any) => {
         console.log("됨? ", res);
+        alert("저장되었습니다.");
       })
       .catch((err: any) => {
         console.error(err);
