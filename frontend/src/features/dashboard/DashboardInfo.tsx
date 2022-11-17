@@ -25,12 +25,13 @@ function DashboardInfo() {
 
   const [info, setInfo] = useState({
     postNum: totalPost,
-    bildTime: {
+    buildTime: {
       year: moment(buildTime, "YYYYMMDDHHmmss").format("YYYY"),
       day: moment(buildTime, "YYYYMMDDHHmmss").format("MM/DD HH:mm"),
     },
     volume: repoSize,
   });
+  const [timeMatch, setTimeMatch] = useState(false);
 
   useEffect(() => {
     getInfo();
@@ -46,16 +47,31 @@ function DashboardInfo() {
       .then(
         axios.spread((res1, res2, res3) => {
           const value = res1.data.latestBuildTime;
-          const valueMoment = moment(value, "YYYYMMDDHHmmss").format("YYYY/MM/DD HH:mm");
           const now = moment().format("YYYY/MM/DD");
           const bild = moment(value, "YYYYMMDDHHmmss").format("YYYY/MM/DD");
-          const timeLag = moment(valueMoment, "YYYYMMDDHHmmss").fromNow();
-          console.log(value, bild, now, bild === now);
+          const bildTime = moment(value, "YYYYMMDDHHmmss");
+          const nowTime = moment();
+          let timeLag;
+
+          setTimeMatch(bild === now);
+
+          if (timeMatch) {
+            const diffTime = {
+              hour: moment.duration(nowTime.diff(bildTime)).hours(),
+              minute: moment.duration(nowTime.diff(bildTime)).minutes(),
+              second: moment.duration(nowTime.diff(bildTime)).seconds(),
+            };
+            if (diffTime.hour != 0) timeLag = diffTime.hour + "시간 " + diffTime.minute + "분 전";
+            else if (diffTime.minute != 0) timeLag = diffTime.minute + "분 전";
+            else timeLag = diffTime.second + "초 전";
+          }
+
+          // console.log(value, bild, now, bild === now, timeLag);
           setInfo({
             ...info,
-            bildTime: {
-              year: bild === now ? "" : moment(value, "YYYYMMDDHHmmss").format("YYYY"),
-              day: bild === now ? timeLag : moment(value, "YYYYMMDDHHmmss").format("MM/DD HH:mm"),
+            buildTime: {
+              year: timeMatch ? "" : moment(bild).format("YYYY"),
+              day: timeMatch ? timeLag : moment(value, "YYYYMMDDHHmmss").format("MM/DD HH:mm"),
             },
             volume: res2.data.size,
             postNum: res3.data.total,
@@ -98,13 +114,13 @@ function DashboardInfo() {
             <div className={styles.infoGird_item}>
               <div className={`${styles.flexRow} ${styles.infoTitle}`} style={{ justifyContent: "center" }}>
                 <Text value="마지막 빌드 시간" bold />
-                <UpdateIcon className={styles.icon} fontSize="small" onClick={getInfo} />
+                {timeMatch && <UpdateIcon className={styles.icon} fontSize="small" onClick={getInfo} />}
               </div>
               <div className={`${styles.infoValue}`}>
                 <Stack>
-                  <Text value={info.bildTime.year} type="text" bold />
+                  <Text value={info.buildTime.year} type="text" bold />
                   <div>
-                    <Text value={info.bildTime.day} type="pageTitle" bold />
+                    <Text value={info.buildTime.day} type="pageTitle" bold />
                   </div>
                 </Stack>
               </div>
