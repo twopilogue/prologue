@@ -260,6 +260,34 @@ iframe {
   border-radius: 0px 0px 20px 20px;
 }
 
+.valueBox {
+  display: flex;
+  justify-content: none;
+  align-items: none;
+  position: relative;
+}
+
+.valueBox>.leftValue {
+  position: absolute;
+  top: 40%;
+  left: 25%;
+  transform: translate(-25%, -40%);
+}
+
+.middleValue {
+  position: absolute;
+  top: 60%;
+  left: 73%;
+  transform: translate(-60%, -73%);
+}
+
+.valueBox>.rightValue {
+  position: absolute;
+  top: 60%;
+  right: 10%;
+  transform: translate(10%, -60%);
+}
+
 .dateValue {
   display: flex;
   flex-direction: column;

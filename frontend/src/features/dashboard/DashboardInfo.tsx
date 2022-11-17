@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 import { rootState } from "app/store";
 import api from "api/Api";
 import Axios from "api/JsonAxios";
-import { Stack, styled } from "@mui/material";
+import { Box, Stack, styled } from "@mui/material";
 import axios from "axios";
 import "moment/locale/ko";
 
@@ -104,11 +104,19 @@ function DashboardInfo() {
                   <InfoOutlinedIcon className={styles.icon} fontSize="small" />
                 </CustomTooltip>
               </div>
-              <div className={styles.infoValue}>
-                <span>
+              <div className={`${styles.infoValue} ${styles.valueBox}`}>
+                {/* <Box className={styles.valueBox}> */}
+                <Box className={styles.leftValue}>
                   <Text value={info.volume} type="textTitle" bold />
                   <Text value={"MB"} type="caption" bold />
-                </span>
+                </Box>
+                <Box className={styles.middleValue}>
+                  <Text value={"/"} type="textTitle" bold />
+                </Box>
+                <Box className={styles.rightValue}>
+                  <Text value={"1GB"} type="caption" bold />
+                </Box>
+                {/* </Box> */}
               </div>
             </div>
             <div className={styles.infoGird_item}>
