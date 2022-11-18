@@ -4,12 +4,13 @@ import styles from "features/dashboard/Dashboard.module.css";
 import Text from "components/Text";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import UpdateIcon from "@mui/icons-material/Update";
+import SyncAltIcon from "@mui/icons-material/SyncAlt";
 import Tooltip, { TooltipProps } from "@mui/material/Tooltip";
 import { useSelector } from "react-redux";
 import { rootState } from "app/store";
 import api from "api/Api";
 import Axios from "api/JsonAxios";
-import { Box, Stack, styled } from "@mui/material";
+import { Box, IconButton, Stack, styled } from "@mui/material";
 import axios from "axios";
 import "moment/locale/ko";
 
@@ -31,11 +32,13 @@ function DashboardInfo() {
     },
     volume: Number(repoSize),
   });
+  const [timer, setTimer] = useState("");
   const [timeMatch, setTimeMatch] = useState(false);
+  const [timerChange, setTimerChange] = useState(false);
 
   useEffect(() => {
     getInfo();
-  }, []);
+  });
 
   function getInfo() {
     axios
@@ -47,13 +50,10 @@ function DashboardInfo() {
       .then(
         axios.spread((res1, res2, res3) => {
           const value = res1.data.latestBuildTime;
-          const now = moment().format("YYYY/MM/DD");
-          const bild = moment(value, "YYYYMMDDHHmmss").format("YYYY/MM/DD");
           const bildTime = moment(value, "YYYYMMDDHHmmss");
           const nowTime = moment();
-          let timeLag;
 
-          setTimeMatch(bild === now);
+          setTimeMatch(moment.duration(bildTime.diff(nowTime)).asDays() < 1);
 
           if (timeMatch) {
             const diffTime = {
@@ -61,17 +61,18 @@ function DashboardInfo() {
               minute: moment.duration(nowTime.diff(bildTime)).minutes(),
               second: moment.duration(nowTime.diff(bildTime)).seconds(),
             };
-            if (diffTime.hour != 0) timeLag = diffTime.hour + "시간 " + diffTime.minute + "분 전";
-            else if (diffTime.minute != 0) timeLag = diffTime.minute + "분 전";
-            else timeLag = diffTime.second + "초 전";
+            if (diffTime.hour != 0) setTimer(diffTime.hour + "시간 전");
+            else if (diffTime.minute != 0) setTimer(diffTime.minute + "분 전");
+            else setTimer(diffTime.second + "초 전");
           }
 
-          // console.log(value, bild, now, bild === now, timeLag);
           setInfo({
             ...info,
             buildTime: {
-              year: timeMatch ? "" : moment(bild).format("YYYY"),
-              day: timeMatch ? timeLag : moment(value, "YYYYMMDDHHmmss").format("MM/DD HH:mm"),
+              // year: timeMatch ? "" : moment(bildTime).format("YYYY"),
+              // day: timeMatch ? timeLag : moment(value, "YYYYMMDDHHmmss").format("MM/DD HH:mm"),
+              year: moment(bildTime).format("YYYY"),
+              day: moment(value, "YYYYMMDDHHmmss").format("MM/DD HH:mm"),
             },
             volume: res2.data.size,
             postNum: res3.data.total,
@@ -119,13 +120,23 @@ function DashboardInfo() {
                 <Text value="마지막 빌드 시간" bold />
                 {timeMatch && <UpdateIcon className={styles.icon} fontSize="small" onClick={getInfo} />}
               </div>
-              <div className={`${styles.infoValue}`}>
-                <Stack>
-                  <Text value={info.buildTime.year} type="text" bold />
-                  <div>
-                    <Text value={info.buildTime.day} type="textTitle" bold />
-                  </div>
-                </Stack>
+              <div className={`${styles.infoValue} ${styles.valueBox}`}>
+                {timerChange ? (
+                  <Text value={timer} type="textTitle" bold />
+                ) : (
+                  <Stack>
+                    <Text value={info.buildTime.year} type="text" bold />
+                    <div>
+                      <Text value={info.buildTime.day} type="textTitle" bold />
+                    </div>
+                  </Stack>
+                )}
+
+                <span className={`${styles.infoTimer}`}>
+                  <IconButton disableRipple onClick={() => setTimerChange(!timerChange)}>
+                    <SyncAltIcon fontSize="small" />
+                  </IconButton>
+                </span>
               </div>
             </div>
           </div>
