@@ -31,11 +31,11 @@ const CustomTooltip = styled(({ className, ...props }: TooltipProps) => (
 
 const BuildButton = styled(ButtonBase)(() => ({
   backgroundColor: "#9bbcd4",
-  borderRadius: "20px 20px",
-  border: "1.5px solid white",
+  borderRadius: "12px",
+  // border: "1.5px solid white",
   color: "white",
   width: "100%",
-  height: "100%",
+  height: "6.6vh",
   padding: "0px",
   fontSize: "1.25rem",
   fontWeight: 600,
@@ -52,7 +52,7 @@ const BuildButton = styled(ButtonBase)(() => ({
 function CircularProgressWithLabel(props: CircularProgressProps & { value: number }) {
   return (
     <Box sx={{ position: "relative", display: "inline-flex" }}>
-      <CircularProgress variant="determinate" {...props} />
+      <CircularProgress variant="determinate" {...props} sx={{ color: "#324350" }} />
       <Box
         sx={{
           top: 0,
@@ -68,7 +68,7 @@ function CircularProgressWithLabel(props: CircularProgressProps & { value: numbe
           },
         }}
       >
-        <Typography variant="caption" component="div" color="text.secondary">{`${Math.round(
+        <Typography variant="overline" component="div" color="text.secondary" sx={{ fontWeight: "600" }}>{`${Math.round(
           props.value,
         )}%`}</Typography>
       </Box>
@@ -219,7 +219,7 @@ function DashboardInfo(props: { buildState: boolean; setBuildState: (state: bool
               <div className={`${styles.flexRow} ${styles.infoTitle}`} style={{ justifyContent: "center" }}>
                 <Text value="마지막 빌드 시간" bold />
               </div>
-              <div className={`${styles.infoValue} ${styles.valueBox}`}>
+              <div className={`${styles.infoValue} ${styles.valueBox} ${styles.dateBox}`}>
                 {timerChange ? (
                   <Text value={timer} type="textTitle" bold />
                 ) : (
@@ -240,7 +240,7 @@ function DashboardInfo(props: { buildState: boolean; setBuildState: (state: bool
             <div className={styles.infoGird_item}>
               {props.buildState ? (
                 <BuildButton className={styles.buildButton} disabled>
-                  <CircularProgressWithLabel value={progress} />
+                  <CircularProgressWithLabel value={progress} size={36} />
                 </BuildButton>
               ) : (
                 <BuildButton className={styles.buildButton} onClick={ClickAllBuild}>
