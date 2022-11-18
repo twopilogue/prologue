@@ -43,7 +43,12 @@ const PostListCard = ({ title, date, tag, category, description, imgUrl }: PostL
       </div>
 
       <div>
-        <img src={imgUrl} alt="" className={styles.postCardImg} />
+        <img
+          src={imgUrl}
+          alt=""
+          className={styles.postCardImg}
+          onError={(event: any) => (event.target.style.display = "none")}
+        />
       </div>
     </div>
   );

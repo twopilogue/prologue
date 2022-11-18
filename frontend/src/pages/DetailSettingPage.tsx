@@ -106,6 +106,7 @@ const DetailSettingPage = () => {
     await Axios.put(api.setting.modifyDetail(), formData)
       .then((res: any) => {
         console.log("디테일 전송됨? ", res);
+        alert("저장되었습니다.");
       })
       .catch((err: any) => {
         console.log(err);

@@ -29,7 +29,7 @@ const PostWriteTitle = ({ savedTitle, savedDescription, savedCategory, savedTag 
   const [tag, setTag] = useState("");
   const [tagList, setTagList] = useState(savedTag);
 
-  const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
+  const { accessToken, githubId, blogType } = useSelector((state: rootState) => state.auth);
 
   const titleChange = (event: any) => {
     setTitle(event.target.value);
@@ -47,15 +47,17 @@ const PostWriteTitle = ({ savedTitle, savedDescription, savedCategory, savedTag 
   };
 
   const getCategoryList = () => {
-    axios
-      .get(api.setting.getCategory(accessToken, githubId))
-      .then((res) => {
-        console.log(res.data.category);
-        setCategoryList(res.data.category);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (blogType == 0) {
+      axios
+        .get(api.setting.getCategory(accessToken, githubId))
+        .then((res) => {
+          console.log(res.data.category);
+          setCategoryList(res.data.category);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   };
 
   const enterKeyPress = (event: any) => {
@@ -112,8 +114,8 @@ const PostWriteTitle = ({ savedTitle, savedDescription, savedCategory, savedTag 
       </div>
       {/* <Text value="설명은 필수 입력값입니다." type="caption" color="red" /> */}
       <br /> <br /> <br />
-      <Text value="카테고리" type="text" />
-      <div style={{ width: "15vw" }}>
+      <div className={blogType == 0 ? `${styles.showSelectBox}` : `${styles.hideSelectBox}`} style={{ width: "15vw" }}>
+        <Text value="카테고리" type="text" />
         <Select value={category} onChange={categoryChange} displayEmpty inputProps={{ "aria-label": "Without label" }}>
           <MenuItem value="">카테고리</MenuItem>
           {categoryList.map((value, key) => (

@@ -1,26 +1,122 @@
 import { useAppSelector } from "app/hooks";
-import React from "react";
+import React, { useState } from "react";
 import { Layout } from "react-grid-layout";
-import { ComponentCheckConfig, selectUserCheckList, selectUserComponentLayoutList } from "slices/settingSlice";
+import {
+  ComponentCheckConfig,
+  ComponentConfig,
+  selectUserCheckList,
+  selectUserComponentLayoutList,
+  selectUserComponentList,
+} from "slices/settingSlice";
 
 export interface defaultLayoutConfig {
   id: number;
   layout: Layout[];
+  components: ComponentConfig[];
   checkList: ComponentCheckConfig;
   struct?: string;
 }
 
+interface layoutObjectConfig {
+  a: Layout[];
+  b: Layout[];
+  c: Layout[];
+}
+
+export const sortJSON = (data: any) => {
+  return data.sort(function (a: any, b: any) {
+    const x = a["y"];
+    const y = b["y"];
+    return x < y ? -1 : x > y ? 1 : 0;
+  });
+};
+
 const DefaultLayoutStyles = () => {
   const custLayout = useAppSelector(selectUserComponentLayoutList);
+  const custList = useAppSelector(selectUserComponentList);
   const custCheckList = useAppSelector(selectUserCheckList);
+  // const [passComponents, setPassComponent] = useState("");
+
+  const sortLayout = () => {
+    const layoutObject: layoutObjectConfig = {
+      a: [],
+      b: [],
+      c: [],
+    };
+    for (let i = 0; i < custLayout.length; i++) {
+      switch (custLayout[i].x) {
+        case 0:
+          layoutObject.a.push(custLayout[i]);
+          break;
+        case 1:
+          layoutObject.b.push(custLayout[i]);
+          break;
+        default:
+          layoutObject.c.push(custLayout[i]);
+      }
+    }
+    console.log("분류됨", layoutObject);
+    const sortedLayoutObject: any = new Object();
+    sortedLayoutObject.a = sortJSON(layoutObject.a);
+    sortedLayoutObject.b = sortJSON(layoutObject.b);
+    sortedLayoutObject.c = sortJSON(layoutObject.c);
+    console.log("분류+정렬됨", sortedLayoutObject);
+    return sortedLayoutObject;
+  };
+
+  const createDiv = () => {
+    const divRowString = `<div className="display-row">`;
+    const divColString = `<div className="display-column">`;
+    const divClose = `</div>`;
+    let tmpPassComponents = divRowString;
+
+    const sortedLayoutObject = sortLayout();
+
+    for (const idx in sortedLayoutObject) {
+      if (sortedLayoutObject[idx].length != 0) {
+        console.log(sortedLayoutObject[idx]);
+
+        tmpPassComponents += divColString;
+        for (let i = 0; i < sortedLayoutObject[idx].length; i++) {
+          console.log(sortedLayoutObject[idx][i].i);
+          switch (sortedLayoutObject[idx][i].i) {
+            case "블로그 로고":
+              tmpPassComponents += "<Logo/>";
+              break;
+            case "프로필":
+              tmpPassComponents += "<Profile/>";
+              break;
+            case "카테고리":
+              tmpPassComponents += "<Category/>";
+              break;
+            case "페이지":
+              tmpPassComponents += "<Header/>";
+              break;
+            case "타이틀":
+              tmpPassComponents += "<Title/>";
+              break;
+            case "글 목록":
+              tmpPassComponents += "<Contents/>";
+              break;
+          }
+        }
+        tmpPassComponents += divClose; // col div close
+      }
+    }
+    tmpPassComponents += divClose; // row div close
+
+    console.log(tmpPassComponents);
+    return tmpPassComponents;
+  };
 
   const DefaultLayoutList: defaultLayoutConfig[] = [
     {
       // 사용자 설정 테마
       id: 0,
       layout: custLayout,
+      components: custList,
       checkList: custCheckList,
-      struct: "",
+      struct: createDiv(),
     },
     {
       id: 1,
@@ -29,6 +125,12 @@ const DefaultLayoutStyles = () => {
         { i: "타이틀", x: 0, y: 1, w: 5, h: 3, static: true },
         { i: "카테고리", x: 0, y: 4, w: 1, h: 4 },
         { i: "글 목록", x: 1, y: 4, w: 4, h: 4, static: true },
+      ],
+      components: [
+        { key: "블로그 로고", id: "logo" },
+        { key: "타이틀", id: "title" },
+        { key: "카테고리", id: "category" },
+        { key: "글 목록", id: "contents" },
       ],
       checkList: {
         logo: true,
@@ -60,6 +162,12 @@ const DefaultLayoutStyles = () => {
         { i: "카테고리", x: 4, y: 4, w: 1, h: 4 },
         { i: "글 목록", x: 0, y: 4, w: 4, h: 4, static: true },
       ],
+      components: [
+        { key: "블로그 로고", id: "logo" },
+        { key: "타이틀", id: "title" },
+        { key: "카테고리", id: "category" },
+        { key: "글 목록", id: "contents" },
+      ],
       checkList: {
         logo: true,
         category: true,
@@ -68,6 +176,7 @@ const DefaultLayoutStyles = () => {
         profile: false,
         page: false,
       },
+
       struct: `<div className='display-row'>
         <Logo />
         <Header />
@@ -89,6 +198,12 @@ const DefaultLayoutStyles = () => {
         { i: "카테고리", x: 0, y: 1, w: 1, h: 7 },
         { i: "타이틀", x: 1, y: 1, w: 4, h: 3, static: true },
         { i: "글 목록", x: 1, y: 4, w: 4, h: 4, static: true },
+      ],
+      components: [
+        { key: "블로그 로고", id: "logo" },
+        { key: "카테고리", id: "category" },
+        { key: "타이틀", id: "title" },
+        { key: "글 목록", id: "contents" },
       ],
       checkList: {
         logo: true,
@@ -120,6 +235,12 @@ const DefaultLayoutStyles = () => {
         { i: "타이틀", x: 0, y: 1, w: 4, h: 3, static: true },
         { i: "글 목록", x: 0, y: 4, w: 4, h: 4, static: true },
       ],
+      components: [
+        { key: "블로그 로고", id: "logo" },
+        { key: "카테고리", id: "category" },
+        { key: "타이틀", id: "title" },
+        { key: "글 목록", id: "contents" },
+      ],
       checkList: {
         logo: true,
         category: true,
@@ -149,6 +270,13 @@ const DefaultLayoutStyles = () => {
         { i: "카테고리", x: 0, y: 3, w: 1, h: 5 },
         { i: "타이틀", x: 1, y: 1, w: 4, h: 3, static: true },
         { i: "글 목록", x: 1, y: 4, w: 4, h: 4, static: true },
+      ],
+      components: [
+        { key: "블로그 로고", id: "logo" },
+        { key: "프로필", id: "profile" },
+        { key: "카테고리", id: "category" },
+        { key: "타이틀", id: "title" },
+        { key: "글 목록", id: "contents" },
       ],
       checkList: {
         logo: true,
@@ -183,6 +311,13 @@ const DefaultLayoutStyles = () => {
         { i: "카테고리", x: 4, y: 3, w: 1, h: 5 },
         { i: "타이틀", x: 0, y: 1, w: 4, h: 3, static: true },
         { i: "글 목록", x: 0, y: 4, w: 4, h: 4, static: true },
+      ],
+      components: [
+        { key: "블로그 로고", id: "logo" },
+        { key: "프로필", id: "profile" },
+        { key: "카테고리", id: "category" },
+        { key: "타이틀", id: "title" },
+        { key: "글 목록", id: "contents" },
       ],
       checkList: {
         logo: true,
