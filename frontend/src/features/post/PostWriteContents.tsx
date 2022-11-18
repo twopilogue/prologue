@@ -34,11 +34,13 @@ const PostWriteContents = () => {
       <div style={{ marginTop: "1%" }}></div>
 
       <Editor
+        usageStatistics={false}
         ref={editorRef}
         initialValue=""
         previewStyle="vertical"
         height="70vh"
         initialEditType="markdown"
+        hideModeSwitch={true}
         plugins={[colorSyntax]}
         onChange={contentChange}
         hooks={{

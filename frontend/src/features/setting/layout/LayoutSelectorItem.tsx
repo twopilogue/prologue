@@ -12,6 +12,7 @@ interface Props {
 
 const LayoutSelectorItem = ({ index, layoutList, setLayoutList }: Props) => {
   const dispatch = useDispatch();
+
   const handleClicked = (i: number) => {
     setLayoutList(
       layoutList.map((it: layoutsConfig) => {
@@ -23,7 +24,7 @@ const LayoutSelectorItem = ({ index, layoutList, setLayoutList }: Props) => {
 
   return (
     <div className={styles.layoutItem} onClick={() => handleClicked(index)}>
-      {layoutList[index - 1].isClicked ? (
+      {layoutList[index].isClicked ? (
         <div className={styles.layoutItemClicked}>
           <img src={require(`assets/setting/layouts/layout_clicked(${index}).png`)} width={110} height={110} />
         </div>

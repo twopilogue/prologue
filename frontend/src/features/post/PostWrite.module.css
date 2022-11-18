@@ -31,6 +31,13 @@
   padding: 1%;
 }
 
+.showSelectBox {
+}
+
+.hideSelectBox {
+  display: none;
+}
+
 /* PostWriteContents */
 .postWriteContents {
   position: absolute;

@@ -89,6 +89,10 @@ interface LayoutConfig {
   componentLayoutList: Layout[];
   componentList: ComponentConfig[];
 
+  userComponentLayoutList: Layout[];
+  userComponentList: ComponentConfig[];
+  userCheckList: ComponentCheckConfig;
+
   checkList: ComponentCheckConfig;
 
   blogSettingInfo: blogInfoConfig;
@@ -118,6 +122,17 @@ export const initialState: LayoutConfig = {
     { key: "타이틀", id: "title" },
     { key: "글 목록", id: "contents" },
   ],
+
+  userComponentLayoutList: [],
+  userComponentList: [],
+  userCheckList: {
+    logo: true,
+    profile: true,
+    category: true,
+    page: true,
+    title: true,
+    contents: true,
+  },
 
   checkList: {
     logo: true,
@@ -170,7 +185,7 @@ export const initialState: LayoutConfig = {
   },
 
   clickedComp: "logo",
-  clickedLayoutIdx: 1,
+  clickedLayoutIdx: 0,
 };
 
 const settingSlice = createSlice({
@@ -207,6 +222,18 @@ const settingSlice = createSlice({
       state.componentList = payload;
     },
 
+    setUserComponentLayoutList: (state, { payload }) => {
+      state.userComponentLayoutList = payload;
+    },
+
+    setUserComponentList: (state, { payload }) => {
+      state.userComponentList = payload;
+    },
+
+    setUserCheckList: (state, { payload }) => {
+      state.userCheckList = payload;
+    },
+
     setCheckList: (state, { payload: { logo, category, profile, page, title, contents } }) => {
       state.checkList = { logo, category, profile, page, title, contents };
     },
@@ -233,6 +260,9 @@ export const {
   setPageDeleList,
   setComponentList,
   setComponentLayoutList,
+  setUserComponentLayoutList,
+  setUserComponentList,
+  setUserCheckList,
   setCheckList,
   setBlogSettingInfo,
   setColors,
@@ -251,6 +281,10 @@ export const selectPageDeleList = (state: rootState) => state.setting.pageDeleLi
 
 export const selectComponentLayoutList = (state: rootState) => state.setting.componentLayoutList;
 export const selectComponentList = (state: rootState) => state.setting.componentList;
+
+export const selectUserComponentLayoutList = (state: rootState) => state.setting.userComponentLayoutList;
+export const selectUserComponentList = (state: rootState) => state.setting.userComponentList;
+export const selectUserCheckList = (state: rootState) => state.setting.userCheckList;
 
 export const selectCheckList = (state: rootState) => state.setting.checkList;
 
