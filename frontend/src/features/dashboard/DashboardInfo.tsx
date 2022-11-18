@@ -9,7 +9,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { rootState } from "app/store";
 import api from "api/Api";
 import Axios from "api/JsonAxios";
-import { Box, ButtonBase, CircularProgress, IconButton, Stack, styled } from "@mui/material";
+import {
+  Box,
+  ButtonBase,
+  CircularProgress,
+  CircularProgressProps,
+  IconButton,
+  Stack,
+  styled,
+  Typography,
+} from "@mui/material";
 import axios from "axios";
 import "moment/locale/ko";
 import { dashboardActions } from "slices/dashboardSlice";
@@ -40,6 +49,33 @@ const BuildButton = styled(ButtonBase)(() => ({
   },
 }));
 
+function CircularProgressWithLabel(props: CircularProgressProps & { value: number }) {
+  return (
+    <Box sx={{ position: "relative", display: "inline-flex" }}>
+      <CircularProgress variant="determinate" {...props} />
+      <Box
+        sx={{
+          top: 0,
+          left: 0,
+          bottom: 0,
+          right: 0,
+          position: "absolute",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          "&.MuiCircularProgress-colorSecondary": {
+            color: "secondary",
+          },
+        }}
+      >
+        <Typography variant="caption" component="div" color="text.secondary">{`${Math.round(
+          props.value,
+        )}%`}</Typography>
+      </Box>
+    </Box>
+  );
+}
+
 function DashboardInfo(props: { buildState: boolean; setBuildState: (state: boolean) => void }) {
   const dispatch = useDispatch();
 
@@ -52,13 +88,32 @@ function DashboardInfo(props: { buildState: boolean; setBuildState: (state: bool
     day: buildTime ? moment(buildTime, "YYYYMMDDHHmmss").format("MM/DD HH:mm") : "",
   });
   const [timerChange, setTimerChange] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    getInfo();
+    getBlogInfo();
     getNewBuildTime();
   }, [timerChange]);
 
-  async function getInfo() {
+  const nowTime = moment();
+  const bildTimes = moment(buildTime, "YYYYMMDDHHmmss");
+  const minute = moment.duration(nowTime.diff(bildTimes)).minutes();
+  const second = moment.duration(nowTime.diff(bildTimes)).seconds();
+
+  useEffect(() => {
+    const Percentage = setInterval(() => {
+      if (progress < 100) {
+        setProgress(((minute * 60 + second) / 200) * 100);
+        setTimer(minute === 0 ? second + "초 전" : minute + "분 전");
+      } else if (progress >= 100) {
+        clearInterval(Percentage);
+        props.setBuildState(false);
+      }
+    }, 1000);
+    return () => clearInterval(Percentage);
+  }, [progress]);
+
+  async function getBlogInfo() {
     await axios
       .all([
         Axios.get(api.dashboard.getTotalPost(accessToken, githubId)),
@@ -98,7 +153,7 @@ function DashboardInfo(props: { buildState: boolean; setBuildState: (state: bool
         if (diffTime.day != 0) setTimer(diffTime.day + "일 전");
         else if (diffTime.hour != 0) setTimer(diffTime.hour + "시간 전");
         else if (diffTime.minute != 0) setTimer(diffTime.minute + "분 전");
-        else setTimer(diffTime.second + "0분 전");
+        else setTimer(diffTime.second + "초 전");
 
         setnewBuildTime({
           year: moment(value, "YYYYMMDDHHmmss").format("YYYY"),
@@ -111,13 +166,14 @@ function DashboardInfo(props: { buildState: boolean; setBuildState: (state: bool
   }
 
   function ClickAllBuild() {
+    setProgress(0);
     triggerStart();
+    setTimerChange(false);
   }
 
   async function triggerStart() {
     await Axios.put(api.blog.triggerStart(accessToken, githubId))
       .then((res) => {
-        console.log("빌드-배포 트리거 실행", res.data);
         props.setBuildState(true);
       })
       .catch((err) => {
@@ -184,7 +240,7 @@ function DashboardInfo(props: { buildState: boolean; setBuildState: (state: bool
             <div className={styles.infoGird_item}>
               {props.buildState ? (
                 <BuildButton className={styles.buildButton} disabled>
-                  <CircularProgress sx={{ color: "white" }} />
+                  <CircularProgressWithLabel value={progress} />
                 </BuildButton>
               ) : (
                 <BuildButton className={styles.buildButton} onClick={ClickAllBuild}>
