@@ -99,6 +99,10 @@ function DashboardInfo() {
       );
   }
 
+  function ClickAllBuild() {
+    console.log("API 연결");
+  }
+
   return (
     <div className={`${styles.container} ${styles.info}`}>
       <div className={styles.infoOne}>
@@ -151,14 +155,14 @@ function DashboardInfo() {
                 )}
                 <span className={`${styles.infoTimer}`}>
                   <IconButton disableRipple onClick={() => setTimerChange(!timerChange)}>
-                    <SyncAltIcon fontSize="small" />
+                    <SyncAltIcon sx={{ fontSize: "1rem" }} />
                   </IconButton>
                 </span>
               </div>
             </div>
             <div className={styles.infoGird_item}>
-              <BuildButton className={styles.buildButton}>
-                {buildButtonState ? "All Build" : <CircularProgress />}
+              <BuildButton className={styles.buildButton} onClick={ClickAllBuild}>
+                {buildButtonState ? <CircularProgress /> : "All Build"}
               </BuildButton>
             </div>
           </div>

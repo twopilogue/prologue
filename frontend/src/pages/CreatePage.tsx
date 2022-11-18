@@ -51,7 +51,7 @@ const CreatePage = () => {
   };
 
   const setSecretRepo = async () => {
-    await await Axios.put(api.auth.setSecretRepo(accessToken, githubId))
+    await Axios.put(api.auth.setSecretRepo(accessToken, githubId))
       .then((res) => {
         console.log("2. Repo secrets 생성", res.data);
         changeBuildType();
