@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 import { rootState } from "app/store";
 import api from "api/Api";
 import Axios from "api/JsonAxios";
-import { Box, IconButton, Stack, styled } from "@mui/material";
+import { Box, ButtonBase, CircularProgress, IconButton, Stack, styled } from "@mui/material";
 import axios from "axios";
 import "moment/locale/ko";
 
@@ -19,6 +19,23 @@ const CustomTooltip = styled(({ className, ...props }: TooltipProps) => (
 ))({
   whiteSpace: "pre-line",
 });
+
+const BuildButton = styled(ButtonBase)(() => ({
+  backgroundColor: "#9bbcd4",
+  borderRadius: "20px 20px",
+  border: "1.5px solid white",
+  color: "white",
+  width: "100%",
+  height: "100%",
+  padding: "0px",
+  fontSize: "1.25rem",
+  fontWeight: 600,
+  fontFamily: "Pretendard-Regular",
+  transition: "all 0.1s",
+  "&:hover": {
+    backgroundColor: "#8ba8bd",
+  },
+}));
 
 function DashboardInfo() {
   const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
@@ -35,6 +52,7 @@ function DashboardInfo() {
   const [timer, setTimer] = useState("");
   const [timeMatch, setTimeMatch] = useState(false);
   const [timerChange, setTimerChange] = useState(false);
+  const [buildButtonState, setBuildButtonState] = useState(false);
 
   useEffect(() => {
     getInfo();
@@ -118,7 +136,7 @@ function DashboardInfo() {
             <div className={styles.infoGird_item}>
               <div className={`${styles.flexRow} ${styles.infoTitle}`} style={{ justifyContent: "center" }}>
                 <Text value="마지막 빌드 시간" bold />
-                {timeMatch && <UpdateIcon className={styles.icon} fontSize="small" onClick={getInfo} />}
+                {/* {timeMatch && <UpdateIcon className={styles.icon} fontSize="small" onClick={getInfo} />} */}
               </div>
               <div className={`${styles.infoValue} ${styles.valueBox}`}>
                 {timerChange ? (
@@ -131,13 +149,17 @@ function DashboardInfo() {
                     </div>
                   </Stack>
                 )}
-
                 <span className={`${styles.infoTimer}`}>
                   <IconButton disableRipple onClick={() => setTimerChange(!timerChange)}>
                     <SyncAltIcon fontSize="small" />
                   </IconButton>
                 </span>
               </div>
+            </div>
+            <div className={styles.infoGird_item}>
+              <BuildButton className={styles.buildButton}>
+                {buildButtonState ? "All Build" : <CircularProgress />}
+              </BuildButton>
             </div>
           </div>
         </div>
