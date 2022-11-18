@@ -98,8 +98,19 @@ function DashboardInfo() {
   }
 
   function ClickAllBuild() {
-    console.log("API 연결");
-    setBuildButtonState(!buildButtonState);
+    triggerStart();
+    setBuildButtonState(true);
+  }
+
+  async function triggerStart() {
+    await Axios.put(api.blog.triggerStart(accessToken, githubId))
+      .then((res) => {
+        console.log("빌드-배포 트리거 실행", res.data);
+        setBuildButtonState(false);
+      })
+      .catch((err) => {
+        console.error("빌드-배포 트리거 실행", err);
+      });
   }
 
   return (
