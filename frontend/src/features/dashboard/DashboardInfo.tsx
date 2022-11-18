@@ -29,7 +29,7 @@ function DashboardInfo() {
       year: moment(buildTime, "YYYYMMDDHHmmss").format("YYYY"),
       day: moment(buildTime, "YYYYMMDDHHmmss").format("MM/DD HH:mm"),
     },
-    volume: repoSize,
+    volume: Number(repoSize),
   });
   const [timeMatch, setTimeMatch] = useState(false);
 
@@ -97,7 +97,7 @@ function DashboardInfo() {
               <div className={`${styles.infoTitle} ${styles.infoVolume}`}>
                 <Text value="사용량" bold />
                 <CustomTooltip
-                  title={`깃허브 블로그는 최대 1GB를 넘을 수 없습니다.${"\n"}사용량은 마지막 빌드 후 1시간 뒤 갱신됩니다`}
+                  title={`깃허브 블로그는 기본 1GB까지 제공합니다.${"\n"}사용량은 마지막 빌드 후 1시간 뒤 갱신됩니다`}
                   placement="top-end"
                   arrow
                 >
@@ -105,18 +105,13 @@ function DashboardInfo() {
                 </CustomTooltip>
               </div>
               <div className={`${styles.infoValue} ${styles.valueBox}`}>
-                {/* <Box className={styles.valueBox}> */}
-                <Box className={styles.leftValue}>
-                  <Text value={info.volume} type="textTitle" bold />
+                <Box>
+                  <Text value={String(info.volume)} type="textTitle" bold />
                   <Text value={"MB"} type="caption" bold />
                 </Box>
-                <Box className={styles.middleValue}>
-                  <Text value={"/"} type="textTitle" bold />
+                <Box className={`${styles.infoAmount}`} sx={info.volume >= 900 ? { color: "red" } : {}}>
+                  <span>남은사용량 : {1000 - info.volume}MB</span>
                 </Box>
-                <Box className={styles.rightValue}>
-                  <Text value={"1GB"} type="caption" bold />
-                </Box>
-                {/* </Box> */}
               </div>
             </div>
             <div className={styles.infoGird_item}>
