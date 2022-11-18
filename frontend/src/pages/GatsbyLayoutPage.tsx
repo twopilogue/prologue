@@ -70,7 +70,8 @@ const LayoutChoicePage = () => {
     })
       .then((res) => {
         console.log("4. 블로그 인증 파일 생성", res.data);
-        getDashboardInfo();
+        navigate("/create", { state: { setStepNumber: 2 } });
+        // getDashboardInfo();
         // openLodingView(false);
         // setNextModalOpen(true);
       })
@@ -145,7 +146,7 @@ const LayoutChoicePage = () => {
           <Button label="Next" onClick={showNextModal} />
         </Stack>
       </Stack>
-      {nextModalOpen && <BlogDashboardMoveModal />}
+      {/* {nextModalOpen && <BlogDashboardMoveModal />} */}
       {lodingView && <BlogLoding />}
     </Box>
   );
