@@ -6,13 +6,11 @@ import { useAppSelector } from "app/hooks";
 import {
   colorsConfig,
   ComponentConfig,
-  initialState,
   selectClickedLayoutIdx,
   selectColors,
-  selectComponentLayoutList,
-  setComponentLayoutList,
-  selectComponentList,
   setClickedComp,
+  selectUserComponentList,
+  selectUserComponentLayoutList,
 } from "slices/settingSlice";
 import { useGettingWidth } from "../layout/LayoutSample";
 import Text from "components/Text";
@@ -20,10 +18,9 @@ import { useDispatch } from "react-redux";
 import DefaultLayoutStyles from "../layout/DefaultLayoutStyles";
 
 // 세부 레이아웃 설정 컴포넌트
-
 const SettingLayout = () => {
-  const componentList = useAppSelector(selectComponentList);
-  const layoutList = useAppSelector(selectComponentLayoutList);
+  const componentList = useAppSelector(selectUserComponentList);
+  const layoutList = useAppSelector(selectUserComponentLayoutList);
   const [isCust, setIsCust] = useState<boolean>(false);
   const clickedIdx = useAppSelector(selectClickedLayoutIdx);
   const [layoutWidth, layoutContainer] = useGettingWidth();
@@ -46,14 +43,16 @@ const SettingLayout = () => {
   };
 
   useEffect(() => {
-    DefaultLayoutList[clickedIdx - 1].id === 7 ? setIsCust(true) : setIsCust(false);
+    DefaultLayoutList[clickedIdx].id === 0 ? setIsCust(true) : setIsCust(false);
   }, [clickedIdx]);
 
-  useEffect(() => {
-    return () => {
-      dispatch(setComponentLayoutList(initialState.componentLayoutList));
-    };
-  });
+  // useEffect(() => {
+  //   return () => {
+  //     dispatch(setComponentLayoutList(initialState.componentLayoutList));
+  //     dispatch(setUserComponentLayoutList(initialState.userComponentLayoutList));
+  //     dispatch(setClickedLayoutIdx(initialState.clickedLayoutIdx));
+  //   };
+  // });
 
   return (
     <div>
@@ -69,7 +68,7 @@ const SettingLayout = () => {
       >
         <GridLayout
           layout={layoutList}
-          cols={5}
+          cols={6}
           rowHeight={50}
           width={layoutWidth - 20}
           verticalCompact={isCust}
@@ -79,7 +78,7 @@ const SettingLayout = () => {
         >
           {componentList.map((item: ComponentConfig) => {
             {
-              return DefaultLayoutList[clickedIdx - 1].checkList[item.id] ? (
+              return DefaultLayoutList[clickedIdx].checkList[item.id] ? (
                 <div
                   className={styles.layout_nonColored}
                   style={styleInfo[item.id]}

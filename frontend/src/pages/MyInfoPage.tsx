@@ -7,10 +7,17 @@ import axios from "axios";
 import api from "api/Api";
 import { useDispatch, useSelector } from "react-redux";
 import { rootState } from "app/store";
-import { blogInfoConfig, colorsConfig, setBlogSettingInfo, setColors } from "slices/settingSlice";
+import {
+  blogInfoConfig,
+  ComponentConfig,
+  setBlogSettingInfo,
+  setUserCheckList,
+  setUserComponentLayoutList,
+  setUserComponentList,
+} from "slices/settingSlice";
 import ButtonStyled from "components/Button";
-import { toJSON } from "cssjson";
 import Axios from "api/JsonAxios";
+import { Layout } from "react-grid-layout";
 
 export interface myInfoProps {
   nickName: string;
@@ -66,57 +73,26 @@ const MyInfoPage = () => {
       });
   };
 
-  const getDetailSetting = async () => {
-    await Axios.get(api.setting.getDetail(accessToken, githubId))
-      .then((res) => {
-        if (res.data.css === "\n") {
-          console.log("설정 없음");
-        } else {
-          const removedResult = res.data.css.replaceAll(".", "").replaceAll(" ", "");
-          const result = toJSON(removedResult);
-          console.log(result);
-
-          console.log("카테고리 변환 결과: ", result.children.category.attributes);
-          console.log("프로필 반환 결과: ", result.children.profile.attributes);
-
-          dispatch(
-            setColors({
-              title: {
-                background: result.children.title.attributes["background-color"],
-                text: result.children.titleh3.attributes["color"],
-                // titleHeight:
-                type: res.data.titleColor, // 색이면 true, 이미지면 false
-                titleText: res.data.titleText,
-              },
-              category: {
-                background: result.children.category.attributes["background-color"],
-                text: result.children.categorya.attributes["color"],
-              },
-              page: {
-                background: result.children["page-container"].attributes["background-color"],
-                text: result.children.pagea.attributes["color"],
-                sort: result.children["page-container"].attributes["justify-content"],
-              },
-              profile: {
-                background: result.children.profile.attributes["background-color"],
-                text: result.children.profile.attributes["color"],
-              },
-              contents: {
-                background: result.children["post-list-container"].attributes["background-color"],
-                text: result.children["post-list-container"].attributes["color"],
-              },
-              logo: {
-                background: "#d3d3eb",
-                text: "#ffffff",
-                logoText: res.data.logoText,
-              },
-            }),
-          );
-        }
-        console.log("DURL?");
+  const getUserLayout = async () => {
+    await Axios.get(api.setting.getLayout(accessToken, githubId))
+      .then((res: any) => {
+        const response = JSON.parse(res.data.layout);
+        console.log("사용자 레이아웃 조회", response);
+        const userLayout: ComponentConfig[] = [];
+        response.layout.map((it: Layout) => {
+          if (it.i === "블로그 로고") userLayout.push({ key: "블로그 로고", id: "logo" });
+          else if (it.i === "프로필") userLayout.push({ key: "프로필", id: "profile" });
+          else if (it.i === "카테고리") userLayout.push({ key: "카테고리", id: "category" });
+          else if (it.i === "페이지") userLayout.push({ key: "페이지", id: "page" });
+          else if (it.i === "타이틀") userLayout.push({ key: "타이틀", id: "title" });
+          else if (it.i === "글 목록") userLayout.push({ key: "글 목록", id: "contents" });
+        });
+        dispatch(setUserComponentLayoutList(response.layout));
+        dispatch(setUserComponentList(userLayout));
+        dispatch(setUserCheckList(response.checkList));
       })
-      .catch((err) => {
-        console.error(err);
+      .catch((err: any) => {
+        console.log("실패@", err);
       });
   };
 
@@ -147,6 +123,7 @@ const MyInfoPage = () => {
       })
       .then((res: any) => {
         console.log("됨?", res);
+        alert("저장되었습니다.");
       })
       .catch((err: any) => {
         console.log(err);
@@ -158,7 +135,7 @@ const MyInfoPage = () => {
   }, []);
 
   useEffect(() => {
-    getDetailSetting();
+    getUserLayout();
   }, []);
 
   return (

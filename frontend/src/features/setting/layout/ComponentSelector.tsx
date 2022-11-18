@@ -1,18 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "../Setting.module.css";
 import SwitchButton from "components/SwitchButton";
 import Text from "components/Text";
 import { useDispatch } from "react-redux";
-import { selectCheckList, selectComponentLayoutList, setCheckList, setComponentLayoutList } from "slices/settingSlice";
+import {
+  selectUserCheckList,
+  selectUserComponentLayoutList,
+  setUserCheckList,
+  setUserComponentLayoutList,
+} from "slices/settingSlice";
 import { useAppSelector } from "app/hooks";
 import { Layout } from "react-grid-layout";
-import DefaultLayoutStyles from "./DefaultLayoutStyles";
 
 const ComponentSelector = () => {
-  const checkList = useAppSelector(selectCheckList);
-  const layoutList = useAppSelector(selectComponentLayoutList);
-  const orginLayouts = DefaultLayoutStyles();
   const dispatch = useDispatch();
+  const [unCheckedList, setUncheckedList] = useState<Layout[]>([]);
+  const userComponentLayoutList = useAppSelector(selectUserComponentLayoutList);
+  const checkList = useAppSelector(selectUserCheckList);
 
   return (
     <div className={styles.checkListContainer}>
@@ -26,12 +30,21 @@ const ComponentSelector = () => {
             name="logo"
             checked={checkList.logo}
             onChange={() => {
-              dispatch(setCheckList({ ...checkList, logo: !checkList.logo }));
-              layoutList.map((it: Layout) => {
-                if (it.i === "블로그 로고") {
-                  dispatch(setComponentLayoutList({ ...layoutList }));
-                }
-              });
+              dispatch(setUserCheckList({ ...checkList, logo: !checkList.logo }));
+              if (checkList.logo) {
+                userComponentLayoutList.map((it) => {
+                  return it.i === "블로그 로고" ? unCheckedList.push(it) : null;
+                });
+              } else if (!checkList.logo) {
+                const logo = unCheckedList.filter((it) => {
+                  return it.i === "블로그 로고" ? true : false;
+                });
+                const tmpLayoutList: Layout[] = [];
+                tmpLayoutList.push(...userComponentLayoutList, logo[0]);
+                dispatch(setUserComponentLayoutList(tmpLayoutList));
+                setUncheckedList(unCheckedList.filter((it) => it.i !== "블로그 로고"));
+                console.log(unCheckedList);
+              }
             }}
           />
         </div>
@@ -41,7 +54,21 @@ const ComponentSelector = () => {
             name="profile"
             checked={checkList.profile}
             onChange={() => {
-              dispatch(setCheckList({ ...checkList, profile: !checkList.profile }));
+              dispatch(setUserCheckList({ ...checkList, profile: !checkList.profile }));
+              if (checkList.profile) {
+                userComponentLayoutList.map((it) => {
+                  return it.i === "프로필" ? unCheckedList.push(it) : null;
+                });
+              } else if (!checkList.profile) {
+                const profile = unCheckedList.filter((it) => {
+                  return it.i === "프로필" ? true : false;
+                });
+                const tmpLayoutList: Layout[] = [];
+                tmpLayoutList.push(...userComponentLayoutList, profile[0]);
+                dispatch(setUserComponentLayoutList(tmpLayoutList));
+                setUncheckedList(unCheckedList.filter((it) => it.i !== "프로필"));
+                console.log(unCheckedList);
+              }
             }}
           />
         </div>
@@ -51,7 +78,21 @@ const ComponentSelector = () => {
             name="category"
             checked={checkList.category}
             onChange={() => {
-              dispatch(setCheckList({ ...checkList, category: !checkList.category }));
+              dispatch(setUserCheckList({ ...checkList, category: !checkList.category }));
+              if (checkList.category) {
+                userComponentLayoutList.map((it) => {
+                  return it.i === "카테고리" ? unCheckedList.push(it) : null;
+                });
+              } else if (!checkList.category) {
+                const category = unCheckedList.filter((it) => {
+                  return it.i === "카테고리" ? true : false;
+                });
+                const tmpLayoutList: Layout[] = [];
+                tmpLayoutList.push(...userComponentLayoutList, category[0]);
+                dispatch(setUserComponentLayoutList(tmpLayoutList));
+                setUncheckedList(unCheckedList.filter((it) => it.i !== "카테고리"));
+                console.log(unCheckedList);
+              }
             }}
           />
         </div>
@@ -60,8 +101,23 @@ const ComponentSelector = () => {
             label="페이지"
             name="page"
             checked={checkList.page}
+            disabled
             onChange={() => {
-              dispatch(setCheckList({ ...checkList, page: !checkList.page }));
+              dispatch(setUserCheckList({ ...checkList, page: !checkList.page }));
+              if (checkList.page) {
+                userComponentLayoutList.map((it) => {
+                  return it.i === "페이지" ? unCheckedList.push(it) : null;
+                });
+              } else if (!checkList.page) {
+                const page = unCheckedList.filter((it) => {
+                  return it.i === "페이지" ? true : false;
+                });
+                const tmpLayoutList: Layout[] = [];
+                tmpLayoutList.push(...userComponentLayoutList, page[0]);
+                dispatch(setUserComponentLayoutList(tmpLayoutList));
+                setUncheckedList(unCheckedList.filter((it) => it.i !== "페이지"));
+                console.log(unCheckedList);
+              }
             }}
           />
         </div>
@@ -77,7 +133,7 @@ const ComponentSelector = () => {
             name="naviCheck"
             checked={props.checkList.naviCheck}
             onChange={() => {
-              props.setCheckList({
+              props.setUserCheckList({
                 ...props.checkList,
                 naviCheck: !props.checkList.naviCheck,
               });

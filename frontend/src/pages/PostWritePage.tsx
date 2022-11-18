@@ -65,9 +65,9 @@ const PostWritePage = () => {
       description +
       "\ncategory: " +
       category +
-      "\ntags: " +
+      "\ntags: [" +
       tagList +
-      "\ndate: " +
+      "]\ndate: " +
       new Date().toISOString() +
       "\n---\n";
 

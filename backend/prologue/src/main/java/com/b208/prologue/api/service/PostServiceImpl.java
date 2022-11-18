@@ -208,27 +208,40 @@ public class PostServiceImpl implements PostService {
     public void insertDetailPost(String encodedAccessToken, String githubId, int blogType, String content, List<ImageResponse> images, List<MultipartFile> files) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
         String commit = "add: 새게시글 작성";
-
+        String featuredImage = "/assets/post-image.png";
         List<TreeRequest> treeRequestList = new ArrayList<>();
 
         Long nowDate = System.currentTimeMillis();
         Timestamp timeStamp = new Timestamp(nowDate);
         String directory = String.valueOf(timeStamp.getTime());
         String path = "content/blog/" + directory;
+        String encodedContent;
+
+        if (files != null && !files.isEmpty()) {
+            for (int i = 0; i < files.size(); i++) {
+                MultipartFile file = files.get(i);
+                String imageName = file.getOriginalFilename().replace(' ','_');
+                encodedContent = commonService.makeBlob(accessToken, githubId, new String(Base64.encodeBase64(file.getBytes())));
+                treeRequestList.add(new TreeRequest(path + "/" + imageName, "100644", "blob", encodedContent));
+                featuredImage = "./"+imageName;
+            }
+        }
 
         if (images != null && !images.isEmpty()) {
             content = replaceImageUrlWithPath(content, images);
         }
-
         if(blogType==1){
             int index = content.indexOf("-");
             StringBuilder sb = new StringBuilder();
             sb.append("---\n");
             sb.append("template: blog-post\n");
             sb.append("templateKey: blog-post\n");
-            sb.append("slug: /").append(directory).append("\n");
-            sb.append("featuredImage: ../src/images/post-image.png\n");
-            sb.append("image: ../src/images/post-image.png\n");
+            sb.append("slug: /blog/").append(directory).append("\n");
+            sb.append("featuredImage: ").append(featuredImage).append("\n");
+            sb.append("featuredimage: ").append(featuredImage).append("\n");
+            if(!featuredImage.equals("/assets/post-image.png")) {
+                sb.append("selectedImage: ").append(featuredImage).append("\n");
+            }
             sb.append("author: ").append(githubId).append("\n");
             sb.append("featured: false\n");
             sb.append("featuredpost: false\n");
@@ -236,19 +249,9 @@ public class PostServiceImpl implements PostService {
 
             content=sb.toString();
         }
-
-        String encodedContent = commonService.makeBlob(accessToken, githubId, base64Converter.encode(content));
-
+        encodedContent = commonService.makeBlob(accessToken, githubId, base64Converter.encode(content));
         treeRequestList.add(new TreeRequest(path + "/index.md", "100644", "blob", encodedContent));
 
-        if (files != null && !files.isEmpty()) {
-            for (int i = 0; i < files.size(); i++) {
-                MultipartFile file = files.get(i);
-                String image = new String(Base64.encodeBase64(file.getBytes()));
-                encodedContent = commonService.makeBlob(accessToken, githubId, image);
-                treeRequestList.add(new TreeRequest(path + "/" + file.getOriginalFilename().replace(' ','_'), "100644", "blob", encodedContent));
-            }
-        }
         commonService.multiFileCommit(accessToken, githubId, treeRequestList, commit);
     }
 
@@ -256,6 +259,7 @@ public class PostServiceImpl implements PostService {
     public void updateDetailPost(String encodedAccessToken, String githubId, int blogType, String path, String content, List<MultipartFile> files, List<ImageResponse> images) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
         String commit = "modify: 게시글 수정";
+        String featuredImage = "/assets/post-image.png";
 
         List<TreeRequest> treeRequestList = new ArrayList<>();
 
@@ -264,6 +268,7 @@ public class PostServiceImpl implements PostService {
                 String imageName = image.getName().replace(' ','_');
                 if (content.contains(image.getUrl())) {
                     content = content.replace(image.getUrl(), "./" + imageName);
+                    featuredImage = "./"+imageName;
                 } else {
                     treeRequestList.add(new TreeRequest(path + "/" + imageName, "100644", "blob", null));
                 }
@@ -276,9 +281,12 @@ public class PostServiceImpl implements PostService {
             sb.append("---\n");
             sb.append("template: blog-post\n");
             sb.append("templateKey: blog-post\n");
-            sb.append("slug: /").append(path.substring(path.lastIndexOf("/")+1)).append("\n");
-            sb.append("featuredImage: ../src/images/post-image.png\n");
-            sb.append("image: ../src/images/post-image.png\n");
+            sb.append("slug: /blog/").append(path.substring(path.lastIndexOf("/")+1)).append("\n");
+            sb.append("featuredImage: ").append(featuredImage).append("\n");
+            sb.append("featuredimage: ").append(featuredImage).append("\n");
+            if(!featuredImage.equals("/assets/post-image.png")) {
+                sb.append("selectedImage: ").append(featuredImage).append("\n");
+            }
             sb.append("author: ").append(githubId).append("\n");
             sb.append("featured: false\n");
             sb.append("featuredpost: false\n");
@@ -286,7 +294,6 @@ public class PostServiceImpl implements PostService {
 
             content=sb.toString();
         }
-
         content = commonService.makeBlob(accessToken, githubId, base64Converter.encode(content));
         treeRequestList.add(new TreeRequest(path + "/index.md", "100644", "blob", content));
 
