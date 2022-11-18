@@ -222,9 +222,9 @@ iframe {
   gap: 12px;
 }
 
-.infoGird_item:nth-child(3) {
-  grid-column-start: 1;
-  grid-column-end: 3;
+.infoGird_item:nth-child(4) {
+  /* grid-column-start: 1;
+  grid-column-end: 3; */
 }
 
 .infoTitle {
@@ -242,7 +242,7 @@ iframe {
 }
 
 .infoVolume>.icon {
-  padding: 0px 6px 0px 22px;
+  padding: 0px 6px 0px 23px;
   font-size: 1rem;
 }
 
@@ -258,6 +258,30 @@ iframe {
   background: #FFFFFF;
   height: 13.5vh;
   border-radius: 0px 0px 20px 20px;
+}
+
+.valueBox {
+  display: flex;
+  position: relative;
+}
+
+.infoAmount {
+  display: flex;
+  position: absolute;
+  bottom: 5%;
+  right: 10%;
+  transform: translate(-5%, -10%);
+  color: gray;
+  font-size: 0.5rem;
+}
+
+.infoTimer {
+  display: flex;
+  position: absolute;
+  top: 0%;
+  right: 3%;
+  transform: translate(-3%, 0%);
+  font-size: 0.5rem;
 }
 
 .dateValue {
