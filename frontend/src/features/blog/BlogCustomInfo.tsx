@@ -60,12 +60,23 @@ function BlogCustomInfo() {
     await Axios.put(api.setting.modifyBlog(), formData)
       .then((res) => {
         console.log("블로그 정보 데이터 보내기", res.data);
-        getDashboardInfo();
+        triggerStart();
       })
       .catch((err) => {
         console.error("블로그 정보 데이터 보내기", err);
       });
   };
+
+  async function triggerStart() {
+    await Axios.put(api.blog.triggerStart(accessToken, githubId))
+      .then((res) => {
+        console.log("빌드-배포 트리거 실행", res.data);
+        getDashboardInfo();
+      })
+      .catch((err) => {
+        console.error("빌드-배포 트리거 실행", err);
+      });
+  }
 
   function getDashboardInfo() {
     getMonthPosts();
@@ -90,7 +101,6 @@ function BlogCustomInfo() {
           newPosts: res.data.currentPosts,
         }),
       );
-
     });
   }
 
