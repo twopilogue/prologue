@@ -5,12 +5,11 @@ import GridLayout from "react-grid-layout";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
-  ComponentCheckConfig,
   ComponentConfig,
-  selectCheckList,
-  selectComponentList,
-  setComponentLayoutList,
   selectClickedLayoutIdx,
+  setUserComponentLayoutList,
+  selectUserComponentList,
+  selectUserComponentLayoutList,
 } from "slices/settingSlice";
 import ComponentSelector from "../layout/ComponentSelector";
 import styles from "../Setting.module.css";
@@ -34,9 +33,9 @@ export const useGettingWidth = () => {
 
 const LayoutSample = () => {
   const dispatch = useDispatch();
-
-  const componentList = useAppSelector(selectComponentList);
+  const componentList = useAppSelector(selectUserComponentList);
   const clickedIdx = useAppSelector(selectClickedLayoutIdx);
+  const custLayout = useAppSelector(selectUserComponentLayoutList);
   const [isCust, setIsCust] = useState<boolean>(false);
   const [layoutWidth, layoutContainer] = useGettingWidth();
   const DefaultLayoutList = DefaultLayoutStyles();
@@ -45,17 +44,33 @@ const LayoutSample = () => {
     return DefaultLayoutList[clickedIdx].layout;
   };
 
+  const getComponents = () => {
+    return DefaultLayoutList[clickedIdx].components;
+  };
+
   const handleLayoutChange = (layouts: any) => {
-    const tmpLayoutList: Layout[] = [];
-    layouts.map((it: Layout) => {
-      tmpLayoutList.push({ i: it.i, x: it.x, y: it.y, w: it.w, h: it.h });
-    });
-    dispatch(setComponentLayoutList(tmpLayoutList));
+    if (clickedIdx === 0) {
+      const tmpLayoutList: Layout[] = [];
+      layouts.map((it: Layout) => {
+        it.static
+          ? tmpLayoutList.push({ i: it.i, x: it.x, y: it.y, w: it.w, h: it.h, static: true })
+          : tmpLayoutList.push({ i: it.i, x: it.x, y: it.y, w: it.w, h: it.h });
+      });
+      dispatch(setUserComponentLayoutList(tmpLayoutList));
+    }
   };
 
   useEffect(() => {
     clickedIdx === 0 ? setIsCust(true) : setIsCust(false);
   }, [clickedIdx]);
+
+  // useEffect(() => {
+  //   return () => {
+  //     dispatch(setUserComponentLayoutList(initialState.userComponentLayoutList));
+  //     dispatch(setUserComponentList(initialState.userComponentList));
+  //     dispatch(setUserCheckList(initialState.userCheckList));
+  //   };
+  // });
 
   return (
     <div>
@@ -83,13 +98,14 @@ const LayoutSample = () => {
               cols={isCust ? 6 : 5}
               rowHeight={50}
               width={layoutWidth - 20}
-              verticalCompact={isCust}
-              preventCollision={!isCust}
+              maxRows={10}
+              verticalCompact={false}
+              preventCollision={false}
               onLayoutChange={handleLayoutChange}
               isDraggable={isCust}
               isResizable={false}
             >
-              {componentList.map((item: ComponentConfig, i: number) => {
+              {getComponents().map((item: ComponentConfig, i: number) => {
                 {
                   return DefaultLayoutList[clickedIdx].checkList[item.id] ? (
                     <div className={styles.layout_colored} key={item.key}>
