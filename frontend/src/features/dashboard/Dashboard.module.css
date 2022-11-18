@@ -1,5 +1,5 @@
 .container {
-  border-radius: 30px;
+  border-radius: 25px;
   width: 100%;
   height: 100%;
   display: flex;
@@ -210,27 +210,32 @@ iframe {
 }
 
 .info>div {
-  width: 90%;
-  height: 90%;
+  width: 91%;
+  height: 91%;
 }
 
 .infoGrid {
   display: grid;
   /* grid-template-columns: 1fr 1fr; */
   grid-template-columns: repeat(auto-fit, minmax(45%, auto));
-  grid-template-rows: 1fr 1fr;
-  gap: 12px;
+  grid-template-rows: 1fr 0.5fr 0.5fr;
+  gap: 11px;
+}
+
+.infoGird_item:nth-child(3) {
+  grid-column-start: 1;
+  grid-column-end: 3;
 }
 
 .infoGird_item:nth-child(4) {
-  /* grid-column-start: 1;
-  grid-column-end: 3; */
+  grid-column-start: 1;
+  grid-column-end: 3;
 }
 
 .infoTitle {
   white-space: pre-line;
   background: #F1F8FF;
-  border-radius: 20px 20px 0px 0px;
+  border-radius: 15px 15px 0px 0px;
   padding: 10px;
 }
 
@@ -250,14 +255,13 @@ iframe {
   cursor: pointer;
 }
 
-
 .infoValue {
   display: flex;
   justify-content: center;
   align-items: center;
   background: #FFFFFF;
-  height: 13.5vh;
-  border-radius: 0px 0px 20px 20px;
+  height: 10.7vh;
+  border-radius: 0px 0px 15px 15px;
 }
 
 .valueBox {
@@ -284,15 +288,28 @@ iframe {
   font-size: 0.5rem;
 }
 
-.dateValue {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  flex-wrap: wrap;
-  background: #FFFFFF;
-  height: 100%;
-  border-radius: 0px 0px 20px 20px;
+.dateBox {
+  height: 8.7vh;
 }
+
+.buildButton {
+  background-color: "#9bbcd4";
+  border-radius: "20px 20px";
+  border: "1.5px solid white";
+  color: "white";
+  width: "100%";
+  height: "100%";
+  padding: "0px";
+  font-size: "1.25rem";
+  font-weight: 600;
+  font-family: "Pretendard-Regular";
+  transition: "all 0.1s";
+}
+
+.buildButton:hover {
+  background-color: "#8ba8bd";
+}
+
 
 /* 페이지 이동 */
 .menuBox {
