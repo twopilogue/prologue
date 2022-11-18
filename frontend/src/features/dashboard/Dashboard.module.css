@@ -262,30 +262,17 @@ iframe {
 
 .valueBox {
   display: flex;
-  justify-content: none;
-  align-items: none;
   position: relative;
 }
 
-.valueBox>.leftValue {
+.infoAmount {
+  display: flex;
   position: absolute;
-  top: 40%;
-  left: 25%;
-  transform: translate(-25%, -40%);
-}
-
-.middleValue {
-  position: absolute;
-  top: 60%;
-  left: 73%;
-  transform: translate(-60%, -73%);
-}
-
-.valueBox>.rightValue {
-  position: absolute;
-  top: 60%;
+  bottom: 5%;
   right: 10%;
-  transform: translate(10%, -60%);
+  transform: translate(-5%, -10%);
+  color: gray;
+  font-size: 0.5rem;
 }
 
 .dateValue {
