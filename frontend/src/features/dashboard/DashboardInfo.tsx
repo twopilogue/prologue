@@ -56,7 +56,7 @@ function DashboardInfo() {
 
   useEffect(() => {
     getInfo();
-  });
+  }, []);
 
   function getInfo() {
     axios
@@ -73,16 +73,14 @@ function DashboardInfo() {
 
           setTimeMatch(moment.duration(bildTime.diff(nowTime)).asDays() < 1);
 
-          if (timeMatch) {
-            const diffTime = {
-              hour: moment.duration(nowTime.diff(bildTime)).hours(),
-              minute: moment.duration(nowTime.diff(bildTime)).minutes(),
-              second: moment.duration(nowTime.diff(bildTime)).seconds(),
-            };
-            if (diffTime.hour != 0) setTimer(diffTime.hour + "시간 전");
-            else if (diffTime.minute != 0) setTimer(diffTime.minute + "분 전");
-            else setTimer(diffTime.second + "초 전");
-          }
+          const diffTime = {
+            hour: moment.duration(nowTime.diff(bildTime)).hours(),
+            minute: moment.duration(nowTime.diff(bildTime)).minutes(),
+            second: moment.duration(nowTime.diff(bildTime)).seconds(),
+          };
+          if (diffTime.hour != 0) setTimer(diffTime.hour + "시간 전");
+          else if (diffTime.minute != 0) setTimer(diffTime.minute + "분 전");
+          else setTimer(diffTime.second + "초 전");
 
           setInfo({
             ...info,
@@ -97,6 +95,11 @@ function DashboardInfo() {
           });
         }),
       );
+  }
+
+  function ClickAllBuild() {
+    console.log("API 연결");
+    setBuildButtonState(!buildButtonState);
   }
 
   return (
@@ -151,14 +154,14 @@ function DashboardInfo() {
                 )}
                 <span className={`${styles.infoTimer}`}>
                   <IconButton disableRipple onClick={() => setTimerChange(!timerChange)}>
-                    <SyncAltIcon fontSize="small" />
+                    <SyncAltIcon sx={{ fontSize: "1rem" }} />
                   </IconButton>
                 </span>
               </div>
             </div>
             <div className={styles.infoGird_item}>
-              <BuildButton className={styles.buildButton}>
-                {buildButtonState ? "All Build" : <CircularProgress />}
+              <BuildButton className={styles.buildButton} onClick={ClickAllBuild}>
+                {buildButtonState ? <CircularProgress /> : "All Build"}
               </BuildButton>
             </div>
           </div>
