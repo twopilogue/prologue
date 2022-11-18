@@ -14,6 +14,7 @@ import BlogLoding from "features/blog/BlogLoding";
 import { useDispatch } from "react-redux";
 import { dashboardActions } from "slices/dashboardSlice";
 import axios from "axios";
+import moment from "moment";
 
 function BlogCustomInfo() {
   const dispatch = useDispatch();
@@ -82,6 +83,7 @@ function BlogCustomInfo() {
     getMonthPosts();
     getNewPost();
     getBlogInfo();
+    getNewBuildTime();
   }
 
   async function getMonthPosts() {
@@ -104,26 +106,35 @@ function BlogCustomInfo() {
     });
   }
 
-  function getBlogInfo() {
-    axios
+  async function getBlogInfo() {
+    await axios
       .all([
-        Axios.get(api.dashboard.getNewBuildTime(accessToken, githubId)),
-        Axios.get(api.dashboard.getRepoSize(accessToken, githubId)),
         Axios.get(api.dashboard.getTotalPost(accessToken, githubId)),
+        Axios.get(api.dashboard.getRepoSize(accessToken, githubId)),
       ])
       .then(
-        axios.spread((res1, res2, res3) => {
+        axios.spread((res1, res2) => {
           dispatch(
             dashboardActions.blogInfo({
-              totalPost: res3.data.total,
+              totalPost: res1.data.total,
               repoSize: res2.data.size,
-              buildTime: res1.data.latestBuildTime,
             }),
           );
           openLodingView(false);
           openSuccessModal(true);
         }),
       );
+  }
+
+  async function getNewBuildTime() {
+    await Axios.get(api.dashboard.getNewBuildTime(accessToken, githubId)).then((res) => {
+      const value = res.data.latestBuildTime;
+      dispatch(
+        dashboardActions.buildTime({
+          buildTime: moment(value, "YYYYMMDDHHmmss").format("YYYY MM/DD HH:mm"),
+        }),
+      );
+    });
   }
 
   const profileOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
