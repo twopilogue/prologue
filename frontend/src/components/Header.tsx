@@ -36,7 +36,7 @@ function Header() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { login, githubId, githubImage } = useSelector((state: rootState) => state.auth);
+  const { login, authFile, githubId, githubImage } = useSelector((state: rootState) => state.auth);
   const [menuOpen, setMenuOpen] = useState(false);
 
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
@@ -76,7 +76,7 @@ function Header() {
             <img width="32" height="32" src={Logo} />
             <h1>Prologue</h1>
           </NavLink>
-          {login && (
+          {login && authFile && (
             <Stack direction="row" spacing={3}>
               <NavLink to="/dashboard" className={styles.link}>
                 대시보드
