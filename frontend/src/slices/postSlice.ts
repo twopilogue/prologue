@@ -29,6 +29,7 @@ interface postConfig {
 
   postList: postListConfig[];
   postCount: number;
+  currentPage: number;
 
   editList: editListConfig;
 }
@@ -44,6 +45,7 @@ const initialState: postConfig = {
 
   postList: [],
   postCount: 0,
+  currentPage: 1,
 
   editList: {
     title: "",
@@ -87,6 +89,9 @@ const postSlice = createSlice({
     setPostCount: (state, { payload }) => {
       state.postCount = payload;
     },
+    setPostCurrentPage: (state, { payload }) => {
+      state.currentPage = payload;
+    },
     setPostEditList: (state, { payload }) => {
       state.editList = payload;
     },
@@ -103,6 +108,7 @@ export const {
   setPostFiles,
   setPostList,
   setPostCount,
+  setPostCurrentPage,
   setPostEditList,
 } = postSlice.actions;
 
@@ -115,6 +121,7 @@ export const selectPostFileList = (state: rootState) => state.posts.fileList;
 export const selectPostFiles = (state: rootState) => state.posts.files;
 export const selectPostList = (state: rootState) => state.posts.postList;
 export const selectPostCount = (state: rootState) => state.posts.postCount;
+export const selectPostCurrentPage = (state: rootState) => state.posts.currentPage;
 export const selectPostEditList = (state: rootState) => state.posts.editList;
 
 export default postSlice.reducer;
