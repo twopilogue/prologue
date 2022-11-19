@@ -8,7 +8,15 @@ import PostListCard from "./PostListCard";
 import PostListImgCard from "./PostListImgCard";
 import { Stack } from "@mui/system";
 import { useAppDispatch, useAppSelector } from "app/hooks";
-import { postListConfig, selectPostList, setPostCount, setPostEditList, setPostList } from "slices/postSlice";
+import {
+  postListConfig,
+  selectPostCount,
+  selectPostCurrentPage,
+  selectPostList,
+  setPostCurrentPage,
+  setPostEditList,
+  setPostList,
+} from "slices/postSlice";
 import { useNavigate } from "react-router-dom";
 import Axios from "api/JsonAxios";
 import { useSelector } from "react-redux";
@@ -20,29 +28,20 @@ const PostList = () => {
   const navigate = useNavigate();
 
   const [sort, setSort] = useState("");
-  const [postCardList, setPostCardList] = useState<postListConfig[]>(useAppSelector(selectPostList));
-  const [list, setList] = useState([]);
+  const [itemCnt, setItemCnt] = useState(6);
 
   const postList = useAppSelector(selectPostList);
+  const postCount = useAppSelector(selectPostCount);
+  const currentPage = useAppSelector(selectPostCurrentPage);
 
   const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
-
-  const scrollBox = useRef(null);
-  const [scrollY, setScrollY] = useState(0);
-  const [scrollActive, setScrollActive] = useState(false);
-
-  let numberOfPages = 0;
-  let currentPage = 0;
 
   const getPostList = async (page: number) => {
     const tmpList: postListConfig[] = [];
 
-    // let numberOfPages = 0;
-    // let currentPage = 0;
-
     await Axios.get(api.posts.getPostList(accessToken, githubId, page))
       .then((res) => {
-        console.log(res);
+        console.log("ㅍㅔ이지  : ", res);
         for (let i = 0; i < res.data.result.Post.length; i++) {
           const post: postListConfig = {
             title: res.data.result.Post[i].title,
@@ -54,21 +53,9 @@ const PostList = () => {
             imgUrl: res.data.result.Post[i].imgUrl,
           };
           tmpList.push(post);
-          console.log("저장할라 하는 post", post);
-          console.log("tmpList : ", tmpList);
         }
-
-        if (res.data.result.PostCount % 6 == 0) {
-          numberOfPages = Math.floor(res.data.result.PostCount / 6);
-        } else if (Math.floor(res.data.result.PostCount / 6) == 0) {
-          numberOfPages = 0;
-        } else {
-          numberOfPages = Math.floor(res.data.result.PostCount / 6) + 1;
-        }
-        dispatch(setPostList([...tmpList]));
-        dispatch(setPostCount(res.data.result.PostCount));
-
-        // handleScroll();
+        dispatch(setPostList([...postList, ...tmpList]));
+        dispatch(setPostCurrentPage(currentPage + 1));
       })
       .catch((err) => {
         console.log(err);
@@ -78,60 +65,6 @@ const PostList = () => {
   const handleChange = (event: SelectChangeEvent) => {
     setSort(event.target.value);
   };
-
-  const logit = () => {
-    setScrollY(scrollBox.current.scrollTop);
-    if (scrollBox.current.scrollTop > 30) {
-      setScrollActive(true);
-      // handleScroll();
-    } else {
-      setScrollActive(false);
-    }
-
-    if (scrollBox.current.scrollTop + scrollBox.current.innerHeight >= document.body.offsetHeight) {
-      handleScroll();
-    }
-  };
-
-  const handleScroll = () => {
-    if (numberOfPages > currentPage) {
-      console.log("페이지 끝");
-      console.log("numberOfPages : ", numberOfPages);
-      console.log("currentPage : ", currentPage);
-      if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
-        console.log("스크롤 하단");
-        // setTimeout(() => {
-        currentPage += 1;
-        getPostList(currentPage);
-        // }, 100);
-      }
-    }
-  };
-
-  useEffect(() => {
-    getPostList(0);
-    console.log("1페이지");
-    console.log("list : ", list);
-    // getPostList(1);
-  }, []);
-
-  // useEffect(() => {
-  //   console.log("postList : ", postList);
-  // }, []);
-
-  useEffect(() => {
-    scrollBox.current;
-  });
-
-  useEffect(() => {
-    const watchScroll = () => {
-      scrollBox.current.addEventListener("scroll", logit);
-    };
-    watchScroll();
-    return () => {
-      scrollBox.current.removeEventListener("scroll", logit);
-    };
-  });
 
   return (
     <div className={styles.postList}>
@@ -148,7 +81,7 @@ const PostList = () => {
         </Stack>
       </div>
 
-      <div className={styles.postDataList} ref={scrollBox}>
+      <div className={styles.postDataList}>
         {postList.map((value, key) => (
           <div
             key={key}
@@ -174,6 +107,19 @@ const PostList = () => {
             />
           </div>
         ))}
+        {postCount >= itemCnt && (
+          <div
+            className={styles.moreListBtn}
+            onClick={() => {
+              getPostList(currentPage);
+              setItemCnt(itemCnt + 6);
+              console.log("postList : ", postList);
+              console.log("page : ", currentPage);
+            }}
+          >
+            글 목록 더 보기
+          </div>
+        )}
       </div>
 
       {/* <PostListImgCard /> */}
