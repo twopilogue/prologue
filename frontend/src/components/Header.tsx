@@ -13,8 +13,9 @@ import api from "api/Api";
 import Axios from "api/JsonAxios";
 import { authActions } from "slices/authSlice";
 
-const GithubButton = styled(Button)(() => ({
+const GithubButton = styled(ButtonBase)(() => ({
   margin: 3,
+  height: "30px",
   color: "black",
   backgroundColor: "transparent",
   "&:hover": {
@@ -35,7 +36,7 @@ function Header() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { login, githubId, githubImage } = useSelector((state: rootState) => state.auth);
+  const { login, authFile, githubId, githubImage } = useSelector((state: rootState) => state.auth);
   const [menuOpen, setMenuOpen] = useState(false);
 
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
@@ -75,18 +76,19 @@ function Header() {
             <img width="32" height="32" src={Logo} />
             <h1>Prologue</h1>
           </NavLink>
-
-          <Stack direction="row" spacing={3}>
-            <NavLink to="/dashboard" className={styles.link}>
-              대시보드
-            </NavLink>
-            <NavLink to="/post" className={styles.link}>
-              게시글 관리
-            </NavLink>
-            <NavLink to="/setting" className={styles.link}>
-              블로그 설정
-            </NavLink>
-          </Stack>
+          {login && authFile && (
+            <Stack direction="row" spacing={3}>
+              <NavLink to="/dashboard" className={styles.link}>
+                대시보드
+              </NavLink>
+              <NavLink to="/post" className={styles.link}>
+                게시글 관리
+              </NavLink>
+              <NavLink to="/setting" className={styles.link}>
+                블로그 설정
+              </NavLink>
+            </Stack>
+          )}
         </Stack>
 
         <Stack direction="row" spacing={2} alignItems="center">
@@ -162,8 +164,11 @@ function Header() {
               </Box>
             </>
           ) : (
-            <GithubButton startIcon={<GitHub />} onClick={onLogin}>
-              Login
+            <GithubButton onClick={onLogin}>
+              <Stack direction="row" spacing={1} alignItems="center">
+                <GitHub fontSize="small" />
+                <Text value="Login" type="text" />
+              </Stack>
             </GithubButton>
           )}
         </Stack>

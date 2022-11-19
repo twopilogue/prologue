@@ -74,10 +74,10 @@ const PostWriteContents = () => {
 
             console.log("redux fileList : ", fileList);
             fileList.push(newFile);
-            dispatch(setPostFileList([...fileList, newFile]));
+            dispatch(setPostFileList([...fileList]));
 
             files.push(blob);
-            dispatch(setPostFiles([...files, blob]));
+            dispatch(setPostFiles([...files]));
 
             callback(imageUrl);
             return false;
