@@ -12,7 +12,7 @@ import {
   selectUserComponentList,
   selectUserComponentLayoutList,
 } from "slices/settingSlice";
-import { useGettingWidth } from "../layout/LayoutSample";
+import { useGettingWidth } from "../layout/LayoutContainer";
 import Text from "components/Text";
 import { useDispatch } from "react-redux";
 import DefaultLayoutStyles from "../layout/DefaultLayoutStyles";

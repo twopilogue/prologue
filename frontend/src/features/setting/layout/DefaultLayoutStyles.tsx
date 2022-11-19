@@ -1,5 +1,4 @@
 import { useAppSelector } from "app/hooks";
-import React, { useState } from "react";
 import { Layout } from "react-grid-layout";
 import {
   ComponentCheckConfig,
@@ -55,12 +54,10 @@ const DefaultLayoutStyles = () => {
           layoutObject.c.push(custLayout[i]);
       }
     }
-    console.log("분류됨", layoutObject);
     const sortedLayoutObject: any = new Object();
     sortedLayoutObject.a = sortJSON(layoutObject.a);
     sortedLayoutObject.b = sortJSON(layoutObject.b);
     sortedLayoutObject.c = sortJSON(layoutObject.c);
-    console.log("분류+정렬됨", sortedLayoutObject);
     return sortedLayoutObject;
   };
 
@@ -74,11 +71,8 @@ const DefaultLayoutStyles = () => {
 
     for (const idx in sortedLayoutObject) {
       if (sortedLayoutObject[idx].length != 0) {
-        console.log(sortedLayoutObject[idx]);
-
         tmpPassComponents += divColString;
         for (let i = 0; i < sortedLayoutObject[idx].length; i++) {
-          console.log(sortedLayoutObject[idx][i].i);
           switch (sortedLayoutObject[idx][i].i) {
             case "블로그 로고":
               tmpPassComponents += "<Logo/>";
@@ -105,7 +99,6 @@ const DefaultLayoutStyles = () => {
     }
     tmpPassComponents += divClose; // row div close
 
-    console.log(tmpPassComponents);
     return tmpPassComponents;
   };
 
@@ -122,23 +115,25 @@ const DefaultLayoutStyles = () => {
       id: 1,
       layout: [
         { i: "블로그 로고", x: 0, y: 0, w: 1, h: 1 },
+        { i: "페이지", x: 1, y: 0, w: 4, h: 1 },
         { i: "타이틀", x: 0, y: 1, w: 5, h: 3, static: true },
         { i: "카테고리", x: 0, y: 4, w: 1, h: 4 },
         { i: "글 목록", x: 1, y: 4, w: 4, h: 4, static: true },
       ],
       components: [
         { key: "블로그 로고", id: "logo" },
+        { key: "페이지", id: "page" },
         { key: "타이틀", id: "title" },
         { key: "카테고리", id: "category" },
         { key: "글 목록", id: "contents" },
       ],
       checkList: {
         logo: true,
+        page: true,
         title: true,
         category: true,
         contents: true,
         profile: false,
-        page: false,
       },
       struct: `<div className='display-row'>
         <Logo />
@@ -158,23 +153,25 @@ const DefaultLayoutStyles = () => {
       id: 2,
       layout: [
         { i: "블로그 로고", x: 0, y: 0, w: 1, h: 1 },
+        { i: "페이지", x: 1, y: 0, w: 4, h: 1 },
         { i: "타이틀", x: 0, y: 1, w: 5, h: 3, static: true },
         { i: "카테고리", x: 4, y: 4, w: 1, h: 4 },
         { i: "글 목록", x: 0, y: 4, w: 4, h: 4, static: true },
       ],
       components: [
         { key: "블로그 로고", id: "logo" },
+        { key: "페이지", id: "page" },
         { key: "타이틀", id: "title" },
         { key: "카테고리", id: "category" },
         { key: "글 목록", id: "contents" },
       ],
       checkList: {
         logo: true,
+        page: true,
         category: true,
         title: true,
         contents: true,
         profile: false,
-        page: false,
       },
 
       struct: `<div className='display-row'>
@@ -195,23 +192,25 @@ const DefaultLayoutStyles = () => {
       id: 3,
       layout: [
         { i: "블로그 로고", x: 0, y: 0, w: 1, h: 1 },
+        { i: "페이지", x: 1, y: 0, w: 4, h: 1 },
         { i: "카테고리", x: 0, y: 1, w: 1, h: 7 },
         { i: "타이틀", x: 1, y: 1, w: 4, h: 3, static: true },
         { i: "글 목록", x: 1, y: 4, w: 4, h: 4, static: true },
       ],
       components: [
         { key: "블로그 로고", id: "logo" },
+        { key: "페이지", id: "page" },
         { key: "카테고리", id: "category" },
         { key: "타이틀", id: "title" },
         { key: "글 목록", id: "contents" },
       ],
       checkList: {
         logo: true,
+        page: true,
         category: true,
         title: true,
         contents: true,
         profile: false,
-        page: false,
       },
       struct: `<div className='display-row'>
         <Logo />
@@ -231,23 +230,25 @@ const DefaultLayoutStyles = () => {
       id: 4,
       layout: [
         { i: "블로그 로고", x: 0, y: 0, w: 1, h: 1 },
+        { i: "페이지", x: 1, y: 0, w: 4, h: 1 },
         { i: "카테고리", x: 4, y: 1, w: 1, h: 7 },
         { i: "타이틀", x: 0, y: 1, w: 4, h: 3, static: true },
         { i: "글 목록", x: 0, y: 4, w: 4, h: 4, static: true },
       ],
       components: [
         { key: "블로그 로고", id: "logo" },
+        { key: "페이지", id: "page" },
         { key: "카테고리", id: "category" },
         { key: "타이틀", id: "title" },
         { key: "글 목록", id: "contents" },
       ],
       checkList: {
         logo: true,
+        page: true,
         category: true,
         title: true,
         contents: true,
         profile: false,
-        page: false,
       },
       struct: `<div className='display-row'>
         <Logo />
@@ -266,6 +267,7 @@ const DefaultLayoutStyles = () => {
       id: 5,
       layout: [
         { i: "블로그 로고", x: 0, y: 0, w: 1, h: 1 },
+        { i: "페이지", x: 1, y: 0, w: 4, h: 1 },
         { i: "프로필", x: 0, y: 1, w: 1, h: 2 },
         { i: "카테고리", x: 0, y: 3, w: 1, h: 5 },
         { i: "타이틀", x: 1, y: 1, w: 4, h: 3, static: true },
@@ -273,6 +275,7 @@ const DefaultLayoutStyles = () => {
       ],
       components: [
         { key: "블로그 로고", id: "logo" },
+        { key: "페이지", id: "page" },
         { key: "프로필", id: "profile" },
         { key: "카테고리", id: "category" },
         { key: "타이틀", id: "title" },
@@ -284,7 +287,7 @@ const DefaultLayoutStyles = () => {
         category: true,
         title: true,
         contents: true,
-        page: false,
+        page: true,
       },
       struct: `<div className='display-row'>
         <Logo />
@@ -307,6 +310,7 @@ const DefaultLayoutStyles = () => {
       id: 6,
       layout: [
         { i: "블로그 로고", x: 0, y: 0, w: 1, h: 1 },
+        { i: "페이지", x: 1, y: 0, w: 4, h: 1 },
         { i: "프로필", x: 4, y: 1, w: 1, h: 2 },
         { i: "카테고리", x: 4, y: 3, w: 1, h: 5 },
         { i: "타이틀", x: 0, y: 1, w: 4, h: 3, static: true },
@@ -315,17 +319,18 @@ const DefaultLayoutStyles = () => {
       components: [
         { key: "블로그 로고", id: "logo" },
         { key: "프로필", id: "profile" },
+        { key: "페이지", id: "page" },
         { key: "카테고리", id: "category" },
         { key: "타이틀", id: "title" },
         { key: "글 목록", id: "contents" },
       ],
       checkList: {
         logo: true,
+        page: true,
         profile: true,
         category: true,
         title: true,
         contents: true,
-        page: false,
       },
       struct: `<div className='display-row'>
         <Logo />
