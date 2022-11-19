@@ -93,6 +93,12 @@ interface LayoutConfig {
   userComponentList: ComponentConfig[];
   userCheckList: ComponentCheckConfig;
 
+  origin: {
+    originComponentLayoutList: Layout[];
+    originComponentList: ComponentConfig[];
+    originCheckList: ComponentCheckConfig;
+  };
+
   checkList: ComponentCheckConfig;
 
   blogSettingInfo: blogInfoConfig;
@@ -133,6 +139,19 @@ export const initialState: LayoutConfig = {
     page: true,
     title: true,
     contents: true,
+  },
+
+  origin: {
+    originComponentLayoutList: [],
+    originComponentList: [],
+    originCheckList: {
+      logo: true,
+      profile: true,
+      category: true,
+      page: true,
+      title: true,
+      contents: true,
+    },
   },
 
   checkList: {
@@ -236,6 +255,9 @@ const settingSlice = createSlice({
       state.userCheckList = payload;
     },
 
+    setOrigin: (state, { payload }) => {
+      state.origin = payload;
+    },
     setCheckList: (state, { payload: { logo, category, profile, page, title, contents } }) => {
       state.checkList = { logo, category, profile, page, title, contents };
     },
@@ -266,6 +288,7 @@ export const {
   setComponentList,
   setComponentLayoutList,
   setUserComponentLayoutList,
+  setOrigin,
   setUserComponentList,
   setUserCheckList,
   setCheckList,
@@ -289,6 +312,7 @@ export const selectComponentLayoutList = (state: rootState) => state.setting.com
 export const selectComponentList = (state: rootState) => state.setting.componentList;
 
 export const selectUserComponentLayoutList = (state: rootState) => state.setting.userComponentLayoutList;
+export const selectOrigin = (state: rootState) => state.setting.origin;
 export const selectUserComponentList = (state: rootState) => state.setting.userComponentList;
 export const selectUserCheckList = (state: rootState) => state.setting.userCheckList;
 

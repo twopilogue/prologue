@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Layout, Responsive, WidthProvider } from "react-grid-layout";
+import { useDispatch } from "react-redux";
+import { Layout } from "react-grid-layout";
 import GridLayout from "react-grid-layout";
 import { useAppSelector } from "app/hooks";
 import {
   ComponentConfig,
-  initialState,
   selectUserCheckList,
   selectUserComponentLayoutList,
+  selectOrigin,
   selectUserComponentList,
-  setComponentLayoutList,
   selectComponentCreated,
   setUserComponentLayoutList,
+  setUserComponentList,
+  setUserCheckList,
 } from "slices/settingSlice";
-import DefaultLayoutStyles from "./DefaultLayoutStyles";
 import styles from "../Setting.module.css";
 import DragHandleIcon from "@mui/icons-material/DragHandle";
 import Text from "components/Text";
@@ -22,6 +22,7 @@ const LayoutCustom = (layoutWidth: any) => {
   const dispatch = useDispatch();
   const userComponentList = useAppSelector(selectUserComponentList);
   const userLayoutList = useAppSelector(selectUserComponentLayoutList);
+  const origin = useAppSelector(selectOrigin);
   const userCheckList = useAppSelector(selectUserCheckList);
   const componentCreated = useAppSelector(selectComponentCreated);
   const [tmpLayoutList, setTmpLayoutList] = useState<Layout[]>([]);
@@ -41,12 +42,32 @@ const LayoutCustom = (layoutWidth: any) => {
     }
   };
 
+  const saveCurrentLayout = () => {
+    const newHeight = (document.querySelector(".react-grid-layout") as HTMLElement).offsetHeight;
+    if (newHeight > 600) {
+      console.log("over height: ", newHeight);
+    } else {
+      console.log("in height: ", newHeight);
+    }
+  };
+
   const getLayout = () => {
     return componentCreated ? userLayoutList : tmpLayoutList;
   };
 
   useEffect(() => {
     setTmpLayoutList(userLayoutList);
+  }, [componentCreated]);
+
+  useEffect(() => {
+    return () => {
+      console.log("종료");
+      if (userComponentList.length > 0) {
+        dispatch(setUserComponentLayoutList(origin.originComponentLayoutList));
+        dispatch(setUserComponentList(origin.originComponentList));
+        dispatch(setUserCheckList(origin.originCheckList));
+      }
+    };
   }, [componentCreated]);
 
   return (
@@ -58,8 +79,9 @@ const LayoutCustom = (layoutWidth: any) => {
         width={width - 20}
         maxRows={4}
         // verticalCompact={false}
-        // preventCollision={true}
+        // preventCollision={true} // If true, grid items won't change position when being dragged over.
         onLayoutChange={handleLayoutChange}
+        onDragStart={saveCurrentLayout}
         isDraggable={true}
         isResizable={false}
       >
