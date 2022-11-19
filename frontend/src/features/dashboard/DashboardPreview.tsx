@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "features/dashboard/Dashboard.module.css";
 import Text from "components/Text";
 import IconButton from "@mui/material/IconButton";
@@ -6,11 +6,23 @@ import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import { Box, Link, Tooltip } from "@mui/material";
 import { rootState } from "app/store";
 import { useSelector } from "react-redux";
+import axios from "axios";
 
 function DashboardPreview(props: { buildState: boolean }) {
   const { githubId } = useSelector((state: rootState) => state.auth);
 
   const blogLink = `https://${githubId}.github.io/`;
+
+  useEffect(() => {
+    axios.get(blogLink).catch((err) => {
+      const iframe = document.getElementById("iframeDiv") as HTMLParagraphElement;
+      // iframe.style.backgroundColor = "Cornsilk";
+      iframe.style.backgroundColor = "OldLace";
+      // iframe.style.backgroundColor = "MintCream";
+      iframe.style.backgroundColor = "#ccff99";
+      console.error("아이프레임 실패", err);
+    });
+  }, []);
 
   return (
     <div className={styles.container}>
@@ -30,7 +42,7 @@ function DashboardPreview(props: { buildState: boolean }) {
           </Tooltip>
         )}
         <Link href={blogLink} target="_blank">
-          <div className={styles.previewIframe} />
+          <div id="iframeDiv" className={styles.previewIframe} />
           <iframe src={blogLink} scrolling="no" />
         </Link>
         <div className={styles.previewInfo}>
