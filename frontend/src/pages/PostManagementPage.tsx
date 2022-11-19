@@ -23,7 +23,7 @@ const PostManagementPage = () => {
     const tmpList: postListConfig[] = [];
 
     await Axios.get(api.posts.getPostList(accessToken, githubId, 0))
-      .then((res: any) => {
+      .then((res) => {
         console.log(res);
         for (let i = 0; i < res.data.result.Post.length; i++) {
           const post: postListConfig = {
@@ -40,7 +40,7 @@ const PostManagementPage = () => {
         dispatch(setPostList(tmpList));
         dispatch(setPostCount(res.data.result.PostCount));
       })
-      .catch((err: any) => {
+      .catch((err) => {
         console.log(err);
       });
   };
