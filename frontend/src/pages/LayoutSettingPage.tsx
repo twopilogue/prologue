@@ -15,7 +15,6 @@ import {
   ComponentConfig,
   selectClickedLayoutIdx,
   setComponentCreated,
-  setOriginComponentLayoutList,
   setUserCheckList,
   setUserComponentLayoutList,
   setUserComponentList,
@@ -43,7 +42,6 @@ const LayoutSettingPage = () => {
           else if (it.i === "글 목록") userComponents.push({ key: "글 목록", id: "contents" });
         });
         dispatch(setUserComponentLayoutList(response.layout));
-        dispatch(setOriginComponentLayoutList(response.layout));
         dispatch(setUserComponentList(userComponents));
         dispatch(setUserCheckList(response.checkList));
         dispatch(setComponentCreated(true));

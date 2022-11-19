@@ -6,12 +6,11 @@ import { useAppSelector } from "app/hooks";
 import {
   ComponentConfig,
   initialState,
-  selectComponentCreated,
-  selectOriginComponentLayoutList,
   selectUserCheckList,
   selectUserComponentLayoutList,
   selectUserComponentList,
   setComponentLayoutList,
+  selectComponentCreated,
   setUserComponentLayoutList,
 } from "slices/settingSlice";
 import DefaultLayoutStyles from "./DefaultLayoutStyles";
@@ -30,7 +29,6 @@ const LayoutCustom = (layoutWidth: any) => {
 
   const handleLayoutChange = (layouts: any) => {
     if (componentCreated) {
-      console.log("요청됨", userLayoutList);
       const tmp: Layout[] = [];
       layouts.map((it: Layout) => {
         it.static
@@ -48,9 +46,6 @@ const LayoutCustom = (layoutWidth: any) => {
   };
 
   useEffect(() => {
-    console.log("axios 종료 후 1회 실행");
-    console.log("componentCreated 변수: ", componentCreated);
-    // console.log("origin layout 변수", originLayoutList);
     setTmpLayoutList(userLayoutList);
   }, [componentCreated]);
 
