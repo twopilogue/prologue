@@ -41,7 +41,7 @@ const PostWriteTitle = ({ savedTitle, savedDescription, savedCategory, savedTag 
     dispatch(setPostDescription(event.target.value));
   };
 
-  const categoryChange = (event: SelectChangeEvent) => {
+  const categoryChange = (event: any) => {
     setCategory(event.target.value);
     dispatch(setPostCategory(event.target.value));
   };
@@ -115,15 +115,23 @@ const PostWriteTitle = ({ savedTitle, savedDescription, savedCategory, savedTag 
       {/* <Text value="설명은 필수 입력값입니다." type="caption" color="red" /> */}
       <br /> <br /> <br />
       <div className={blogType == 0 ? `${styles.showSelectBox}` : `${styles.hideSelectBox}`} style={{ width: "15vw" }}>
-        <Text value="카테고리" type="text" />
-        <Select value={category} onChange={categoryChange} displayEmpty inputProps={{ "aria-label": "Without label" }}>
+        <Text value="카테고리" type="text" /> <br />
+        <select name="cateogry" value={category} onChange={categoryChange}>
+          <option value="">카테고리</option>
+          {categoryList.map((value, key) => (
+            <option key={key} value={value}>
+              {value}
+            </option>
+          ))}
+        </select>
+        {/* <Select value={category} onChange={categoryChange} displayEmpty inputProps={{ "aria-label": "Without label" }}>
           <MenuItem value="">카테고리</MenuItem>
           {categoryList.map((value, key) => (
             <MenuItem key={key} value={value}>
               {value}
             </MenuItem>
           ))}
-        </Select>
+        </Select> */}
       </div>
       <br /> <br /> <br />
       <Text value="태그" type="text" />
