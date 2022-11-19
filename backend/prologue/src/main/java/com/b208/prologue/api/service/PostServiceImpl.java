@@ -32,12 +32,8 @@ public class PostServiceImpl implements PostService {
     private final CommonService commonService;
 
     @Override
-    public Map<String, Object> getList(String encodedAccessToken, String githubId, int page) throws Exception {
+    public Map<String, Object> getList(String encodedAccessToken, String githubId, int page, int index, String category) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
-
-        Map<String, Object> result = new HashMap<>();
-        List<String> temp = new ArrayList<>();
-        List<PostRequest> postRequests = new ArrayList<>();
 
         String url = "/repos/" + githubId + "/" + githubId + ".github.io" + "/contents/";
 
@@ -48,87 +44,124 @@ public class PostServiceImpl implements PostService {
                 .retrieve()
                 .bodyToMono(PostGetListResponse[].class).block();
 
-        for (int i = (list.length - 1) - (6 * page); i > (list.length - 1) - (6 * (page + 1)); i--) {
-            if (i < 0) {
-                break;
-            }
-            PostRequest postRequest = new PostRequest();
+        return category == null? getListAll(accessToken, githubId, list, page) : getListSpecific(accessToken, githubId, list, page == 0? list.length-1 : index, category);
+    }
 
-            if (isNumeric(list[i].getName()) == false && list[i].getName().length() != 13) {
-                String post = setItem(url, accessToken, list[i].getPath());
-                temp.add(post);
-                postRequest.setDirectory(list[i].getName());
-                postRequest.setImgUrl(getImage(accessToken, githubId, list[i].getName()));
+    @Override
+    public Map<String, Object> getListAll(String accessToken, String githubId, PostGetListResponse[] list, int page) throws Exception {
 
-                StringTokenizer st = new StringTokenizer(post, "\n");
-                int cnt = st.countTokens();
+        List<PostRequest> postRequests = new ArrayList<>();
+        String url = "/repos/" + githubId + "/" + githubId + ".github.io" + "/contents/";
+        int i = (list.length - 1) - (6 * page);
 
-                boolean flag = false;
-                for (int j = 0; j < cnt; j++) {
-                    String line = st.nextToken();
-
-                    if (line.contains("date")) {
-                        flag = true;
-
-                        String tempDate = line.substring(line.indexOf("\"") + 1);
-                        String[] tmp = tempDate.split("T");
-                        tempDate = tmp[0];
-
-                        postRequest.setDate(tempDate);
-                        break;
-                    }
-                }
-                if (flag == false) {
-                    postRequest.setDate("No Date");
-                }
-            } else {
-                temp.add(setItem(url, accessToken, list[i].getPath()));
-                postRequest.setDirectory(list[i].getName());
-                postRequest.setImgUrl(getImage(accessToken, githubId, list[i].getName()));
-
-                Date tempDate = new Date(Long.parseLong(list[i].getName()));
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
-                postRequest.setDate(String.valueOf(dateFormat.format(tempDate)));
-            }
-            postRequests.add(postRequest);
+        for ( ; 0 <= i && i > (list.length - 1) - (6 * (page + 1)); i--) {
+            String post = setItem(url, accessToken, list[i].getPath());
+            postRequests.add(getPostFrontMatter(accessToken, githubId, list[i], post));
         }
 
-        for (int i = 0; i < temp.size(); i++) {
-            if (temp.get(i).contains("---")) {
-                String tempContent[] = temp.get(i).split("---\n");
+        Collections.sort(postRequests, new Comparator().reversed());
 
-                StringTokenizer st = new StringTokenizer(tempContent[1], "\n");
-                int cnt = st.countTokens();
+        Map<String, Object> result = new HashMap<>();
+        result.put("Post", postRequests);
+        result.put("isLast", i<0);
+        result.put("index", i);
 
-                List<String> tag = new ArrayList<>();
-                for (int j = 0; j < cnt; j++) {
-                    String line = st.nextToken();
-                    if (line.contains("title")) {
-                        postRequests.get(i).setTitle(line.substring(line.indexOf(": ") + 1));
-                    } else if (line.contains("description")) {
-                        postRequests.get(i).setDescription(line.substring(line.indexOf(": ") + 1));
-                    } else if (line.contains("category")) {
-                        postRequests.get(i).setCategory(line.substring(line.indexOf(": ") + 1));
-                    } else if (line.contains("tag")) {
-                        String tagLine = line.substring(line.indexOf(": ") + 1);
-                        String[] tagArr = tagLine.split(",");
-                        for (String tagTemp : tagArr) {
-                            tag.add(tagTemp);
-                        }
-                        postRequests.get(i).setTag(tag);
-                    }
-                }
+        return result;
+    }
+
+    @Override
+    public Map<String, Object> getListSpecific(String accessToken, String githubId, PostGetListResponse[] list, int index, String category) throws Exception {
+
+        List<PostRequest> postRequests = new ArrayList<>();
+        String url = "/repos/" + githubId + "/" + githubId + ".github.io" + "/contents/";
+        int i = index, cntPosts = 0;
+
+        for (; 0 <= i ; i--) {
+            String post = setItem(url, accessToken, list[i].getPath());
+
+            int startIndex = post.indexOf("\ncategory");
+            startIndex = post.indexOf(": ", startIndex);
+            int endIndex = post.indexOf("\ntags");
+            String categoryStr = post.substring(startIndex+2,endIndex).trim();
+
+            if(category.equals(categoryStr)){
+                if(++cntPosts == 7) break;
+                postRequests.add(getPostFrontMatter(accessToken, githubId, list[i], post));
             }
         }
 
         Collections.sort(postRequests, new Comparator().reversed());
 
-        int cnt = list.length;
-        result.put("PostCount", cnt);
+        Map<String, Object> result = new HashMap<>();
         result.put("Post", postRequests);
+        result.put("isLast", i < 0 || cntPosts < 7);
+        result.put("index", i);
 
         return result;
+    }
+
+    @Override
+    public PostRequest getPostFrontMatter (String accessToken, String githubId, PostGetListResponse item, String post) throws Exception {
+
+        PostRequest postRequest = new PostRequest();
+        postRequest.setDirectory(item.getName());
+        postRequest.setImgUrl(getImage(accessToken, githubId, item.getName()));
+
+        if (!isNumeric(item.getName()) && item.getName().length() != 13) {
+            StringTokenizer st = new StringTokenizer(post, "\n");
+            int cnt = st.countTokens();
+
+            boolean flag = false;
+            for (int j = 0; j < cnt; j++) {
+                String line = st.nextToken();
+
+                if (line.contains("date")) {
+                    flag = true;
+
+                    String tempDate = line.substring(line.indexOf("\"") + 1);
+                    tempDate = tempDate.split("T")[0];
+
+                    postRequest.setDate(tempDate);
+                    break;
+                }
+            }
+            if (flag == false) {
+                postRequest.setDate("No Date");
+            }
+        } else {
+            Date tempDate = new Date(Long.parseLong(item.getName()));
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+            postRequest.setDate(String.valueOf(dateFormat.format(tempDate)));
+        }
+
+        if (post.contains("---")) {
+            int targetIndex = post.indexOf("date: ");
+            targetIndex = post.indexOf("\n---", targetIndex);
+
+            String tempContent = post.substring(0,targetIndex);
+
+            int startIndex = tempContent.indexOf("title");
+            startIndex = tempContent.indexOf(": ",startIndex);
+            int endIndex = tempContent.indexOf("\ndescription");
+            postRequest.setTitle(tempContent.substring(startIndex+2,endIndex));
+
+            startIndex = tempContent.indexOf(": ", endIndex);
+            endIndex = tempContent.indexOf("\ncategory");
+            postRequest.setDescription(tempContent.substring(startIndex+2,endIndex));
+
+            startIndex = tempContent.indexOf(": ", endIndex);
+            endIndex = tempContent.indexOf("\ntags");
+            postRequest.setCategory(tempContent.substring(startIndex+2,endIndex));
+
+            startIndex = tempContent.indexOf(": [", endIndex);
+            endIndex = tempContent.indexOf("]\ndate");
+            String tagLine = tempContent.substring(startIndex+3,endIndex);
+            String[] tagArr = tagLine.split(",");
+            postRequest.setTag(tagArr);
+        }
+
+        return postRequest;
     }
 
     public static boolean isNumeric(String s) {
@@ -361,7 +394,7 @@ public class PostServiceImpl implements PostService {
     public String getDetailPost(String encodedAccessToken, String githubId, String path, List<ImageResponse> images) throws Exception {
         String content = getDetailPage(encodedAccessToken, githubId, path, images);
 
-        int index = content.indexOf("date");
+        int index = content.indexOf("date: ");
         index = content.indexOf("---", index);
         content = content.substring(index + 4);
 
