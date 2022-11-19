@@ -6,7 +6,6 @@ import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
 import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import PostWriteTitle from "../features/post/PostWriteTitle";
-import PostWriteContents from "../features/post/PostWriteContents";
 import { useSelector } from "react-redux";
 import { rootState } from "app/store";
 import { useNavigate, useParams } from "react-router-dom";
@@ -16,6 +15,7 @@ import api from "api/Api";
 import PostViewerContents from "features/post/PostViewerContents";
 import { useAppDispatch, useAppSelector } from "app/hooks";
 import {
+  resetPostFileList,
   selectPostCategory,
   selectPostContent,
   selectPostDescription,
@@ -24,7 +24,6 @@ import {
   selectPostFiles,
   selectPostTagList,
   selectPostTitle,
-  setPostFileList,
 } from "slices/postSlice";
 import Modal from "components/Modal";
 
@@ -71,7 +70,9 @@ const PostEditPage = () => {
           const image = { name: res.data.images[i].name, url: res.data.images[i].url };
           console.log("res image : ", image);
           savedFileList.push(image);
-          dispatch(setPostFileList([...savedFileList, image]));
+          console.log("원래 fileList : ", fileList);
+          // dispatch(setPostFileList([...fileList, ...savedFileList]));
+          console.log("dispatch fileList : ", fileList);
         }
       })
       .catch((err) => {
@@ -83,7 +84,7 @@ const PostEditPage = () => {
     setLoading(true);
     getPostDetail();
     setLoading(false);
-  }, [loading]);
+  }, []);
 
   const editPost = () => {
     const formData = new FormData();
@@ -101,21 +102,13 @@ const PostEditPage = () => {
       description +
       "\ncategory: " +
       category +
-      "\ntags: [" +
+      "\ntags: " +
       tagList +
-      "]\ndate: " +
+      "\ndate: " +
       new Date().toISOString() +
       "\n---\n";
 
-    const modifyDetailPostRequest: modifyDetailPostRequestProps = {
-      accessToken: accessToken,
-      githubId: githubId,
-      directory: directory,
-      content: frontMatter + content,
-      images: [],
-      blogType: blogType,
-    };
-
+    const tmpArray = [];
     console.log("fileList : ", fileList);
     if (fileList.length) {
       for (let i = 0; i < fileList.length; i++) {
@@ -123,9 +116,29 @@ const PostEditPage = () => {
           url: fileList[i].url,
           name: fileList[i].name,
         };
-        modifyDetailPostRequest.images.push(tmp);
+        console.log("tmp : ", tmp);
+        tmpArray.push(tmp);
       }
     }
+
+    if (savedFileList.length) {
+      for (let i = 0; i < savedFileList.length; i++) {
+        const tmp = {
+          url: savedFileList[i].url,
+          name: savedFileList[i].name,
+        };
+        tmpArray.push(tmp);
+      }
+    }
+
+    const modifyDetailPostRequest: modifyDetailPostRequestProps = {
+      accessToken: accessToken,
+      githubId: githubId,
+      directory: directory,
+      content: frontMatter + content,
+      images: tmpArray,
+      blogType: blogType,
+    };
 
     formData.append(
       "modifyDetailPostRequest",
@@ -134,14 +147,14 @@ const PostEditPage = () => {
     console.log("modifyDetailPostRequest : ", modifyDetailPostRequest);
 
     Axios.put(api.posts.modifyPost(), formData)
-      .then((res: any) => {
+      .then((res) => {
         console.log(res);
         navigate("/post");
       })
-      .catch((err: any) => {
+      .catch((err) => {
         console.log(err);
       });
-    dispatch(setPostFileList([]));
+    dispatch(resetPostFileList());
   };
 
   const deletePost = () => {
@@ -152,13 +165,14 @@ const PostEditPage = () => {
         directory: directory,
       },
     })
-      .then((res: any) => {
+      .then((res) => {
         console.log(res);
         navigate("/post");
       })
-      .catch((err: any) => {
+      .catch((err) => {
         console.log(err);
       });
+    dispatch(resetPostFileList());
   };
 
   const showCancelModal = () => {
@@ -203,7 +217,10 @@ const PostEditPage = () => {
         <Modal
           text={`정말 게시글 목록으로 돌아가시겠습니까?\n수정 중인 게시글은 사라집니다.`}
           twoButtonCancle={() => setCancelModalOpen(false)}
-          twoButtonConfirm={() => navigate("/post")}
+          twoButtonConfirm={() => {
+            navigate("/post");
+            dispatch(resetPostFileList());
+          }}
         />
       )}
       {saveModalOpen && (
