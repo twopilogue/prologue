@@ -15,6 +15,7 @@ import {
   ComponentConfig,
   selectClickedLayoutIdx,
   setComponentCreated,
+  setOrigin,
   setUserCheckList,
   setUserComponentLayoutList,
   setUserComponentList,
@@ -44,6 +45,13 @@ const LayoutSettingPage = () => {
         dispatch(setUserComponentLayoutList(response.layout));
         dispatch(setUserComponentList(userComponents));
         dispatch(setUserCheckList(response.checkList));
+        dispatch(
+          setOrigin({
+            originComponentLayoutList: response.layout,
+            originComponentList: userComponents,
+            originCheckList: response.checkList,
+          }),
+        );
         dispatch(setComponentCreated(true));
         console.log("-------레이아웃 dispatch 완료-------");
       })
