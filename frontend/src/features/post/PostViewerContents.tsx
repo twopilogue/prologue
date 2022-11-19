@@ -66,11 +66,11 @@ const PostViewerContents = ({ content }: PostViewerContentsProps) => {
 
               let imageUrl;
               await Axios.put(api.posts.getImgUrl(), formData)
-                .then((res: any) => {
+                .then((res) => {
                   console.log(res);
                   imageUrl = res.data.tempImageUrl;
                 })
-                .catch((err: any) => {
+                .catch((err) => {
                   console.log(err);
                 });
 
@@ -78,10 +78,11 @@ const PostViewerContents = ({ content }: PostViewerContentsProps) => {
               console.log("newFile:", newFile);
 
               fileList.push(newFile);
-              dispatch(setPostFileList([...fileList, newFile]));
+              console.log("새로운 파일 추가된 fileList", fileList);
+              dispatch(setPostFileList([...fileList]));
 
               files.push(blob);
-              dispatch(setPostFiles([...files, blob]));
+              dispatch(setPostFiles([...files]));
 
               callback(imageUrl);
               return false;
