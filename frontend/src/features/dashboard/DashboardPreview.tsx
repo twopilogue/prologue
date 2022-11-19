@@ -16,10 +16,7 @@ function DashboardPreview(props: { buildState: boolean }) {
   useEffect(() => {
     axios.get(blogLink).catch((err) => {
       const iframe = document.getElementById("iframeDiv") as HTMLParagraphElement;
-      // iframe.style.backgroundColor = "Cornsilk";
       iframe.style.backgroundColor = "OldLace";
-      // iframe.style.backgroundColor = "MintCream";
-      iframe.style.backgroundColor = "#ccff99";
       console.error("아이프레임 실패", err);
     });
   }, []);
