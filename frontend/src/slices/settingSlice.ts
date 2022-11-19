@@ -93,6 +93,12 @@ interface LayoutConfig {
   userComponentList: ComponentConfig[];
   userCheckList: ComponentCheckConfig;
 
+  origin: {
+    originComponentLayoutList: Layout[];
+    originComponentList: ComponentConfig[];
+    originCheckList: ComponentCheckConfig;
+  };
+
   checkList: ComponentCheckConfig;
 
   blogSettingInfo: blogInfoConfig;
@@ -101,6 +107,7 @@ interface LayoutConfig {
 
   clickedComp: string;
   clickedLayoutIdx: number;
+  componentCreated: boolean;
 }
 
 export const initialState: LayoutConfig = {
@@ -132,6 +139,19 @@ export const initialState: LayoutConfig = {
     page: true,
     title: true,
     contents: true,
+  },
+
+  origin: {
+    originComponentLayoutList: [],
+    originComponentList: [],
+    originCheckList: {
+      logo: true,
+      profile: true,
+      category: true,
+      page: true,
+      title: true,
+      contents: true,
+    },
   },
 
   checkList: {
@@ -186,6 +206,7 @@ export const initialState: LayoutConfig = {
 
   clickedComp: "logo",
   clickedLayoutIdx: 0,
+  componentCreated: false,
 };
 
 const settingSlice = createSlice({
@@ -234,6 +255,9 @@ const settingSlice = createSlice({
       state.userCheckList = payload;
     },
 
+    setOrigin: (state, { payload }) => {
+      state.origin = payload;
+    },
     setCheckList: (state, { payload: { logo, category, profile, page, title, contents } }) => {
       state.checkList = { logo, category, profile, page, title, contents };
     },
@@ -249,6 +273,9 @@ const settingSlice = createSlice({
     setClickedLayoutIdx: (state, { payload }) => {
       state.clickedLayoutIdx = payload;
     },
+    setComponentCreated: (state, { payload }) => {
+      state.componentCreated = payload;
+    },
   },
 });
 export const {
@@ -261,6 +288,7 @@ export const {
   setComponentList,
   setComponentLayoutList,
   setUserComponentLayoutList,
+  setOrigin,
   setUserComponentList,
   setUserCheckList,
   setCheckList,
@@ -268,6 +296,7 @@ export const {
   setColors,
   setClickedComp,
   setClickedLayoutIdx,
+  setComponentCreated,
 } = settingSlice.actions;
 
 export const selectCategoryLayoutList = (state: rootState) => state.setting.categoryLayoutList;
@@ -283,6 +312,7 @@ export const selectComponentLayoutList = (state: rootState) => state.setting.com
 export const selectComponentList = (state: rootState) => state.setting.componentList;
 
 export const selectUserComponentLayoutList = (state: rootState) => state.setting.userComponentLayoutList;
+export const selectOrigin = (state: rootState) => state.setting.origin;
 export const selectUserComponentList = (state: rootState) => state.setting.userComponentList;
 export const selectUserCheckList = (state: rootState) => state.setting.userCheckList;
 
@@ -294,6 +324,7 @@ export const selectColors = (state: rootState) => state.setting.colorList;
 
 export const selectClickedComp = (state: rootState) => state.setting.clickedComp;
 export const selectClickedLayoutIdx = (state: rootState) => state.setting.clickedLayoutIdx;
+export const selectComponentCreated = (state: rootState) => state.setting.componentCreated;
 
 export default settingSlice.reducer;
 

@@ -84,6 +84,16 @@
   cursor: pointer;
 }
 
+.moreListBtn {
+  cursor: pointer;
+  width: 62vw;
+  height: 3vh;
+  background-color: #ffffff;
+  padding: 2%;
+  margin-top: 1%;
+  text-align: center;
+}
+
 /* PostListCard */
 .postListCard {
   position: relative;
