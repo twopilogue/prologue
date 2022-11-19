@@ -12,6 +12,7 @@ import Axios from "api/MultipartAxios";
 import api from "api/Api";
 import { useAppDispatch, useAppSelector } from "app/hooks";
 import {
+  resetPostFileList,
   selectPostCategory,
   selectPostContent,
   selectPostDescription,
@@ -104,7 +105,7 @@ const PostWritePage = () => {
       .catch((err: any) => {
         console.log(err);
       });
-    dispatch(setPostFileList([]));
+    dispatch(resetPostFileList());
   };
 
   const showCancelModal = () => {
