@@ -30,7 +30,6 @@ export const sortJSON = (data: any) => {
 
 const ConfirmButton = ({ type, payload }: Props) => {
   const dispatch = useDispatch();
-  const [passComponents, setPassComponent] = useState("");
   const componentLayoutList = useAppSelector(selectComponentLayoutList);
 
   const handleOnClick = () => {
@@ -74,9 +73,10 @@ const ConfirmButton = ({ type, payload }: Props) => {
   };
 
   const createDiv = () => {
+    const divRowString = `<div className="display_row">`;
     const divColString = `<div className="display_column">`;
     const divClose = `</div>`;
-    let tmpPassComponents = "";
+    let tmpPassComponents = divRowString;
 
     const sortedLayoutObject = sortLayout();
 
@@ -108,11 +108,10 @@ const ConfirmButton = ({ type, payload }: Props) => {
               break;
           }
         }
-        tmpPassComponents += divClose;
+        tmpPassComponents += divClose; // col div close
       }
     }
-    setPassComponent(tmpPassComponents);
-    console.log(passComponents);
+    tmpPassComponents += divClose; // row div close
   };
 
   return (

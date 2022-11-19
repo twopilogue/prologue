@@ -75,6 +75,9 @@ const postSlice = createSlice({
     setPostFileList: (state, { payload }) => {
       state.fileList = payload;
     },
+    resetPostFileList: (state) => {
+      state.fileList = [];
+    },
     setPostFiles: (state, { payload }) => {
       state.files = payload;
     },
@@ -96,6 +99,7 @@ export const {
   setPostTagList,
   setPostContent,
   setPostFileList,
+  resetPostFileList,
   setPostFiles,
   setPostList,
   setPostCount,

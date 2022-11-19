@@ -17,9 +17,37 @@ const PostManagementPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   handleScroll();
-  // }, [currentPage]);
+  const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
+
+  const getPostList = async () => {
+    const tmpList: postListConfig[] = [];
+
+    await Axios.get(api.posts.getPostList(accessToken, githubId, 0))
+      .then((res: any) => {
+        console.log(res);
+        for (let i = 0; i < res.data.result.Post.length; i++) {
+          const post: postListConfig = {
+            title: res.data.result.Post[i].title,
+            date: res.data.result.Post[i].date,
+            description: res.data.result.Post[i].description,
+            category: res.data.result.Post[i].category,
+            tag: res.data.result.Post[i].tag,
+            directory: res.data.result.Post[i].directory,
+            imgUrl: res.data.result.Post[i].imgUrl,
+          };
+          tmpList.push(post);
+        }
+        dispatch(setPostList(tmpList));
+        dispatch(setPostCount(res.data.result.PostCount));
+      })
+      .catch((err: any) => {
+        console.log(err);
+      });
+  };
+
+  useEffect(() => {
+    getPostList();
+  }, []);
 
   return (
     <div>

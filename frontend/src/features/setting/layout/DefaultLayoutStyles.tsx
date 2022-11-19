@@ -1,5 +1,5 @@
 import { useAppSelector } from "app/hooks";
-import React from "react";
+import React, { useState } from "react";
 import { Layout } from "react-grid-layout";
 import {
   ComponentCheckConfig,
@@ -17,10 +17,97 @@ export interface defaultLayoutConfig {
   struct?: string;
 }
 
+interface layoutObjectConfig {
+  a: Layout[];
+  b: Layout[];
+  c: Layout[];
+}
+
+export const sortJSON = (data: any) => {
+  return data.sort(function (a: any, b: any) {
+    const x = a["y"];
+    const y = b["y"];
+    return x < y ? -1 : x > y ? 1 : 0;
+  });
+};
+
 const DefaultLayoutStyles = () => {
   const custLayout = useAppSelector(selectUserComponentLayoutList);
   const custList = useAppSelector(selectUserComponentList);
   const custCheckList = useAppSelector(selectUserCheckList);
+  // const [passComponents, setPassComponent] = useState("");
+
+  const sortLayout = () => {
+    const layoutObject: layoutObjectConfig = {
+      a: [],
+      b: [],
+      c: [],
+    };
+    for (let i = 0; i < custLayout.length; i++) {
+      switch (custLayout[i].x) {
+        case 0:
+          layoutObject.a.push(custLayout[i]);
+          break;
+        case 1:
+          layoutObject.b.push(custLayout[i]);
+          break;
+        default:
+          layoutObject.c.push(custLayout[i]);
+      }
+    }
+    console.log("분류됨", layoutObject);
+    const sortedLayoutObject: any = new Object();
+    sortedLayoutObject.a = sortJSON(layoutObject.a);
+    sortedLayoutObject.b = sortJSON(layoutObject.b);
+    sortedLayoutObject.c = sortJSON(layoutObject.c);
+    console.log("분류+정렬됨", sortedLayoutObject);
+    return sortedLayoutObject;
+  };
+
+  const createDiv = () => {
+    const divRowString = `<div className="display-row">`;
+    const divColString = `<div className="display-column">`;
+    const divClose = `</div>`;
+    let tmpPassComponents = divRowString;
+
+    const sortedLayoutObject = sortLayout();
+
+    for (const idx in sortedLayoutObject) {
+      if (sortedLayoutObject[idx].length != 0) {
+        console.log(sortedLayoutObject[idx]);
+
+        tmpPassComponents += divColString;
+        for (let i = 0; i < sortedLayoutObject[idx].length; i++) {
+          console.log(sortedLayoutObject[idx][i].i);
+          switch (sortedLayoutObject[idx][i].i) {
+            case "블로그 로고":
+              tmpPassComponents += "<Logo/>";
+              break;
+            case "프로필":
+              tmpPassComponents += "<Profile/>";
+              break;
+            case "카테고리":
+              tmpPassComponents += "<Category/>";
+              break;
+            case "페이지":
+              tmpPassComponents += "<Header/>";
+              break;
+            case "타이틀":
+              tmpPassComponents += "<Title/>";
+              break;
+            case "글 목록":
+              tmpPassComponents += "<Contents/>";
+              break;
+          }
+        }
+        tmpPassComponents += divClose; // col div close
+      }
+    }
+    tmpPassComponents += divClose; // row div close
+
+    console.log(tmpPassComponents);
+    return tmpPassComponents;
+  };
 
   const DefaultLayoutList: defaultLayoutConfig[] = [
     {
@@ -29,7 +116,7 @@ const DefaultLayoutStyles = () => {
       layout: custLayout,
       components: custList,
       checkList: custCheckList,
-      struct: "",
+      struct: createDiv(),
     },
     {
       id: 1,
