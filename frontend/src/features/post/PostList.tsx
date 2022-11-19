@@ -8,48 +8,63 @@ import PostListCard from "./PostListCard";
 import PostListImgCard from "./PostListImgCard";
 import { Stack } from "@mui/system";
 import { useAppDispatch, useAppSelector } from "app/hooks";
-import { postListConfig, selectPostList, setPostEditList } from "slices/postSlice";
+import {
+  postListConfig,
+  selectPostCount,
+  selectPostCurrentPage,
+  selectPostList,
+  setPostCurrentPage,
+  setPostEditList,
+  setPostList,
+} from "slices/postSlice";
 import { useNavigate } from "react-router-dom";
+import Axios from "api/JsonAxios";
+import { useSelector } from "react-redux";
+import api from "api/Api";
+import { rootState } from "app/store";
 
 const PostList = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const [sort, setSort] = useState("");
-  const [postCardList, setPostCardList] = useState<postListConfig[]>(useAppSelector(selectPostList));
+  const [itemCnt, setItemCnt] = useState(6);
 
   const postList = useAppSelector(selectPostList);
+  const postCount = useAppSelector(selectPostCount);
+  const currentPage = useAppSelector(selectPostCurrentPage);
 
-  // const scrollBox = useRef(null);
-  // const [scrollY, setScrollY] = useState(0);
-  // const [scrollActive, setScrollActive] = useState(false);
+  const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
+
+  const getPostList = async (page: number) => {
+    const tmpList: postListConfig[] = [];
+
+    await Axios.get(api.posts.getPostList(accessToken, githubId, page))
+      .then((res) => {
+        console.log("ㅍㅔ이지  : ", res);
+        for (let i = 0; i < res.data.result.Post.length; i++) {
+          const post: postListConfig = {
+            title: res.data.result.Post[i].title,
+            date: res.data.result.Post[i].date,
+            description: res.data.result.Post[i].description,
+            category: res.data.result.Post[i].category,
+            tag: res.data.result.Post[i].tag,
+            directory: res.data.result.Post[i].directory,
+            imgUrl: res.data.result.Post[i].imgUrl,
+          };
+          tmpList.push(post);
+        }
+        dispatch(setPostList([...postList, ...tmpList]));
+        dispatch(setPostCurrentPage(currentPage + 1));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const handleChange = (event: SelectChangeEvent) => {
     setSort(event.target.value);
   };
-
-  // const logit = () => {
-  //   setScrollY(scrollBox.current.scrollTop);
-  //   if (scrollBox.current.scrollTop > 30) {
-  //     setScrollActive(true);
-  //   } else {
-  //     setScrollActive(false);
-  //   }
-  // };
-
-  useEffect(() => {
-    console.log("postList : ", postList);
-  }, []);
-
-  // useEffect(() => {
-  //   const watchScroll = () => {
-  //     scrollBox.current.addEventListener("scroll", logit);
-  //   };
-  //   watchScroll();
-  //   return () => {
-  //     // scrollBox.current.removeEventListener('scroll', logit);
-  //   };
-  // });
 
   return (
     <div className={styles.postList}>
@@ -92,6 +107,19 @@ const PostList = () => {
             />
           </div>
         ))}
+        {postCount >= itemCnt && (
+          <div
+            className={styles.moreListBtn}
+            onClick={() => {
+              getPostList(currentPage);
+              setItemCnt(itemCnt + 6);
+              console.log("postList : ", postList);
+              console.log("page : ", currentPage);
+            }}
+          >
+            글 목록 더 보기
+          </div>
+        )}
       </div>
 
       {/* <PostListImgCard /> */}
