@@ -11,7 +11,7 @@ import dashboardReducer from "../slices/dashboardSlice";
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["auth"],
+  whitelist: ["auth", "dashboard"],
 };
 
 const rootReducer = combineReducers({

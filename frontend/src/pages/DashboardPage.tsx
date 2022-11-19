@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import DashboardCalendar from "features/dashboard/DashboardCalendar/DashboardCalendar";
 import DashboardInfo from "features/dashboard/DashboardInfo";
 import DashboardList from "features/dashboard/DashboardList";
@@ -18,11 +18,24 @@ const DashboardPage = () => {
 
   const { login, accessToken, githubId } = useSelector((state: rootState) => state.auth);
 
+  const [buildState, setBuildState] = useState<boolean>();
+
+  const getData = (state: boolean) => {
+    setBuildState(state);
+  };
+
   useEffect(() => {
     {
       login && getAuthFile();
     }
+    getBildState();
   }, []);
+
+  function getBildState() {
+    Axios.get(api.dashboard.getBildState(accessToken, githubId)).then((res) => {
+      setBuildState(res.data.buildState === "progress");
+    });
+  }
 
   // 서비스 인증 파일 존재 여부
   async function getAuthFile() {
@@ -47,13 +60,13 @@ const DashboardPage = () => {
         </Grid>
         <Grid item xs={5}>
           <Stack spacing={2} height="88vh">
-            <DashboardPreview />
+            <DashboardPreview buildState={buildState} />
             <DashboardList />
           </Stack>
         </Grid>
         <Grid item xs={3}>
           <Stack spacing={2} height="88vh">
-            <DashboardInfo />
+            <DashboardInfo buildState={buildState} setBuildState={getData} />
             <DashboardMenu />
           </Stack>
         </Grid>
