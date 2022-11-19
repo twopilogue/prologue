@@ -35,8 +35,6 @@ const PostManagementPage = () => {
             imgUrl: res.data.result.Post[i].imgUrl,
           };
           tmpList.push(post);
-          console.log("저장할라 하는 post", post);
-          console.log("tmpList : ", tmpList);
         }
         dispatch(setPostList(tmpList));
         dispatch(setPostCount(res.data.result.PostCount));
