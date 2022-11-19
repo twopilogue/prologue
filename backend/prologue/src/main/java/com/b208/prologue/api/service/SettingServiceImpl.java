@@ -169,7 +169,7 @@ public class SettingServiceImpl implements SettingService {
             if (category.get(i).equals("전체보기")) {
                 throw new Exception("해당 이름은 생성할 수 없습니다.");
             }
-            jsonArray.add(category.get(i));
+            jsonArray.add(category.get(i).trim());
         }
 
         GetRepoContentResponse getRepoContentResponse = commonService.getDetailContent(accessToken, githubId, path);
