@@ -101,6 +101,7 @@ interface LayoutConfig {
 
   clickedComp: string;
   clickedLayoutIdx: number;
+  componentCreated: boolean;
 }
 
 export const initialState: LayoutConfig = {
@@ -186,6 +187,7 @@ export const initialState: LayoutConfig = {
 
   clickedComp: "logo",
   clickedLayoutIdx: 0,
+  componentCreated: false,
 };
 
 const settingSlice = createSlice({
@@ -249,6 +251,9 @@ const settingSlice = createSlice({
     setClickedLayoutIdx: (state, { payload }) => {
       state.clickedLayoutIdx = payload;
     },
+    setComponentCreated: (state, { payload }) => {
+      state.componentCreated = payload;
+    },
   },
 });
 export const {
@@ -268,6 +273,7 @@ export const {
   setColors,
   setClickedComp,
   setClickedLayoutIdx,
+  setComponentCreated,
 } = settingSlice.actions;
 
 export const selectCategoryLayoutList = (state: rootState) => state.setting.categoryLayoutList;
@@ -294,6 +300,7 @@ export const selectColors = (state: rootState) => state.setting.colorList;
 
 export const selectClickedComp = (state: rootState) => state.setting.clickedComp;
 export const selectClickedLayoutIdx = (state: rootState) => state.setting.clickedLayoutIdx;
+export const selectComponentCreated = (state: rootState) => state.setting.componentCreated;
 
 export default settingSlice.reducer;
 
