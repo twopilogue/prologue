@@ -4,7 +4,7 @@ interface dashboardConfig {
   monthPosts: [];
   newPosts: { directory: string; title: string; date: string }[];
   buildTime: string;
-  repoSize: string;
+  repoSize: number;
   totalPost: string;
 }
 
@@ -17,16 +17,19 @@ interface newPostsConfig {
 }
 
 interface blogInfoConfig {
-  buildTime: string;
-  repoSize: string;
   totalPost: string;
+  repoSize: string;
+}
+
+interface buildTimeConfig {
+  buildTime: string;
 }
 
 const initialState: dashboardConfig = {
   monthPosts: [],
   newPosts: [],
   buildTime: "",
-  repoSize: "",
+  repoSize: 0,
   totalPost: "",
 };
 
@@ -49,7 +52,9 @@ const dashboardSlice = createSlice({
     },
     blogInfo: (state, action: PayloadAction<blogInfoConfig>) => {
       state.totalPost = action.payload.totalPost;
-      state.repoSize = action.payload.repoSize;
+      state.repoSize = Number(action.payload.repoSize);
+    },
+    buildTime: (state, action: PayloadAction<buildTimeConfig>) => {
       state.buildTime = action.payload.buildTime;
     },
   },

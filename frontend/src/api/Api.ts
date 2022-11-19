@@ -20,7 +20,7 @@ interface apiInterface {
     chooseTemplate: () => string;
     getRepoList: (accessToken: string, githubId: string) => string;
     deleteRepo: (accessToken: string, githubId: string) => string;
-    // changeBranch: (accessToken: string, githubId: string) => string;
+    triggerStart: (accessToken: string, githubId: string) => string;
     changeBuildType: (accessToken: string, githubId: string) => string;
   };
   dashboard: {
@@ -73,8 +73,8 @@ const api: apiInterface = {
       HOST + BLOG + "list?accessToken=" + accessToken + "&githubId=" + githubId,
     deleteRepo: (accessToken: string, githubId: string) =>
       HOST + BLOG + "repo?accessToken=" + accessToken + "&githubId=" + githubId,
-    // changeBranch: (accessToken: string, githubId: string) =>
-    //   HOST + BLOG + "deploy-branch?accessToken=" + accessToken + "&githubId=" + githubId,
+    triggerStart: (accessToken: string, githubId: string) =>
+      HOST + BLOG + "workflow?accessToken=" + accessToken + "&githubId=" + githubId,
     changeBuildType: (accessToken: string, githubId: string) =>
       HOST + BLOG + "build-type?accessToken=" + accessToken + "&githubId=" + githubId,
   },
