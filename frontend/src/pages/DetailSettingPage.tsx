@@ -6,14 +6,7 @@ import Text from "components/Text";
 import ButtonStyled from "components/Button";
 import ReplayIcon from "@mui/icons-material/Replay";
 import { useAppSelector } from "app/hooks";
-import {
-  colorsConfig,
-  initialState,
-  selectClickedLayoutIdx,
-  selectColors,
-  setClickedComp,
-  setColors,
-} from "slices/settingSlice";
+import { colorsConfig, initialState, selectColors, setClickedComp, setColors } from "slices/settingSlice";
 import { DetailSettingStyles } from "features/setting/detail/DetailSettingStyles";
 import SettingLayout from "features/setting/detail/SettingLayout";
 import DetailSelector from "features/setting/detail/DetailSelector";
@@ -25,10 +18,13 @@ import Modal from "components/Modal";
 const DetailSettingPage = () => {
   const [titleImg, setTitleImg] = useState(null);
   const [logoImg, setLogoImg] = useState(null);
-  const [saveModalOpen, setSaveModalOpen] = useState<boolean>(false);
   const { githubId, accessToken } = useSelector((state: rootState) => state.auth);
   const colors: colorsConfig = useAppSelector(selectColors);
   const [originColors, setOriginColors] = useState(null);
+  const [saveModalOpen, setSaveModalOpen] = useState<boolean>(false);
+  const [loadingModalOpen, setLoadingModalOpen] = useState<boolean>(false);
+  const [finModalOpen, setFinModalOpen] = useState<boolean>(false);
+  const [resetModalOpen, setResetModalOpen] = useState<boolean>(false);
 
   const formData = new FormData();
   const dispatch = useDispatch();
@@ -87,6 +83,8 @@ const DetailSettingPage = () => {
   };
 
   const handleOnSave = () => {
+    setSaveModalOpen(false);
+    setLoadingModalOpen(true);
     // 디테일 세팅
     const modified = DetailSettingStyles(colors);
     const result = {
@@ -109,23 +107,18 @@ const DetailSettingPage = () => {
     await Axios.put(api.setting.modifyDetail(), formData)
       .then((res: any) => {
         console.log("디테일 전송됨? ", res);
-        alert("저장되었습니다.");
-        setSaveModalOpen(false);
+        setLoadingModalOpen(false);
+        setFinModalOpen(true);
       })
       .catch((err: any) => {
         console.log(err);
       });
   };
 
-  const showSaveModal = () => {
-    setSaveModalOpen(true);
-  };
-
   const onReset = () => {
-    if (window.confirm("기존 설정으로 돌아갑니다.")) {
-      dispatch(setColors(originColors));
-      dispatch(setClickedComp(initialState.clickedComp));
-    }
+    dispatch(setColors(originColors));
+    dispatch(setClickedComp(initialState.clickedComp));
+    setResetModalOpen(false);
   };
 
   useEffect(() => {
@@ -144,7 +137,10 @@ const DetailSettingPage = () => {
     <div>
       <div className={styles.textPadding} style={{ display: "flex", paddingTop: "0", paddingBottom: "10px" }}>
         <Text value="세부 레이아웃 설정" type="groupTitle" bold />
-        <div style={{ marginLeft: "10px", marginTop: "4px" }} onClick={onReset}>
+        <div
+          style={{ marginLeft: "10px", marginTop: "4px", cursor: "pointer" }}
+          onClick={() => setResetModalOpen(true)}
+        >
           <ReplayIcon fontSize="small" />
         </div>
       </div>
@@ -160,7 +156,7 @@ const DetailSettingPage = () => {
           <ButtonStyled color="sky" label="취소" />
         </div>
         <div style={{ margin: "10px" }}>
-          <ButtonStyled label="저장" onClick={showSaveModal} />
+          <ButtonStyled label="저장" onClick={() => setSaveModalOpen(true)} />
         </div>
       </div>
       {saveModalOpen && (
@@ -168,6 +164,15 @@ const DetailSettingPage = () => {
           text={`변경된 디자인을 저장하시겠습니까?`}
           twoButtonCancle={() => setSaveModalOpen(false)}
           twoButtonConfirm={handleOnSave}
+        />
+      )}
+      {loadingModalOpen && <Modal text={`설정한 레이아웃을 저장하시겠습니까?`} loding />}
+      {finModalOpen && <Modal saveButtonClose={() => setFinModalOpen(false)} save />}
+      {resetModalOpen && (
+        <Modal
+          text={`기존 설정으로 돌아갑니다.\n\n계속하시겠습니까?`}
+          twoButtonCancle={() => setResetModalOpen(false)}
+          twoButtonConfirm={onReset}
         />
       )}
     </div>
