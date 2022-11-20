@@ -68,7 +68,6 @@ const PageSettingPage = () => {
   const sendPage = async (result: resultConfig[]) => {
     await Axios.put(api.setting.modifyPage(), { accessToken: accessToken, githubId: githubId, pages: result })
       .then((res: any) => {
-        console.log("됨? ", res);
         setLoadingModalOpen(false);
         setFinModalOpen(true);
       })

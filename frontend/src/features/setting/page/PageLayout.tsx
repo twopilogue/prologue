@@ -79,7 +79,6 @@ const PageLayout = () => {
     dispatch(setPageList(pageList.filter((it) => it.id !== item.id)));
     dispatch(setPageCnt(pageCnt - 1));
     dispatch(setIsEditPage(isEdit.filter((it) => it.id !== item.id)));
-    console.log(deleList);
   };
 
   const handleSave = (item: any) => {
