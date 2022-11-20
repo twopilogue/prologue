@@ -33,6 +33,17 @@ export const blogTabs = [
   },
 ];
 
+export const nonUserBlogTabs = [
+  {
+    label: "블로그 정보 설정",
+    Component: (
+      <div>
+        <MyInfoPage />
+      </div>
+    ),
+  },
+];
+
 export const layoutTabs = [
   {
     label: "레이아웃 선택",
