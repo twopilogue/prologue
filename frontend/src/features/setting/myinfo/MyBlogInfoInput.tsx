@@ -40,7 +40,7 @@ const MyBlogInfoInput = () => {
   const checkReg = (e: any, link: linkConfig) => {
     const reg = /([\w-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
     if (link.site === "email") {
-      if (!reg.test(e.target.value)) {
+      if (!reg.test(e.target.value) || !link.url) {
         setEmailCheck(false);
         setEmailMsg("잘못된 이메일 형식입니다.");
       } else {
