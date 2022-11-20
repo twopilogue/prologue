@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styles from "features/post/PostWrite.module.css";
 import Text from "components/Text";
 import Button from "components/Button";
-import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
+import MeetingRoomOutlinedIcon from "@mui/icons-material/MeetingRoomOutlined";
 import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import PostWriteTitle from "../features/post/PostWriteTitle";
@@ -194,7 +194,13 @@ const PostEditPage = () => {
         <br /> <br />
         <Text value="간편하게 깃허브 블로그 게시글을 수정해보세요." type="caption" color="dark_gray" />
         <div className={styles.postWriteButtons}>
-          <Button label="돌아가기" color="sky" width="10vw" icon={<RefreshOutlinedIcon />} onClick={showCancelModal} />
+          <Button
+            label="돌아가기"
+            color="sky"
+            width="10vw"
+            icon={<MeetingRoomOutlinedIcon />}
+            onClick={showCancelModal}
+          />
           &nbsp; &nbsp; &nbsp;
           <Button label="작성완료" width="10vw" icon={<CheckOutlinedIcon />} onClick={showSaveModal} />
         </div>
