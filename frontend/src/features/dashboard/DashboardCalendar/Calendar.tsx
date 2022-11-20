@@ -31,8 +31,12 @@ const CalendarStyled = styled(Calendar)(() => ({
   ".react-calendar__tile": {
     color: "#DFDFDF",
     border: "1px solid #DFDFDF",
-    borderRadius: "50px",
+    borderRadius: "50%",
     pointerEvents: "none",
+    margin: "1.5px 0px",
+  },
+  ".react-calendar__navigation": {
+    marginBottom: 0,
   },
   ".react-calendar__navigation button": {
     color: "white",
@@ -43,14 +47,23 @@ const CalendarStyled = styled(Calendar)(() => ({
       backgroundColor: "transparent",
     },
   },
+  ".react-calendar__navigation__label": {
+    pointerEvents: "none",
+  },
   //달력에 오늘 날짜 표시 변경
   ".react-calendar__tile--now": {
     backgroundColor: palette.sky_2,
     color: "black",
     pointerEvents: "none",
+    fontWeight: "600",
   },
   ".mark": {
     background: palette.purlue_4,
+  },
+  ".react-calendar__tile--now.mark": {
+    backgroundColor: "#dfc3f9",
+    color: "black",
+    fontWeight: "600",
   },
 }));
 
