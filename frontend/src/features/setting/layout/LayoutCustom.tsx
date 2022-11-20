@@ -76,7 +76,7 @@ const LayoutCustom = (layoutWidth: any) => {
         layout={getLayout()}
         cols={6}
         rowHeight={50}
-        width={width - 20}
+        width={width - 80}
         maxRows={4}
         // verticalCompact={false}
         // preventCollision={true} // If true, grid items won't change position when being dragged over.

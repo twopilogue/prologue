@@ -63,7 +63,6 @@ const MyInfoPage = () => {
         setMyBlogInfo({
           title: result.title,
           description: result.description,
-          /* 임시 데이터 */
           social: result.social,
         });
       })
@@ -81,7 +80,6 @@ const MyInfoPage = () => {
       summary: myInfo.summary,
       nickName: myInfo.nickName,
       description: myBlogInfo.description,
-      /* 임시 데이터 */
       social: myBlogInfo.social,
     };
     return tmpPayload;

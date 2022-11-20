@@ -38,9 +38,9 @@ const DetailSelector = ({ logoImg, titleImg, setLogoImg, setTitleImg }: Props) =
   };
 
   return (
-    <div>
+    <>
       <div className={styles.checkListContainer}>{components[clicked]}</div>
-    </div>
+    </>
   );
 };
 
