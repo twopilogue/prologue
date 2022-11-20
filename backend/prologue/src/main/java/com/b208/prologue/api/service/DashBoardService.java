@@ -13,4 +13,5 @@ public interface DashBoardService {
     String getLatestBuildTime(String encodedAccessToken, String githubId) throws Exception;
     Integer getTotalCount(String encodedAccessToken, String githubId) throws Exception;
     String getBuildState(String encodedAccessToken, String githubId) throws Exception;
+    boolean checkUpdate(String encodedAccessToken, String githubId) throws Exception;
 }

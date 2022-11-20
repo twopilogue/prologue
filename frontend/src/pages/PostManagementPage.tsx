@@ -1,53 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styles from "features/post/Post.module.css";
 import Text from "components/Text";
 import ButtonStyled from "components/Button";
-import TrendingUpOutlinedIcon from "@mui/icons-material/TrendingUpOutlined";
 import PostCategoryList from "features/post/PostCategoryList";
 import PostList from "features/post/PostList";
 import { useNavigate } from "react-router-dom";
-import Axios from "api/JsonAxios";
-import api from "api/Api";
-import { postListConfig, selectPostList, setPostCount, setPostList } from "slices/postSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { rootState } from "app/store";
-import { useAppSelector } from "app/hooks";
 
 const PostManagementPage = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
-
-  const getPostList = async () => {
-    const tmpList: postListConfig[] = [];
-
-    await Axios.get(api.posts.getPostList(accessToken, githubId, 0))
-      .then((res) => {
-        console.log(res);
-        for (let i = 0; i < res.data.result.Post.length; i++) {
-          const post: postListConfig = {
-            title: res.data.result.Post[i].title,
-            date: res.data.result.Post[i].date,
-            description: res.data.result.Post[i].description,
-            category: res.data.result.Post[i].category,
-            tag: res.data.result.Post[i].tag,
-            directory: res.data.result.Post[i].directory,
-            imgUrl: res.data.result.Post[i].imgUrl,
-          };
-          tmpList.push(post);
-        }
-        dispatch(setPostList(tmpList));
-        dispatch(setPostCount(res.data.result.PostCount));
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  useEffect(() => {
-    getPostList();
-  }, []);
+  const [category, setCategory] = useState("전체보기");
 
   return (
     <div>
@@ -66,8 +28,8 @@ const PostManagementPage = () => {
         />
       </div>
       <div style={{ display: "flex", marginTop: "1%" }}>
-        <PostCategoryList />
-        <PostList />
+        <PostCategoryList setCategory={setCategory} />
+        <PostList category={category} />
       </div>
     </div>
   );

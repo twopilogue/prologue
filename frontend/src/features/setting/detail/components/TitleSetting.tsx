@@ -10,6 +10,7 @@ import { useAppSelector } from "app/hooks";
 import { colorsConfig, getTextColor, selectColors, setColors } from "slices/settingSlice";
 import { useDispatch } from "react-redux";
 import { RadioGroup } from "@mui/material";
+import { detailItemFolded, detailItemUnfolded } from "./LogoSetting";
 
 interface TitleSettingProps {
   titleImg: File;
@@ -20,6 +21,8 @@ const TitleSetting = ({ titleImg, setTitleImg }: TitleSettingProps) => {
   const titleImgRef = useRef<HTMLInputElement | null>(null);
   const colors: colorsConfig = useAppSelector(selectColors);
   const [radioValue, setRadioValue] = useState("titleColor");
+  const detailItemColor = useRef<any>();
+  const detailItemImg = useRef<any>();
   const dispatch = useDispatch();
   const maxLength = 15;
 
@@ -40,15 +43,15 @@ const TitleSetting = ({ titleImg, setTitleImg }: TitleSettingProps) => {
     setTitleImg(e.target.files[0]);
   };
 
-  const handleTitleHeight = (e: any) => {
-    if (!e.target.value) return;
-    if (typeof e.target.value != "number") {
-      alert("숫자만 입력 가능.");
-      e.target.value = 0;
-    }
+  // 높이 설정 보류
+  // const handleTitleHeight = (e: any) => {
+  //   if (typeof parseInt(e.target.value) != "number") {
+  //     alert("숫자만 입력 가능.");
+  //     e.target.value = 0;
+  //   }
 
-    dispatch(setColors({ ...colors, title: { ...colors.title, titleHeight: e.target.value } }));
-  };
+  //   dispatch(setColors({ ...colors, title: { ...colors.title, titleHeight: e.target.value } }));
+  // };
 
   const handleTitleText = (e: any) => {
     if (e.length > maxLength) {
@@ -57,14 +60,28 @@ const TitleSetting = ({ titleImg, setTitleImg }: TitleSettingProps) => {
     dispatch(setColors({ ...colors, title: { ...colors.title, titleText: e } }));
   };
 
+  const changeLogoHeight = (e: ChangeEvent<HTMLInputElement>) => {
+    if (detailItemColor.current && detailItemImg.current) {
+      if (e.target.value === "titleColor") {
+        Object.assign(detailItemColor.current.style, detailItemUnfolded);
+        Object.assign(detailItemImg.current.style, detailItemFolded);
+      } else {
+        Object.assign(detailItemColor.current.style, detailItemFolded);
+        Object.assign(detailItemImg.current.style, detailItemUnfolded);
+      }
+    } else {
+      console.log("에러");
+    }
+  };
+
   return (
     <>
       <div className={styles.checkListTitle}>
         <Text value="타이틀" type="text" bold />
       </div>
       <div className={styles.detailContainer}>
-        <div className={styles.detailItem}>
-          <div className={styles.detailItemThree}>
+        <div className={styles.detailItem}></div>
+        {/* <div className={styles.detailItemThree}>
             <div style={{ textAlign: "center" }}>
               <Text value="높이" type="text" />
             </div>
@@ -85,12 +102,14 @@ const TitleSetting = ({ titleImg, setTitleImg }: TitleSettingProps) => {
             <Text value="미리보기가 제공되지 않습니다." type="caption" color="dark_gray" />
           </div>
         </div>
-        <div className={styles.detailHr} />
+        <div className={styles.detailHr} /> */}
 
         <div className={styles.detailItem}>
-          <Text value="텍스트 설정" type="text" />
+          <div className={styles.textPaddingSm}>
+            <Text value="타이틀 텍스트" type="text" bold />
+          </div>
         </div>
-        <div>
+        <div style={{ margin: "0 10px 10px 10px" }}>
           <Input
             placeholder="텍스트 입력"
             value={colors.title.titleText}
@@ -100,10 +119,16 @@ const TitleSetting = ({ titleImg, setTitleImg }: TitleSettingProps) => {
         <div className={styles.detailHr} />
 
         <div className={styles.detailItem}>
-          <RadioGroup value={radioValue} onChange={radioChange}>
-            <RadioButton label="색상 설정" value="titleColor" />
+          <RadioGroup
+            value={radioValue}
+            onChange={(e) => {
+              radioChange(e);
+              changeLogoHeight(e);
+            }}
+          >
+            <RadioButton label="배경색" value="titleColor" />
           </RadioGroup>
-          <div>
+          <div ref={detailItemColor} style={detailItemUnfolded}>
             <SketchPicker
               color={colors.title.background}
               onChangeComplete={(color) => handleChangeComplete(color.hex)}
@@ -112,24 +137,32 @@ const TitleSetting = ({ titleImg, setTitleImg }: TitleSettingProps) => {
         </div>
         <div className={styles.detailHr} />
         <div className={styles.detailItem}>
-          <RadioGroup value={radioValue} onChange={radioChange}>
-            <RadioButton label="이미지 설정" value="titleImg" />
+          <RadioGroup
+            value={radioValue}
+            onChange={(e) => {
+              radioChange(e);
+              changeLogoHeight(e);
+            }}
+          >
+            <RadioButton label="이미지" value="titleImg" />
           </RadioGroup>
         </div>
-        <input type="file" style={{ display: "none" }} ref={titleImgRef} onChange={(e) => handleImageUpload(e)} />
-        <div className={styles.detailItemImgBtn} onClick={() => controlImgRef(titleImgRef)}>
-          <ButtonStyled color="blue" label="이미지 첨부" />
-        </div>
-        <div>
-          {titleImg ? (
-            <div className={styles.textInfo}>
-              <Text value="이미지가 첨부되었습니다." type="caption" color="blue_4" />
-            </div>
-          ) : (
-            <div className={styles.textInfo}>
-              <Text value="" type="caption" color="blue_4" />
-            </div>
-          )}
+        <div ref={detailItemImg} style={detailItemFolded}>
+          <input type="file" style={{ display: "none" }} ref={titleImgRef} onChange={(e) => handleImageUpload(e)} />
+          <div className={styles.detailItemImgBtn} onClick={() => controlImgRef(titleImgRef)}>
+            <ButtonStyled color="blue" label="이미지 첨부" />
+          </div>
+          <div>
+            {titleImg ? (
+              <div className={styles.textInfo}>
+                <Text value="이미지가 첨부되었습니다." type="caption" color="blue_4" />
+              </div>
+            ) : (
+              <div className={styles.textInfo}>
+                <Text value="" type="caption" color="blue_4" />
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </>
