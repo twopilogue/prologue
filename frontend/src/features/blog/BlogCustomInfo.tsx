@@ -19,7 +19,7 @@ import moment from "moment";
 function BlogCustomInfo() {
   const dispatch = useDispatch();
 
-  const { githubId, accessToken } = useSelector((state: rootState) => state.auth);
+  const { githubId, accessToken, template } = useSelector((state: rootState) => state.auth);
   const [imgPreview, setImgPreview] = useState(null);
   const [lodingView, openLodingView] = React.useState(false);
 
@@ -110,7 +110,7 @@ function BlogCustomInfo() {
     await axios
       .all([
         Axios.get(api.dashboard.getTotalPost(accessToken, githubId)),
-        Axios.get(api.dashboard.getRepoSize(accessToken, githubId)),
+        Axios.get(api.dashboard.getRepoSize(accessToken, githubId, template)),
       ])
       .then(
         axios.spread((res1, res2) => {
