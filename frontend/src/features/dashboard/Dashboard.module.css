@@ -46,6 +46,14 @@
   height: 41vh;
 }
 
+.calendarNowDate {
+  justify-content: space-between;
+  align-items: flex-end;
+  color: lightgray;
+  cursor: pointer;
+}
+
+
 /* 블로그 바로가기 */
 .preview {
   position: relative;
