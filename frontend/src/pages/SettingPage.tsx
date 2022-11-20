@@ -23,7 +23,7 @@ import { useNavigate } from "react-router-dom";
 
 const SettingPage = () => {
   const dispatch = useDispatch();
-  const { githubId, accessToken } = useSelector((state: rootState) => state.auth);
+  const { githubId, accessToken, blogType } = useSelector((state: rootState) => state.auth);
 
   const getBlogInfo = async () => {
     await Axios.get(api.setting.getBlog(accessToken, githubId))
@@ -102,8 +102,10 @@ const SettingPage = () => {
 
   useEffect(() => {
     getBlogInfo();
-    getCategory();
-    getPage();
+    if (blogType !== 1) {
+      getCategory();
+      getPage();
+    }
   }, []);
 
   return (
