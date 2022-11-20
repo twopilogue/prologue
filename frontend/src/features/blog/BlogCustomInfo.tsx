@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { Avatar, Paper, Stack } from "@mui/material";
+import { Avatar, Box, Button, ButtonBase, Paper, Stack } from "@mui/material";
 import ButtonCoustom from "components/Button";
 import ModeIcon from "@mui/icons-material/Mode";
 import Input from "components/Input";
@@ -231,8 +231,30 @@ function BlogCustomInfo() {
                   />
                 </Stack>
               </div>
-              {/* <div></div> */}
-              <ButtonCoustom label="Next" onClick={onClickNext} />
+              <Stack spacing={1}>
+                {isInfo.profile_name.length > 0 &&
+                isInfo.profile_summary.length > 0 &&
+                isInfo.blog_name.length > 0 &&
+                isInfo.blog_summary.length > 0 ? (
+                  <ButtonCoustom label="Next" onClick={onClickNext} />
+                ) : (
+                  <>
+                    <Text value="모두 입력하세요!" type="caption" color="red" />
+                    <Button
+                      disabled
+                      sx={{
+                        borderRadius: "10px",
+                        backgroundColor: "SlateGrey",
+                        "&.MuiButton-text": {
+                          color: "white",
+                        },
+                      }}
+                    >
+                      Next
+                    </Button>
+                  </>
+                )}
+              </Stack>
             </Stack>
           </Stack>
         </Stack>
