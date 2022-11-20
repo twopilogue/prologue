@@ -39,13 +39,11 @@ const DetailSettingPage = () => {
           const result = toJSON(removedResult);
           console.log(result);
 
-          console.log("카테고리 변환 결과: ", result.children.category.attributes);
-          console.log("프로필 반환 결과: ", result.children.profile.attributes);
+          console.log("카테고리 변환 결과: ", result.children.titleh3.attributes);
           const colors = {
             title: {
               background: result.children.title.attributes["background-color"],
               text: result.children.titleh3.attributes["color"],
-              // titleHeight:
               type: res.data.titleColor, // 색이면 true, 이미지면 false
               titleText: res.data.titleText,
             },
@@ -67,8 +65,8 @@ const DetailSettingPage = () => {
               text: result.children["post-list-container"].attributes["color"],
             },
             logo: {
-              background: "#d3d3eb",
-              text: "#ffffff",
+              background: "#ffffff",
+              text: "#000000",
               logoText: res.data.logoText,
             },
           };
