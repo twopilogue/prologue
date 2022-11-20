@@ -87,6 +87,14 @@ function Header() {
               <NavLink to="/setting" className={styles.link}>
                 블로그 설정
               </NavLink>
+              <Link
+                href="https://prologue-docs.site/docs/template/get-started/introduction"
+                className={styles.link}
+                underline="none"
+                color="inherit"
+              >
+                Docs
+              </Link>
             </Stack>
           )}
         </Stack>
