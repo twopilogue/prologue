@@ -34,11 +34,9 @@ const CategoryPage = () => {
     layoutList.forEach((item) => map.set(parseInt(item.i), item));
     categoryList.forEach((item) => map.set(item.id, { ...map.get(item.id), ...item }));
     const merged = Array.from(map.values());
-    console.log(merged);
 
     // 정렬
     const sorted = merged.sort((a, b) => a.y - b.y);
-    console.log(sorted);
     const result: string[] = [];
 
     sorted.map((item) => result.push(item.key));
@@ -52,7 +50,6 @@ const CategoryPage = () => {
       category: result,
     })
       .then((res: any) => {
-        console.log("됨? ", res);
         setLoadingModalOpen(false);
         setFinModalOpen(true);
       })

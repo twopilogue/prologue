@@ -37,9 +37,7 @@ const DetailSettingPage = () => {
         } else {
           const removedResult = res.data.css.replaceAll(".", "").replaceAll(" ", "");
           const result = toJSON(removedResult);
-          console.log(result);
 
-          console.log("카테고리 변환 결과: ", result.children.titleh3.attributes);
           const colors = {
             title: {
               background: result.children.title.attributes["background-color"],
@@ -73,7 +71,6 @@ const DetailSettingPage = () => {
           dispatch(setColors(colors));
           setOriginColors(colors);
         }
-        console.log("DURL?");
       })
       .catch((err) => {
         console.error(err);
@@ -104,7 +101,6 @@ const DetailSettingPage = () => {
   const sendDetailSetting = async (formData: FormData) => {
     await Axios.put(api.setting.modifyDetail(), formData)
       .then((res: any) => {
-        console.log("디테일 전송됨? ", res);
         setLoadingModalOpen(false);
         setFinModalOpen(true);
       })

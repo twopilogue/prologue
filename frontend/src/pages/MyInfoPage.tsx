@@ -55,7 +55,6 @@ const MyInfoPage = () => {
         headers: { "Content-Type": `multipart/form-data` },
       })
       .then((res: any) => {
-        console.log("됨?", res);
         setLoadingModalOpen(false);
         setFinModalOpen(true);
       })

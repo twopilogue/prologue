@@ -38,18 +38,11 @@ const LayoutCustom = (layoutWidth: any) => {
           : tmp.push({ i: it.i, x: it.x, y: it.y, w: it.w, h: it.h });
       });
       dispatch(setUserComponentLayoutList(tmp));
-    } else {
-      console.log("생성 안 됨!");
     }
   };
 
   const saveCurrentLayout = () => {
     const newHeight = (document.querySelector(".react-grid-layout") as HTMLElement).offsetHeight;
-    if (newHeight > 600) {
-      console.log("over height: ", newHeight);
-    } else {
-      console.log("in height: ", newHeight);
-    }
   };
 
   const getLayout = () => {
@@ -62,7 +55,6 @@ const LayoutCustom = (layoutWidth: any) => {
 
   useEffect(() => {
     return () => {
-      console.log("종료");
       if (userComponentList.length > 0) {
         dispatch(setUserComponentLayoutList(origin.originComponentLayoutList));
         dispatch(setUserComponentList(origin.originComponentList));

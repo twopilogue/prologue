@@ -25,7 +25,6 @@ const CreatePage = () => {
   const [lodingView, openLodingView] = React.useState(false);
 
   const layoutSetting = async () => {
-    console.log(radioValue);
     if (radioValue === "CustomLayout") {
       dispatch(authActions.blogType({ blogType: 0 }));
       chooseTemplate();
