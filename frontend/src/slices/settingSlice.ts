@@ -2,6 +2,18 @@ import { createSlice } from "@reduxjs/toolkit";
 import { rootState } from "../app/store";
 import { Layout } from "react-grid-layout";
 
+export interface myInfoProps {
+  nickName: string;
+  summary: string;
+  profileImg: string | FormData;
+}
+
+export interface myBlogInfoProps {
+  title: string;
+  description: string;
+  social: object;
+}
+
 export interface KeyConfig {
   key: string;
   id: number;
@@ -77,14 +89,19 @@ export interface colorsConfig {
 }
 
 interface LayoutConfig {
+  myInfo: myInfoProps;
+  myBlogInfo: myBlogInfoProps;
+
   categoryLayoutList: Layout[];
   categoryList: KeyConfig[];
   categoryCnt: number;
+  isEditCategory: editList[];
 
   pageLayoutList: Layout[];
   pageList: PageConfig[];
   pageCnt: number;
   pageDeleList: PageConfig[];
+  isEditPage: editList[];
 
   componentLayoutList: Layout[];
   componentList: ComponentConfig[];
@@ -111,14 +128,27 @@ interface LayoutConfig {
 }
 
 export const initialState: LayoutConfig = {
+  myInfo: {
+    nickName: "",
+    summary: "",
+    profileImg: null,
+  },
+  myBlogInfo: {
+    title: "",
+    description: "",
+    social: {},
+  },
+
   categoryLayoutList: [],
   categoryList: [],
   categoryCnt: 1,
+  isEditCategory: [],
 
   pageLayoutList: [],
   pageList: [],
   pageCnt: 1,
   pageDeleList: [],
+  isEditPage: [],
 
   componentLayoutList: [],
   componentList: [
@@ -213,6 +243,17 @@ const settingSlice = createSlice({
   name: "setting",
   initialState,
   reducers: {
+    setMyInfo: (state, { payload: { nickName, summary, profileImg } }) => {
+      state.myInfo.nickName = nickName;
+      state.myInfo.summary = summary;
+      state.myInfo.profileImg = profileImg;
+    },
+    setMyBlogInfo: (state, { payload: { title, description, social } }) => {
+      state.myBlogInfo.title = title;
+      state.myBlogInfo.description = description;
+      state.myBlogInfo.social = social;
+    },
+
     setCategoryLayoutList: (state, { payload }) => {
       state.categoryLayoutList = payload;
     },
@@ -221,6 +262,9 @@ const settingSlice = createSlice({
     },
     setCategoryCnt: (state, { payload }) => {
       state.categoryCnt = payload;
+    },
+    setIsEditCategory: (state, { payload }) => {
+      state.isEditCategory = payload;
     },
 
     setPageLayoutList: (state, { payload }) => {
@@ -234,6 +278,9 @@ const settingSlice = createSlice({
     },
     setPageDeleList: (state, { payload }) => {
       state.pageDeleList = payload;
+    },
+    setIsEditPage: (state, { payload }) => {
+      state.isEditPage = payload;
     },
 
     setComponentLayoutList: (state, { payload }) => {
@@ -279,12 +326,17 @@ const settingSlice = createSlice({
   },
 });
 export const {
+  setMyInfo,
+  setMyBlogInfo,
   setCategoryLayoutList,
   setCategoryList,
   setCategoryCnt,
+  setIsEditCategory,
+  setPageLayoutList,
   setPageList,
   setPageCnt,
   setPageDeleList,
+  setIsEditPage,
   setComponentList,
   setComponentLayoutList,
   setUserComponentLayoutList,
@@ -299,14 +351,19 @@ export const {
   setComponentCreated,
 } = settingSlice.actions;
 
+export const selectMyInfo = (state: rootState) => state.setting.myInfo;
+export const selectMyBlogInfo = (state: rootState) => state.setting.myBlogInfo;
+
 export const selectCategoryLayoutList = (state: rootState) => state.setting.categoryLayoutList;
 export const selectCategoryCnt = (state: rootState) => state.setting.categoryCnt;
 export const selectCategoryList = (state: rootState) => state.setting.categoryList;
+export const selectIsEditCategory = (state: rootState) => state.setting.isEditCategory;
 
 export const selectPageLayoutList = (state: rootState) => state.setting.pageLayoutList;
 export const selectPageList = (state: rootState) => state.setting.pageList;
 export const selectPageCnt = (state: rootState) => state.setting.pageCnt;
 export const selectPageDeleList = (state: rootState) => state.setting.pageDeleList;
+export const selectIsEditPage = (state: rootState) => state.setting.isEditPage;
 
 export const selectComponentLayoutList = (state: rootState) => state.setting.componentLayoutList;
 export const selectComponentList = (state: rootState) => state.setting.componentList;

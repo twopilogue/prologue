@@ -1,8 +1,14 @@
-import CategoryCntSetting from "features/setting/category/CategoryCntSetting";
 import CategoryLayout from "features/setting/category/CategoryLayout";
 import React, { useEffect, useState } from "react";
 import { Layout } from "react-grid-layout";
-import { KeyConfig, editList } from "slices/settingSlice";
+import {
+  KeyConfig,
+  editList,
+  selectCategoryList,
+  selectCategoryLayoutList,
+  selectIsEditCategory,
+  selectCategoryCnt,
+} from "slices/settingSlice";
 import ButtonStyled from "components/Button";
 import styles from "features/setting/Setting.module.css";
 import Axios from "api/JsonAxios";
@@ -10,38 +16,19 @@ import api from "api/Api";
 import { useSelector } from "react-redux";
 import { rootState } from "app/store";
 import Modal from "components/Modal";
+import { useAppSelector } from "app/hooks";
 
 const CategoryPage = () => {
   const { githubId, accessToken } = useSelector((state: rootState) => state.auth);
-  const [categoryList, setCategoryList] = useState<KeyConfig[]>([]);
-  const [layoutList, setLayoutList] = useState<Layout[]>([]);
-  const [isEdit, setIsEdit] = useState<editList[]>([]);
-  const [categoryCnt, setCategoryCnt] = useState<number>(0);
+  // const [categoryList, setCategoryList] = useState<KeyConfig[]>([]);
+  // const [layoutList, setLayoutList] = useState<Layout[]>([]);
+  // const [isEdit, setIsEdit] = useState<editList[]>([]);
+  // const [categoryCnt, setCategoryCnt] = useState<number>(0);
+  const categoryList = useAppSelector(selectCategoryList);
+  const layoutList = useAppSelector(selectCategoryLayoutList);
+  const isEdit = useAppSelector(selectIsEditCategory);
+  const categoryCnt = useAppSelector(selectCategoryCnt);
   const [saveModalOpen, setSaveModalOpen] = useState<boolean>(false);
-
-  const getCategory = async () => {
-    await Axios.get(api.setting.getCategory(accessToken, githubId))
-      .then((res: any) => {
-        const response = res.data.category;
-        const tmpList: KeyConfig[] = [];
-        for (let i = 0; i < response.length; i++) {
-          tmpList.push({ key: response[i], id: i });
-        }
-        setCategoryList(tmpList);
-        setCategoryCnt(response.length);
-
-        if (tmpList) {
-          setIsEdit(
-            tmpList.map((it) => {
-              return { key: it.key, id: it.id, editable: false };
-            }),
-          );
-        }
-      })
-      .catch((err: any) => {
-        console.error(err);
-      });
-  };
 
   const saveCategoryList = () => {
     console.log("카테고리", categoryList);
@@ -82,24 +69,10 @@ const CategoryPage = () => {
     setSaveModalOpen(true);
   };
 
-  useEffect(() => {
-    getCategory();
-  }, []);
-
   return (
     <>
       <div>
-        <CategoryLayout
-          categoryList={categoryList}
-          layoutList={layoutList}
-          categoryCnt={categoryCnt}
-          isEdit={isEdit}
-          setCategoryList={setCategoryList}
-          setLayoutList={setLayoutList}
-          setCategoryCnt={setCategoryCnt}
-          setIsEdit={setIsEdit}
-        />
-        <CategoryCntSetting />
+        <CategoryLayout />
       </div>
       <div className={styles.confirmButton}>
         <div style={{ margin: "10px" }}>
