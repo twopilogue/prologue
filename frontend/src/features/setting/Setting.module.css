@@ -111,6 +111,7 @@
   margin: 10px;
   /* background-color: #d3d3eb; */
   border-radius: 5px;
+  border: 1px solid #ececec;
 }
 
 .layout_colored {
