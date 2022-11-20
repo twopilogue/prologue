@@ -47,9 +47,11 @@ const PostEditPage = () => {
   const [contentData, setContentData] = useState("");
   const [saveData, setSaveData] = useState(useAppSelector(selectPostEditList));
   const [savedFileList, setSavedFileList] = useState([]);
+  const [loadingModalOpen, setLoadingModalOpen] = useState(false);
   const [cancelModalOpen, setCancelModalOpen] = useState(false);
   const [saveModalOpen, setSaveModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [uploadModalOpen, setUploadModalOpen] = useState(false);
 
   const title = useAppSelector(selectPostTitle);
   const description = useAppSelector(selectPostDescription);
@@ -86,7 +88,7 @@ const PostEditPage = () => {
     setLoading(false);
   }, []);
 
-  const editPost = () => {
+  const editPost = async () => {
     const formData = new FormData();
 
     for (let i = 0; i < files.length; i++) {
@@ -146,19 +148,26 @@ const PostEditPage = () => {
     );
     console.log("modifyDetailPostRequest : ", modifyDetailPostRequest);
 
-    Axios.put(api.posts.modifyPost(), formData)
+    setSaveModalOpen(false);
+    setLoadingModalOpen(true);
+    await Axios.put(api.posts.modifyPost(), formData)
       .then((res) => {
         console.log(res);
-        navigate("/post");
+        setLoadingModalOpen(false);
+        setUploadModalOpen(true);
+        // navigate("/post");
       })
       .catch((err) => {
         console.log(err);
+        setLoadingModalOpen(false);
       });
     dispatch(resetPostFileList());
   };
 
-  const deletePost = () => {
-    JsonAxios.delete(api.posts.deletePost(), {
+  const deletePost = async () => {
+    setDeleteModalOpen(false);
+    setLoadingModalOpen(true);
+    await JsonAxios.delete(api.posts.deletePost(), {
       data: {
         accessToken: accessToken,
         githubId: githubId,
@@ -167,10 +176,12 @@ const PostEditPage = () => {
     })
       .then((res) => {
         console.log(res);
+        setLoadingModalOpen(false);
         navigate("/post");
       })
       .catch((err) => {
         console.log(err);
+        setLoadingModalOpen(false);
       });
     dispatch(resetPostFileList());
   };
@@ -219,6 +230,7 @@ const PostEditPage = () => {
         <PostViewerContents content={contentData} />
       </div>
 
+      {loadingModalOpen && <Modal text={`게시글 수정을 완료하시겠습니까?`} loding />}
       {cancelModalOpen && (
         <Modal
           text={`정말 게시글 목록으로 돌아가시겠습니까?\n수정 중인 게시글은 사라집니다.`}
@@ -243,6 +255,7 @@ const PostEditPage = () => {
           twoButtonConfirm={deletePost}
         />
       )}
+      {uploadModalOpen && <Modal saveButtonClose={() => setUploadModalOpen(false)} save />}
     </div>
   );
 };
