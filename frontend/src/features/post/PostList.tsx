@@ -1,7 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "features/post/Post.module.css";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
 import FormatAlignLeftIcon from "@mui/icons-material/FormatAlignLeft";
 import GridViewOutlinedIcon from "@mui/icons-material/GridViewOutlined";
 import PostListCard from "./PostListCard";
@@ -32,7 +30,6 @@ const PostList = ({ category }: PostListProps) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const [sort, setSort] = useState("");
   const [itemCnt, setItemCnt] = useState(6);
 
   const postList = useAppSelector(selectPostList);
@@ -74,20 +71,10 @@ const PostList = ({ category }: PostListProps) => {
     getPostList();
   }, [category]);
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setSort(event.target.value);
-  };
-
   return (
     <div className={styles.postList}>
       <div className={styles.postSettings}>
         <Stack direction="row" spacing={2}>
-          <Select value={sort} onChange={handleChange} displayEmpty inputProps={{ "aria-label": "Without label" }}>
-            <MenuItem value="">게시글 정렬</MenuItem>
-            <MenuItem value={"최신순"}>최신순</MenuItem>
-            <MenuItem value={"오래된순"}>오래된순</MenuItem>
-          </Select>
-
           <FormatAlignLeftIcon />
           <GridViewOutlinedIcon />
         </Stack>
