@@ -65,7 +65,7 @@ const LayoutChoicePage = () => {
     })
       .then((res) => {
         console.log("4. 블로그 인증 파일 생성", res.data);
-        navigate("/create", { state: { setStepNumber: 2 } });
+        navigate("/create", { state: { setStepNumber: 2, setTemplate: isChoiceTheme } });
       })
       .catch((err) => {
         console.error("4. 블로그 인증 파일 생성", err);

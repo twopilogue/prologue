@@ -38,8 +38,13 @@ const PageSettingPage = () => {
   const layoutList = useAppSelector(selectPageLayoutList);
   const deleList = useAppSelector(selectPageDeleList);
   const [saveModalOpen, setSaveModalOpen] = useState<boolean>(false);
+  const [loadingModalOpen, setLoadingModalOpen] = useState<boolean>(false);
+  const [finModalOpen, setFinModalOpen] = useState<boolean>(false);
 
   const savePageList = () => {
+    setSaveModalOpen(false);
+    setLoadingModalOpen(true);
+
     // 페이지리스트 + 삭제리스트
     const pageResult: PageConfig[] = pageList.concat(deleList);
 
@@ -64,20 +69,16 @@ const PageSettingPage = () => {
     await Axios.put(api.setting.modifyPage(), { accessToken: accessToken, githubId: githubId, pages: result })
       .then((res: any) => {
         console.log("됨? ", res);
-        alert("저장되었습니다.");
-        setSaveModalOpen(false);
+        setLoadingModalOpen(false);
+        setFinModalOpen(true);
       })
       .catch((err: any) => {
         console.log(err);
       });
   };
 
-  const showSaveModal = () => {
-    setSaveModalOpen(true);
-  };
-
   return (
-    <div>
+    <>
       <div className={styles.textPadding} style={{ paddingTop: "0", paddingBottom: "10px" }}>
         <Text value="페이지 설정" type="groupTitle" bold />
       </div>
@@ -90,17 +91,19 @@ const PageSettingPage = () => {
           <ButtonStyled color="sky" label="취소" />
         </div>
         <div style={{ margin: "10px" }}>
-          <ButtonStyled label="저장" onClick={showSaveModal} />
+          <ButtonStyled label="저장" onClick={() => setSaveModalOpen(true)} />
         </div>
       </div>
       {saveModalOpen && (
         <Modal
-          text={`작성한 정보를 저장하시겠습니까?`}
+          text={`작성한 페이지 정보를 저장하시겠습니까?`}
           twoButtonCancle={() => setSaveModalOpen(false)}
           twoButtonConfirm={savePageList}
         />
       )}
-    </div>
+      {loadingModalOpen && <Modal text={`작성한 페이지 정보를 저장하시겠습니까?`} loding />}
+      {finModalOpen && <Modal saveButtonClose={() => setFinModalOpen(false)} save />}
+    </>
   );
 };
 

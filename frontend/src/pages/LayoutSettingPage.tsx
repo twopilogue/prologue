@@ -7,7 +7,6 @@ import Modal from "components/Modal";
 import Text from "components/Text";
 import DefaultLayoutStyles from "features/setting/layout/DefaultLayoutStyles";
 import LayoutContainer from "features/setting/layout/LayoutContainer";
-import LayoutSample from "features/setting/layout/LayoutSample";
 import LayoutSelector from "features/setting/layout/LayoutSelector";
 import React, { useEffect, useState } from "react";
 import { Layout } from "react-grid-layout";
@@ -29,6 +28,8 @@ const LayoutSettingPage = () => {
   const { githubId, accessToken } = useSelector((state: rootState) => state.auth);
   const DefaultLayoutList = DefaultLayoutStyles();
   const [saveModalOpen, setSaveModalOpen] = useState<boolean>(false);
+  const [loadingModalOpen, setLoadingModalOpen] = useState<boolean>(false);
+  const [finModalOpen, setFinModalOpen] = useState<boolean>(false);
 
   const getUserLayout = async () => {
     await Axios.get(api.setting.getLayout(accessToken, githubId))
@@ -63,6 +64,8 @@ const LayoutSettingPage = () => {
   };
 
   const handleOnSave = () => {
+    setSaveModalOpen(false);
+    setLoadingModalOpen(true);
     const layoutJson = {
       layout: DefaultLayoutList[clickedIdx].layout,
       checkList: DefaultLayoutList[clickedIdx].checkList,
@@ -82,16 +85,12 @@ const LayoutSettingPage = () => {
     await Axios.put(api.setting.modifyLayout(), result)
       .then((res: any) => {
         console.log("레이아웃 수정 완!", res);
-        alert("저장되었습니다.");
-        setSaveModalOpen(false);
+        setLoadingModalOpen(false);
+        setFinModalOpen(true);
       })
       .catch((err: any) => {
         console.log("ㅡㅡ빠꾸", err);
       });
-  };
-
-  const showSaveModal = () => {
-    setSaveModalOpen(true);
   };
 
   useEffect(() => {
@@ -113,7 +112,7 @@ const LayoutSettingPage = () => {
           <ButtonStyled color="sky" label="취소" />
         </div>
         <div style={{ margin: "10px" }}>
-          <ButtonStyled label="저장 후 레이아웃 설정" onClick={showSaveModal} />
+          <ButtonStyled label="저장" onClick={() => setSaveModalOpen(true)} />
         </div>
       </div>
       {saveModalOpen && (
@@ -123,6 +122,8 @@ const LayoutSettingPage = () => {
           twoButtonConfirm={handleOnSave}
         />
       )}
+      {loadingModalOpen && <Modal text={`설정한 레이아웃을 저장하시겠습니까?`} loding />}
+      {finModalOpen && <Modal saveButtonClose={() => setFinModalOpen(false)} save />}
     </>
   );
 };

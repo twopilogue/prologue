@@ -21,9 +21,11 @@ const MyInfoPage = () => {
   const { githubId, accessToken } = useSelector((state: rootState) => state.auth);
   const [newPic, setNewPic] = useState<Blob>(null);
   const [socialList, setSocialList] = useState({});
-  const [saveModalOpen, setSaveModalOpen] = useState<boolean>(false);
   const myBlogInfo = useAppSelector(selectMyBlogInfo);
   const myInfo = useAppSelector(selectMyInfo);
+  const [saveModalOpen, setSaveModalOpen] = useState<boolean>(false);
+  const [loadingModalOpen, setLoadingModalOpen] = useState<boolean>(false);
+  const [finModalOpen, setFinModalOpen] = useState<boolean>(false);
 
   const handleOnEdit = () => {
     const tmpPayload = {
@@ -39,6 +41,9 @@ const MyInfoPage = () => {
   };
 
   const sendBlogInfo = async () => {
+    setSaveModalOpen(false);
+    setLoadingModalOpen(true);
+
     const formData = new FormData();
     const result = handleOnEdit();
 
@@ -51,17 +56,12 @@ const MyInfoPage = () => {
       })
       .then((res: any) => {
         console.log("됨?", res);
-        alert("저장되었습니다.");
-        setSaveModalOpen(false);
-        window.location.reload(); // 새로고침
+        setLoadingModalOpen(false);
+        setFinModalOpen(true);
       })
       .catch((err: any) => {
         console.log(err);
       });
-  };
-
-  const showSaveModal = () => {
-    setSaveModalOpen(true);
   };
 
   return (
@@ -74,7 +74,7 @@ const MyInfoPage = () => {
       <div>
         <div className={styles.confirmButton}>
           <div style={{ margin: "10px" }}>
-            <ButtonStyled label="저장" onClick={showSaveModal} />
+            <ButtonStyled label="저장" onClick={() => setSaveModalOpen(true)} />
           </div>
         </div>
       </div>
@@ -84,6 +84,16 @@ const MyInfoPage = () => {
           text={`작성한 정보를 저장하시겠습니까?`}
           twoButtonCancle={() => setSaveModalOpen(false)}
           twoButtonConfirm={sendBlogInfo}
+        />
+      )}
+      {loadingModalOpen && <Modal text={`설정한 레이아웃을 저장하시겠습니까?`} loding />}
+      {finModalOpen && (
+        <Modal
+          saveButtonClose={() => {
+            setFinModalOpen(false);
+            window.location.reload(); // 새로고침
+          }}
+          save
         />
       )}
     </div>

@@ -11,7 +11,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { authActions } from "slices/authSlice";
 import { rootState } from "app/store";
-import Modal from "components/Modal";
 
 const DashboardPage = () => {
   const dispatch = useDispatch();
