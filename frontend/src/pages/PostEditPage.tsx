@@ -177,7 +177,8 @@ const PostEditPage = () => {
       .then((res) => {
         console.log(res);
         setLoadingModalOpen(false);
-        navigate("/post");
+        setUploadModalOpen(true);
+        // navigate("/post");
       })
       .catch((err) => {
         console.log(err);
