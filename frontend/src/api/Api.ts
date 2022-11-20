@@ -51,7 +51,7 @@ interface apiInterface {
     getPostDetail: (accessToken: string, githubId: string, directory: string) => string;
     modifyPost: () => string;
     deletePost: () => string;
-    getPostList: (accessToken: string, githubId: string, page: number) => string;
+    getPostList: (accessToken: string, githubId: string, index: number, category: string) => string;
     getPage: (accessToken: string, githubId: string, pageName: string) => string;
     modifyPage: () => string;
   };
@@ -118,8 +118,17 @@ const api: apiInterface = {
       HOST + POSTS + "?accessToken=" + accessToken + "&githubId=" + githubId + "&directory=" + directory,
     modifyPost: () => HOST + POSTS,
     deletePost: () => HOST + POSTS,
-    getPostList: (accessToken: string, githubId: string, page: number) =>
-      HOST + POSTS + "/list?accessToken=" + accessToken + "&githubId=" + githubId + "&page=" + page,
+    getPostList: (accessToken: string, githubId: string, index: number, category: string) =>
+      HOST +
+      POSTS +
+      "/list?accessToken=" +
+      accessToken +
+      "&githubId=" +
+      githubId +
+      "&index=" +
+      index +
+      "&category=" +
+      category,
     getPage: (accessToken: string, githubId: string, pageName: string) =>
       HOST + POSTS + "/pages?accessToken=" + accessToken + "&githubId=" + githubId + "&pageName=" + pageName,
     modifyPage: () => HOST + POSTS + "/pages",
