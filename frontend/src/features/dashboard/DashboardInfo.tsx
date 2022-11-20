@@ -18,6 +18,7 @@ import {
   Stack,
   styled,
   Typography,
+  keyframes,
 } from "@mui/material";
 import axios from "axios";
 import "moment/locale/ko";
@@ -41,16 +42,21 @@ const BuildButton = styled(ButtonBase)(() => ({
   fontFamily: "Pretendard-Regular",
   transition: "all 0.1s",
   animation: "blink 1s step-end infinite",
-  "&:hover": {
-    backgroundColor: "#8ba8bd",
-  },
-  "&.Mui-disabled": {
-    // backgroundColor: "#8198aa",
-    // backgroundColor: "#D6E5F3",
-    backgroundColor: "#ecf2f7",
-    color: "#abb5c0",
-  },
 }));
+
+const blink_1 = keyframes`
+  0%,
+  10%,
+  20%,
+  100% {
+    opacity: 1
+  }
+
+  5%,
+  15% {
+    opacity: 0.5
+  }
+`;
 
 function CircularProgressWithLabel(props: CircularProgressProps & { value: number }) {
   return (
@@ -99,7 +105,7 @@ function DashboardInfo(props: { buildState: boolean; setBuildState: (state: bool
   const countRef = useRef(null);
 
   const startHandler = () => {
-    if (!props.buildState) {
+    if (!props.buildState || uploadClick == false) {
       clearInterval(countRef.current);
       countRef.current = 0;
       return;
@@ -130,6 +136,12 @@ function DashboardInfo(props: { buildState: boolean; setBuildState: (state: bool
 
   useEffect(() => {
     startHandler();
+    setUploadClick(props.buildState);
+  }, [uploadClick]);
+
+  useEffect(() => {
+    startHandler();
+    getBlogInfo();
     Axios.get(api.dashboard.getChangeState(accessToken, githubId)).then((res) => {
       setChangeState(res.data.checkUpdate);
       console.log("변경사항있나", res.data.checkUpdate);
@@ -142,7 +154,7 @@ function DashboardInfo(props: { buildState: boolean; setBuildState: (state: bool
   }, [timerChange]);
 
   useEffect(() => {
-    if (!props.buildState) return;
+    if (!props.buildState || uploadClick == false) return;
     if (progressCount >= 100) {
       resetHandler();
     }
@@ -275,11 +287,29 @@ function DashboardInfo(props: { buildState: boolean; setBuildState: (state: bool
                 <BuildButton disabled>
                   <CircularProgressWithLabel value={progressCount} size={36} />
                 </BuildButton>
+              ) : changeState ? (
+                <BuildButton
+                  onClick={triggerStart}
+                  sx={{
+                    animation: `${blink_1} 4s infinite both`,
+                    backgroundColor: "#5cbac3",
+                    "&:hover": {
+                      backgroundColor: "#40696c",
+                    },
+                  }}
+                >
+                  변경사항 배포
+                </BuildButton>
               ) : (
                 <BuildButton
                   onClick={triggerStart}
-                  disabled={!changeState}
-                  className={changeState ? `${styles.build_possible_Button}` : `${styles.build_none_Button}`}
+                  disabled
+                  sx={{
+                    "&.Mui-disabled": {
+                      backgroundColor: "#ecf2f7",
+                      color: "#abb5c0",
+                    },
+                  }}
                 >
                   변경사항 배포
                 </BuildButton>
