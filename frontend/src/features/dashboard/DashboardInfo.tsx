@@ -78,7 +78,7 @@ function CircularProgressWithLabel(props: CircularProgressProps & { value: numbe
 function DashboardInfo(props: { buildState: boolean; setBuildState: (state: boolean) => void }) {
   const dispatch = useDispatch();
 
-  const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
+  const { accessToken, githubId, template } = useSelector((state: rootState) => state.auth);
   const { totalPost, repoSize, buildTime } = useSelector((state: rootState) => state.dashboard);
 
   const [buildTimer, setBuilTimer] = useState("");
@@ -139,7 +139,7 @@ function DashboardInfo(props: { buildState: boolean; setBuildState: (state: bool
     await axios
       .all([
         Axios.get(api.dashboard.getTotalPost(accessToken, githubId)),
-        Axios.get(api.dashboard.getRepoSize(accessToken, githubId)),
+        Axios.get(api.dashboard.getRepoSize(accessToken, githubId, template)),
       ])
       .then(
         axios.spread((res1, res2) => {
