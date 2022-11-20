@@ -236,4 +236,21 @@ public class DashBoardServiceImpl implements DashBoardService {
         }
         return buildState;
     }
+
+    public boolean checkUpdate(String encodedAccessToken, String githubId) throws Exception {
+        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
+        String response = webClient.get()
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io/branches/main")
+                .accept(MediaType.APPLICATION_JSON)
+                .headers(h -> h.setBearerAuth(accessToken))
+                .retrieve()
+                .bodyToMono(String.class).block();
+
+        JSONParser jsonParser = new JSONParser();
+        JSONObject object = (JSONObject) jsonParser.parse(response);
+        JSONObject commit = (JSONObject) jsonParser.parse(object.get("commit").toString());
+        JSONObject commitDetail = (JSONObject) jsonParser.parse(commit.get("commit").toString());
+        if (commitDetail.get("message").equals("action workflow")) return false;
+        return true;
+    }
 }
