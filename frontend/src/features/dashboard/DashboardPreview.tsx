@@ -14,6 +14,7 @@ function DashboardPreview(props: { buildState: boolean }) {
   const { githubId } = useSelector((state: rootState) => state.auth);
 
   const blogLink = `https://${githubId}.github.io/`;
+  const repoLink = `https://github.com/${githubId}`;
 
   useEffect(() => {
     axios.get(blogLink).catch(() => {
@@ -49,7 +50,7 @@ function DashboardPreview(props: { buildState: boolean }) {
         </Link>
         <div className={styles.previewInfo}>
           <div className={styles.flexRow}>
-            <Link href={blogLink} underline="none" color="black" target="_blank">
+            <Link href={repoLink} underline="none" color="black" target="_blank">
               <Text value={`${githubId}.github.io`} bold />
             </Link>
             <IconButton href="/setting">
