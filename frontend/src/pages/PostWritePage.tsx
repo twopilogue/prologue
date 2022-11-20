@@ -50,61 +50,81 @@ const PostWritePage = () => {
   const files = useAppSelector(selectPostFiles);
 
   const savePost = () => {
-    const formData = new FormData();
-    console.log("files : ", files);
-    for (let i = 0; i < files.length; i++) {
-      formData.append("files", files[i]);
-      const file: File = files[i];
-      console.log("files[i] : ", file.name);
+    if (title == "") {
+      setSaveModalOpen(false);
+      document.getElementById("titleError").style.display = "inline";
+      setTimeout(() => {
+        document.getElementById("titleError").style.display = "none";
+      }, 3500);
+      console.log("제목 비었음");
     }
 
-    const frontMatter =
-      "---\ntitle: " +
-      title +
-      "\ndescription: " +
-      description +
-      "\ncategory: " +
-      category +
-      "\ntags: [" +
-      tagList +
-      "]\ndate: " +
-      new Date().toISOString() +
-      "\n---\n";
+    if (description == "") {
+      setSaveModalOpen(false);
+      document.getElementById("descriptionError").style.display = "inline";
+      setTimeout(() => {
+        document.getElementById("descriptionError").style.display = "none";
+      }, 3500);
+      console.log("설명 비었음");
+    }
 
-    const writeDetailPostRequest: writeDetailPostRequestProps = {
-      accessToken: accessToken,
-      githubId: githubId,
-      content: frontMatter + content,
-      images: [],
-      blogType: blogType,
-    };
-
-    console.log("fileList length : ", fileList.length);
-    if (fileList.length) {
-      for (let i = 0; i < fileList.length; i++) {
-        const tmp = {
-          url: fileList[i].url,
-          name: fileList[i].name,
-        };
-        console.log("tmp : ", tmp);
-        writeDetailPostRequest.images.push(tmp);
+    if (title != "" && description != "") {
+      const formData = new FormData();
+      console.log("files : ", files);
+      for (let i = 0; i < files.length; i++) {
+        formData.append("files", files[i]);
+        const file: File = files[i];
+        console.log("files[i] : ", file.name);
       }
+
+      const frontMatter =
+        "---\ntitle: " +
+        title +
+        "\ndescription: " +
+        description +
+        "\ncategory: " +
+        category +
+        "\ntags: [" +
+        tagList +
+        "]\ndate: " +
+        new Date().toISOString() +
+        "\n---\n";
+
+      const writeDetailPostRequest: writeDetailPostRequestProps = {
+        accessToken: accessToken,
+        githubId: githubId,
+        content: frontMatter + content,
+        images: [],
+        blogType: blogType,
+      };
+
+      console.log("fileList length : ", fileList.length);
+      if (fileList.length) {
+        for (let i = 0; i < fileList.length; i++) {
+          const tmp = {
+            url: fileList[i].url,
+            name: fileList[i].name,
+          };
+          console.log("tmp : ", tmp);
+          writeDetailPostRequest.images.push(tmp);
+        }
+      }
+
+      formData.append(
+        "writeDetailPostRequest",
+        new Blob([JSON.stringify(writeDetailPostRequest)], { type: "application/json" }),
+      );
+
+      Axios.post(api.posts.writePost(), formData)
+        .then((res) => {
+          console.log(res);
+          navigate("/post");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      dispatch(resetPostFileList());
     }
-
-    formData.append(
-      "writeDetailPostRequest",
-      new Blob([JSON.stringify(writeDetailPostRequest)], { type: "application/json" }),
-    );
-
-    Axios.post(api.posts.writePost(), formData)
-      .then((res) => {
-        console.log(res);
-        navigate("/post");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    dispatch(resetPostFileList());
   };
 
   const showCancelModal = () => {
