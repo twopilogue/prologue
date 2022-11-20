@@ -6,7 +6,7 @@ interface authConfig {
   githubImage: string;
   login: boolean;
   authFile: boolean;
-  blogType: null | 0 | 1; // 0:직접 레이아웃 설정, 1: 게시글만 관리
+  blogType: null | 0 | 1;
   template: string;
 }
 

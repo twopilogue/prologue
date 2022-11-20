@@ -40,36 +40,21 @@ const CreatePage = () => {
       accessToken: accessToken,
       githubId: githubId,
       template: "prologue-template",
-    })
-      .then(async (res) => {
-        console.log("1. 기본 테마적용 성공", res.data);
-        setTimeout(() => [setSecretRepo()], 200);
-      })
-      .catch((err) => {
-        console.error("1. 기본 테마적용 err", err);
-      });
+    }).then(async () => {
+      setTimeout(() => [setSecretRepo()], 200);
+    });
   };
 
   const setSecretRepo = async () => {
-    await Axios.put(api.auth.setSecretRepo(accessToken, githubId))
-      .then((res) => {
-        console.log("2. Repo secrets 생성", res.data);
-        changeBuildType();
-      })
-      .catch((err) => {
-        console.error("2. Repo secrets 생성", err);
-      });
+    await Axios.put(api.auth.setSecretRepo(accessToken, githubId)).then(() => {
+      changeBuildType();
+    });
   };
 
   const changeBuildType = async () => {
-    await Axios.put(api.blog.changeBuildType(accessToken, githubId))
-      .then(async (res) => {
-        console.log("3. 블로그 빌드타입 변경", res.data);
-        setAuthFile();
-      })
-      .catch((err) => {
-        console.error("3. 블로그 빌드타입 변경", err);
-      });
+    await Axios.put(api.blog.changeBuildType(accessToken, githubId)).then(async () => {
+      setAuthFile();
+    });
   };
 
   // 인증 파일 생성
@@ -79,15 +64,10 @@ const CreatePage = () => {
       githubId: githubId,
       blogType: 0,
       template: "prologue-template",
-    })
-      .then((res) => {
-        console.log("4. 블로그 인증 파일 생성", res.data);
-        openLodingView(false);
-        setStepNumber(2);
-      })
-      .catch((err) => {
-        console.error("4. 블로그 인증 파일 생성", err);
-      });
+    }).then(() => {
+      openLodingView(false);
+      setStepNumber(2);
+    });
   };
 
   return (
