@@ -3,22 +3,25 @@ import styles from "../Setting.module.css";
 import Text from "components/Text";
 import Input from "components/Input";
 import SelectInput from "features/setting/SelectInput";
-import { blogInfoConfig } from "slices/settingSlice";
-import { myBlogInfoProps } from "pages/MyInfoPage";
+import { selectMyBlogInfo, setMyBlogInfo } from "slices/settingSlice";
 import ButtonStyled from "components/Button";
+import { useDispatch } from "react-redux";
+import { useAppSelector } from "app/hooks";
 
-interface Props {
-  myBlogInfo: myBlogInfoProps;
-  setMyBlogInfo: Dispatch<SetStateAction<myBlogInfoProps>>;
-  setSocialList: Dispatch<SetStateAction<object>>;
-}
+// interface Props {
+//   // myBlogInfo: myBlogInfoProps;
+//   // setMyBlogInfo: Dispatch<SetStateAction<myBlogInfoProps>>;
+//   // setSocialList: Dispatch<SetStateAction<object>>;
+// }
 
 export interface linkConfig {
   site: string;
   url: string;
 }
 
-const MyBlogInfoInput = ({ myBlogInfo, setMyBlogInfo, setSocialList }: Props) => {
+const MyBlogInfoInput = () => {
+  const dispatch = useDispatch();
+  const myBlogInfo = useAppSelector(selectMyBlogInfo);
   const [link, setLink] = useState<linkConfig>({
     site: "",
     url: "",
@@ -28,15 +31,17 @@ const MyBlogInfoInput = ({ myBlogInfo, setMyBlogInfo, setSocialList }: Props) =>
     if (!link.site || !link.url) {
       return;
     }
-    setMyBlogInfo({
-      ...myBlogInfo,
-      social: {
-        ...myBlogInfo.social,
-        [link.site]: link.url,
-      },
-    });
+    dispatch(
+      setMyBlogInfo({
+        ...myBlogInfo,
+        social: {
+          ...myBlogInfo.social,
+          [link.site]: link.url,
+        },
+      }),
+    );
 
-    setSocialList({ ...myBlogInfo.social, [link.site]: link.url });
+    dispatch(setMyBlogInfo({ ...myBlogInfo, social: { ...myBlogInfo.social, [link.site]: link.url } }));
   };
 
   return (
@@ -53,10 +58,12 @@ const MyBlogInfoInput = ({ myBlogInfo, setMyBlogInfo, setSocialList }: Props) =>
                 value={myBlogInfo.title}
                 placeholder="블로그명을 입력하세요."
                 onChange={(e: any) => {
-                  setMyBlogInfo({
-                    ...myBlogInfo,
-                    title: e.target.value,
-                  });
+                  dispatch(
+                    setMyBlogInfo({
+                      ...myBlogInfo,
+                      title: e.target.value,
+                    }),
+                  );
                 }}
               />
             </div>
@@ -72,10 +79,12 @@ const MyBlogInfoInput = ({ myBlogInfo, setMyBlogInfo, setSocialList }: Props) =>
                 multiline
                 rows={4}
                 onChange={(e: any) => {
-                  setMyBlogInfo({
-                    ...myBlogInfo,
-                    description: e.target.value,
-                  });
+                  dispatch(
+                    setMyBlogInfo({
+                      ...myBlogInfo,
+                      description: e.target.value,
+                    }),
+                  );
                 }}
               />
             </div>

@@ -27,7 +27,7 @@ interface apiInterface {
     getNewPost: (accessToken: string, githubId: string) => string;
     getNewBuildTime: (accessToken: string, githubId: string) => string;
     getMonthPosts: (accessToken: string, githubId: string) => string;
-    getRepoSize: (accessToken: string, githubId: string) => string;
+    getRepoSize: (accessToken: string, githubId: string, template: string) => string;
     getTotalPost: (accessToken: string, githubId: string) => string;
     getBildState: (accessToken: string, githubId: string) => string;
   };
@@ -85,8 +85,8 @@ const api: apiInterface = {
       HOST + DASHBOARD + "latest-build?accessToken=" + accessToken + "&githubId=" + githubId,
     getMonthPosts: (accessToken: string, githubId: string) =>
       HOST + DASHBOARD + "month-posts?accessToken=" + accessToken + "&githubId=" + githubId,
-    getRepoSize: (accessToken: string, githubId: string) =>
-      HOST + DASHBOARD + "size?accessToken=" + accessToken + "&githubId=" + githubId,
+    getRepoSize: (accessToken: string, githubId: string, template: string) =>
+      HOST + DASHBOARD + "size?accessToken=" + accessToken + "&githubId=" + githubId + "&template=" + template,
     getTotalPost: (accessToken: string, githubId: string) =>
       HOST + DASHBOARD + "total?accessToken=" + accessToken + "&githubId=" + githubId,
     getBildState: (accessToken: string, githubId: string) =>

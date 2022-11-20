@@ -11,6 +11,7 @@ import {
   setClickedComp,
   selectUserComponentList,
   selectUserComponentLayoutList,
+  setClickedLayoutIdx,
 } from "slices/settingSlice";
 import { useGettingWidth } from "../layout/LayoutContainer";
 import Text from "components/Text";
@@ -46,13 +47,11 @@ const SettingLayout = () => {
     DefaultLayoutList[clickedIdx].id === 0 ? setIsCust(true) : setIsCust(false);
   }, [clickedIdx]);
 
-  // useEffect(() => {
-  //   return () => {
-  //     dispatch(setComponentLayoutList(initialState.componentLayoutList));
-  //     dispatch(setUserComponentLayoutList(initialState.userComponentLayoutList));
-  //     dispatch(setClickedLayoutIdx(initialState.clickedLayoutIdx));
-  //   };
-  // });
+  useEffect(() => {
+    return () => {
+      dispatch(setClickedLayoutIdx(0));
+    };
+  }, []);
 
   return (
     <div>

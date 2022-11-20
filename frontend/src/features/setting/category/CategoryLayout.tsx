@@ -7,74 +7,81 @@ import Text from "components/Text";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import CategoryLayoutItem from "./CategoryLayoutItem";
 
-import { editList, KeyConfig } from "slices/settingSlice";
-
-interface Props {
-  categoryList: KeyConfig[];
-  layoutList: Layout[];
-  categoryCnt: number;
-  isEdit: editList[];
-  setCategoryList: Dispatch<React.SetStateAction<KeyConfig[]>>;
-  setLayoutList: Dispatch<React.SetStateAction<Layout[]>>;
-  setCategoryCnt: Dispatch<React.SetStateAction<number>>;
-  setIsEdit: Dispatch<React.SetStateAction<editList[]>>;
-}
-
-const CategoryLayout = ({
-  categoryList,
-  layoutList,
-  categoryCnt,
-  isEdit,
-  setCategoryList,
-  setLayoutList,
+import {
+  selectCategoryCnt,
+  selectCategoryLayoutList,
+  selectCategoryList,
+  selectIsEditCategory,
   setCategoryCnt,
-  setIsEdit,
-}: Props) => {
+  setCategoryLayoutList,
+  setCategoryList,
+  setIsEditCategory,
+} from "slices/settingSlice";
+import { useAppSelector } from "app/hooks";
+import { useDispatch } from "react-redux";
+
+const useGettingWidth = () => {
+  const [gridWidth, setGridWidth] = useState(null);
+  const gridAddRef = useCallback((node: HTMLElement) => {
+    if (node !== null) {
+      setGridWidth(node.offsetWidth);
+    }
+  }, []);
+  return [gridWidth, gridAddRef];
+};
+
+const CategoryLayout = () => {
+  const dispatch = useDispatch();
   const [newName, setNewName] = useState<string>("");
+  const categoryList = useAppSelector(selectCategoryList);
+  const layoutList = useAppSelector(selectCategoryLayoutList);
+  const isEdit = useAppSelector(selectIsEditCategory);
+  const categoryCnt = useAppSelector(selectCategoryCnt);
+  const [gridWidth, gridAddRef] = useGettingWidth();
 
   const addBox = () => {
     const categoryName: string = "새 카테고리 " + (categoryCnt + 1).toString();
-
-    setCategoryList(categoryList.concat({ key: categoryName, id: categoryCnt }));
-    setIsEdit(isEdit.concat({ key: categoryName, id: categoryCnt, editable: false }));
-    setCategoryCnt(categoryCnt + 1);
+    dispatch(setCategoryList(categoryList.concat({ key: categoryName, id: categoryCnt })));
+    dispatch(setIsEditCategory(isEdit.concat({ key: categoryName, id: categoryCnt, editable: false })));
+    dispatch(setCategoryCnt(categoryCnt + 1));
   };
 
   const handleEdit = (item: any) => {
-    console.log(item);
-    console.log("카테고리", categoryList);
-    console.log("레이아웃", layoutList);
-    console.log("개수", categoryCnt);
-    console.log("수정", isEdit);
     setNewName(item.key); // 이름으로 placeholder
-    setIsEdit(
-      isEdit.map((it: any) => {
-        return it.id === item.id
-          ? { key: it.key, id: it.id, editable: true }
-          : { key: it.key, id: it.id, editable: false };
-      }),
+    dispatch(
+      setIsEditCategory(
+        isEdit.map((it: any) => {
+          return it.id === item.id
+            ? { key: it.key, id: it.id, editable: true }
+            : { key: it.key, id: it.id, editable: false };
+        }),
+      ),
     );
   };
 
   const handleDele = (item: number) => {
-    setCategoryList(categoryList.filter((it) => it.id !== item));
+    dispatch(setCategoryList(categoryList.filter((it) => it.id !== item)));
     // set LayoutList( LayoutList.filter((it) => it.y !== item));
-    setCategoryCnt(categoryCnt - 1);
-    setIsEdit(isEdit.filter((it) => it.id !== item));
+    dispatch(setCategoryCnt(categoryCnt - 1));
+    dispatch(setIsEditCategory(isEdit.filter((it) => it.id !== item)));
   };
 
   const handleSave = (item: number) => {
-    setCategoryList(
-      categoryList.map((it: any) => {
-        return it.id === item ? { key: newName, id: it.id } : { key: it.key, id: it.id };
-      }),
+    dispatch(
+      setCategoryList(
+        categoryList.map((it: any) => {
+          return it.id === item ? { key: newName, id: it.id } : { key: it.key, id: it.id };
+        }),
+      ),
     );
-    setIsEdit(
-      isEdit.map((it: any) => {
-        return it.id === item
-          ? { key: newName, id: it.id, editable: false }
-          : { key: it.key, id: it.id, editable: false };
-      }),
+    dispatch(
+      setIsEditCategory(
+        isEdit.map((it: any) => {
+          return it.id === item
+            ? { key: newName, id: it.id, editable: false }
+            : { key: it.key, id: it.id, editable: false };
+        }),
+      ),
     );
   };
 
@@ -87,31 +94,18 @@ const CategoryLayout = ({
     layouts.map((it: Layout) => {
       return tmpList.push({ i: it.i, x: it.x, y: it.y, w: it.w, h: it.h, static: it.static });
     });
-    setLayoutList(tmpList);
+    dispatch(setCategoryLayoutList(tmpList));
   };
-
-  const useGettingWidth = () => {
-    const [gridWidth, setGridWidth] = useState(null);
-
-    // ✅  useRef와 useEffect를 지우고 callback ref를 새로 작성
-    const gridAddRef = useCallback((node: HTMLElement) => {
-      if (node !== null) {
-        setGridWidth(node.offsetWidth);
-      }
-    }, []);
-
-    return [gridWidth, gridAddRef];
-  };
-
-  const [gridWidth, gridAddRef] = useGettingWidth();
 
   useEffect(() => {
     if (categoryList) {
-      setIsEdit(
-        categoryList.map((it) => {
-          console.log("what?");
-          return { key: it.key, id: it.id, editable: false };
-        }),
+      dispatch(
+        setIsEditCategory(
+          categoryList.map((it) => {
+            console.log("what?");
+            return { key: it.key, id: it.id, editable: false };
+          }),
+        ),
       );
     }
   }, []);
@@ -126,7 +120,7 @@ const CategoryLayout = ({
       </div>
 
       <div className={styles.gridContainer}>
-        {categoryList.length != 0 ? (
+        {categoryList.length !== 0 ? (
           <GridLayout
             className="layout"
             layout={layoutList}

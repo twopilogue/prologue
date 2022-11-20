@@ -86,11 +86,21 @@ const PostList = ({ category }: PostListProps) => {
             key={key}
             className={styles.postCards}
             onClick={() => {
+              let newTag: string[];
+
+              if (value.tag.length <= 1) {
+                newTag = [];
+              } else {
+                newTag = [...value.tag];
+                newTag[0] = newTag[0].replace(" [", "");
+                newTag[newTag.length - 1] = newTag[newTag.length - 1].replace("]", "");
+              }
+
               const tmp = {
                 title: value.title,
                 description: value.description,
                 category: value.category,
-                tag: value.tag,
+                tag: newTag,
               };
               dispatch(setPostEditList(tmp));
               navigate("/post/edit/" + value.directory);

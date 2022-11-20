@@ -32,12 +32,6 @@ const LayoutContainer = () => {
     clickedIdx === 0 ? setIsCust(true) : setIsCust(false);
   }, [clickedIdx]);
 
-  useEffect(() => {
-    return () => {
-      console.log("종ㄷ료?");
-    };
-  }, []);
-
   return (
     <div>
       <div className={styles.textPadding} style={{ paddingBottom: "10px" }}>
