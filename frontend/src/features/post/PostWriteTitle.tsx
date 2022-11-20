@@ -87,7 +87,8 @@ const PostWriteTitle = ({ savedTitle, savedDescription, savedCategory, savedTag 
 
   // const deletePostTag = (event: any) => {
   //   console.log("삭제");
-  //   const deleteTag = event.target.value;
+  //   const deleteTag = event.target.label;
+  //   console.log("deleteTag : ", deleteTag);
   //   const filteredTagList = tagList.filter((tag) => tag !== deleteTag);
   //   setTagList(filteredTagList);
   // };
