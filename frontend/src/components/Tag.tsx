@@ -13,7 +13,7 @@ const randomBrightColor = () => {
   const colorG = arrG[randomNum];
   const colorB = arrB[randomNum];
 
-  return "rgb" + "(" + colorR + "," + colorG + "," + colorB + ")";
+  return "rgb" + "(" + 115 + "," + 119 + "," + 204 + ")";
 };
 
 const ChipStyled = styled(Chip)(() => ({
@@ -36,13 +36,7 @@ interface Props {
 }
 
 const Tag = ({ label, onDelete }: Props) => {
-  return (
-    <ChipStyled
-      deleteIcon={<HighlightOffIcon />}
-      label={label}
-      onDelete={onDelete}
-    />
-  );
+  return <ChipStyled deleteIcon={<HighlightOffIcon />} label={label} onDelete={onDelete} />;
 };
 
 Tag.defaultProps = {
