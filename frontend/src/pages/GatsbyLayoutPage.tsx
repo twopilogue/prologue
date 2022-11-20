@@ -61,6 +61,7 @@ const LayoutChoicePage = () => {
       accessToken: accessToken,
       githubId: githubId,
       blogType: 1,
+      template: isChoiceTheme,
     })
       .then((res) => {
         console.log("4. 블로그 인증 파일 생성", res.data);

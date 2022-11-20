@@ -78,6 +78,7 @@ const CreatePage = () => {
       accessToken: accessToken,
       githubId: githubId,
       blogType: 0,
+      template: "prologue-template",
     })
       .then((res) => {
         console.log("4. 블로그 인증 파일 생성", res.data);
