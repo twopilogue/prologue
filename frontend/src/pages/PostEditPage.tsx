@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styles from "features/post/PostWrite.module.css";
 import Text from "components/Text";
 import Button from "components/Button";
-import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
+import MeetingRoomOutlinedIcon from "@mui/icons-material/MeetingRoomOutlined";
 import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import PostWriteTitle from "../features/post/PostWriteTitle";
@@ -47,9 +47,11 @@ const PostEditPage = () => {
   const [contentData, setContentData] = useState("");
   const [saveData, setSaveData] = useState(useAppSelector(selectPostEditList));
   const [savedFileList, setSavedFileList] = useState([]);
+  const [loadingModalOpen, setLoadingModalOpen] = useState(false);
   const [cancelModalOpen, setCancelModalOpen] = useState(false);
   const [saveModalOpen, setSaveModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [uploadModalOpen, setUploadModalOpen] = useState(false);
 
   const title = useAppSelector(selectPostTitle);
   const description = useAppSelector(selectPostDescription);
@@ -86,7 +88,7 @@ const PostEditPage = () => {
     setLoading(false);
   }, []);
 
-  const editPost = () => {
+  const editPost = async () => {
     const formData = new FormData();
 
     for (let i = 0; i < files.length; i++) {
@@ -146,19 +148,26 @@ const PostEditPage = () => {
     );
     console.log("modifyDetailPostRequest : ", modifyDetailPostRequest);
 
-    Axios.put(api.posts.modifyPost(), formData)
+    setSaveModalOpen(false);
+    setLoadingModalOpen(true);
+    await Axios.put(api.posts.modifyPost(), formData)
       .then((res) => {
         console.log(res);
-        navigate("/post");
+        setLoadingModalOpen(false);
+        setUploadModalOpen(true);
+        // navigate("/post");
       })
       .catch((err) => {
         console.log(err);
+        setLoadingModalOpen(false);
       });
     dispatch(resetPostFileList());
   };
 
-  const deletePost = () => {
-    JsonAxios.delete(api.posts.deletePost(), {
+  const deletePost = async () => {
+    setDeleteModalOpen(false);
+    setLoadingModalOpen(true);
+    await JsonAxios.delete(api.posts.deletePost(), {
       data: {
         accessToken: accessToken,
         githubId: githubId,
@@ -167,10 +176,12 @@ const PostEditPage = () => {
     })
       .then((res) => {
         console.log(res);
+        setLoadingModalOpen(false);
         navigate("/post");
       })
       .catch((err) => {
         console.log(err);
+        setLoadingModalOpen(false);
       });
     dispatch(resetPostFileList());
   };
@@ -194,7 +205,13 @@ const PostEditPage = () => {
         <br /> <br />
         <Text value="간편하게 깃허브 블로그 게시글을 수정해보세요." type="caption" color="dark_gray" />
         <div className={styles.postWriteButtons}>
-          <Button label="돌아가기" color="sky" width="10vw" icon={<RefreshOutlinedIcon />} onClick={showCancelModal} />
+          <Button
+            label="돌아가기"
+            color="sky"
+            width="10vw"
+            icon={<MeetingRoomOutlinedIcon />}
+            onClick={showCancelModal}
+          />
           &nbsp; &nbsp; &nbsp;
           <Button label="작성완료" width="10vw" icon={<CheckOutlinedIcon />} onClick={showSaveModal} />
         </div>
@@ -213,6 +230,7 @@ const PostEditPage = () => {
         <PostViewerContents content={contentData} />
       </div>
 
+      {loadingModalOpen && <Modal text={`게시글 수정을 완료하시겠습니까?`} loding />}
       {cancelModalOpen && (
         <Modal
           text={`정말 게시글 목록으로 돌아가시겠습니까?\n수정 중인 게시글은 사라집니다.`}
@@ -237,6 +255,7 @@ const PostEditPage = () => {
           twoButtonConfirm={deletePost}
         />
       )}
+      {uploadModalOpen && <Modal saveButtonClose={() => setUploadModalOpen(false)} save />}
     </div>
   );
 };
