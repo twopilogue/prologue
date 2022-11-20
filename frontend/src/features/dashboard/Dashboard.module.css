@@ -291,22 +291,29 @@ iframe {
   height: 8.7vh;
 }
 
-.buildButton {
-  background-color: "#9bbcd4";
-  border-radius: "20px 20px";
-  border: "1.5px solid white";
-  color: "white";
-  width: "100%";
-  height: "100%";
-  padding: "0px";
-  font-size: "1.25rem";
-  font-weight: 600;
-  font-family: "Pretendard-Regular";
-  transition: "all 0.1s";
-}
-
 .buildButton:hover {
   background-color: "#8ba8bd";
+}
+
+.build_possible_Button {
+  animation: blink 4s infinite both;
+  background-color: #5cbac3;
+}
+
+
+@keyframes blink {
+
+  0%,
+  10%,
+  20%,
+  100% {
+    opacity: 1
+  }
+
+  5%,
+  15% {
+    opacity: 0.5
+  }
 }
 
 /* 페이지 이동 메뉴 */

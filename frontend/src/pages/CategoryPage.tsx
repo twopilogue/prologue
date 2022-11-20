@@ -20,19 +20,15 @@ import { useAppSelector } from "app/hooks";
 
 const CategoryPage = () => {
   const { githubId, accessToken } = useSelector((state: rootState) => state.auth);
-  // const [categoryList, setCategoryList] = useState<KeyConfig[]>([]);
-  // const [layoutList, setLayoutList] = useState<Layout[]>([]);
-  // const [isEdit, setIsEdit] = useState<editList[]>([]);
-  // const [categoryCnt, setCategoryCnt] = useState<number>(0);
   const categoryList = useAppSelector(selectCategoryList);
   const layoutList = useAppSelector(selectCategoryLayoutList);
-  const isEdit = useAppSelector(selectIsEditCategory);
-  const categoryCnt = useAppSelector(selectCategoryCnt);
   const [saveModalOpen, setSaveModalOpen] = useState<boolean>(false);
+  const [loadingModalOpen, setLoadingModalOpen] = useState<boolean>(false);
+  const [finModalOpen, setFinModalOpen] = useState<boolean>(false);
 
   const saveCategoryList = () => {
-    console.log("카테고리", categoryList);
-    console.log("레이아웃", layoutList);
+    setSaveModalOpen(false);
+    setLoadingModalOpen(true);
     // 병합
     const map = new Map();
     layoutList.forEach((item) => map.set(parseInt(item.i), item));
@@ -57,16 +53,12 @@ const CategoryPage = () => {
     })
       .then((res: any) => {
         console.log("됨? ", res);
-        alert("저장되었습니다.");
-        setSaveModalOpen(false);
+        setLoadingModalOpen(false);
+        setFinModalOpen(true);
       })
       .catch((err: any) => {
         console.error(err);
       });
-  };
-
-  const showSaveModal = () => {
-    setSaveModalOpen(true);
   };
 
   return (
@@ -79,16 +71,18 @@ const CategoryPage = () => {
           <ButtonStyled color="sky" label="취소" />
         </div>
         <div style={{ margin: "10px" }}>
-          <ButtonStyled label="저장" onClick={showSaveModal} />
+          <ButtonStyled label="저장" onClick={() => setSaveModalOpen(true)} />
         </div>
       </div>
       {saveModalOpen && (
         <Modal
-          text={`작성한 정보를 저장하시겠습니까?`}
+          text={`작성한 카테고리 정보를 저장하시겠습니까?`}
           twoButtonCancle={() => setSaveModalOpen(false)}
           twoButtonConfirm={saveCategoryList}
         />
       )}
+      {loadingModalOpen && <Modal text={`작성한 카테고리 정보를 저장하시겠습니까?`} loding />}
+      {finModalOpen && <Modal saveButtonClose={() => setFinModalOpen(false)} save />}
     </>
   );
 };

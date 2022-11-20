@@ -15,11 +15,12 @@ import { useDispatch } from "react-redux";
 import { dashboardActions } from "slices/dashboardSlice";
 import axios from "axios";
 import moment from "moment";
+import { authActions } from "slices/authSlice";
 
-function BlogCustomInfo() {
+function BlogCustomInfo(props: { template: string }) {
   const dispatch = useDispatch();
 
-  const { githubId, accessToken, template } = useSelector((state: rootState) => state.auth);
+  const { githubId, accessToken } = useSelector((state: rootState) => state.auth);
   const [imgPreview, setImgPreview] = useState(null);
   const [lodingView, openLodingView] = React.useState(false);
 
@@ -110,7 +111,7 @@ function BlogCustomInfo() {
     await axios
       .all([
         Axios.get(api.dashboard.getTotalPost(accessToken, githubId)),
-        Axios.get(api.dashboard.getRepoSize(accessToken, githubId, template)),
+        Axios.get(api.dashboard.getRepoSize(accessToken, githubId, props.template)),
       ])
       .then(
         axios.spread((res1, res2) => {
@@ -120,6 +121,7 @@ function BlogCustomInfo() {
               repoSize: res2.data.size,
             }),
           );
+          dispatch(authActions.template({ template: props.template }));
           openLodingView(false);
           openSuccessModal(true);
         }),
