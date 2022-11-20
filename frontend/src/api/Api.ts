@@ -30,6 +30,7 @@ interface apiInterface {
     getRepoSize: (accessToken: string, githubId: string, template: string) => string;
     getTotalPost: (accessToken: string, githubId: string) => string;
     getBildState: (accessToken: string, githubId: string) => string;
+    getChangeState: (accessToken: string, githubId: string) => string;
   };
   setting: {
     getCategory: (accessToken: string, githubId: string) => string;
@@ -91,6 +92,8 @@ const api: apiInterface = {
       HOST + DASHBOARD + "total?accessToken=" + accessToken + "&githubId=" + githubId,
     getBildState: (accessToken: string, githubId: string) =>
       HOST + DASHBOARD + "build?accessToken=" + accessToken + "&githubId=" + githubId,
+    getChangeState: (accessToken: string, githubId: string) =>
+      HOST + DASHBOARD + "check?accessToken=" + accessToken + "&githubId=" + githubId,
   },
   setting: {
     getCategory: (accessToken: string, githubId: string) =>

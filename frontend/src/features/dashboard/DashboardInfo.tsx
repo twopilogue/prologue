@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import moment from "moment";
 import styles from "features/dashboard/Dashboard.module.css";
 import Text from "components/Text";
@@ -40,11 +40,15 @@ const BuildButton = styled(ButtonBase)(() => ({
   fontWeight: 600,
   fontFamily: "Pretendard-Regular",
   transition: "all 0.1s",
+  animation: "blink 1s step-end infinite",
   "&:hover": {
     backgroundColor: "#8ba8bd",
   },
   "&.Mui-disabled": {
-    backgroundColor: "#8198aa",
+    // backgroundColor: "#8198aa",
+    // backgroundColor: "#D6E5F3",
+    backgroundColor: "#ecf2f7",
+    color: "#abb5c0",
   },
 }));
 
@@ -81,6 +85,7 @@ function DashboardInfo(props: { buildState: boolean; setBuildState: (state: bool
   const { accessToken, githubId, template } = useSelector((state: rootState) => state.auth);
   const { totalPost, repoSize, buildTime } = useSelector((state: rootState) => state.dashboard);
 
+  const [changeState, setChangeState] = useState<boolean>();
   const [buildTimer, setBuilTimer] = useState("");
   const [newBuildTime, setnewBuildTime] = useState<{ year: string; day: string }>({
     year: buildTime ? moment(buildTime, "YYYYMMDDHHmmss").format("YYYY") : moment().format("YYYY"),
@@ -94,7 +99,11 @@ function DashboardInfo(props: { buildState: boolean; setBuildState: (state: bool
   const countRef = useRef(null);
 
   const startHandler = () => {
-    if (!props.buildState) return;
+    if (!props.buildState) {
+      clearInterval(countRef.current);
+      countRef.current = 0;
+      return;
+    }
     countRef.current = setInterval(() => {
       const nowTime = moment();
       const minute = moment.duration(nowTime.diff(bildTimes)).minutes();
@@ -121,6 +130,10 @@ function DashboardInfo(props: { buildState: boolean; setBuildState: (state: bool
 
   useEffect(() => {
     startHandler();
+    Axios.get(api.dashboard.getChangeState(accessToken, githubId)).then((res) => {
+      setChangeState(res.data.checkUpdate);
+      console.log("변경사항있나", res.data.checkUpdate);
+    });
   }, []);
 
   useEffect(() => {
@@ -259,12 +272,16 @@ function DashboardInfo(props: { buildState: boolean; setBuildState: (state: bool
             </div>
             <div className={styles.infoGird_item}>
               {uploadClick || props.buildState ? (
-                <BuildButton className={styles.buildButton} disabled>
+                <BuildButton disabled>
                   <CircularProgressWithLabel value={progressCount} size={36} />
                 </BuildButton>
               ) : (
-                <BuildButton className={styles.buildButton} onClick={triggerStart}>
-                  변경사항 업로드
+                <BuildButton
+                  onClick={triggerStart}
+                  disabled={!changeState}
+                  className={changeState ? `${styles.build_possible_Button}` : `${styles.build_none_Button}`}
+                >
+                  변경사항 배포
                 </BuildButton>
               )}
             </div>
