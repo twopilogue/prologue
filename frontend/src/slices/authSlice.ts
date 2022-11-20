@@ -7,6 +7,7 @@ interface authConfig {
   login: boolean;
   authFile: boolean;
   blogType: null | 0 | 1; // 0:직접 레이아웃 설정, 1: 게시글만 관리
+  template: string;
 }
 
 interface loginConfig {
@@ -23,6 +24,10 @@ interface authFileConfig {
   authFile: boolean;
 }
 
+interface templateConfig {
+  template: string;
+}
+
 const initialState: authConfig = {
   accessToken: "",
   githubId: "",
@@ -30,6 +35,7 @@ const initialState: authConfig = {
   login: false,
   authFile: false,
   blogType: null,
+  template: "",
 };
 
 const authSlice = createSlice({
@@ -55,6 +61,9 @@ const authSlice = createSlice({
     },
     blogType: (state, action: PayloadAction<blogTypeConfig>) => {
       state.blogType = action.payload.blogType;
+    },
+    template: (state, action: PayloadAction<templateConfig>) => {
+      state.template = action.payload.template;
     },
   },
 });

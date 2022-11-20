@@ -53,6 +53,7 @@ function LoginOAuthHandler() {
       if (res.data.checkAuthFile) {
         dispatch(authActions.blogType({ blogType: res.data.blogType }));
         dispatch(authActions.authFile({ authFile: true }));
+        dispatch(authActions.template({ template: res.data.template }));
         setTimeout(() => [setSecretRepo(accessToken, githubId)], 200);
       } else {
         dispatch(authActions.authFile({ authFile: false }));
