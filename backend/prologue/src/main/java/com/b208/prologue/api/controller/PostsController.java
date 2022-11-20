@@ -74,7 +74,7 @@ public class PostsController {
 
         try {
             postService.insertDetailPost(writeDetailPostRequest.getAccessToken(), writeDetailPostRequest.getGithubId(), writeDetailPostRequest.getBlogType(),
-                    writeDetailPostRequest.getContent(), writeDetailPostRequest.getImages() ,files);
+                    writeDetailPostRequest.getContent(), writeDetailPostRequest.getImages(), files);
             return ResponseEntity.status(200).body(BaseResponseBody.of(200, "게시글 작성에 성공하였습니다."));
         } catch (Exception e) {
             e.printStackTrace();

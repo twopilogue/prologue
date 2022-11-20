@@ -44,7 +44,7 @@ public class PostServiceImpl implements PostService {
                 .retrieve()
                 .bodyToMono(PostGetListResponse[].class).block();
 
-        return category == null? getListAll(accessToken, githubId, list, page) : getListSpecific(accessToken, githubId, list, page == 0? list.length-1 : index, category);
+        return category == null ? getListAll(accessToken, githubId, list, page) : getListSpecific(accessToken, githubId, list, page == 0 ? list.length - 1 : index, category);
     }
 
     @Override
@@ -54,7 +54,7 @@ public class PostServiceImpl implements PostService {
         String url = "/repos/" + githubId + "/" + githubId + ".github.io" + "/contents/";
         int i = (list.length - 1) - (6 * page);
 
-        for ( ; 0 <= i && i > (list.length - 1) - (6 * (page + 1)); i--) {
+        for (; 0 <= i && i > (list.length - 1) - (6 * (page + 1)); i--) {
             String post = setItem(url, accessToken, list[i].getPath());
             postRequests.add(getPostFrontMatter(accessToken, githubId, list[i], post));
         }
@@ -63,7 +63,7 @@ public class PostServiceImpl implements PostService {
 
         Map<String, Object> result = new HashMap<>();
         result.put("Post", postRequests);
-        result.put("isLast", i<0);
+        result.put("isLast", i < 0);
         result.put("index", i);
 
         return result;
@@ -76,16 +76,16 @@ public class PostServiceImpl implements PostService {
         String url = "/repos/" + githubId + "/" + githubId + ".github.io" + "/contents/";
         int i = index, cntPosts = 0;
 
-        for (; 0 <= i ; i--) {
+        for (; 0 <= i; i--) {
             String post = setItem(url, accessToken, list[i].getPath());
 
             int startIndex = post.indexOf("\ncategory");
             startIndex = post.indexOf(": ", startIndex);
             int endIndex = post.indexOf("\ntags");
-            String categoryStr = post.substring(startIndex+2,endIndex).trim();
+            String categoryStr = post.substring(startIndex + 2, endIndex).trim();
 
-            if(category.equals(categoryStr)){
-                if(++cntPosts == 7) break;
+            if (category.equals(categoryStr)) {
+                if (++cntPosts == 7) break;
                 postRequests.add(getPostFrontMatter(accessToken, githubId, list[i], post));
             }
         }
@@ -101,7 +101,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostRequest getPostFrontMatter (String accessToken, String githubId, PostGetListResponse item, String post) throws Exception {
+    public PostRequest getPostFrontMatter(String accessToken, String githubId, PostGetListResponse item, String post) throws Exception {
 
         PostRequest postRequest = new PostRequest();
         postRequest.setDirectory(item.getName());
@@ -136,29 +136,27 @@ public class PostServiceImpl implements PostService {
         }
 
         if (post.contains("---")) {
-            int targetIndex = post.indexOf("date: ");
-            targetIndex = post.indexOf("\n---", targetIndex);
+            int targetIndex = post.indexOf("]\ndate: ");
 
-            String tempContent = post.substring(0,targetIndex);
+            String tempContent = post.substring(0, targetIndex);
 
             int startIndex = tempContent.indexOf("title");
-            startIndex = tempContent.indexOf(": ",startIndex);
+            startIndex = tempContent.indexOf(": ", startIndex);
             int endIndex = tempContent.indexOf("\ndescription");
-            postRequest.setTitle(tempContent.substring(startIndex+2,endIndex));
+            postRequest.setTitle(tempContent.substring(startIndex + 2, endIndex));
 
             startIndex = tempContent.indexOf(": ", endIndex);
             endIndex = tempContent.indexOf("\ncategory");
-            postRequest.setDescription(tempContent.substring(startIndex+2,endIndex));
+            postRequest.setDescription(tempContent.substring(startIndex + 2, endIndex));
 
             startIndex = tempContent.indexOf(": ", endIndex);
             endIndex = tempContent.indexOf("\ntags");
-            postRequest.setCategory(tempContent.substring(startIndex+2,endIndex));
+            postRequest.setCategory(tempContent.substring(startIndex + 2, endIndex));
 
             startIndex = tempContent.indexOf(": [", endIndex);
-            endIndex = tempContent.indexOf("]\ndate");
-            String tagLine = tempContent.substring(startIndex+3,endIndex);
+            String tagLine = tempContent.substring(startIndex + 3);
             String[] tagArr = tagLine.split(",");
-            postRequest.setTag(tagArr);
+            postRequest.setTag(tagArr[0].equals("") ? new String[]{} : tagArr);
         }
 
         return postRequest;
@@ -253,17 +251,17 @@ public class PostServiceImpl implements PostService {
         if (files != null && !files.isEmpty()) {
             for (int i = 0; i < files.size(); i++) {
                 MultipartFile file = files.get(i);
-                String imageName = file.getOriginalFilename().replace(' ','_');
+                String imageName = file.getOriginalFilename().replace(' ', '_');
                 encodedContent = commonService.makeBlob(accessToken, githubId, new String(Base64.encodeBase64(file.getBytes())));
                 treeRequestList.add(new TreeRequest(path + "/" + imageName, "100644", "blob", encodedContent));
-                featuredImage = "./"+imageName;
+                featuredImage = "./" + imageName;
             }
         }
 
         if (images != null && !images.isEmpty()) {
             content = replaceImageUrlWithPath(content, images);
         }
-        if(blogType==1){
+        if (blogType == 1) {
             int index = content.indexOf("-");
             StringBuilder sb = new StringBuilder();
             sb.append("---\n");
@@ -272,15 +270,15 @@ public class PostServiceImpl implements PostService {
             sb.append("slug: /blog/").append(directory).append("\n");
             sb.append("featuredImage: ").append(featuredImage).append("\n");
             sb.append("featuredimage: ").append(featuredImage).append("\n");
-            if(!featuredImage.equals("/assets/post-image.png")) {
+            if (!featuredImage.equals("/assets/post-image.png")) {
                 sb.append("selectedImage: ").append(featuredImage).append("\n");
             }
             sb.append("author: ").append(githubId).append("\n");
             sb.append("featured: false\n");
             sb.append("featuredpost: false\n");
-            sb.append(content.substring(index+4));
+            sb.append(content.substring(index + 4));
 
-            content=sb.toString();
+            content = sb.toString();
         }
         encodedContent = commonService.makeBlob(accessToken, githubId, base64Converter.encode(content));
         treeRequestList.add(new TreeRequest(path + "/index.md", "100644", "blob", encodedContent));
@@ -298,34 +296,34 @@ public class PostServiceImpl implements PostService {
 
         if (images != null && !images.isEmpty()) {
             for (ImageResponse image : images) {
-                String imageName = image.getName().replace(' ','_');
+                String imageName = image.getName().replace(' ', '_');
                 if (content.contains(image.getUrl())) {
                     content = content.replace(image.getUrl(), "./" + imageName);
-                    featuredImage = "./"+imageName;
+                    featuredImage = "./" + imageName;
                 } else {
                     treeRequestList.add(new TreeRequest(path + "/" + imageName, "100644", "blob", null));
                 }
             }
         }
 
-        if(blogType==1){
+        if (blogType == 1) {
             int index = content.indexOf("-");
             StringBuilder sb = new StringBuilder();
             sb.append("---\n");
             sb.append("template: blog-post\n");
             sb.append("templateKey: blog-post\n");
-            sb.append("slug: /blog/").append(path.substring(path.lastIndexOf("/")+1)).append("\n");
+            sb.append("slug: /blog/").append(path.substring(path.lastIndexOf("/") + 1)).append("\n");
             sb.append("featuredImage: ").append(featuredImage).append("\n");
             sb.append("featuredimage: ").append(featuredImage).append("\n");
-            if(!featuredImage.equals("/assets/post-image.png")) {
+            if (!featuredImage.equals("/assets/post-image.png")) {
                 sb.append("selectedImage: ").append(featuredImage).append("\n");
             }
             sb.append("author: ").append(githubId).append("\n");
             sb.append("featured: false\n");
             sb.append("featuredpost: false\n");
-            sb.append(content.substring(index+4));
+            sb.append(content.substring(index + 4));
 
-            content=sb.toString();
+            content = sb.toString();
         }
         content = commonService.makeBlob(accessToken, githubId, base64Converter.encode(content));
         treeRequestList.add(new TreeRequest(path + "/index.md", "100644", "blob", content));
@@ -335,7 +333,7 @@ public class PostServiceImpl implements PostService {
                 MultipartFile file = files.get(i);
                 String image = new String(Base64.encodeBase64(file.getBytes()));
                 String encodedContent = commonService.makeBlob(accessToken, githubId, image);
-                treeRequestList.add(new TreeRequest(path + "/" + file.getOriginalFilename().replace(' ','_'), "100644", "blob", encodedContent));
+                treeRequestList.add(new TreeRequest(path + "/" + file.getOriginalFilename().replace(' ', '_'), "100644", "blob", encodedContent));
             }
         }
         commonService.multiFileCommit(accessToken, githubId, treeRequestList, commit);
@@ -350,7 +348,7 @@ public class PostServiceImpl implements PostService {
 
         if (images != null && !images.isEmpty()) {
             for (ImageResponse image : images) {
-                String imageName = image.getName().replace(' ','_');
+                String imageName = image.getName().replace(' ', '_');
                 if (content.contains(image.getUrl())) {
                     content = content.replace(image.getUrl(), "./" + imageName);
                 } else {
@@ -367,7 +365,7 @@ public class PostServiceImpl implements PostService {
                 MultipartFile file = files.get(i);
                 String image = new String(Base64.encodeBase64(file.getBytes()));
                 String encodedContent = commonService.makeBlob(accessToken, githubId, image);
-                treeRequestList.add(new TreeRequest(path + "/" + file.getOriginalFilename().replace(' ','_'), "100644", "blob", encodedContent));
+                treeRequestList.add(new TreeRequest(path + "/" + file.getOriginalFilename().replace(' ', '_'), "100644", "blob", encodedContent));
             }
         }
         commonService.multiFileCommit(accessToken, githubId, treeRequestList, commit);
@@ -455,7 +453,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public String replaceImageUrlWithPath(String content, List<ImageResponse> images) {
         for (ImageResponse image : images) {
-            content = content.replace(image.getUrl(), "./" + image.getName().replace(' ','_'));
+            content = content.replace(image.getUrl(), "./" + image.getName().replace(' ', '_'));
         }
         return content;
     }
@@ -463,7 +461,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public String replaceImagePathWithUrl(String content, List<ImageResponse> images) {
         for (ImageResponse image : images) {
-            content = content.replace("./" + image.getName().replace(' ','_'), image.getUrl());
+            content = content.replace("./" + image.getName().replace(' ', '_'), image.getUrl());
         }
         return content;
     }
