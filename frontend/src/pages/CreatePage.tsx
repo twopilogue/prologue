@@ -20,6 +20,7 @@ const CreatePage = () => {
   const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
 
   const [isStepNumber, setStepNumber] = React.useState(state === null ? 0 : state.setStepNumber);
+  const [isThemplate] = React.useState(state === null ? "prologue-template" : state.setTemplate);
   const [radioValue, setRadioValue] = React.useState("CustomLayout");
   const [lodingView, openLodingView] = React.useState(false);
 
@@ -106,7 +107,7 @@ const CreatePage = () => {
           ) : isStepNumber === 1 ? (
             <BlogLayoutSetting radioValue={radioValue} setValue={setRadioValue} onClick={layoutSetting} />
           ) : (
-            <BlogCustomInfo />
+            <BlogCustomInfo template={isThemplate} />
           )}
         </div>
       </div>
