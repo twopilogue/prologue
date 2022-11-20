@@ -33,11 +33,11 @@ public class PostsController {
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
     public ResponseEntity<? extends BaseResponseBody> getPost(@RequestParam String accessToken, @RequestParam String githubId,
-                                                              @RequestParam int page, int index,
+                                                              @RequestParam int index,
                                                               @RequestParam(required = false) String category) {
 
         try {
-            Map<String, Object> result = postService.getList(accessToken, githubId, page, index, category);
+            Map<String, Object> result = postService.getList(accessToken, githubId, index, category);
             return ResponseEntity.status(200).body(PostListResponse.of(result, 200, "게시물 목록 조회 성공"));
         } catch (Exception e) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "게시글 목록 조회에 실패하였습니다."));

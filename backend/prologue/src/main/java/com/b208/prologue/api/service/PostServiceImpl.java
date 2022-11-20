@@ -32,7 +32,7 @@ public class PostServiceImpl implements PostService {
     private final CommonService commonService;
 
     @Override
-    public Map<String, Object> getList(String encodedAccessToken, String githubId, int page, int index, String category) throws Exception {
+    public Map<String, Object> getList(String encodedAccessToken, String githubId, int index, String category) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
         String url = "/repos/" + githubId + "/" + githubId + ".github.io" + "/contents/";
@@ -43,18 +43,18 @@ public class PostServiceImpl implements PostService {
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToMono(PostGetListResponse[].class).block();
-
-        return category == null ? getListAll(accessToken, githubId, list, page) : getListSpecific(accessToken, githubId, list, page == 0 ? list.length - 1 : index, category);
+        index = index < 0 ? list.length - 1 : index;
+        return category == null ? getListAll(accessToken, githubId, list, index) : getListSpecific(accessToken, githubId, list, index, category);
     }
 
     @Override
-    public Map<String, Object> getListAll(String accessToken, String githubId, PostGetListResponse[] list, int page) throws Exception {
+    public Map<String, Object> getListAll(String accessToken, String githubId, PostGetListResponse[] list, int index) throws Exception {
 
         List<PostRequest> postRequests = new ArrayList<>();
         String url = "/repos/" + githubId + "/" + githubId + ".github.io" + "/contents/";
-        int i = (list.length - 1) - (6 * page);
+        int i = index;
 
-        for (; 0 <= i && i > (list.length - 1) - (6 * (page + 1)); i--) {
+        for (; 0 <= i && i > index - 6; i--) {
             String post = setItem(url, accessToken, list[i].getPath());
             postRequests.add(getPostFrontMatter(accessToken, githubId, list[i], post));
         }
@@ -153,8 +153,8 @@ public class PostServiceImpl implements PostService {
             endIndex = tempContent.indexOf("\ntags");
             postRequest.setCategory(tempContent.substring(startIndex + 2, endIndex));
 
-            startIndex = tempContent.indexOf(": [", endIndex);
-            String tagLine = tempContent.substring(startIndex + 3);
+            startIndex = tempContent.indexOf("[", endIndex);
+            String tagLine = tempContent.substring(startIndex + 1);
             String[] tagArr = tagLine.split(",");
             postRequest.setTag(tagArr[0].equals("") ? new String[]{} : tagArr);
         }
