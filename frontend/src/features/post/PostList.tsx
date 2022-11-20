@@ -74,7 +74,7 @@ const PostList = ({ category }: PostListProps) => {
   return (
     <div className={styles.postList}>
       <div className={styles.postSettings}>
-        <Stack direction="row" spacing={2}>
+        <Stack direction="row" justifyContent="flex-end" alignItems="center" spacing={2}>
           <FormatAlignLeftIcon />
           <GridViewOutlinedIcon />
         </Stack>
