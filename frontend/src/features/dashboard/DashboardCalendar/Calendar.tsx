@@ -4,7 +4,8 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import styled from "@emotion/styled";
 import palette from "styles/colorPalette";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { dashboardActions } from "slices/dashboardSlice";
 import { rootState } from "app/store";
 import api from "api/Api";
 import Axios from "api/JsonAxios";
@@ -30,8 +31,12 @@ const CalendarStyled = styled(Calendar)(() => ({
   ".react-calendar__tile": {
     color: "#DFDFDF",
     border: "1px solid #DFDFDF",
-    borderRadius: "50px",
+    borderRadius: "50%",
     pointerEvents: "none",
+    margin: "1.5px 0px",
+  },
+  ".react-calendar__navigation": {
+    marginBottom: 0,
   },
   ".react-calendar__navigation button": {
     color: "white",
@@ -42,31 +47,44 @@ const CalendarStyled = styled(Calendar)(() => ({
       backgroundColor: "transparent",
     },
   },
+  ".react-calendar__navigation__label": {
+    pointerEvents: "none",
+  },
   //달력에 오늘 날짜 표시 변경
   ".react-calendar__tile--now": {
     backgroundColor: palette.sky_2,
     color: "black",
     pointerEvents: "none",
+    fontWeight: "600",
   },
   ".mark": {
     background: palette.purlue_4,
   },
+  ".react-calendar__tile--now.mark": {
+    backgroundColor: "#dfc3f9",
+    color: "black",
+    fontWeight: "600",
+  },
 }));
 
 function CalenderCustom() {
-  const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
+  const dispatch = useDispatch();
 
-  const [marks, setMark] = useState(["2022-10-30", "2022-11-01", "2022-11-04", "2022-11-10", "2022-11-21"]);
+  const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
+  const { monthPosts } = useSelector((state: rootState) => state.dashboard);
+
+  const [marks, setMark] = useState(monthPosts);
 
   useEffect(() => {
-    getMonthPosts();
-  }, []);
-
-  async function getMonthPosts() {
-    await Axios.get(api.dashboard.getMonthPosts(accessToken, githubId)).then((res) => {
+    Axios.get(api.dashboard.getMonthPosts(accessToken, githubId)).then((res) => {
+      dispatch(
+        dashboardActions.monthPosts({
+          monthPosts: res.data.dateList,
+        }),
+      );
       setMark(res.data.dateList);
     });
-  }
+  }, []);
 
   return (
     <div>

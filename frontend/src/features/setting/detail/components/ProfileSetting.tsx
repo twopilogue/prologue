@@ -4,15 +4,17 @@ import RadioButton from "components/RadioButton";
 import styles from "../../Setting.module.css";
 import { SketchPicker } from "react-color";
 import { useDispatch } from "react-redux";
-import { colorsConfig, selectColors, setColors } from "slices/settingSlice";
+import { colorsConfig, getTextColor, selectColors, setColors } from "slices/settingSlice";
 import { useAppSelector } from "app/hooks";
+import { detailItemUnfolded } from "./LogoSetting";
 
 const ProfileSetting = () => {
   const dispatch = useDispatch();
   const colors: colorsConfig = useAppSelector(selectColors);
 
   const handleChangeComplete = (color: any) => {
-    dispatch(setColors({ ...colors, profile: { ...colors.profile, background: color } }));
+    const textColor = getTextColor(color);
+    dispatch(setColors({ ...colors, profile: { background: color, text: textColor } }));
   };
   return (
     <div>
@@ -21,8 +23,10 @@ const ProfileSetting = () => {
       </div>
       <div className={styles.detailContainer}>
         <div className={styles.detailItem}>
-          <RadioButton label="색상 설정" value="color" checked />
-          <div>
+          <div className={styles.textPaddingSm}>
+            <Text value="배경색" type="text" bold />
+          </div>
+          <div style={detailItemUnfolded}>
             <SketchPicker
               color={colors.profile.background}
               onChangeComplete={(color) => handleChangeComplete(color.hex)}

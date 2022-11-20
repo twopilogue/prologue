@@ -19,24 +19,25 @@ interface apiInterface {
   blog: {
     chooseTemplate: () => string;
     getRepoList: (accessToken: string, githubId: string) => string;
-    setRepo: (accessToken: string, githubId: string) => string;
     deleteRepo: (accessToken: string, githubId: string) => string;
-    setGitWorkflow: (accessToken: string, githubId: string) => string;
-    changeBranch: (accessToken: string, githubId: string) => string;
+    triggerStart: (accessToken: string, githubId: string) => string;
+    changeBuildType: (accessToken: string, githubId: string) => string;
   };
   dashboard: {
     getNewPost: (accessToken: string, githubId: string) => string;
     getNewBuildTime: (accessToken: string, githubId: string) => string;
     getMonthPosts: (accessToken: string, githubId: string) => string;
-    getRepoSize: (accessToken: string, githubId: string) => string;
+    getRepoSize: (accessToken: string, githubId: string, template: string) => string;
     getTotalPost: (accessToken: string, githubId: string) => string;
+    getBildState: (accessToken: string, githubId: string) => string;
+    getChangeState: (accessToken: string, githubId: string) => string;
   };
   setting: {
     getCategory: (accessToken: string, githubId: string) => string;
     modifyCategory: () => string;
     getBlog: (accessToken: string, githubId: string) => string;
     modifyBlog: () => string;
-    getLayout: () => string;
+    getLayout: (accessToken: string, githubId: string) => string;
     modifyLayout: () => string;
     getLayoutDetail: () => string;
     modifyLayoutDetail: () => string;
@@ -47,10 +48,11 @@ interface apiInterface {
   };
   posts: {
     writePost: () => string;
+    getImgUrl: () => string;
     getPostDetail: (accessToken: string, githubId: string, directory: string) => string;
     modifyPost: () => string;
     deletePost: () => string;
-    getPostList: (accessToken: string, githubId: string, page: number) => string;
+    getPostList: (accessToken: string, githubId: string, index: number, category: string) => string;
     getPage: (accessToken: string, githubId: string, pageName: string) => string;
     modifyPage: () => string;
   };
@@ -70,14 +72,12 @@ const api: apiInterface = {
     chooseTemplate: () => HOST + BLOG + "template",
     getRepoList: (accessToken: string, githubId: string) =>
       HOST + BLOG + "list?accessToken=" + accessToken + "&githubId=" + githubId,
-    setRepo: (accessToken: string, githubId: string) =>
-      HOST + BLOG + "repo?accessToken=" + accessToken + "&githubId=" + githubId,
     deleteRepo: (accessToken: string, githubId: string) =>
       HOST + BLOG + "repo?accessToken=" + accessToken + "&githubId=" + githubId,
-    setGitWorkflow: (accessToken: string, githubId: string) =>
+    triggerStart: (accessToken: string, githubId: string) =>
       HOST + BLOG + "workflow?accessToken=" + accessToken + "&githubId=" + githubId,
-    changeBranch: (accessToken: string, githubId: string) =>
-      HOST + BLOG + "deploy-branch?accessToken=" + accessToken + "&githubId=" + githubId,
+    changeBuildType: (accessToken: string, githubId: string) =>
+      HOST + BLOG + "build-type?accessToken=" + accessToken + "&githubId=" + githubId,
   },
   dashboard: {
     getNewPost: (accessToken: string, githubId: string) =>
@@ -86,10 +86,14 @@ const api: apiInterface = {
       HOST + DASHBOARD + "latest-build?accessToken=" + accessToken + "&githubId=" + githubId,
     getMonthPosts: (accessToken: string, githubId: string) =>
       HOST + DASHBOARD + "month-posts?accessToken=" + accessToken + "&githubId=" + githubId,
-    getRepoSize: (accessToken: string, githubId: string) =>
-      HOST + DASHBOARD + "size?accessToken=" + accessToken + "&githubId=" + githubId,
+    getRepoSize: (accessToken: string, githubId: string, template: string) =>
+      HOST + DASHBOARD + "size?accessToken=" + accessToken + "&githubId=" + githubId + "&template=" + template,
     getTotalPost: (accessToken: string, githubId: string) =>
       HOST + DASHBOARD + "total?accessToken=" + accessToken + "&githubId=" + githubId,
+    getBildState: (accessToken: string, githubId: string) =>
+      HOST + DASHBOARD + "build?accessToken=" + accessToken + "&githubId=" + githubId,
+    getChangeState: (accessToken: string, githubId: string) =>
+      HOST + DASHBOARD + "check?accessToken=" + accessToken + "&githubId=" + githubId,
   },
   setting: {
     getCategory: (accessToken: string, githubId: string) =>
@@ -98,7 +102,8 @@ const api: apiInterface = {
     getBlog: (accessToken: string, githubId: string) =>
       HOST + SETTING + "blog?accessToken=" + accessToken + "&githubId=" + githubId,
     modifyBlog: () => HOST + SETTING + "blog",
-    getLayout: () => HOST + SETTING + "layout",
+    getLayout: (accessToken: string, githubId: string) =>
+      HOST + SETTING + "layout?accessToken=" + accessToken + "&githubId=" + githubId,
     modifyLayout: () => HOST + SETTING + "layout",
     getLayoutDetail: () => HOST + SETTING + "layout/css",
     modifyLayoutDetail: () => HOST + SETTING + "layout/css",
@@ -111,12 +116,22 @@ const api: apiInterface = {
   },
   posts: {
     writePost: () => HOST + POSTS,
+    getImgUrl: () => HOST + POSTS + "/temp-image",
     getPostDetail: (accessToken: string, githubId: string, directory: string) =>
       HOST + POSTS + "?accessToken=" + accessToken + "&githubId=" + githubId + "&directory=" + directory,
     modifyPost: () => HOST + POSTS,
     deletePost: () => HOST + POSTS,
-    getPostList: (accessToken: string, githubId: string, page: number) =>
-      HOST + POSTS + "/list?accessToken=" + accessToken + "&githubId=" + githubId + "&page=" + page,
+    getPostList: (accessToken: string, githubId: string, index: number, category: string) =>
+      HOST +
+      POSTS +
+      "/list?accessToken=" +
+      accessToken +
+      "&githubId=" +
+      githubId +
+      "&index=" +
+      index +
+      "&category=" +
+      category,
     getPage: (accessToken: string, githubId: string, pageName: string) =>
       HOST + POSTS + "/pages?accessToken=" + accessToken + "&githubId=" + githubId + "&pageName=" + pageName,
     modifyPage: () => HOST + POSTS + "/pages",

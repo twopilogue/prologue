@@ -4,8 +4,10 @@ interface authConfig {
   accessToken: string;
   githubId: string;
   githubImage: string;
-  auth: boolean;
-  blogType: null | 0 | 1; // 0:직접 레이아웃 설정, 1: 게시글만 관리
+  login: boolean;
+  authFile: boolean;
+  blogType: null | 0 | 1;
+  template: string;
 }
 
 interface loginConfig {
@@ -18,12 +20,22 @@ interface blogTypeConfig {
   blogType: null | 0 | 1;
 }
 
+interface authFileConfig {
+  authFile: boolean;
+}
+
+interface templateConfig {
+  template: string;
+}
+
 const initialState: authConfig = {
   accessToken: "",
   githubId: "",
   githubImage: "",
-  auth: false,
+  login: false,
+  authFile: false,
   blogType: null,
+  template: "",
 };
 
 const authSlice = createSlice({
@@ -34,15 +46,24 @@ const authSlice = createSlice({
       state.accessToken = action.payload.accessToken;
       state.githubId = action.payload.githubId;
       state.githubImage = action.payload.githubImage;
-      state.auth = true;
+      state.login = true;
     },
     logout: (state) => {
       state.githubId = "";
       state.accessToken = "";
-      state.auth = false;
+      state.githubImage = "";
+      state.login = false;
+      state.authFile = false;
+      state.blogType = null;
+    },
+    authFile: (state, action: PayloadAction<authFileConfig>) => {
+      state.authFile = action.payload.authFile;
     },
     blogType: (state, action: PayloadAction<blogTypeConfig>) => {
       state.blogType = action.payload.blogType;
+    },
+    template: (state, action: PayloadAction<templateConfig>) => {
+      state.template = action.payload.template;
     },
   },
 });

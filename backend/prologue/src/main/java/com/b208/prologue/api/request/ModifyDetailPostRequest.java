@@ -1,5 +1,6 @@
 package com.b208.prologue.api.request;
 
+import com.b208.prologue.api.response.ImageResponse;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -22,6 +23,10 @@ public class ModifyDetailPostRequest {
     @ApiModelProperty(name = "깃허브 아이디", example = "test1234", required = true)
     String githubId;
 
+    @NotNull
+    @ApiModelProperty(name = "블로그테마 타입", example = "0", required = true)
+    Integer blogType;
+
     @NotBlank
     @ApiModelProperty(name = "게시글이 저장된 폴더", example = "1666319753", required = true)
     String directory;
@@ -30,7 +35,7 @@ public class ModifyDetailPostRequest {
     @ApiModelProperty(name = "게시글 내용", example = "md파일 내용...", required = true)
     String content;
 
-    @ApiModelProperty(name = "게시글에서 삭제할 이미지", example = "이미지 파일명")
-    List<String> deletedFiles;
+    @ApiModelProperty(name = "이미지 url, 상대경로", example = "이미지 url, 상대경로")
+    List<ImageResponse> images;
 
 }

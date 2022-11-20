@@ -12,6 +12,7 @@ import reactor.core.publisher.Mono;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
@@ -85,25 +86,44 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public void createWorkflow(String encodedAccessToken, String githubId) throws Exception {
+    public void updateBuildType(String encodedAccessToken, String githubId) throws Exception {
+
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
-        ClassPathResource resource = new ClassPathResource("deploy.yaml");
-        BufferedReader br = new BufferedReader(new InputStreamReader(resource.getInputStream()));
-        StringBuilder sb = new StringBuilder();
-        String nullString = "";
-        while ((nullString = br.readLine()) != null) {
-            sb.append(nullString).append("\n");
-        }
-        String workflow = base64Converter.encode(sb.toString());
-
-        CreateContentRequest createContentRequest = new CreateContentRequest("upload git action workflow", workflow);
+        UpdateBuildTypeRequest UpdateBuildTypeRequest = new UpdateBuildTypeRequest("workflow");
         webClient.put()
-                .uri("/repos/" + githubId + "/" + githubId + ".github.io" + "/contents/.github/workflows/deploy.yaml")
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io/pages")
                 .headers(h -> h.setBearerAuth(accessToken))
-                .body(Mono.just(createContentRequest), CreateContentRequest.class)
+                .body(Mono.just(UpdateBuildTypeRequest), UpdateBuildTypeRequest.class)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .bodyToMono(String.class).block();
+                .bodyToMono(String.class)
+                .block();
+    }
+
+    @Override
+    public void actionWorkflow(String encodedAccessToken, String githubId) throws Exception {
+
+        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
+
+        GetShaResponse getShaResponse = webClient.get()
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/build")
+                .headers(h -> h.setBearerAuth(accessToken))
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(GetShaResponse.class)
+                .block();
+
+        Date date = new Date();
+        String nowTime = date.toString();
+        UpdateContentRequest updateContentRequest = new UpdateContentRequest("action workflow", base64Converter.encode(nowTime), getShaResponse.getSha());
+        webClient.put()
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io/contents/build")
+                .headers(h -> h.setBearerAuth(accessToken))
+                .body(Mono.just(updateContentRequest), UpdateContentRequest.class)
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
     }
 }

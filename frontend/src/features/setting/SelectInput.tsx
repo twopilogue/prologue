@@ -20,8 +20,9 @@ const SelectInput = ({ link, setLink }: Props) => {
 
   return (
     <div>
-      <FormControl sx={{ width: "100%", height: "100%" }}>
+      <FormControl sx={{ width: "100%" }}>
         <Select
+          displayEmpty
           size="small"
           id="demo-select-small"
           onChange={handleChange}
@@ -29,9 +30,10 @@ const SelectInput = ({ link, setLink }: Props) => {
           value={link.site}
         >
           <MenuItem disabled value="">
-            <em>사이트를 선택하세요.</em>
+            <em>사이트 선택</em>
           </MenuItem>
           <MenuItem value={"github"}>Github</MenuItem>
+          <MenuItem value={"email"}>Email</MenuItem>
           <MenuItem value={"instagram"}>Instagram</MenuItem>
           <MenuItem value={"twitter"}>Twitter</MenuItem>
         </Select>

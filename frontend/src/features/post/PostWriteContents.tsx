@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import styles from "features/post/PostWrite.module.css";
 import Text from "components/Text";
 import { Editor } from "@toast-ui/react-editor";
@@ -7,50 +7,71 @@ import "tui-color-picker/dist/tui-color-picker.css";
 import "@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css";
 import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
 import { useAppDispatch } from "app/hooks";
-import { setPostContent, setPostFileList } from "slices/postSlice";
+import { setPostContent, setPostFileList, setPostFiles } from "slices/postSlice";
+import api from "api/Api";
+import { useSelector } from "react-redux";
+import { rootState } from "app/store";
+import Axios from "api/MultipartAxios";
 
 const PostWriteContents = () => {
   const dispatch = useAppDispatch();
 
-  const [showImages, setShowImages] = useState([]);
+  const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
+
   const [fileList, setFileList] = useState([]);
+  const [files, setFiles] = useState([]);
 
   const editorRef = useRef<Editor>();
 
   const contentChange = () => {
     dispatch(setPostContent(editorRef.current?.getInstance().getMarkdown()));
-    dispatch(setPostFileList(fileList));
+    // dispatch(setPostFileList(fileList));
   };
 
   return (
     <div className={styles.postWriteContents}>
-      <Text value="내용" type="text" />
-      <div style={{ marginTop: "1%" }}></div>
+      {/* <Text value="내용" type="text" />
+      <div style={{ marginTop: "1%" }}></div> */}
+
       <Editor
+        usageStatistics={false}
         ref={editorRef}
         initialValue=""
         previewStyle="vertical"
-        height="70vh"
+        height="100%"
         initialEditType="markdown"
+        hideModeSwitch={true}
         plugins={[colorSyntax]}
         onChange={contentChange}
         hooks={{
-          addImageBlobHook: (blob, callback) => {
-            const uploadFileLists = [...fileList];
-            const imageUrlLists = [...showImages];
+          addImageBlobHook: async (blob, callback) => {
+            const formData = new FormData();
+            const file: any = blob;
 
-            const currentImageUrl = URL.createObjectURL(blob);
-            imageUrlLists.push(currentImageUrl);
-            uploadFileLists.push(blob);
+            const tempImageUploadRequest = {
+              accessToken: accessToken,
+              githubId: githubId,
+            };
+            formData.append(
+              "tempImageUploadRequest",
+              new Blob([JSON.stringify(tempImageUploadRequest)], { type: "application/json" }),
+            );
+            formData.append("file", blob);
 
-            setShowImages(imageUrlLists);
-            setFileList(uploadFileLists);
+            let imageUrl;
+            await Axios.put(api.posts.getImgUrl(), formData).then((res) => {
+              imageUrl = res.data.tempImageUrl;
+            });
 
-            console.log(imageUrlLists);
-            console.log(uploadFileLists);
-            console.log(fileList);
+            const newFile = { name: file.name, url: imageUrl };
 
-            callback(currentImageUrl);
+            fileList.push(newFile);
+            dispatch(setPostFileList([...fileList]));
+
+            files.push(blob);
+            dispatch(setPostFiles([...files]));
+
+            callback(imageUrl);
             return false;
           },
         }}

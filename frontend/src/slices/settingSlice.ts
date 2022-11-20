@@ -2,8 +2,29 @@ import { createSlice } from "@reduxjs/toolkit";
 import { rootState } from "../app/store";
 import { Layout } from "react-grid-layout";
 
+export interface myInfoProps {
+  nickName: string;
+  summary: string;
+  profileImg: string | FormData;
+}
+
+export interface myBlogInfoProps {
+  title: string;
+  description: string;
+  social: object;
+}
+
 export interface KeyConfig {
   key: string;
+  id: number;
+}
+
+export interface PageConfig {
+  id: number;
+  label: string;
+  posts: boolean;
+  type: string;
+  oldName?: string;
 }
 
 export interface ComponentConfig {
@@ -11,29 +32,28 @@ export interface ComponentConfig {
   id: string;
 }
 
+export interface editList {
+  key: string;
+  id: number;
+  editable: boolean;
+}
+
 export interface ComponentCheckConfig {
   [logo: string]: boolean;
-  profile: boolean;
-  category: boolean;
-  page: boolean;
-  title: boolean;
+  profile?: boolean;
+  category?: boolean;
+  page?: boolean;
+  title?: boolean;
   contents: boolean;
 }
 
 export interface blogInfoConfig {
-  siteMetadata: {
-    author: {
-      name: string;
-      summary: string;
-    };
-    description: string;
-    siteUrl: string;
-    social: {
-      twitter: string;
-    };
-    title: string;
-  };
-  profileImg: string;
+  nickName: string;
+  summary: string;
+  profileImg: string | FormData;
+  title: string;
+  description: string;
+  social: object;
 }
 
 export interface colorsConfig {
@@ -41,6 +61,8 @@ export interface colorsConfig {
     background: string;
     text: string;
     titleHeight: number;
+    type: boolean; // 이미지 or 색
+    titleText: string;
   };
   category: {
     background: string;
@@ -49,6 +71,7 @@ export interface colorsConfig {
   page: {
     background: string;
     text: string;
+    sort: string;
   };
   profile: {
     background: string;
@@ -61,21 +84,37 @@ export interface colorsConfig {
   logo: {
     background: string;
     text: string;
-    inputText: string;
+    logoText: string;
   };
 }
 
 interface LayoutConfig {
+  myInfo: myInfoProps;
+  myBlogInfo: myBlogInfoProps;
+
   categoryLayoutList: Layout[];
   categoryList: KeyConfig[];
   categoryCnt: number;
+  isEditCategory: editList[];
 
   pageLayoutList: Layout[];
-  pageList: KeyConfig[];
+  pageList: PageConfig[];
   pageCnt: number;
+  pageDeleList: PageConfig[];
+  isEditPage: editList[];
 
   componentLayoutList: Layout[];
   componentList: ComponentConfig[];
+
+  userComponentLayoutList: Layout[];
+  userComponentList: ComponentConfig[];
+  userCheckList: ComponentCheckConfig;
+
+  origin: {
+    originComponentLayoutList: Layout[];
+    originComponentList: ComponentConfig[];
+    originCheckList: ComponentCheckConfig;
+  };
 
   checkList: ComponentCheckConfig;
 
@@ -84,16 +123,32 @@ interface LayoutConfig {
   colorList: colorsConfig;
 
   clickedComp: string;
+  clickedLayoutIdx: number;
+  componentCreated: boolean;
 }
 
 export const initialState: LayoutConfig = {
+  myInfo: {
+    nickName: "",
+    summary: "",
+    profileImg: null,
+  },
+  myBlogInfo: {
+    title: "",
+    description: "",
+    social: {},
+  },
+
   categoryLayoutList: [],
   categoryList: [],
   categoryCnt: 1,
+  isEditCategory: [],
 
   pageLayoutList: [],
   pageList: [],
   pageCnt: 1,
+  pageDeleList: [],
+  isEditPage: [],
 
   componentLayoutList: [],
   componentList: [
@@ -105,6 +160,30 @@ export const initialState: LayoutConfig = {
     { key: "글 목록", id: "contents" },
   ],
 
+  userComponentLayoutList: [],
+  userComponentList: [],
+  userCheckList: {
+    logo: true,
+    profile: true,
+    category: true,
+    page: true,
+    title: true,
+    contents: true,
+  },
+
+  origin: {
+    originComponentLayoutList: [],
+    originComponentList: [],
+    originCheckList: {
+      logo: true,
+      profile: true,
+      category: true,
+      page: true,
+      title: true,
+      contents: true,
+    },
+  },
+
   checkList: {
     logo: true,
     profile: true,
@@ -115,57 +194,66 @@ export const initialState: LayoutConfig = {
   },
 
   blogSettingInfo: {
-    siteMetadata: {
-      author: {
-        name: "",
-        summary: "",
-      },
-      description: "",
-      siteUrl: "",
-      social: {
-        twitter: "",
-      },
-      title: "",
-    },
+    nickName: "",
+    summary: "",
     profileImg: "",
+    title: "",
+    description: "",
+    social: {},
   },
 
   colorList: {
     title: {
-      background: "#d3d3eb",
-      text: "darkgray",
+      background: "",
+      text: "",
       titleHeight: 0,
+      type: true,
+      titleText: "",
     },
     category: {
-      background: "#d3d3eb",
-      text: "darkgray",
+      background: "",
+      text: "",
     },
     page: {
-      background: "#d3d3eb",
-      text: "darkgray",
+      background: "",
+      text: "",
+      sort: "",
     },
     profile: {
-      background: "#d3d3eb",
-      text: "darkgray",
+      background: "",
+      text: "",
     },
     contents: {
-      background: "#d3d3eb",
-      text: "darkgray",
+      background: "",
+      text: "",
     },
     logo: {
-      background: "#d3d3eb",
-      text: "darkgray",
-      inputText: "",
+      background: "",
+      text: "",
+      logoText: "",
     },
   },
 
   clickedComp: "logo",
+  clickedLayoutIdx: 0,
+  componentCreated: false,
 };
 
 const settingSlice = createSlice({
   name: "setting",
   initialState,
   reducers: {
+    setMyInfo: (state, { payload: { nickName, summary, profileImg } }) => {
+      state.myInfo.nickName = nickName;
+      state.myInfo.summary = summary;
+      state.myInfo.profileImg = profileImg;
+    },
+    setMyBlogInfo: (state, { payload: { title, description, social } }) => {
+      state.myBlogInfo.title = title;
+      state.myBlogInfo.description = description;
+      state.myBlogInfo.social = social;
+    },
+
     setCategoryLayoutList: (state, { payload }) => {
       state.categoryLayoutList = payload;
     },
@@ -174,6 +262,9 @@ const settingSlice = createSlice({
     },
     setCategoryCnt: (state, { payload }) => {
       state.categoryCnt = payload;
+    },
+    setIsEditCategory: (state, { payload }) => {
+      state.isEditCategory = payload;
     },
 
     setPageLayoutList: (state, { payload }) => {
@@ -185,6 +276,12 @@ const settingSlice = createSlice({
     setPageCnt: (state, { payload }) => {
       state.pageCnt = payload;
     },
+    setPageDeleList: (state, { payload }) => {
+      state.pageDeleList = payload;
+    },
+    setIsEditPage: (state, { payload }) => {
+      state.isEditPage = payload;
+    },
 
     setComponentLayoutList: (state, { payload }) => {
       state.componentLayoutList = payload;
@@ -193,12 +290,26 @@ const settingSlice = createSlice({
       state.componentList = payload;
     },
 
+    setUserComponentLayoutList: (state, { payload }) => {
+      state.userComponentLayoutList = payload;
+    },
+
+    setUserComponentList: (state, { payload }) => {
+      state.userComponentList = payload;
+    },
+
+    setUserCheckList: (state, { payload }) => {
+      state.userCheckList = payload;
+    },
+
+    setOrigin: (state, { payload }) => {
+      state.origin = payload;
+    },
     setCheckList: (state, { payload: { logo, category, profile, page, title, contents } }) => {
       state.checkList = { logo, category, profile, page, title, contents };
     },
-    setBlogSettingInfo: (state, { payload: { siteMetadata, profileImg } }) => {
-      state.blogSettingInfo.siteMetadata = siteMetadata;
-      state.blogSettingInfo.profileImg = profileImg;
+    setBlogSettingInfo: (state, { payload }) => {
+      state.blogSettingInfo = payload;
     },
     setColors: (state, { payload }) => {
       state.colorList = payload;
@@ -206,32 +317,61 @@ const settingSlice = createSlice({
     setClickedComp: (state, { payload }) => {
       state.clickedComp = payload;
     },
+    setClickedLayoutIdx: (state, { payload }) => {
+      state.clickedLayoutIdx = payload;
+    },
+    setComponentCreated: (state, { payload }) => {
+      state.componentCreated = payload;
+    },
   },
 });
 export const {
+  setMyInfo,
+  setMyBlogInfo,
   setCategoryLayoutList,
   setCategoryList,
   setCategoryCnt,
+  setIsEditCategory,
+  setPageLayoutList,
   setPageList,
   setPageCnt,
+  setPageDeleList,
+  setIsEditPage,
   setComponentList,
   setComponentLayoutList,
+  setUserComponentLayoutList,
+  setOrigin,
+  setUserComponentList,
+  setUserCheckList,
   setCheckList,
   setBlogSettingInfo,
   setColors,
   setClickedComp,
+  setClickedLayoutIdx,
+  setComponentCreated,
 } = settingSlice.actions;
+
+export const selectMyInfo = (state: rootState) => state.setting.myInfo;
+export const selectMyBlogInfo = (state: rootState) => state.setting.myBlogInfo;
 
 export const selectCategoryLayoutList = (state: rootState) => state.setting.categoryLayoutList;
 export const selectCategoryCnt = (state: rootState) => state.setting.categoryCnt;
 export const selectCategoryList = (state: rootState) => state.setting.categoryList;
+export const selectIsEditCategory = (state: rootState) => state.setting.isEditCategory;
 
 export const selectPageLayoutList = (state: rootState) => state.setting.pageLayoutList;
 export const selectPageList = (state: rootState) => state.setting.pageList;
 export const selectPageCnt = (state: rootState) => state.setting.pageCnt;
+export const selectPageDeleList = (state: rootState) => state.setting.pageDeleList;
+export const selectIsEditPage = (state: rootState) => state.setting.isEditPage;
 
 export const selectComponentLayoutList = (state: rootState) => state.setting.componentLayoutList;
 export const selectComponentList = (state: rootState) => state.setting.componentList;
+
+export const selectUserComponentLayoutList = (state: rootState) => state.setting.userComponentLayoutList;
+export const selectOrigin = (state: rootState) => state.setting.origin;
+export const selectUserComponentList = (state: rootState) => state.setting.userComponentList;
+export const selectUserCheckList = (state: rootState) => state.setting.userCheckList;
 
 export const selectCheckList = (state: rootState) => state.setting.checkList;
 
@@ -240,15 +380,19 @@ export const selectBlogSettingInfo = (state: rootState) => state.setting.blogSet
 export const selectColors = (state: rootState) => state.setting.colorList;
 
 export const selectClickedComp = (state: rootState) => state.setting.clickedComp;
+export const selectClickedLayoutIdx = (state: rootState) => state.setting.clickedLayoutIdx;
+export const selectComponentCreated = (state: rootState) => state.setting.componentCreated;
 
 export default settingSlice.reducer;
 
-/*
+/* 배경색 기준 텍스트 컬러 설정 */
+export const getTextColor = (hexColor: string) => {
+  const color = hexColor.slice(1); // # 제거
+  const rgb = parseInt(color, 16); // 10진수 변환
+  const r = (rgb >> 16) & 0xff;
+  const g = (rgb >> 8) & 0xff;
+  const b = (rgb >> 0) & 0xff;
+  const luma = 0.2126 * r + 0.7152 * g + 0.0722 * b;
 
-{ i: "a", x: 0, y: 0, w: 1, h: 2, static: true, isResizable: false },
-{ i: "b", x: 1, y: 0, w: 1, h: 2, isResizable: false },
-{ i: "c", x: 2, y: 0, w: 1, h: 2, isResizable: false },
-
-{ key: "a" }, { key: "b" }, { key: "c" }
-
-*/
+  return luma < 127.5 ? "#ffffff" : "#000000";
+};

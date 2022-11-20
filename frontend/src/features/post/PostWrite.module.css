@@ -9,16 +9,16 @@
 
 .postWriteButtons {
   position: absolute;
-  top: -30%;
-  left: 14%;
-  transform: translate(-14%, 30%);
+  top: 90%;
+  left: 32%;
+  transform: translate(-32%, -90%);
 }
 
 .postDeleteButton {
   position: absolute;
-  top: -30%;
+  top: 90%;
   right: 0;
-  transform: translate(115%, 30%);
+  transform: translate(115%, -90%);
 }
 
 /* PostWriteTitle */
@@ -31,12 +31,53 @@
   padding: 1%;
 }
 
+.showSelectBox {
+}
+
+.hideSelectBox {
+  display: none;
+}
+
+.categoryBox {
+  width: 115%;
+  height: 4vh;
+  padding: 2%;
+  border-radius: 5px;
+  border: 1px solid #a4a4a4;
+}
+
+.categoryBox:focus {
+  border: 1px solid #a2a5dc;
+  outline: none;
+}
+
+.categoryBox option {
+  width: 100%;
+}
+
 /* PostWriteContents */
 .postWriteContents {
   position: absolute;
   right: -7%;
+  /* border: 1px solid #a2a5dc; */
+  /* width: 73vw;
+  height: 75vh; */
+  width: 75vw;
+  height: 78vh;
+  /* padding: 1%; */
+}
+
+.postEditor {
+  width: 100%;
+  height: 100%;
+}
+
+/* PageViewerContents */
+.pageWriteContents {
+  position: absolute;
   border: 1px solid #a2a5dc;
-  width: 73vw;
+  left: -7%;
+  width: 112%;
   height: 75vh;
   padding: 1%;
 }

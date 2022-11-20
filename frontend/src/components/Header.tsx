@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
-import { LightMode, DarkMode } from "@mui/icons-material";
-import { Avatar, Box, IconButton, Menu, MenuItem, Stack, Typography, Button, Link, Divider } from "@mui/material";
-import GitHubIcon from "@mui/icons-material/GitHub";
-import LogoutIcon from "@mui/icons-material/Logout";
+import { Avatar, Box, Menu, MenuItem, Stack, Button, Link, ButtonBase } from "@mui/material";
+import { GitHub, Logout, KeyboardArrowUp, KeyboardArrowDown } from "@mui/icons-material";
+import Text from "./Text";
+import Logo from "assets/Logo.svg";
 import styles from "./css/Header.module.css";
 import palette from "../styles/colorPalette";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,12 +12,12 @@ import { rootState } from "app/store";
 import api from "api/Api";
 import Axios from "api/JsonAxios";
 import { authActions } from "slices/authSlice";
-import Text from "./Text";
 
-const GithubButton = styled(Button)(() => ({
+const GithubButton = styled(ButtonBase)(() => ({
   margin: 3,
+  height: "30px",
+  color: "black",
   backgroundColor: "transparent",
-  ".MuiButton-outlined": { color: palette.blue_5 },
   "&:hover": {
     backgroundColor: "transparent",
     borderColor: palette.black,
@@ -34,18 +34,21 @@ const AvatarStyled = styled(Avatar)(() => ({
 function Header() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const { auth, githubId, githubImage } = useSelector((state: rootState) => state.auth);
+  const { login, authFile, githubId, githubImage } = useSelector((state: rootState) => state.auth);
+  const [menuOpen, setMenuOpen] = useState(false);
 
-  const [backgroudMode, setBackgroudMode] = React.useState(true);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
+    setMenuOpen(true);
   };
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+    setMenuOpen(false);
   };
 
   const onLogin = () => {
@@ -65,60 +68,48 @@ function Header() {
       <div
         className={styles.wrapper}
         style={{
-          backgroundColor: backgroudMode ? "white" : "black",
-          color: backgroudMode ? "black" : "white",
+          backgroundColor: ["/dashboard", "/login", "/"].includes(location.pathname) && "rgba( 255, 255, 255, 0.2 )",
         }}
       >
-        <div>
-          <NavLink
-            to="/"
-            style={{
-              color: backgroudMode ? "black" : "white",
-            }}
-          >
-            <img
-              width="32"
-              height="32"
-              src="https://user-images.githubusercontent.com/83412032/198398260-5da6df5d-7abd-4228-a9e7-471360e16000.png"
-            />
+        <Stack direction="row" spacing={6} alignItems="center">
+          <NavLink to="/" className={styles.link}>
+            <img width="32" height="32" src={Logo} />
             <h1>Prologue</h1>
           </NavLink>
-        </div>
+          {login && authFile && (
+            <Stack direction="row" spacing={3}>
+              <NavLink to="/dashboard" className={styles.link}>
+                대시보드
+              </NavLink>
+              <NavLink to="/post" className={styles.link}>
+                게시글 관리
+              </NavLink>
+              <NavLink to="/setting" className={styles.link}>
+                블로그 설정
+              </NavLink>
+              <Link
+                href="https://prologue-docs.site/docs/template/get-started/introduction"
+                className={styles.link}
+                underline="none"
+                color="inherit"
+              >
+                Docs
+              </Link>
+            </Stack>
+          )}
+        </Stack>
 
-        <Stack direction="row" spacing={2} style={{ alignItems: "center" }}>
-          <IconButton
-            sx={{ color: backgroudMode ? "black" : "white" }}
-            onClick={() => setBackgroudMode(!backgroudMode)}
-          >
-            {backgroudMode ? <LightMode /> : <DarkMode />}
-          </IconButton>
-          <NavLink
-            to="/post"
-            style={{
-              color: backgroudMode ? "black" : "white",
-              textDecoration: "none",
-            }}
-          >
-            게시글 관리
-          </NavLink>
-          <NavLink
-            to="/setting"
-            style={{
-              color: backgroudMode ? "black" : "white",
-              textDecoration: "none",
-            }}
-          >
-            블로그 설정
-          </NavLink>
-
-          {auth ? (
+        <Stack direction="row" spacing={2} alignItems="center">
+          {login ? (
             <>
               <Box sx={{ flexGrow: 0 }}>
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <AvatarStyled alt="Remy Sharp" src={githubImage} />
-                </IconButton>
+                <ButtonBase onClick={handleOpenUserMenu} disableRipple>
+                  <AvatarStyled src={githubImage} />
+                  {menuOpen ? <KeyboardArrowUp fontSize="small" /> : <KeyboardArrowDown fontSize="small" />}
+                </ButtonBase>
                 <Menu
                   sx={{
+                    cursor: "pointer",
                     "& .MuiList-root": {
                       pt: 0,
                       pb: 0,
@@ -139,11 +130,11 @@ function Header() {
                     sx: {
                       overflow: "visible",
                       filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-                      mt: 1.2,
+                      mt: 1.0,
+                      ml: 0.5,
                       "& .MuiAvatar-root": {
                         width: 32,
                         height: 32,
-                        ml: -0.5,
                         mr: 1,
                       },
                       "&:before": {
@@ -151,11 +142,11 @@ function Header() {
                         display: "block",
                         position: "absolute",
                         top: 0,
-                        right: 14,
+                        right: 10,
                         width: 10,
                         height: 10,
                         bgcolor: "background.paper",
-                        transform: "translateY(-50%) rotate(45deg)",
+                        transform: "translateY(-50%)  rotate(45deg)",
                         zIndex: 0,
                       },
                     },
@@ -166,14 +157,14 @@ function Header() {
                   <MenuItem onClick={handleCloseUserMenu}>
                     <Link href={`https://github.com/${githubId}`} underline="none" color="black">
                       <Stack direction="row" spacing={1}>
-                        <GitHubIcon fontSize="small" />
+                        <GitHub fontSize="small" />
                         <Text value="GitHub" type="caption" />
                       </Stack>
                     </Link>
                   </MenuItem>
                   <MenuItem onClick={onLogout}>
                     <Stack direction="row" spacing={1}>
-                      <LogoutIcon fontSize="small" />
+                      <Logout fontSize="small" />
                       <Text value="Logout" type="caption" />
                     </Stack>
                   </MenuItem>
@@ -181,14 +172,11 @@ function Header() {
               </Box>
             </>
           ) : (
-            <GithubButton
-              startIcon={<GitHubIcon />}
-              onClick={onLogin}
-              sx={{
-                color: backgroudMode ? "black" : "white",
-              }}
-            >
-              Login
+            <GithubButton onClick={onLogin}>
+              <Stack direction="row" spacing={1} alignItems="center">
+                <GitHub fontSize="small" />
+                <Text value="Login" type="text" />
+              </Stack>
             </GithubButton>
           )}
         </Stack>

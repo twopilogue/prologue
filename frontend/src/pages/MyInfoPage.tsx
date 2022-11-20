@@ -7,101 +7,45 @@ import axios from "axios";
 import api from "api/Api";
 import { useDispatch, useSelector } from "react-redux";
 import { rootState } from "app/store";
-import { blogInfoConfig, setBlogSettingInfo } from "slices/settingSlice";
+
 import ButtonStyled from "components/Button";
 
-export interface myInfoProps {
-  name: string;
-  summary: string;
-  profileImg: string | FormData;
-}
-
-export interface myBlogInfoProps {
-  title: string;
-  description: string;
-  social: object;
-}
+import Modal from "components/Modal";
+import { useNavigate } from "react-router-dom";
+import { useAppSelector } from "app/hooks";
+import { selectMyBlogInfo, selectMyInfo } from "slices/settingSlice";
 
 const MyInfoPage = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { githubId, accessToken } = useSelector((state: rootState) => state.auth);
-  const [oldString, setOldString] = useState<blogInfoConfig>(null);
   const [newPic, setNewPic] = useState<Blob>(null);
   const [socialList, setSocialList] = useState({});
-  const [myInfo, setMyInfo] = useState<myInfoProps>({
-    name: "",
-    summary: "",
-    profileImg: null,
-  });
-  const [myBlogInfo, setMyBlogInfo] = useState<myBlogInfoProps>({
-    title: "",
-    description: "",
-    social: [],
-  });
-  const [payload, setPayload] = useState({
-    nickName: [],
-    summary: [],
-    profileImg: [],
-    title: [],
-    description: [],
-  });
-
-  const getBlogInfo = async () => {
-    await axios
-      .get(api.setting.getBlog(accessToken, githubId))
-      .then((res: any) => {
-        const originString: string = res.data.setting;
-        const teststring = originString.replaceAll("${__dirname}", "dirname_Change");
-
-        const test = "return (" + teststring + ")";
-        const st: blogInfoConfig = new Function(test)();
-        setOldString(st);
-        dispatch(setBlogSettingInfo({ siteMetadata: st.siteMetadata, profileImg: res.data.profileImg }));
-
-        setMyInfo({
-          name: st.siteMetadata.author.name,
-          summary: st.siteMetadata.author.summary,
-          profileImg: res.data.profileImg,
-        });
-        setMyBlogInfo({
-          title: st.siteMetadata.title,
-          description: st.siteMetadata.description,
-          social: st.siteMetadata.social,
-        });
-      })
-
-      .catch((err: any) => {
-        console.log(err);
-      });
-  };
+  const myBlogInfo = useAppSelector(selectMyBlogInfo);
+  const myInfo = useAppSelector(selectMyInfo);
+  const [saveModalOpen, setSaveModalOpen] = useState<boolean>(false);
+  const [loadingModalOpen, setLoadingModalOpen] = useState<boolean>(false);
+  const [finModalOpen, setFinModalOpen] = useState<boolean>(false);
 
   const handleOnEdit = () => {
-    console.log("저장?");
-    console.log("오리지널", oldString);
-    console.log("수정된 내 정보", myInfo);
     const tmpPayload = {
-      nickName: [oldString.siteMetadata.author.name, myInfo.name],
-      summary: [oldString.siteMetadata.author.summary, myInfo.summary],
-      profileImg: ["../src/images/profile-pic.png", ""],
-      title: [oldString.siteMetadata.title, myBlogInfo.title],
-      description: [oldString.siteMetadata.description, myBlogInfo.description],
+      accessToken: accessToken,
+      githubId: githubId,
+      title: myBlogInfo.title,
+      summary: myInfo.summary,
+      nickName: myInfo.nickName,
+      description: myBlogInfo.description,
+      social: myBlogInfo.social,
     };
-    setPayload(tmpPayload);
-    console.log("결과: ", tmpPayload);
     return tmpPayload;
   };
 
   const sendBlogInfo = async () => {
-    const formData = new FormData();
-    const result = {
-      accessToken: accessToken,
-      githubId: githubId,
-      modified: handleOnEdit(),
-      social: socialList,
-    };
+    setSaveModalOpen(false);
+    setLoadingModalOpen(true);
 
-    console.log("리퀘스트: ", result);
-    console.log(JSON.stringify(result));
+    const formData = new FormData();
+    const result = handleOnEdit();
 
     formData.append("imageFile", newPic);
     formData.append("modifyBlogSettingRequest", new Blob([JSON.stringify(result)], { type: "application/json" }));
@@ -111,34 +55,46 @@ const MyInfoPage = () => {
         headers: { "Content-Type": `multipart/form-data` },
       })
       .then((res: any) => {
-        console.log("됨?", res);
+        setLoadingModalOpen(false);
+        setFinModalOpen(true);
       })
       .catch((err: any) => {
         console.log(err);
       });
   };
 
-  useEffect(() => {
-    getBlogInfo();
-  }, []);
-
   return (
     <div>
       <MyGitInfo />
       <div className={styles.hr}></div>
-      <MyInfoInput myInfo={myInfo} setMyInfo={setMyInfo} setNewPic={setNewPic} />
+      <MyInfoInput setNewPic={setNewPic} />
       <div className={styles.hr}></div>
-      <MyBlogInfoInput myBlogInfo={myBlogInfo} setMyBlogInfo={setMyBlogInfo} setSocialList={setSocialList} />
+      <MyBlogInfoInput />
       <div>
         <div className={styles.confirmButton}>
           <div style={{ margin: "10px" }}>
-            <ButtonStyled color="sky" label="취소" />
-          </div>
-          <div style={{ margin: "10px" }}>
-            <ButtonStyled label="저장" onClick={sendBlogInfo} />
+            <ButtonStyled label="저장" onClick={() => setSaveModalOpen(true)} />
           </div>
         </div>
       </div>
+
+      {saveModalOpen && (
+        <Modal
+          text={`작성한 정보를 저장하시겠습니까?`}
+          twoButtonCancle={() => setSaveModalOpen(false)}
+          twoButtonConfirm={sendBlogInfo}
+        />
+      )}
+      {loadingModalOpen && <Modal text={`설정한 레이아웃을 저장하시겠습니까?`} loding />}
+      {finModalOpen && (
+        <Modal
+          saveButtonClose={() => {
+            setFinModalOpen(false);
+            window.location.reload(); // 새로고침
+          }}
+          save
+        />
+      )}
     </div>
   );
 };

@@ -1,25 +1,57 @@
-import { useAppSelector } from "app/hooks";
 import React from "react";
-import { colorsConfig, selectColors } from "slices/settingSlice";
-import DetailSetting from "./DetailSetting";
-// import css from "css";
+import { colorsConfig } from "slices/settingSlice";
 
 export const DetailSettingStyles = (styles: colorsConfig) => {
   const result = `
   .category {
-    margin-bottom: var(--spacing-4);
-    margin-right: var(--spacing-4);
-  
-    padding: var(--spacing-4);
-  
     background-color: ${styles.category.background};
-    border-radius: 10px;
   }
-  `;
 
-  const removedResult = result.replaceAll(".", "");
-  // const json = toJSON(removedResult);
-  // console.log(json);
+  .category a {
+    color: ${styles.category.text};
+  }
+
+  .profile {
+    background-color: ${styles.profile.background};
+    color: ${styles.profile.text};
+  } 
+
+  .title {
+    background-color: ${styles.title.background};
+    height: ${styles.title.titleHeight};
+  }
+
+  .title h3 {
+    color: ${styles.title.text};
+  }
+  
+  .title h3 {
+    color: ${styles.title.text};
+  }
+  
+  .post-list-container {
+    background-color: ${styles.contents.background};
+    color: ${styles.contents.text};
+  }
+
+  .post-list-container-title {
+    border-bottom: 1px solid ${styles.contents.text};
+  }
+  
+  .post-list-item h2 {
+    color: ${styles.contents.text};
+  }
+
+  .page-container {
+    background-color: ${styles.page.background};
+    justify-content: ${styles.page.sort};
+  }
+
+  .page a {
+    color: ${styles.page.text};
+  }
+  
+  `;
 
   return result;
 };

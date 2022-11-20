@@ -12,29 +12,31 @@ import { RadioGroup } from "@mui/material";
 interface LogoSettingProps {
   logoImg: File;
   setLogoImg: Dispatch<SetStateAction<File>>;
+  logoType: string;
+  setLogoType: Dispatch<SetStateAction<string>>;
 }
 
-const LogoSetting = ({ logoImg, setLogoImg }: LogoSettingProps) => {
+export const detailItemFolded: CSSProperties = {
+  margin: "0 10px 0px 10px",
+  maxHeight: "0",
+  overflow: "hidden",
+};
+export const detailItemUnfolded: CSSProperties = {
+  margin: "0 10px 10px 10px",
+  maxHeight: "100%",
+  overflow: "hidden",
+};
+
+const LogoSetting = ({ logoImg, setLogoImg, logoType, setLogoType }: LogoSettingProps) => {
   const logoImgRef = useRef<HTMLInputElement | null>(null);
   const colors: colorsConfig = useAppSelector(selectColors);
-  const [radioValue, setRadioValue] = useState("logoText");
   const dispatch = useDispatch();
   const detailItemText = useRef<any>();
   const detailItemImg = useRef<any>();
   const maxTextLength = 10;
-  const detailItemFolded: CSSProperties = {
-    margin: "0 10px 0px 10px",
-    maxHeight: "0",
-    overflow: "hidden",
-  };
-  const detailItemUnfolded: CSSProperties = {
-    margin: "0 10px 10px 10px",
-    maxHeight: "100%",
-    overflow: "hidden",
-  };
 
   const radioChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setRadioValue((event.target as HTMLInputElement).value);
+    setLogoType((event.target as HTMLInputElement).value);
   };
 
   const changeLogoHeight = (e: ChangeEvent<HTMLInputElement>) => {
@@ -78,7 +80,7 @@ const LogoSetting = ({ logoImg, setLogoImg }: LogoSettingProps) => {
       <div className={styles.detailContainer}>
         <div className={styles.detailItem}>
           <RadioGroup
-            value={radioValue}
+            value={logoType}
             onChange={(e) => {
               radioChange(e);
               changeLogoHeight(e);
@@ -90,14 +92,14 @@ const LogoSetting = ({ logoImg, setLogoImg }: LogoSettingProps) => {
         <div ref={detailItemText} style={detailItemUnfolded}>
           <Input
             placeholder="텍스트 입력"
-            value={colors.logo.inputText}
+            value={colors.logo.logoText}
             onChange={(e) => handleLogoText(e.target.value)}
           />
         </div>
         <div className={styles.detailHr} />
         <div className={styles.detailItem}>
           <RadioGroup
-            value={radioValue}
+            value={logoType}
             onChange={(e) => {
               radioChange(e);
               changeLogoHeight(e);

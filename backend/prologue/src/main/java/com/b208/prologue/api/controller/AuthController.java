@@ -85,7 +85,8 @@ public class AuthController {
             AuthFileCheckResponse authFileCheckResponse = authService.checkAuthFile(accessToken, githubId);
             boolean checkAuthFile = authFileCheckResponse.isCheckAuthFile();
             Integer blogType = authFileCheckResponse.getBlogType();
-            return ResponseEntity.status(200).body(AuthFileCheckResponse.of(checkAuthFile, blogType, 200, "서비스 인증 파일 조회를 성공하였습니다."));
+            String template = authFileCheckResponse.getTemplate();
+            return ResponseEntity.status(200).body(AuthFileCheckResponse.of(checkAuthFile, blogType, template, 200, "서비스 인증 파일 조회를 성공하였습니다."));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -101,7 +102,7 @@ public class AuthController {
     public ResponseEntity<? extends BaseResponseBody> createAuthFile(@Valid @RequestBody CreateAuthFileRequest createAuthFileRequest) throws Exception {
         try {
             authService.createAuthFile(createAuthFileRequest);
-            return ResponseEntity.status(200).body(AuthFileCheckResponse.of(true, createAuthFileRequest.getBlogType(), 200, "서비스 인증 파일 생성을 성공하였습니다."));
+            return ResponseEntity.status(200).body(AuthFileCheckResponse.of(true, createAuthFileRequest.getBlogType(), createAuthFileRequest.getTemplate(), 200, "서비스 인증 파일 생성을 성공하였습니다."));
         } catch (Exception e) {
             e.printStackTrace();
         }

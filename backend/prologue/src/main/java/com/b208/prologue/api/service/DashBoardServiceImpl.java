@@ -4,12 +4,19 @@ import com.b208.prologue.api.request.DashBoardPostRequest;
 import com.b208.prologue.api.response.github.*;
 import com.b208.prologue.common.Base64Converter;
 import lombok.RequiredArgsConstructor;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -40,7 +47,7 @@ public class DashBoardServiceImpl implements DashBoardService {
             if (i < 0) break;
             DashBoardPostRequest boardPostRequest = new DashBoardPostRequest();
 
-            if(isNumeric(list[i].getName()) == false && list[i].getName().length() != 13) {
+            if (isNumeric(list[i].getName()) == false && list[i].getName().length() != 13) {
                 String post = postService.setItem(url, accessToken, list[i].getPath());
                 temp.add(post);
                 boardPostRequest.setDirectory(list[i].getName());
@@ -49,10 +56,10 @@ public class DashBoardServiceImpl implements DashBoardService {
                 int cnt = st.countTokens();
 
                 boolean flag = false;
-                for(int j = 0; j < cnt; j++){
+                for (int j = 0; j < cnt; j++) {
                     String line = st.nextToken();
 
-                    if(line.contains("date")){
+                    if (line.contains("date")) {
                         flag = true;
 
                         String tempDate = line.substring(line.indexOf("\"") + 1);
@@ -63,15 +70,15 @@ public class DashBoardServiceImpl implements DashBoardService {
                         break;
                     }
                 }
-                if(flag == false){
+                if (flag == false) {
                     continue;
                 }
-            }else{
+            } else {
                 temp.add(postService.setItem(url, accessToken, list[i].getPath()));
                 boardPostRequest.setDirectory(list[i].getName());
 
                 Date tempDate = new Date(Long.parseLong(list[i].getName()));
-                SimpleDateFormat dateFormat = new SimpleDateFormat ("yyyy-MM-dd");
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
                 boardPostRequest.setDate(String.valueOf(dateFormat.format(tempDate)));
             }
@@ -79,17 +86,17 @@ public class DashBoardServiceImpl implements DashBoardService {
             boardPostRequests.add(boardPostRequest);
         }
 
-        for(int i = 0; i < temp.size(); i++){
+        for (int i = 0; i < temp.size(); i++) {
             StringTokenizer st = new StringTokenizer(temp.get(i), "\n");
             int cnt = st.countTokens();
 
-            for(int j = 0; j < cnt; j++){
+            for (int j = 0; j < cnt; j++) {
                 String line = st.nextToken();
-                if(line.contains("title")){
+                if (line.contains("title")) {
                     boardPostRequests.get(i).setTitle(line.substring(line.indexOf(": ") + 1));
                     break;
                 }
-                if(j == (cnt-1)){
+                if (j == (cnt - 1)) {
                     boardPostRequests.get(i).setTitle("No Title");
                 }
             }
@@ -120,7 +127,7 @@ public class DashBoardServiceImpl implements DashBoardService {
     }
 
     @Override
-    public Double getRepositorySize(String encodedAccessToken, String githubId) throws Exception {
+    public Double getRepositorySize(String encodedAccessToken, String githubId, String template) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
         GetRepositorySizeResponse getRepositorySizeResponse = webClient.get()
@@ -129,6 +136,16 @@ public class DashBoardServiceImpl implements DashBoardService {
                 .headers(h -> h.setBearerAuth(accessToken))
                 .retrieve()
                 .bodyToMono(GetRepositorySizeResponse.class).block();
+
+        if(getRepositorySizeResponse.getSize() == 0.0) {
+            GetRepositorySizeResponse tempBlogSize = webClient.get()
+                    .uri("/repos/team-epilogue/" + template)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .headers(h -> h.setBearerAuth(accessToken))
+                    .retrieve()
+                    .bodyToMono(GetRepositorySizeResponse.class).block();
+            return tempBlogSize.getSize() / 1000.0;
+        }
 
         return getRepositorySizeResponse.getSize() / 1000.0;
     }
@@ -146,10 +163,11 @@ public class DashBoardServiceImpl implements DashBoardService {
                 .retrieve()
                 .bodyToMono(GetFileNameResponse[].class).block();
 
-        for (int i = 0; i < getFileNameResponse.length; i++){
-            if(isNumeric(getFileNameResponse[i].getName()) == false && getFileNameResponse[i].getName().length() != 13) continue;
+        for (int i = 0; i < getFileNameResponse.length; i++) {
+            if (isNumeric(getFileNameResponse[i].getName()) == false && getFileNameResponse[i].getName().length() != 13)
+                continue;
             Date date = new Date(Long.parseLong(getFileNameResponse[i].getName()));
-            SimpleDateFormat dateFormat = new SimpleDateFormat ("yyyy-MM-dd");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
             result.add(String.valueOf(dateFormat.format(date)));
         }
@@ -168,16 +186,28 @@ public class DashBoardServiceImpl implements DashBoardService {
 
     public String getLatestBuildTime(String encodedAccessToken, String githubId) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
-
-        GetLatestBuildTimeResponse getLatestBuildTimeResponse = webClient.get()
-                .uri("/repos/" + githubId + "/" + githubId + ".github.io/pages/builds/latest")
+        String response = webClient.get()
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io/actions/runs")
                 .accept(MediaType.APPLICATION_JSON)
                 .headers(h -> h.setBearerAuth(accessToken))
                 .retrieve()
-                .bodyToMono(GetLatestBuildTimeResponse.class).block();
+                .bodyToMono(String.class).block();
 
-        SimpleDateFormat dataFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
-        return dataFormat.format(getLatestBuildTimeResponse.getLastBuildTime());
+        JSONParser jsonParser = new JSONParser();
+        JSONObject object = (JSONObject) jsonParser.parse(response);
+        JSONArray workflow_runs = (JSONArray) jsonParser.parse(object.get("workflow_runs").toString());
+        JSONObject content = (JSONObject) workflow_runs.get(0);
+
+        LocalDateTime dateTime = LocalDateTime.from(
+                Instant.from(
+                        DateTimeFormatter.ISO_DATE_TIME.parse(content.get("created_at").toString())
+                ).atZone(ZoneId.of("Asia/Seoul"))
+        );
+
+        Date date = java.sql.Timestamp.valueOf(dateTime);
+        SimpleDateFormat dataFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+        return dataFormat.format(date);
     }
 
     @Override
@@ -193,5 +223,44 @@ public class DashBoardServiceImpl implements DashBoardService {
                 .bodyToMono(PostGetListResponse[].class).block();
 
         return list.length;
+    }
+
+    @Override
+    public String getBuildState(String encodedAccessToken, String githubId) throws Exception {
+        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
+        String response = webClient.get()
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io/actions/runs")
+                .accept(MediaType.APPLICATION_JSON)
+                .headers(h -> h.setBearerAuth(accessToken))
+                .retrieve()
+                .bodyToMono(String.class).block();
+
+        JSONParser jsonParser = new JSONParser();
+        JSONObject object = (JSONObject) jsonParser.parse(response);
+        JSONArray workflow_runs = (JSONArray) jsonParser.parse(object.get("workflow_runs").toString());
+        JSONObject content = (JSONObject) workflow_runs.get(0);
+
+        String buildState = "progress";
+        if (content.get("status").equals("completed")) {
+            buildState = "completed";
+        }
+        return buildState;
+    }
+
+    public boolean checkUpdate(String encodedAccessToken, String githubId) throws Exception {
+        String accessToken = base64Converter.decryptAES256(encodedAccessToken);
+        String response = webClient.get()
+                .uri("/repos/" + githubId + "/" + githubId + ".github.io/branches/main")
+                .accept(MediaType.APPLICATION_JSON)
+                .headers(h -> h.setBearerAuth(accessToken))
+                .retrieve()
+                .bodyToMono(String.class).block();
+
+        JSONParser jsonParser = new JSONParser();
+        JSONObject object = (JSONObject) jsonParser.parse(response);
+        JSONObject commit = (JSONObject) jsonParser.parse(object.get("commit").toString());
+        JSONObject commitDetail = (JSONObject) jsonParser.parse(commit.get("commit").toString());
+        if (commitDetail.get("message").equals("action workflow")) return false;
+        return true;
     }
 }

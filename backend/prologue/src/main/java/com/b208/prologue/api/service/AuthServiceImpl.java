@@ -156,10 +156,12 @@ public class AuthServiceImpl implements AuthService {
                 StringTokenizer st = new StringTokenizer(content, " ");
                 String authGithubId = st.nextToken();
                 Integer blogType = Integer.parseInt(st.nextToken());
+                String template = st.nextToken();
 
                 if (githubId.equals(authGithubId)) {
                     authFileCheckResponse.setCheckAuthFile(true);
                     authFileCheckResponse.setBlogType(blogType);
+                    authFileCheckResponse.setTemplate(template);
                     return authFileCheckResponse;
                 } else {
                     return authFileCheckResponse;
@@ -172,7 +174,7 @@ public class AuthServiceImpl implements AuthService {
     public void createAuthFile(CreateAuthFileRequest createAuthFileRequest) throws Exception {
         String accessToken = base64Converter.decryptAES256(createAuthFileRequest.getAccessToken());
         String githubId = createAuthFileRequest.getGithubId();
-        String authFile = base64Converter.encode(base64Converter.encryptAES256(githubId + " " + createAuthFileRequest.getBlogType()));
+        String authFile = base64Converter.encode(base64Converter.encryptAES256(githubId + " " + createAuthFileRequest.getBlogType() + " " + createAuthFileRequest.getTemplate()));
 
         CreateContentRequest createContentRequest = new CreateContentRequest("upload service auth file", authFile);
 

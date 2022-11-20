@@ -46,8 +46,9 @@ public class DashBoardController {
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
     public ResponseEntity<? extends BaseResponseBody> getRepositorySize(@RequestParam @ApiParam(value = "accessToken", required = true) String accessToken,
-                                                                        @RequestParam @ApiParam(value = "사용자 깃허브 아이디", required = true) String githubId) throws Exception {
-        Double size = dashBoardService.getRepositorySize(accessToken, githubId);
+                                                                        @RequestParam @ApiParam(value = "사용자 깃허브 아이디", required = true) String githubId,
+                                                                        @RequestParam @ApiParam(value = "사용자 블로그 템플릿", required = true) String template) throws Exception {
+        Double size = dashBoardService.getRepositorySize(accessToken, githubId, template);
         return ResponseEntity.status(200).body(RepositorySizeResponse.of(size, 200, "레포지토리 사용량 조회 성공"));
     }
 
@@ -58,13 +59,13 @@ public class DashBoardController {
             @ApiResponse(code = 400, message = "게시글 날짜 조회 실패", response = BaseResponseBody.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
-    public ResponseEntity<? extends  BaseResponseBody> getDateList(@RequestParam String accessToken, @RequestParam String githubId) {
+    public ResponseEntity<? extends BaseResponseBody> getDateList(@RequestParam String accessToken, @RequestParam String githubId) {
 
         try {
             Set<String> result = dashBoardService.getDateList(accessToken, githubId);
 
             return ResponseEntity.status(200).body(DateListResponse.of(result, 200, "게시글 날짜목록 조회 성공"));
-        } catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "게시글 날짜목록 조회에 실패하였습니다."));
         }
     }
@@ -93,14 +94,46 @@ public class DashBoardController {
             @ApiResponse(code = 400, message = "전체 게시글 수 조회 실패", response = BaseResponseBody.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
-    public ResponseEntity<? extends  BaseResponseBody> getTotalPostCount(@RequestParam String accessToken, @RequestParam String githubId) {
+    public ResponseEntity<? extends BaseResponseBody> getTotalPostCount(@RequestParam String accessToken, @RequestParam String githubId) {
 
         try {
             int result = dashBoardService.getTotalCount(accessToken, githubId);
 
             return ResponseEntity.status(200).body(GetTotalCountResponse.of(result, 200, "전체 게시글 수 조회 성공"));
-        } catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "전체 게시글 수 조회에 실패하였습니다."));
+        }
+    }
+
+    @GetMapping("/build")
+    @ApiOperation(value = "빌드 상태 조회", notes = "빌드 상태 조회")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "빌드 상태 조회 성공", response = GetBuildStateResponse.class),
+            @ApiResponse(code = 400, message = "빌드 상태 조회 실패", response = BaseResponseBody.class),
+            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<? extends BaseResponseBody> getBuildState(@RequestParam String accessToken, @RequestParam String githubId) {
+        try {
+            String buildState = dashBoardService.getBuildState(accessToken, githubId);
+            return ResponseEntity.status(200).body(GetBuildStateResponse.of(buildState, 200, "빌드 상태 조회 성공"));
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "빌드 상태 조회에 실패하였습니다."));
+        }
+    }
+
+    @GetMapping("/check")
+    @ApiOperation(value = "레포지토리 변경 사항 여부 조회", notes = "레포지토리 변경 사항 여부 조회")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "레포지토리 변경 사항 여부 성공", response = GetCheckUpdateResponse.class),
+            @ApiResponse(code = 400, message = "조회 실패", response = BaseResponseBody.class),
+            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<? extends BaseResponseBody> checkUpdate(@RequestParam String accessToken, @RequestParam String githubId) {
+        try {
+            boolean checkUpdate = dashBoardService.checkUpdate(accessToken, githubId);
+            return ResponseEntity.status(200).body(GetCheckUpdateResponse.of(checkUpdate, 200, "레포지토리 변경 사항 여부 조회 성공"));
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "레포지토리 변경 사항 여부 조회에 실패하였습니다."));
         }
     }
 }

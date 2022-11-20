@@ -5,7 +5,7 @@
   left: 0;
   position: fixed;
   display: block;
-  z-index: 1;
+  z-index: 999;
   text-align: center;
   overflow: hidden;
 }
@@ -25,15 +25,30 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  z-index: 1;
   transform: translate(-50%, -50%);
+  z-index: 1;
   background: #FFFFFF;
   border: 0.2px solid rgba(0, 0, 0, 0.2);
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 20px;
   padding: 30px 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 p {
   white-space: pre-line
+}
+
+.hiddenDiv {
+  visibility: hidden;
+  margin: 1em;
+}
+
+.progress {
+  position: absolute;
+  top: 26%;
+  left: 42.5%;
+  transform: translate(-26%, -42.5%);
 }

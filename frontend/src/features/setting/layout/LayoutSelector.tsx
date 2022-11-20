@@ -1,31 +1,38 @@
-import Text from "components/Text";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { initialState, setClickedLayoutIdx } from "slices/settingSlice";
 import styles from "../Setting.module.css";
 import LayoutSelectorItem from "./../layout/LayoutSelectorItem";
+import DefaultLayoutStyles, { defaultLayoutConfig } from "./DefaultLayoutStyles";
+
+export interface layoutsConfig {
+  idx: number;
+  isClicked: boolean;
+}
 
 const LayoutSelector = () => {
+  const [layoutList, setLayoutList] = useState<layoutsConfig[]>([
+    { idx: 0, isClicked: true },
+    { idx: 1, isClicked: false },
+    { idx: 2, isClicked: false },
+    { idx: 3, isClicked: false },
+    { idx: 4, isClicked: false },
+    { idx: 5, isClicked: false },
+    { idx: 6, isClicked: false },
+  ]);
+  const DefaultLayouts = DefaultLayoutStyles();
+
+  useEffect(() => {
+    return () => {
+      setClickedLayoutIdx(initialState.clickedLayoutIdx);
+    };
+  }, []);
+
   return (
     <>
-      <div
-        className={styles.textPadding}
-        style={{ paddingTop: "0", paddingBottom: "10px" }}
-      >
-        <Text value="기본 레이아웃 선택" type="groupTitle" bold />
-      </div>
-      <div style={{ paddingLeft: "20px" }}>
-        <Text value="기본으로 사용할 레이아웃을 선택하세요." type="caption" />
-      </div>
       <div className={styles.layoutContainer}>
-        <LayoutSelectorItem />
-        <LayoutSelectorItem />
-        <LayoutSelectorItem />
-        <LayoutSelectorItem />
-        <LayoutSelectorItem />
-        <LayoutSelectorItem />
-        <LayoutSelectorItem />
-        <LayoutSelectorItem />
-        <LayoutSelectorItem />
-        <LayoutSelectorItem />
+        {DefaultLayouts.map((item: defaultLayoutConfig, i: number) => {
+          return <LayoutSelectorItem key={i} index={item.id} layoutList={layoutList} setLayoutList={setLayoutList} />;
+        })}
       </div>
     </>
   );

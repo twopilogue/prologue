@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Stack } from "@mui/material";
+import { Box, Stack, styled } from "@mui/material";
 import Text from "components/Text";
 import Modal from "components/Modal";
 import BlogReset from "features/blog/BlogReset";
@@ -11,11 +11,30 @@ import Axios from "api/JsonAxios";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
+const BoxNoneClickStyle = styled(Box)(() => ({
+  display: "flex",
+  position: "absolute",
+  alignItems: "center",
+  justifyContent: "center",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: "99.6%",
+  height: "99.6%",
+  color: "#89be93",
+  textShadow: "-1px 0px white,0px 1px white, 1px 0px white, 0px -1px white",
+  webkitTextStrokeColor: "yellow",
+  background: "rgba(0, 0, 0, 0.3)",
+  backdropFilter: "blur(1.5px)",
+  borderRadius: "20px",
+  zIndex: 1,
+}));
+
 function BlogResetPage() {
   const navigate = useNavigate();
-  
+
   const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
-  
+
   const [repositoryModalOpen, setRepositoryModalOpen] = React.useState(false);
   const [ManageModalOpen, setManageModalOpen] = React.useState(false);
 
@@ -29,7 +48,6 @@ function BlogResetPage() {
 
   async function deleteRepo() {
     await Axios.delete(api.blog.deleteRepo(accessToken, githubId)).then((res) => {
-      console.log("레포지토리가 삭제되었습니다.")
       navigate("/create");
     });
   }
@@ -71,19 +89,24 @@ function BlogResetPage() {
           onClick={context[0].onClick}
         />
         <div style={{ borderLeft: "1px dashed #000000", height: "450px" }} />
-        <BlogReset
-          title={context[1].title}
-          image={context[1].image}
-          text={context[1].text}
-          onClick={context[1].onClick}
-        />
+        <Box sx={{ position: "relative" }}>
+          <BoxNoneClickStyle>
+            <Text value="Open later..." type="title" bold />
+          </BoxNoneClickStyle>
+          <BlogReset
+            title={context[1].title}
+            image={context[1].image}
+            text={context[1].text}
+            onClick={context[1].onClick}
+          />
+        </Box>
       </Stack>
       {repositoryModalOpen && (
         <Modal
           buttonNum={2}
           twoButtonCancle={() => setRepositoryModalOpen(false)}
           twoButtonConfirm={deleteRepo}
-          text={`Repository 초기화를 선택했습니다\ngithub.io 데이터들이 모두 삭제됩니다`}
+          text={`Repository 초기화를 선택했습니다.\ngithub.io 데이터들이 모두 삭제됩니다.`}
         />
       )}
       {ManageModalOpen && (
@@ -91,7 +114,7 @@ function BlogResetPage() {
           buttonNum={2}
           twoButtonCancle={() => setManageModalOpen(false)}
           twoButtonConfirm={() => console.log("게시글만 관리 확인 클릭")}
-          text={`게시글만 관리를 선택했습니다\n게시글 탐색이 안 될 경우 지원이 불가합니다`}
+          text={`게시글만 관리를 선택했습니다.\n게시글 탐색이 안 될 경우 지원이 불가합니다.`}
         />
       )}
     </Box>

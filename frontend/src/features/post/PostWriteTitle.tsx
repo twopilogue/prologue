@@ -1,54 +1,72 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "features/post/PostWrite.module.css";
 import Text from "components/Text";
 import Input from "components/Input";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
 import Tag from "components/Tag";
 import { useAppDispatch } from "app/hooks";
-import { setPostCategory, setPostTagList, setPostTitle } from "slices/postSlice";
+import { setPostCategory, setPostDescription, setPostTagList, setPostTitle } from "slices/postSlice";
 import axios from "api/JsonAxios";
 import api from "api/Api";
 import { useSelector } from "react-redux";
 import { rootState } from "app/store";
 
-const PostWriteTitle = () => {
+interface PostWriteTitleProps {
+  savedTitle: string;
+  savedDescription: string;
+  savedCategory: string;
+  savedTag: string[];
+}
+
+const PostWriteTitle = ({ savedTitle, savedDescription, savedCategory, savedTag }: PostWriteTitleProps) => {
   const dispatch = useAppDispatch();
 
-  const [title, setTitle] = useState("");
-  const [category, setCategory] = useState("");
+  const [title, setTitle] = useState(savedTitle);
+  const [description, setDescription] = useState(savedDescription);
+  const [category, setCategory] = useState(savedCategory);
   const [categoryList, setCategoryList] = useState([]);
   const [tag, setTag] = useState("");
-  const [tagList, setTagList] = useState([]);
+  const [tagList, setTagList] = useState(savedTag);
 
-  const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
+  const { accessToken, githubId, blogType } = useSelector((state: rootState) => state.auth);
 
   const titleChange = (event: any) => {
     setTitle(event.target.value);
-    console.log("제목 : ", event.target.value);
     dispatch(setPostTitle(event.target.value));
   };
 
-  const categoryChange = (event: SelectChangeEvent) => {
+  const descriptionChange = (event: any) => {
+    setDescription(event.target.value);
+    dispatch(setPostDescription(event.target.value));
+  };
+
+  const categoryChange = (event: any) => {
     setCategory(event.target.value);
     dispatch(setPostCategory(event.target.value));
   };
 
   const getCategoryList = () => {
-    axios
-      .get(api.setting.getCategory(accessToken, githubId))
-      .then((res: any) => {
-        console.log(res.data.category);
+    if (blogType == 0) {
+      axios.get(api.setting.getCategory(accessToken, githubId)).then((res) => {
         setCategoryList(res.data.category);
-      })
-      .catch((err: any) => {
-        console.log(err);
       });
+    }
   };
 
   const enterKeyPress = (event: any) => {
+    const english = /[^a-z]/g;
+
     if (event.target.value.length !== 0 && event.key === "Enter") {
-      makeTagItem();
+      if (english.test(event.target.value)) {
+        event.target.value = event.target.value.replace(english, "");
+      }
+
+      const newTagList = [...tagList];
+
+      if (event.target.value.length) {
+        newTagList.push(event.target.value);
+        setTagList(newTagList);
+        setTag("");
+      }
     }
   };
 
@@ -56,21 +74,13 @@ const PostWriteTitle = () => {
     setTag(event.target.value);
   };
 
-  const makeTagItem = () => {
-    console.log("태그 만들기 : ", tag);
-
-    const newTagList = [...tagList];
-    newTagList.push(tag);
-    setTagList(newTagList);
-    setTag("");
-  };
-
-  const deletePostTag = (event: any) => {
-    console.log("삭제");
-    const deleteTag = event.target.value;
-    const filteredTagList = tagList.filter((tag) => tag !== deleteTag);
-    setTagList(filteredTagList);
-  };
+  // const deletePostTag = (event: any) => {
+  //   console.log("삭제");
+  //   const deleteTag = event.target.label;
+  //   console.log("deleteTag : ", deleteTag);
+  //   const filteredTagList = tagList.filter((tag) => tag !== deleteTag);
+  //   setTagList(filteredTagList);
+  // };
 
   useEffect(() => {
     getCategoryList();
@@ -86,18 +96,38 @@ const PostWriteTitle = () => {
       <div style={{ marginTop: "1%" }}>
         <Input placeholder="제목을 입력해주세요" onChange={titleChange} value={title} />
       </div>
-      <Text value="제목은 필수 입력값입니다." type="caption" color="red" />
+      <div id="titleError" style={{ display: "none" }}>
+        <Text value="제목은 필수 입력값입니다." type="caption" color="red" />
+      </div>
       <br /> <br /> <br />
-      <Text value="카테고리" type="text" />
-      <div style={{ width: "15vw" }}>
-        <Select value={category} onChange={categoryChange} displayEmpty inputProps={{ "aria-label": "Without label" }}>
+      <Text value="설명" type="text" />
+      <div style={{ marginTop: "1%" }}>
+        <Input placeholder="설명을 입력해주세요" onChange={descriptionChange} value={description} />
+      </div>
+      <div id="descriptionError" style={{ display: "none" }}>
+        <Text value="설명은 필수 입력값입니다." type="caption" color="red" />
+      </div>
+      <br /> <br /> <br />
+      <div className={blogType == 0 ? `${styles.showSelectBox}` : `${styles.hideSelectBox}`} style={{ width: "15vw" }}>
+        <Text value="카테고리" type="text" /> <br />
+        <div style={{ marginTop: "1%" }}>
+          <select className={styles.categoryBox} name="cateogry" value={category} onChange={categoryChange}>
+            <option value="">설정 안 함</option>
+            {categoryList.map((value, key) => (
+              <option key={key} value={value}>
+                {value}
+              </option>
+            ))}
+          </select>
+        </div>
+        {/* <Select value={category} onChange={categoryChange} displayEmpty inputProps={{ "aria-label": "Without label" }}>
           <MenuItem value="">카테고리</MenuItem>
           {categoryList.map((value, key) => (
             <MenuItem key={key} value={value}>
               {value}
             </MenuItem>
           ))}
-        </Select>
+        </Select> */}
       </div>
       <br /> <br /> <br />
       <Text value="태그" type="text" />
@@ -110,10 +140,17 @@ const PostWriteTitle = () => {
         />
       </div>
       {tagList.map((tag, index) => (
-        <Tag key={index} label={tag} onDelete={() => deletePostTag} />
+        <Tag key={index} label={tag} />
       ))}
     </div>
   );
 };
 
 export default PostWriteTitle;
+
+PostWriteTitle.defaultProps = {
+  savedTitle: "",
+  savedDescription: "",
+  savedCategory: "",
+  savedTag: [],
+};

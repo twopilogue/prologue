@@ -1,22 +1,26 @@
 // core
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import storage from "redux-persist/lib/storage";
-import { persistReducer } from "redux-persist";
+import { persistReducer, persistStore } from "redux-persist";
 import thunk from "redux-thunk";
 import authReducer from "../slices/authSlice";
 import postReducer from "../slices/postSlice";
 import settingReducer from "../slices/settingSlice";
+import dashboardReducer from "../slices/dashboardSlice";
+
+const persistConfig = {
+  key: "root",
+  storage,
+  whitelist: ["auth", "dashboard"],
+};
 
 const rootReducer = combineReducers({
   auth: authReducer,
   posts: postReducer,
   setting: settingReducer,
+  dashboard: dashboardReducer,
 });
 
-const persistConfig = {
-  key: "root",
-  storage,
-};
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
@@ -25,5 +29,6 @@ export const store = configureStore({
   middleware: [thunk],
 });
 
-export type rootState = ReturnType<typeof store.getState>;
+export const persistor = persistStore(store);
 export type AppDispatch = typeof store.dispatch;
+export type rootState = ReturnType<typeof store.getState>;
