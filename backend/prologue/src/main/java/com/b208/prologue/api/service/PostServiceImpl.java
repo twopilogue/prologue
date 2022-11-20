@@ -44,7 +44,7 @@ public class PostServiceImpl implements PostService {
                 .retrieve()
                 .bodyToMono(PostGetListResponse[].class).block();
         index = index < 0 ? list.length - 1 : index;
-        return category == null ? getListAll(accessToken, githubId, list, index) : getListSpecific(accessToken, githubId, list, index, category);
+        return category.equals("전체보기") ? getListAll(accessToken, githubId, list, index) : getListSpecific(accessToken, githubId, list, index, category);
     }
 
     @Override
