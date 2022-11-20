@@ -18,6 +18,8 @@ import {
 import ButtonStyled from "components/Button";
 import Axios from "api/JsonAxios";
 import { Layout } from "react-grid-layout";
+import Modal from "components/Modal";
+import { useNavigate } from "react-router-dom";
 
 export interface myInfoProps {
   nickName: string;
@@ -33,9 +35,11 @@ export interface myBlogInfoProps {
 
 const MyInfoPage = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { githubId, accessToken } = useSelector((state: rootState) => state.auth);
   const [newPic, setNewPic] = useState<Blob>(null);
   const [socialList, setSocialList] = useState({});
+  const [saveModalOpen, setSaveModalOpen] = useState<boolean>(false);
   const [myInfo, setMyInfo] = useState<myInfoProps>({
     nickName: "",
     summary: "",
@@ -63,7 +67,6 @@ const MyInfoPage = () => {
         setMyBlogInfo({
           title: result.title,
           description: result.description,
-          /* 임시 데이터 */
           social: result.social,
         });
       })
@@ -81,7 +84,6 @@ const MyInfoPage = () => {
       summary: myInfo.summary,
       nickName: myInfo.nickName,
       description: myBlogInfo.description,
-      /* 임시 데이터 */
       social: myBlogInfo.social,
     };
     return tmpPayload;
@@ -101,10 +103,16 @@ const MyInfoPage = () => {
       .then((res: any) => {
         console.log("됨?", res);
         alert("저장되었습니다.");
+        setSaveModalOpen(false);
+        window.location.reload(); // 새로고침
       })
       .catch((err: any) => {
         console.log(err);
       });
+  };
+
+  const showSaveModal = () => {
+    setSaveModalOpen(true);
   };
 
   useEffect(() => {
@@ -121,13 +129,18 @@ const MyInfoPage = () => {
       <div>
         <div className={styles.confirmButton}>
           <div style={{ margin: "10px" }}>
-            <ButtonStyled color="sky" label="취소" />
-          </div>
-          <div style={{ margin: "10px" }}>
-            <ButtonStyled label="저장" onClick={sendBlogInfo} />
+            <ButtonStyled label="저장" onClick={showSaveModal} />
           </div>
         </div>
       </div>
+
+      {saveModalOpen && (
+        <Modal
+          text={`작성한 정보를 저장하시겠습니까?`}
+          twoButtonCancle={() => setSaveModalOpen(false)}
+          twoButtonConfirm={sendBlogInfo}
+        />
+      )}
     </div>
   );
 };

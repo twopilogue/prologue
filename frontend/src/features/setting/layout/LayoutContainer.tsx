@@ -44,7 +44,11 @@ const LayoutContainer = () => {
         <Text value="레이아웃 배치" type="groupTitle" bold />
       </div>
       <div style={{ paddingLeft: "20px" }}>
-        <Text value="드래그 앤 드롭으로 레이아웃의 위치를 자유롭게 설정하세요." type="caption" />
+        {isCust ? (
+          <Text value="드래그 앤 드롭으로 레이아웃의 위치를 자유롭게 설정하세요." type="caption" />
+        ) : (
+          <Text value="기본으로 제공되는 레이아웃을 사용할 수 있습니다." type="caption" />
+        )}
       </div>
       <div className={isCust ? `` : `${styles.layoutSelectOneContainer}`}>
         <div className={isCust ? `${styles.layoutSelectContainer}` : `${styles.layoutSelectContainerOne}`}>
