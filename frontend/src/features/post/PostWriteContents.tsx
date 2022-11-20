@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import styles from "features/post/PostWrite.module.css";
 import Text from "components/Text";
 import { Editor } from "@toast-ui/react-editor";
@@ -6,8 +6,8 @@ import "@toast-ui/editor/dist/toastui-editor.css";
 import "tui-color-picker/dist/tui-color-picker.css";
 import "@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css";
 import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
-import { useAppDispatch, useAppSelector } from "app/hooks";
-import { selectPostFileList, selectPostFiles, setPostContent, setPostFileList, setPostFiles } from "slices/postSlice";
+import { useAppDispatch } from "app/hooks";
+import { setPostContent, setPostFileList, setPostFiles } from "slices/postSlice";
 import api from "api/Api";
 import { useSelector } from "react-redux";
 import { rootState } from "app/store";
@@ -30,15 +30,15 @@ const PostWriteContents = () => {
 
   return (
     <div className={styles.postWriteContents}>
-      <Text value="내용" type="text" />
-      <div style={{ marginTop: "1%" }}></div>
+      {/* <Text value="내용" type="text" />
+      <div style={{ marginTop: "1%" }}></div> */}
 
       <Editor
         usageStatistics={false}
         ref={editorRef}
         initialValue=""
         previewStyle="vertical"
-        height="70vh"
+        height="100%"
         initialEditType="markdown"
         hideModeSwitch={true}
         plugins={[colorSyntax]}
@@ -61,11 +61,11 @@ const PostWriteContents = () => {
 
             let imageUrl;
             await Axios.put(api.posts.getImgUrl(), formData)
-              .then((res: any) => {
+              .then((res) => {
                 console.log(res);
                 imageUrl = res.data.tempImageUrl;
               })
-              .catch((err: any) => {
+              .catch((err) => {
                 console.log(err);
               });
 
