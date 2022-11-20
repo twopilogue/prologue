@@ -52,7 +52,6 @@ const PageViewerContents = ({ content }: PageViewerContentsProps) => {
             addImageBlobHook: async (blob, callback) => {
               const formData = new FormData();
               const file: any = blob;
-              console.log(blob);
 
               const tempImageUploadRequest = {
                 accessToken: accessToken,
@@ -65,17 +64,11 @@ const PageViewerContents = ({ content }: PageViewerContentsProps) => {
               formData.append("file", blob);
 
               let imageUrl;
-              await Axios.put(api.posts.getImgUrl(), formData)
-                .then((res: any) => {
-                  console.log(res);
-                  imageUrl = res.data.tempImageUrl;
-                })
-                .catch((err: any) => {
-                  console.log(err);
-                });
+              await Axios.put(api.posts.getImgUrl(), formData).then((res: any) => {
+                imageUrl = res.data.tempImageUrl;
+              });
 
               const newFile = { name: file.name, url: imageUrl };
-              console.log("newFile:", newFile);
 
               fileList.push(newFile);
               dispatch(setPostFileList([...fileList, newFile]));

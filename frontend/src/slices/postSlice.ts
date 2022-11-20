@@ -87,7 +87,19 @@ const postSlice = createSlice({
       state.postList = payload;
     },
     resetPostList: (state) => {
-      state.postList = [];
+      // state.postList = [
+      //   {
+      //     title: "",
+      //     date: "",
+      //     description: "",
+      //     category: "",
+      //     tag: [],
+      //     directory: "",
+      //     imgUrl: "",
+      //   },
+      // ];
+      const tmp: postListConfig[] = [];
+      state.postList = [...tmp];
     },
     setPostIndex: (state, { payload }) => {
       state.postIndex = payload;

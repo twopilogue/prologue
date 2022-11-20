@@ -41,6 +41,7 @@ const PostWritePage = () => {
   const [loading, setLoading] = useState(false);
   const [cancelModalOpen, setCancelModalOpen] = useState(false);
   const [saveModalOpen, setSaveModalOpen] = useState(false);
+  const [uploadModalOpen, setUploadModalOpen] = useState(false);
 
   const title = useAppSelector(selectPostTitle);
   const description = useAppSelector(selectPostDescription);
@@ -69,11 +70,9 @@ const PostWritePage = () => {
 
     if (title != "" && description != "" && content != "") {
       const formData = new FormData();
-      console.log("files : ", files);
       for (let i = 0; i < files.length; i++) {
         formData.append("files", files[i]);
         const file: File = files[i];
-        console.log("files[i] : ", file.name);
       }
 
       const frontMatter =
@@ -97,14 +96,12 @@ const PostWritePage = () => {
         blogType: blogType,
       };
 
-      console.log("fileList length : ", fileList.length);
       if (fileList.length) {
         for (let i = 0; i < fileList.length; i++) {
           const tmp = {
             url: fileList[i].url,
             name: fileList[i].name,
           };
-          console.log("tmp : ", tmp);
           writeDetailPostRequest.images.push(tmp);
         }
       }
@@ -118,12 +115,11 @@ const PostWritePage = () => {
       setLoading(true);
       await Axios.post(api.posts.writePost(), formData)
         .then((res) => {
-          console.log(res);
           setLoading(false);
+          setUploadModalOpen(true);
           navigate("/post");
         })
         .catch((err) => {
-          console.log(err);
           setLoading(false);
         });
       dispatch(resetPostFileList());
@@ -180,6 +176,7 @@ const PostWritePage = () => {
           twoButtonConfirm={savePost}
         />
       )}
+      {uploadModalOpen && <Modal saveButtonClose={() => setUploadModalOpen(false)} save />}
     </div>
   );
 };

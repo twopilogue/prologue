@@ -49,7 +49,6 @@ const PostViewerContents = ({ content }: PostViewerContentsProps) => {
             addImageBlobHook: async (blob, callback) => {
               const formData = new FormData();
               const file: any = blob;
-              console.log(blob);
 
               const tempImageUploadRequest = {
                 accessToken: accessToken,
@@ -62,20 +61,13 @@ const PostViewerContents = ({ content }: PostViewerContentsProps) => {
               formData.append("file", blob);
 
               let imageUrl;
-              await Axios.put(api.posts.getImgUrl(), formData)
-                .then((res) => {
-                  console.log(res);
-                  imageUrl = res.data.tempImageUrl;
-                })
-                .catch((err) => {
-                  console.log(err);
-                });
+              await Axios.put(api.posts.getImgUrl(), formData).then((res) => {
+                imageUrl = res.data.tempImageUrl;
+              });
 
               const newFile = { name: file.name, url: imageUrl };
-              console.log("newFile:", newFile);
 
               fileList.push(newFile);
-              console.log("새로운 파일 추가된 fileList", fileList);
               dispatch(setPostFileList([...fileList]));
 
               files.push(blob);

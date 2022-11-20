@@ -46,8 +46,6 @@ const PostList = ({ category }: PostListProps) => {
     setLoading(true);
     await Axios.get(api.posts.getPostList(accessToken, githubId, postIndex, category))
       .then((res) => {
-        console.log(res);
-
         for (let i = 0; i < res.data.result.Post.length; i++) {
           const post: postListConfig = {
             title: res.data.result.Post[i].title,
@@ -66,16 +64,21 @@ const PostList = ({ category }: PostListProps) => {
         setLoading(false);
       })
       .catch((err) => {
-        console.log(err);
         setLoading(false);
       });
   };
 
   useEffect(() => {
-    console.log(category);
-    dispatch(resetPostList());
     getPostList();
   }, [category]);
+
+  useEffect(() => {
+    dispatch(resetPostList());
+    dispatch(setPostIndex(-1));
+    // getPostList(category);
+    // console.log(postList);
+    // console.log(postIndex);
+  }, []);
 
   return (
     <div className={styles.postList}>
@@ -120,8 +123,6 @@ const PostList = ({ category }: PostListProps) => {
               className={styles.moreListBtn}
               onClick={() => {
                 getPostList();
-                console.log(category);
-                console.log("postList : ", postList);
                 // console.log("page : ", currentPage);
               }}
             >

@@ -46,15 +46,9 @@ const PostWriteTitle = ({ savedTitle, savedDescription, savedCategory, savedTag 
 
   const getCategoryList = () => {
     if (blogType == 0) {
-      axios
-        .get(api.setting.getCategory(accessToken, githubId))
-        .then((res) => {
-          console.log(res.data.category);
-          setCategoryList(res.data.category);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      axios.get(api.setting.getCategory(accessToken, githubId)).then((res) => {
+        setCategoryList(res.data.category);
+      });
     }
   };
 
@@ -64,10 +58,7 @@ const PostWriteTitle = ({ savedTitle, savedDescription, savedCategory, savedTag 
     if (event.target.value.length !== 0 && event.key === "Enter") {
       if (english.test(event.target.value)) {
         event.target.value = event.target.value.replace(english, "");
-        console.log("replace : ", event.target.value);
       }
-
-      console.log("태그 만들기 : ", tag);
 
       const newTagList = [...tagList];
 

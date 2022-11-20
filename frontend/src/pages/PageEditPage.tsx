@@ -42,20 +42,15 @@ const PageEditPage = () => {
   const files = useAppSelector(selectPostFiles);
 
   const getPageDetail = async () => {
-    await Axios.get(api.posts.getPage(accessToken, githubId, pageName))
-      .then((res) => {
-        console.log(res);
-        setContentData(res.data.content);
+    await Axios.get(api.posts.getPage(accessToken, githubId, pageName)).then((res) => {
+      setContentData(res.data.content);
 
-        for (let i = 0; i < res.data.images.length; i++) {
-          const image = { name: res.data.images[i].name, url: res.data.images[i].url };
-          savedFileList.push(image);
-          dispatch(setPostFileList([...savedFileList, image]));
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      for (let i = 0; i < res.data.images.length; i++) {
+        const image = { name: res.data.images[i].name, url: res.data.images[i].url };
+        savedFileList.push(image);
+        dispatch(setPostFileList([...savedFileList, image]));
+      }
+    });
   };
 
   useEffect(() => {
@@ -70,7 +65,6 @@ const PageEditPage = () => {
     for (let i = 0; i < files.length; i++) {
       formData.append("files", files[i]);
       const file: File = files[i];
-      console.log("files[i] : ", file.name);
     }
 
     const modifyDetailPageRequest: modifyDetailPageRequestProps = {
@@ -96,14 +90,10 @@ const PageEditPage = () => {
       new Blob([JSON.stringify(modifyDetailPageRequest)], { type: "application/json" }),
     );
 
-    Axios.put(api.posts.modifyPage(), formData)
-      .then((res) => {
-        console.log(res);
-        // navigate(-1);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    Axios.put(api.posts.modifyPage(), formData).then((res) => {
+      // navigate(-1);
+    });
+
     dispatch(setPostFileList([]));
   };
 
