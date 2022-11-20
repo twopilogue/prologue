@@ -6,7 +6,6 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  /* box-shadow: 0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%); */
 }
 
 .flexColumn {
@@ -43,7 +42,7 @@
   margin: 3px 0px;
 }
 
-.calendarDiv > div {
+.calendarDiv>div {
   height: 41vh;
 }
 
@@ -75,7 +74,7 @@
   /* text-transform: uppercase; */
 }
 
-.bildProgress > span {
+.bildProgress>span {
   position: relative;
   animation: anime_textup 2.5s infinite;
 }
@@ -160,14 +159,14 @@ iframe {
 .previewInfo {
   position: absolute;
   width: 100%;
-  background: rgba(231, 231, 231, 0.6);
+  background: rgba(242, 242, 242, 0.72);
   border-radius: 0px 0px 30px 30px;
   bottom: 0;
   align-items: center;
   z-index: 2;
 }
 
-.previewInfo > div {
+.previewInfo>div {
   padding: 5px 30px;
 }
 
@@ -188,11 +187,11 @@ iframe {
   border-radius: 30px;
 }
 
-.list > div {
+.list>div {
   width: 100%;
 }
 
-.list > div > div {
+.list>div>div {
   padding: 0px 35px;
 }
 
@@ -210,7 +209,7 @@ iframe {
   background-color: #d6e5f3;
 }
 
-.info > div {
+.info>div {
   width: 91%;
   height: 91%;
 }
@@ -246,7 +245,7 @@ iframe {
   justify-content: flex-end;
 }
 
-.infoVolume > .icon {
+.infoVolume>.icon {
   padding: 0px 6px 0px 23px;
   font-size: 1rem;
 }
@@ -310,14 +309,14 @@ iframe {
   background-color: "#8ba8bd";
 }
 
-/* 페이지 이동 */
+/* 페이지 이동 메뉴 */
 .menuBox {
   height: 20vh;
   background-color: #e2e2f3;
   border-radius: 20px;
 }
 
-.menuBox > div {
+.menuBox>div {
   display: flex;
   padding: 20px;
 }

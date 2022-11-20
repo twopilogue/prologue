@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "features/dashboard/Dashboard.module.css";
 import Text from "components/Text";
 import IconButton from "@mui/material/IconButton";
@@ -9,20 +9,22 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 
 function DashboardPreview(props: { buildState: boolean }) {
+  const [random, setState] = useState<number>();
+
   const { githubId } = useSelector((state: rootState) => state.auth);
 
   const blogLink = `https://${githubId}.github.io/`;
 
   useEffect(() => {
-    axios.get(blogLink).catch((err) => {
+    axios.get(blogLink).catch(() => {
       const iframe = document.getElementById("iframeDiv") as HTMLParagraphElement;
-      // iframe.style.backgroundColor = "Cornsilk";
       iframe.style.backgroundColor = "OldLace";
-      // iframe.style.backgroundColor = "MintCream";
-      iframe.style.backgroundColor = "#ccff99";
-      console.error("아이프레임 실패", err);
     });
   }, []);
+
+  useEffect(() => {
+    setState(random + 1);
+  }, [props.buildState]);
 
   return (
     <div className={styles.container}>
@@ -43,7 +45,7 @@ function DashboardPreview(props: { buildState: boolean }) {
         )}
         <Link href={blogLink} target="_blank">
           <div id="iframeDiv" className={styles.previewIframe} />
-          <iframe src={blogLink} scrolling="no" />
+          <iframe id="iframe" key={random} src={blogLink} scrolling="no" />
         </Link>
         <div className={styles.previewInfo}>
           <div className={styles.flexRow}>

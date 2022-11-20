@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import moment from "moment";
 import styles from "features/dashboard/Dashboard.module.css";
 import Text from "components/Text";
@@ -32,12 +32,11 @@ const CustomTooltip = styled(({ className, ...props }: TooltipProps) => (
 const BuildButton = styled(ButtonBase)(() => ({
   backgroundColor: "#9bbcd4",
   borderRadius: "12px",
-  // border: "1.5px solid white",
   color: "white",
   width: "100%",
   height: "6.6vh",
   padding: "0px",
-  fontSize: "1.25rem",
+  fontSize: "1.1rem",
   fontWeight: 600,
   fontFamily: "Pretendard-Regular",
   transition: "all 0.1s",
@@ -79,45 +78,68 @@ function CircularProgressWithLabel(props: CircularProgressProps & { value: numbe
 function DashboardInfo(props: { buildState: boolean; setBuildState: (state: boolean) => void }) {
   const dispatch = useDispatch();
 
-  const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
+  const { accessToken, githubId, template } = useSelector((state: rootState) => state.auth);
   const { totalPost, repoSize, buildTime } = useSelector((state: rootState) => state.dashboard);
 
-  const [timer, setTimer] = useState("");
+  const [buildTimer, setBuilTimer] = useState("");
   const [newBuildTime, setnewBuildTime] = useState<{ year: string; day: string }>({
     year: buildTime ? moment(buildTime, "YYYYMMDDHHmmss").format("YYYY") : moment().format("YYYY"),
     day: buildTime ? moment(buildTime, "YYYYMMDDHHmmss").format("MM/DD HH:mm") : "",
   });
   const [timerChange, setTimerChange] = useState(false);
-  const [progress, setProgress] = useState(0);
+  const [progressCount, setProgressCount] = useState(0);
+  const [uploadClick, setUploadClick] = useState(props.buildState);
+
+  const [bildTimes, setBildTimes] = useState(moment(buildTime, "YYYYMMDDHHmmss"));
+  const countRef = useRef(null);
+
+  const startHandler = () => {
+    if (!props.buildState) return;
+    countRef.current = setInterval(() => {
+      const nowTime = moment();
+      const minute = moment.duration(nowTime.diff(bildTimes)).minutes();
+      const second = moment.duration(nowTime.diff(bildTimes)).seconds();
+
+      if (minute < 1) setBuilTimer(second + "초 전");
+
+      setProgressCount(Math.trunc(((minute * 60 + second) / 200) * 100));
+    }, 1000);
+  };
+
+  const resetHandler = () => {
+    clearInterval(countRef.current);
+    countRef.current = 0;
+    setProgressCount(0);
+    props.setBuildState(false);
+    setUploadClick(false);
+  };
+
+  useEffect(() => {
+    startHandler();
+    setUploadClick(props.buildState);
+  }, [props.buildState]);
+
+  useEffect(() => {
+    startHandler();
+  }, []);
 
   useEffect(() => {
     getBlogInfo();
     getNewBuildTime();
   }, [timerChange]);
 
-  const nowTime = moment();
-  const bildTimes = moment(buildTime, "YYYYMMDDHHmmss");
-  const minute = moment.duration(nowTime.diff(bildTimes)).minutes();
-  const second = moment.duration(nowTime.diff(bildTimes)).seconds();
-
   useEffect(() => {
-    const Percentage = setInterval(() => {
-      if (progress < 100) {
-        setProgress(((minute * 60 + second) / 200) * 100);
-        setTimer(minute === 0 ? second + "초 전" : minute + "분 전");
-      } else if (progress >= 100) {
-        clearInterval(Percentage);
-        props.setBuildState(false);
-      }
-    }, 1000);
-    return () => clearInterval(Percentage);
-  }, [progress]);
+    if (!props.buildState) return;
+    if (progressCount >= 100) {
+      resetHandler();
+    }
+  }, [progressCount]);
 
   async function getBlogInfo() {
     await axios
       .all([
         Axios.get(api.dashboard.getTotalPost(accessToken, githubId)),
-        Axios.get(api.dashboard.getRepoSize(accessToken, githubId)),
+        Axios.get(api.dashboard.getRepoSize(accessToken, githubId, template)),
       ])
       .then(
         axios.spread((res1, res2) => {
@@ -141,8 +163,9 @@ function DashboardInfo(props: { buildState: boolean; setBuildState: (state: bool
           }),
         );
 
-        const bildTimes = moment(value, "YYYYMMDDHHmmss");
+        setBildTimes(moment(value, "YYYYMMDDHHmmss"));
         const nowTime = moment();
+        const bildTimes = moment(value, "YYYYMMDDHHmmss");
 
         const diffTime = {
           day: moment.duration(nowTime.diff(bildTimes)).days(),
@@ -150,10 +173,10 @@ function DashboardInfo(props: { buildState: boolean; setBuildState: (state: bool
           minute: moment.duration(nowTime.diff(bildTimes)).minutes(),
           second: moment.duration(nowTime.diff(bildTimes)).seconds(),
         };
-        if (diffTime.day != 0) setTimer(diffTime.day + "일 전");
-        else if (diffTime.hour != 0) setTimer(diffTime.hour + "시간 전");
-        else if (diffTime.minute != 0) setTimer(diffTime.minute + "분 전");
-        else setTimer(diffTime.second + "초 전");
+        if (diffTime.day != 0) setBuilTimer(diffTime.day + "일 전");
+        else if (diffTime.hour != 0) setBuilTimer(diffTime.hour + "시간 전");
+        else if (diffTime.minute != 0) setBuilTimer(diffTime.minute + "분 전");
+        else setBuilTimer(diffTime.second + "초 전");
 
         setnewBuildTime({
           year: moment(value, "YYYYMMDDHHmmss").format("YYYY"),
@@ -165,16 +188,13 @@ function DashboardInfo(props: { buildState: boolean; setBuildState: (state: bool
       });
   }
 
-  function ClickAllBuild() {
-    setProgress(0);
-    triggerStart();
-    setTimerChange(false);
-  }
-
   async function triggerStart() {
+    props.setBuildState(true);
+    setUploadClick(true);
+    setBildTimes(moment());
     await Axios.put(api.blog.triggerStart(accessToken, githubId))
-      .then((res) => {
-        props.setBuildState(true);
+      .then(() => {
+        startHandler();
       })
       .catch((err) => {
         console.error("빌드-배포 트리거 실행", err);
@@ -221,7 +241,7 @@ function DashboardInfo(props: { buildState: boolean; setBuildState: (state: bool
               </div>
               <div className={`${styles.infoValue} ${styles.valueBox} ${styles.dateBox}`}>
                 {timerChange ? (
-                  <Text value={timer} type="textTitle" bold />
+                  <Text value={buildTimer} type="textTitle" bold />
                 ) : (
                   <Stack>
                     <Text value={newBuildTime.year} type="text" bold />
@@ -238,13 +258,13 @@ function DashboardInfo(props: { buildState: boolean; setBuildState: (state: bool
               </div>
             </div>
             <div className={styles.infoGird_item}>
-              {props.buildState ? (
+              {uploadClick || props.buildState ? (
                 <BuildButton className={styles.buildButton} disabled>
-                  <CircularProgressWithLabel value={progress} size={36} />
+                  <CircularProgressWithLabel value={progressCount} size={36} />
                 </BuildButton>
               ) : (
-                <BuildButton className={styles.buildButton} onClick={ClickAllBuild}>
-                  All Build
+                <BuildButton className={styles.buildButton} onClick={triggerStart}>
+                  변경사항 업로드
                 </BuildButton>
               )}
             </div>

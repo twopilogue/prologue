@@ -20,7 +20,7 @@ const LandingPage = () => {
       if (authFile) navigate("/dashboard");
       else {
         Axios.get(api.blog.getRepoList(accessToken, githubId)).then((res) => {
-          if (res.data.checkRepository) navigate("create/reset")
+          if (res.data.checkRepository) navigate("create/reset");
           else navigate("/create");
         });
       }
@@ -31,7 +31,6 @@ const LandingPage = () => {
     <>
       <Stack justifyContent="center" alignItems="center">
         <LandingMain />
-        <LandingSub />
       </Stack>
     </>
   );
