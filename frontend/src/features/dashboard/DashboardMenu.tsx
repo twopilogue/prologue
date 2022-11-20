@@ -2,6 +2,7 @@ import React from "react";
 import styles from "features/dashboard/Dashboard.module.css";
 import { Container, Stack } from "@mui/system";
 import { Avatar, Link } from "@mui/material";
+import Text from "components/Text";
 
 function DashboardMenu() {
   return (
@@ -12,7 +13,9 @@ function DashboardMenu() {
             <Link href="/post/write" underline="none" color="inherit">
               <Stack justifyContent="center" alignItems="center" spacing={2}>
                 <Avatar sx={{ bgcolor: "white", width: "60px", height: "60px" }}>💬</Avatar>
-                <div className={styles.menuText}>새 글 작성하기</div>
+                <div className={styles.menuText}>
+                  <Text value="새 글 작성하기" bold />
+                </div>
               </Stack>
             </Link>
           </div>
@@ -20,7 +23,9 @@ function DashboardMenu() {
             <Link href="/post" underline="none" color="inherit">
               <Stack justifyContent="center" alignItems="center" spacing={2}>
                 <Avatar sx={{ bgcolor: "white", width: "60px", height: "60px" }}>📄</Avatar>
-                <div className={styles.menuText}>게시글 관리</div>
+                <div className={styles.menuText}>
+                  <Text value="게시글 관리" bold />
+                </div>
               </Stack>
             </Link>
           </div>
