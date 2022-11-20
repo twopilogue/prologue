@@ -34,9 +34,6 @@ const PostViewerContents = ({ content }: PostViewerContentsProps) => {
 
   return (
     <div className={styles.postWriteContents}>
-      <Text value="내용" type="text" />
-      <div style={{ marginTop: "1%" }}></div>
-
       {content && (
         <Editor
           usageStatistics={false}
