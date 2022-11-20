@@ -4,19 +4,22 @@ import React, { Dispatch, SetStateAction, useCallback, useRef, useState } from "
 import styles from "../Setting.module.css";
 import ModeIcon from "@mui/icons-material/Mode";
 import { useAppSelector } from "app/hooks";
-import { selectBlogSettingInfo } from "slices/settingSlice";
-import { myInfoProps } from "pages/MyInfoPage";
+import { selectBlogSettingInfo, selectMyBlogInfo, selectMyInfo, setMyInfo } from "slices/settingSlice";
 import { Avatar } from "@mui/material";
+import { useDispatch } from "react-redux";
 
 interface Props {
-  myInfo: myInfoProps;
-  setMyInfo: Dispatch<SetStateAction<myInfoProps>>;
+  // myInfo: myInfoProps;
+  // setMyInfo: Dispatch<SetStateAction<myInfoProps>>;
   setNewPic: Dispatch<SetStateAction<Blob>>;
 }
 
-const MemberInfoInput = ({ myInfo, setMyInfo, setNewPic }: Props) => {
+const MemberInfoInput = ({ setNewPic }: Props) => {
+  const dispatch = useDispatch();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [imgPreview, setImgPreview] = useState(null);
+  const myInfo = useAppSelector(selectMyInfo);
+  const myBlogInfo = useAppSelector(selectMyBlogInfo);
 
   const onUploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) {
@@ -50,10 +53,12 @@ const MemberInfoInput = ({ myInfo, setMyInfo, setNewPic }: Props) => {
                 value={myInfo.nickName}
                 placeholder="닉네임을 입력하세요."
                 onChange={(e: any) => {
-                  setMyInfo({
-                    ...myInfo,
-                    nickName: e.target.value,
-                  });
+                  dispatch(
+                    setMyInfo({
+                      ...myInfo,
+                      nickName: e.target.value,
+                    }),
+                  );
                 }}
               />
             </div>
@@ -67,10 +72,12 @@ const MemberInfoInput = ({ myInfo, setMyInfo, setNewPic }: Props) => {
                 multiline
                 rows={8}
                 onChange={(e: any) => {
-                  setMyInfo({
-                    ...myInfo,
-                    summary: e.target.value,
-                  });
+                  dispatch(
+                    setMyInfo({
+                      ...myInfo,
+                      summary: e.target.value,
+                    }),
+                  );
                 }}
               />
             </div>

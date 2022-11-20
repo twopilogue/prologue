@@ -7,31 +7,13 @@ import axios from "axios";
 import api from "api/Api";
 import { useDispatch, useSelector } from "react-redux";
 import { rootState } from "app/store";
-import {
-  blogInfoConfig,
-  ComponentConfig,
-  setBlogSettingInfo,
-  setUserCheckList,
-  setUserComponentLayoutList,
-  setUserComponentList,
-} from "slices/settingSlice";
+
 import ButtonStyled from "components/Button";
-import Axios from "api/JsonAxios";
-import { Layout } from "react-grid-layout";
+
 import Modal from "components/Modal";
 import { useNavigate } from "react-router-dom";
-
-export interface myInfoProps {
-  nickName: string;
-  summary: string;
-  profileImg: string | FormData;
-}
-
-export interface myBlogInfoProps {
-  title: string;
-  description: string;
-  social: object;
-}
+import { useAppSelector } from "app/hooks";
+import { selectMyBlogInfo, selectMyInfo } from "slices/settingSlice";
 
 const MyInfoPage = () => {
   const dispatch = useDispatch();
@@ -40,41 +22,8 @@ const MyInfoPage = () => {
   const [newPic, setNewPic] = useState<Blob>(null);
   const [socialList, setSocialList] = useState({});
   const [saveModalOpen, setSaveModalOpen] = useState<boolean>(false);
-  const [myInfo, setMyInfo] = useState<myInfoProps>({
-    nickName: "",
-    summary: "",
-    profileImg: null,
-  });
-  const [myBlogInfo, setMyBlogInfo] = useState<myBlogInfoProps>({
-    title: "",
-    description: "",
-    social: {},
-  });
-
-  const getBlogInfo = async () => {
-    await axios
-      .get(api.setting.getBlog(accessToken, githubId))
-      .then((res: any) => {
-        const result: blogInfoConfig = res.data;
-
-        dispatch(setBlogSettingInfo(result));
-
-        setMyInfo({
-          nickName: result.nickName,
-          summary: result.summary,
-          profileImg: result.profileImg,
-        });
-        setMyBlogInfo({
-          title: result.title,
-          description: result.description,
-          social: result.social,
-        });
-      })
-
-      .catch((err: any) => {
-        console.log(err);
-      });
-  };
+  const myBlogInfo = useAppSelector(selectMyBlogInfo);
+  const myInfo = useAppSelector(selectMyInfo);
 
   const handleOnEdit = () => {
     const tmpPayload = {
@@ -115,17 +64,13 @@ const MyInfoPage = () => {
     setSaveModalOpen(true);
   };
 
-  useEffect(() => {
-    getBlogInfo();
-  }, []);
-
   return (
     <div>
       <MyGitInfo />
       <div className={styles.hr}></div>
-      <MyInfoInput myInfo={myInfo} setMyInfo={setMyInfo} setNewPic={setNewPic} />
+      <MyInfoInput setNewPic={setNewPic} />
       <div className={styles.hr}></div>
-      <MyBlogInfoInput myBlogInfo={myBlogInfo} setMyBlogInfo={setMyBlogInfo} setSocialList={setSocialList} />
+      <MyBlogInfoInput />
       <div>
         <div className={styles.confirmButton}>
           <div style={{ margin: "10px" }}>
