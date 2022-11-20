@@ -10,8 +10,8 @@
 .postWriteButtons {
   position: absolute;
   top: -30%;
-  left: 14%;
-  transform: translate(-14%, 30%);
+  left: 32%;
+  transform: translate(-32%, 30%);
 }
 
 .postDeleteButton {
