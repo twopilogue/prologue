@@ -145,7 +145,6 @@ function DashboardInfo(props: { buildState: boolean; setBuildState: (state: bool
     getBlogInfo();
     Axios.get(api.dashboard.getChangeState(accessToken, githubId)).then((res) => {
       setChangeState(res.data.checkUpdate);
-      console.log("변경사항있나", res.data.checkUpdate);
     });
   }, []);
 
@@ -182,51 +181,43 @@ function DashboardInfo(props: { buildState: boolean; setBuildState: (state: bool
   async function getNewBuildTime() {
     if (buildTimer.includes("초")) return;
 
-    await Axios.get(api.dashboard.getNewBuildTime(accessToken, githubId))
-      .then((res) => {
-        const value = res.data.latestBuildTime;
-        dispatch(
-          dashboardActions.buildTime({
-            buildTime: moment(value, "YYYYMMDDHHmmss").format("YYYY MM/DD HH:mm"),
-          }),
-        );
+    await Axios.get(api.dashboard.getNewBuildTime(accessToken, githubId)).then((res) => {
+      const value = res.data.latestBuildTime;
+      dispatch(
+        dashboardActions.buildTime({
+          buildTime: moment(value, "YYYYMMDDHHmmss").format("YYYY MM/DD HH:mm"),
+        }),
+      );
 
-        setBildTimes(moment(value, "YYYYMMDDHHmmss"));
-        const nowTime = moment();
-        const bildTimes = moment(value, "YYYYMMDDHHmmss");
+      setBildTimes(moment(value, "YYYYMMDDHHmmss"));
+      const nowTime = moment();
+      const bildTimes = moment(value, "YYYYMMDDHHmmss");
 
-        const diffTime = {
-          day: moment.duration(nowTime.diff(bildTimes)).days(),
-          hour: moment.duration(nowTime.diff(bildTimes)).hours(),
-          minute: moment.duration(nowTime.diff(bildTimes)).minutes(),
-          second: moment.duration(nowTime.diff(bildTimes)).seconds(),
-        };
-        if (diffTime.day != 0) setBuilTimer(diffTime.day + "일 전");
-        else if (diffTime.hour != 0) setBuilTimer(diffTime.hour + "시간 전");
-        else if (diffTime.minute != 0) setBuilTimer(diffTime.minute + "분 전");
-        else setBuilTimer(diffTime.second + "초 전");
+      const diffTime = {
+        day: moment.duration(nowTime.diff(bildTimes)).days(),
+        hour: moment.duration(nowTime.diff(bildTimes)).hours(),
+        minute: moment.duration(nowTime.diff(bildTimes)).minutes(),
+        second: moment.duration(nowTime.diff(bildTimes)).seconds(),
+      };
+      if (diffTime.day != 0) setBuilTimer(diffTime.day + "일 전");
+      else if (diffTime.hour != 0) setBuilTimer(diffTime.hour + "시간 전");
+      else if (diffTime.minute != 0) setBuilTimer(diffTime.minute + "분 전");
+      else setBuilTimer(diffTime.second + "초 전");
 
-        setnewBuildTime({
-          year: moment(value, "YYYYMMDDHHmmss").format("YYYY"),
-          day: moment(value, "YYYYMMDDHHmmss").format("MM/DD HH:mm"),
-        });
-      })
-      .catch((err) => {
-        console.error("최신 빌드 시간 가져오기", err);
+      setnewBuildTime({
+        year: moment(value, "YYYYMMDDHHmmss").format("YYYY"),
+        day: moment(value, "YYYYMMDDHHmmss").format("MM/DD HH:mm"),
       });
+    });
   }
 
   async function triggerStart() {
     props.setBuildState(true);
     setUploadClick(true);
     setBildTimes(moment());
-    await Axios.put(api.blog.triggerStart(accessToken, githubId))
-      .then(() => {
-        startHandler();
-      })
-      .catch((err) => {
-        console.error("빌드-배포 트리거 실행", err);
-      });
+    await Axios.put(api.blog.triggerStart(accessToken, githubId)).then(() => {
+      startHandler();
+    });
   }
 
   return (

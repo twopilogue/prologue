@@ -48,7 +48,6 @@ function BlogResetPage() {
 
   async function deleteRepo() {
     await Axios.delete(api.blog.deleteRepo(accessToken, githubId)).then((res) => {
-      console.log("레포지토리가 삭제되었습니다.");
       navigate("/create");
     });
   }
