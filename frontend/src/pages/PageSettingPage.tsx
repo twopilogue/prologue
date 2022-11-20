@@ -9,6 +9,7 @@ import { rootState } from "app/store";
 import { PageConfig, editList, selectPageDeleList, setPageDeleList } from "slices/settingSlice";
 import ButtonStyled from "components/Button";
 import { Layout } from "react-grid-layout";
+import Modal from "components/Modal";
 
 interface resultConfig {
   label: string;
@@ -24,6 +25,7 @@ const PageSettingPage = () => {
   const [pageCnt, setPageCnt] = useState<number>(0);
   const [isEdit, setIsEdit] = useState<editList[]>([]);
   const [deleList, setDeleList] = useState<PageConfig[]>([]);
+  const [saveModalOpen, setSaveModalOpen] = useState<boolean>(false);
 
   const getPage = async () => {
     await Axios.get(api.setting.getPage(accessToken, githubId))
@@ -72,10 +74,15 @@ const PageSettingPage = () => {
       .then((res: any) => {
         console.log("됨? ", res);
         alert("저장되었습니다.");
+        setSaveModalOpen(false);
       })
       .catch((err: any) => {
         console.log(err);
       });
+  };
+
+  const showSaveModal = () => {
+    setSaveModalOpen(true);
   };
 
   useEffect(() => {
@@ -107,9 +114,16 @@ const PageSettingPage = () => {
           <ButtonStyled color="sky" label="취소" />
         </div>
         <div style={{ margin: "10px" }}>
-          <ButtonStyled label="저장" onClick={savePageList} />
+          <ButtonStyled label="저장" onClick={showSaveModal} />
         </div>
       </div>
+      {saveModalOpen && (
+        <Modal
+          text={`작성한 정보를 저장하시겠습니까?`}
+          twoButtonCancle={() => setSaveModalOpen(false)}
+          twoButtonConfirm={savePageList}
+        />
+      )}
     </div>
   );
 };

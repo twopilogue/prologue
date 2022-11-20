@@ -61,9 +61,9 @@ const SettingLayout = () => {
         style={{
           backgroundColor: "white",
           border: "2px solid #ECECEC",
-          marginLeft: "5px",
-          marginRight: "5px",
-          paddingBottom: "20px",
+          // marginLeft: "5px",
+          // marginRight: "5px",
+          paddingBottom: "30px",
         }}
       >
         <GridLayout

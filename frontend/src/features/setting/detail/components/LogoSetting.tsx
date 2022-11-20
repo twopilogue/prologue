@@ -16,6 +16,17 @@ interface LogoSettingProps {
   setLogoType: Dispatch<SetStateAction<string>>;
 }
 
+export const detailItemFolded: CSSProperties = {
+  margin: "0 10px 0px 10px",
+  maxHeight: "0",
+  overflow: "hidden",
+};
+export const detailItemUnfolded: CSSProperties = {
+  margin: "0 10px 10px 10px",
+  maxHeight: "100%",
+  overflow: "hidden",
+};
+
 const LogoSetting = ({ logoImg, setLogoImg, logoType, setLogoType }: LogoSettingProps) => {
   const logoImgRef = useRef<HTMLInputElement | null>(null);
   const colors: colorsConfig = useAppSelector(selectColors);
@@ -23,16 +34,6 @@ const LogoSetting = ({ logoImg, setLogoImg, logoType, setLogoType }: LogoSetting
   const detailItemText = useRef<any>();
   const detailItemImg = useRef<any>();
   const maxTextLength = 10;
-  const detailItemFolded: CSSProperties = {
-    margin: "0 10px 0px 10px",
-    maxHeight: "0",
-    overflow: "hidden",
-  };
-  const detailItemUnfolded: CSSProperties = {
-    margin: "0 10px 10px 10px",
-    maxHeight: "100%",
-    overflow: "hidden",
-  };
 
   const radioChange = (event: ChangeEvent<HTMLInputElement>) => {
     setLogoType((event.target as HTMLInputElement).value);

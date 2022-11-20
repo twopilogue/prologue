@@ -28,8 +28,8 @@ interface postConfig {
   files: [];
 
   postList: postListConfig[];
-  postCount: number;
-  currentPage: number;
+  postIndex: number;
+  postIsLast: boolean;
 
   editList: editListConfig;
 }
@@ -44,8 +44,8 @@ const initialState: postConfig = {
   files: [],
 
   postList: [],
-  postCount: 0,
-  currentPage: 1,
+  postIndex: -1,
+  postIsLast: false,
 
   editList: {
     title: "",
@@ -86,11 +86,17 @@ const postSlice = createSlice({
     setPostList: (state, { payload }) => {
       state.postList = payload;
     },
-    setPostCount: (state, { payload }) => {
-      state.postCount = payload;
+    resetPostList: (state) => {
+      state.postList = [];
     },
-    setPostCurrentPage: (state, { payload }) => {
-      state.currentPage = payload;
+    setPostIndex: (state, { payload }) => {
+      state.postIndex = payload;
+    },
+    resetPostIndex: (state) => {
+      state.postIndex = -1;
+    },
+    setPostIsLast: (state, { payload }) => {
+      state.postIsLast = payload;
     },
     setPostEditList: (state, { payload }) => {
       state.editList = payload;
@@ -107,8 +113,10 @@ export const {
   resetPostFileList,
   setPostFiles,
   setPostList,
-  setPostCount,
-  setPostCurrentPage,
+  resetPostList,
+  setPostIndex,
+  resetPostIndex,
+  setPostIsLast,
   setPostEditList,
 } = postSlice.actions;
 
@@ -120,8 +128,8 @@ export const selectPostContent = (state: rootState) => state.posts.content;
 export const selectPostFileList = (state: rootState) => state.posts.fileList;
 export const selectPostFiles = (state: rootState) => state.posts.files;
 export const selectPostList = (state: rootState) => state.posts.postList;
-export const selectPostCount = (state: rootState) => state.posts.postCount;
-export const selectPostCurrentPage = (state: rootState) => state.posts.currentPage;
+export const selectPostIndex = (state: rootState) => state.posts.postIndex;
+export const selectPostIsLast = (state: rootState) => state.posts.postIsLast;
 export const selectPostEditList = (state: rootState) => state.posts.editList;
 
 export default postSlice.reducer;

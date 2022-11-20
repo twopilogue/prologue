@@ -12,7 +12,7 @@ public class PostRequest {
     String date;
     String description;
     String category;
-    List<String> tag;
+    String[] tag;
     String directory;
     String imgUrl;
 }
