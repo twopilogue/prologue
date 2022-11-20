@@ -9,6 +9,7 @@ import Axios from "api/JsonAxios";
 import api from "api/Api";
 import { useSelector } from "react-redux";
 import { rootState } from "app/store";
+import Modal from "components/Modal";
 
 const CategoryPage = () => {
   const { githubId, accessToken } = useSelector((state: rootState) => state.auth);
@@ -16,6 +17,7 @@ const CategoryPage = () => {
   const [layoutList, setLayoutList] = useState<Layout[]>([]);
   const [isEdit, setIsEdit] = useState<editList[]>([]);
   const [categoryCnt, setCategoryCnt] = useState<number>(0);
+  const [saveModalOpen, setSaveModalOpen] = useState<boolean>(false);
 
   const getCategory = async () => {
     await Axios.get(api.setting.getCategory(accessToken, githubId))
@@ -69,10 +71,15 @@ const CategoryPage = () => {
       .then((res: any) => {
         console.log("됨? ", res);
         alert("저장되었습니다.");
+        setSaveModalOpen(false);
       })
       .catch((err: any) => {
         console.error(err);
       });
+  };
+
+  const showSaveModal = () => {
+    setSaveModalOpen(true);
   };
 
   useEffect(() => {
@@ -99,9 +106,16 @@ const CategoryPage = () => {
           <ButtonStyled color="sky" label="취소" />
         </div>
         <div style={{ margin: "10px" }}>
-          <ButtonStyled label="저장" onClick={saveCategoryList} />
+          <ButtonStyled label="저장" onClick={showSaveModal} />
         </div>
       </div>
+      {saveModalOpen && (
+        <Modal
+          text={`작성한 정보를 저장하시겠습니까?`}
+          twoButtonCancle={() => setSaveModalOpen(false)}
+          twoButtonConfirm={saveCategoryList}
+        />
+      )}
     </>
   );
 };
