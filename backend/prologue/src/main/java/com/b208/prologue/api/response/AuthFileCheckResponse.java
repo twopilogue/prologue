@@ -16,10 +16,14 @@ public class AuthFileCheckResponse extends BaseResponseBody {
     @ApiModelProperty(name = "블로그 타입")
     Integer blogType = null;
 
-    public static AuthFileCheckResponse of(boolean checkAuthFile, Integer blogType, Integer statusCode, String message) {
+    @ApiModelProperty(name = "블로그 타입")
+    String template;
+
+    public static AuthFileCheckResponse of(boolean checkAuthFile, Integer blogType, String template, Integer statusCode, String message) {
         AuthFileCheckResponse res = new AuthFileCheckResponse();
         res.setCheckAuthFile(checkAuthFile);
         res.setBlogType(blogType);
+        res.setTemplate(template);
         res.setStatusCode(statusCode);
         res.setMessage(message);
         return res;
