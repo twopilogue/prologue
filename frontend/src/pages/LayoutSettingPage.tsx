@@ -35,7 +35,6 @@ const LayoutSettingPage = () => {
     await Axios.get(api.setting.getLayout(accessToken, githubId))
       .then((res: any) => {
         const response = JSON.parse(res.data.layout);
-        console.log("사용자 레이아웃 조회", response);
         const userComponents: ComponentConfig[] = [];
         response.layout.map((it: Layout) => {
           if (it.i === "블로그 로고") userComponents.push({ key: "블로그 로고", id: "logo" });
@@ -56,7 +55,6 @@ const LayoutSettingPage = () => {
           }),
         );
         dispatch(setComponentCreated(true));
-        console.log("-------레이아웃 dispatch 완료-------");
       })
       .catch((err: any) => {
         console.log("실패@", err);
@@ -70,7 +68,6 @@ const LayoutSettingPage = () => {
       layout: DefaultLayoutList[clickedIdx].layout,
       checkList: DefaultLayoutList[clickedIdx].checkList,
     };
-    console.log(layoutJson.checkList);
 
     const result = {
       accessToken: accessToken,
@@ -84,12 +81,11 @@ const LayoutSettingPage = () => {
   const sendUserLayout = async (result: object) => {
     await Axios.put(api.setting.modifyLayout(), result)
       .then((res: any) => {
-        console.log("레이아웃 수정 완!", res);
         setLoadingModalOpen(false);
         setFinModalOpen(true);
       })
       .catch((err: any) => {
-        console.log("ㅡㅡ빠꾸", err);
+        console.log("실패", err);
       });
   };
 

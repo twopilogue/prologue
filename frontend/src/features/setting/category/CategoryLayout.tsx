@@ -102,7 +102,6 @@ const CategoryLayout = () => {
       dispatch(
         setIsEditCategory(
           categoryList.map((it) => {
-            console.log("what?");
             return { key: it.key, id: it.id, editable: false };
           }),
         ),
