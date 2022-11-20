@@ -22,6 +22,7 @@ import Axios from "api/JsonAxios";
 import { useSelector } from "react-redux";
 import api from "api/Api";
 import { rootState } from "app/store";
+import { CircularProgress } from "@mui/material";
 
 interface PostListProps {
   category: string;
@@ -31,21 +32,20 @@ const PostList = ({ category }: PostListProps) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const [itemCnt, setItemCnt] = useState(6);
-
   const postList = useAppSelector(selectPostList);
   const postIndex = useAppSelector(selectPostIndex);
   const postIsLast = useAppSelector(selectPostIsLast);
 
   const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
 
+  const [loading, setLoading] = useState(false);
+
   const getPostList = async () => {
     const tmpList: postListConfig[] = [];
 
+    setLoading(true);
     await Axios.get(api.posts.getPostList(accessToken, githubId, postIndex, category))
       .then((res) => {
-        console.log(res);
-
         for (let i = 0; i < res.data.result.Post.length; i++) {
           const post: postListConfig = {
             title: res.data.result.Post[i].title,
@@ -61,17 +61,24 @@ const PostList = ({ category }: PostListProps) => {
         dispatch(setPostList([...postList, ...tmpList]));
         dispatch(setPostIndex(res.data.result.index));
         dispatch(setPostIsLast(res.data.result.isLast));
+        setLoading(false);
       })
       .catch((err) => {
-        console.log(err);
+        setLoading(false);
       });
   };
 
   useEffect(() => {
-    console.log(category);
-    dispatch(resetPostList());
     getPostList();
   }, [category]);
+
+  useEffect(() => {
+    dispatch(resetPostList());
+    dispatch(setPostIndex(-1));
+    // getPostList(category);
+    // console.log(postList);
+    // console.log(postIndex);
+  }, []);
 
   return (
     <div className={styles.postList}>
@@ -82,57 +89,48 @@ const PostList = ({ category }: PostListProps) => {
         </Stack>
       </div>
 
-      <div className={styles.postDataList}>
-        {postList.map((value, key) => (
-          <div
-            key={key}
-            className={styles.postCards}
-            onClick={() => {
-              let newTag: string[];
-
-              if (value.tag.length <= 1) {
-                newTag = [];
-              } else {
-                newTag = [...value.tag];
-                newTag[0] = newTag[0].replace(" [", "");
-                newTag[newTag.length - 1] = newTag[newTag.length - 1].replace("]", "");
-              }
-
-              const tmp = {
-                title: value.title,
-                description: value.description,
-                category: value.category,
-                tag: newTag,
-              };
-              dispatch(setPostEditList(tmp));
-              navigate("/post/edit/" + value.directory);
-            }}
-          >
-            <PostListCard
-              title={value.title}
-              date={value.date}
-              tag={value.tag}
-              category={value.category}
-              description={value.description}
-              imgUrl={value.imgUrl}
-            />
-          </div>
-        ))}
-        {!postIsLast && (
-          <div
-            className={styles.moreListBtn}
-            onClick={() => {
-              setItemCnt(itemCnt + 6);
-              getPostList();
-              console.log(category);
-              console.log("postList : ", postList);
-              // console.log("page : ", currentPage);
-            }}
-          >
-            글 목록 더 보기
-          </div>
-        )}
-      </div>
+      {loading ? (
+        <CircularProgress className={styles.postListLoading} sx={{ color: "gray" }} />
+      ) : (
+        <div className={styles.postDataList}>
+          {postList.map((value, key) => (
+            <div
+              key={key}
+              className={styles.postCards}
+              onClick={() => {
+                const tmp = {
+                  title: value.title,
+                  description: value.description,
+                  category: value.category,
+                  tag: value.tag,
+                };
+                dispatch(setPostEditList(tmp));
+                navigate("/post/edit/" + value.directory);
+              }}
+            >
+              <PostListCard
+                title={value.title}
+                date={value.date}
+                tag={value.tag}
+                category={value.category}
+                description={value.description}
+                imgUrl={value.imgUrl}
+              />
+            </div>
+          ))}
+          {!postIsLast && (
+            <div
+              className={styles.moreListBtn}
+              onClick={() => {
+                getPostList();
+                // console.log("page : ", currentPage);
+              }}
+            >
+              글 목록 더 보기
+            </div>
+          )}
+        </div>
+      )}
 
       {/* <PostListImgCard /> */}
     </div>

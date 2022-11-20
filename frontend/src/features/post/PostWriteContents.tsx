@@ -47,7 +47,6 @@ const PostWriteContents = () => {
           addImageBlobHook: async (blob, callback) => {
             const formData = new FormData();
             const file: any = blob;
-            console.log(blob);
 
             const tempImageUploadRequest = {
               accessToken: accessToken,
@@ -60,19 +59,12 @@ const PostWriteContents = () => {
             formData.append("file", blob);
 
             let imageUrl;
-            await Axios.put(api.posts.getImgUrl(), formData)
-              .then((res) => {
-                console.log(res);
-                imageUrl = res.data.tempImageUrl;
-              })
-              .catch((err) => {
-                console.log(err);
-              });
+            await Axios.put(api.posts.getImgUrl(), formData).then((res) => {
+              imageUrl = res.data.tempImageUrl;
+            });
 
             const newFile = { name: file.name, url: imageUrl };
-            console.log("newFile : ", newFile);
 
-            console.log("redux fileList : ", fileList);
             fileList.push(newFile);
             dispatch(setPostFileList([...fileList]));
 

@@ -62,24 +62,15 @@ const PostEditPage = () => {
   const files = useAppSelector(selectPostFiles);
 
   const getPostDetail = async () => {
-    await Axios.get(api.posts.getPostDetail(accessToken, githubId, directory))
-      .then((res) => {
-        console.log(res);
-        setContentData(res.data.content);
+    await Axios.get(api.posts.getPostDetail(accessToken, githubId, directory)).then((res) => {
+      setContentData(res.data.content);
 
-        console.log("image length : ", res.data.images.length);
-        for (let i = 0; i < res.data.images.length; i++) {
-          const image = { name: res.data.images[i].name, url: res.data.images[i].url };
-          console.log("res image : ", image);
-          savedFileList.push(image);
-          console.log("원래 fileList : ", fileList);
-          // dispatch(setPostFileList([...fileList, ...savedFileList]));
-          console.log("dispatch fileList : ", fileList);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      for (let i = 0; i < res.data.images.length; i++) {
+        const image = { name: res.data.images[i].name, url: res.data.images[i].url };
+        savedFileList.push(image);
+        // dispatch(setPostFileList([...fileList, ...savedFileList]));
+      }
+    });
   };
 
   useEffect(() => {
@@ -94,7 +85,6 @@ const PostEditPage = () => {
     for (let i = 0; i < files.length; i++) {
       formData.append("files", files[i]);
       const file: File = files[i];
-      console.log("files[i] : ", file.name);
     }
 
     const frontMatter =
@@ -111,14 +101,14 @@ const PostEditPage = () => {
       "\n---\n";
 
     const tmpArray = [];
-    console.log("fileList : ", fileList);
+
     if (fileList.length) {
       for (let i = 0; i < fileList.length; i++) {
         const tmp = {
           url: fileList[i].url,
           name: fileList[i].name,
         };
-        console.log("tmp : ", tmp);
+
         tmpArray.push(tmp);
       }
     }
@@ -146,19 +136,16 @@ const PostEditPage = () => {
       "modifyDetailPostRequest",
       new Blob([JSON.stringify(modifyDetailPostRequest)], { type: "application/json" }),
     );
-    console.log("modifyDetailPostRequest : ", modifyDetailPostRequest);
 
     setSaveModalOpen(false);
     setLoadingModalOpen(true);
     await Axios.put(api.posts.modifyPost(), formData)
       .then((res) => {
-        console.log(res);
         setLoadingModalOpen(false);
         setUploadModalOpen(true);
-        // navigate("/post");
+        navigate("/post");
       })
       .catch((err) => {
-        console.log(err);
         setLoadingModalOpen(false);
       });
     dispatch(resetPostFileList());
@@ -175,12 +162,11 @@ const PostEditPage = () => {
       },
     })
       .then((res) => {
-        console.log(res);
         setLoadingModalOpen(false);
+        setUploadModalOpen(true);
         navigate("/post");
       })
       .catch((err) => {
-        console.log(err);
         setLoadingModalOpen(false);
       });
     dispatch(resetPostFileList());
