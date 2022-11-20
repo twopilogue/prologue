@@ -119,4 +119,20 @@ public class DashBoardController {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "빌드 상태 조회에 실패하였습니다."));
         }
     }
+
+    @GetMapping("/check")
+    @ApiOperation(value = "레포지토리 변경 사항 여부 조회", notes = "레포지토리 변경 사항 여부 조회")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "레포지토리 변경 사항 여부 성공", response = GetCheckUpdateResponse.class),
+            @ApiResponse(code = 400, message = "조회 실패", response = BaseResponseBody.class),
+            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<? extends BaseResponseBody> checkUpdate(@RequestParam String accessToken, @RequestParam String githubId) {
+        try {
+            boolean checkUpdate = dashBoardService.checkUpdate(accessToken, githubId);
+            return ResponseEntity.status(200).body(GetCheckUpdateResponse.of(checkUpdate, 200, "레포지토리 변경 사항 여부 조회 성공"));
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "레포지토리 변경 사항 여부 조회에 실패하였습니다."));
+        }
+    }
 }
