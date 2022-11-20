@@ -127,7 +127,7 @@ public class DashBoardServiceImpl implements DashBoardService {
     }
 
     @Override
-    public Double getRepositorySize(String encodedAccessToken, String githubId) throws Exception {
+    public Double getRepositorySize(String encodedAccessToken, String githubId, String template) throws Exception {
         String accessToken = base64Converter.decryptAES256(encodedAccessToken);
 
         GetRepositorySizeResponse getRepositorySizeResponse = webClient.get()
@@ -136,6 +136,16 @@ public class DashBoardServiceImpl implements DashBoardService {
                 .headers(h -> h.setBearerAuth(accessToken))
                 .retrieve()
                 .bodyToMono(GetRepositorySizeResponse.class).block();
+
+        if(getRepositorySizeResponse.getSize() == 0.0) {
+            GetRepositorySizeResponse tempBlogSize = webClient.get()
+                    .uri("/repos/team-epilogue/" + template)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .headers(h -> h.setBearerAuth(accessToken))
+                    .retrieve()
+                    .bodyToMono(GetRepositorySizeResponse.class).block();
+            return tempBlogSize.getSize() / 1000.0;
+        }
 
         return getRepositorySizeResponse.getSize() / 1000.0;
     }
