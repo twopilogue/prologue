@@ -6,10 +6,19 @@ import Axios from "api/JsonAxios";
 import api from "api/Api";
 import { useSelector } from "react-redux";
 import { rootState } from "app/store";
-import { PageConfig, editList, selectPageDeleList, setPageDeleList } from "slices/settingSlice";
+import {
+  PageConfig,
+  editList,
+  selectPageList,
+  selectPageLayoutList,
+  selectPageCnt,
+  selectIsEditPage,
+  selectPageDeleList,
+} from "slices/settingSlice";
 import ButtonStyled from "components/Button";
 import { Layout } from "react-grid-layout";
 import Modal from "components/Modal";
+import { useAppSelector } from "app/hooks";
 
 interface resultConfig {
   label: string;
@@ -20,33 +29,15 @@ interface resultConfig {
 
 const PageSettingPage = () => {
   const { githubId, accessToken } = useSelector((state: rootState) => state.auth);
-  const [pageList, setPageList] = useState<PageConfig[]>([]);
-  const [layoutList, setLayoutList] = useState<Layout[]>([]);
-  const [pageCnt, setPageCnt] = useState<number>(0);
-  const [isEdit, setIsEdit] = useState<editList[]>([]);
-  const [deleList, setDeleList] = useState<PageConfig[]>([]);
+  // const [pageList, setPageList] = useState<PageConfig[]>([]);
+  // const [layoutList, setLayoutList] = useState<Layout[]>([]);
+  // const [pageCnt, setPageCnt] = useState<number>(0);
+  // const [isEdit, setIsEdit] = useState<editList[]>([]);
+  // const [deleList, setDeleList] = useState<PageConfig[]>([]);
+  const pageList = useAppSelector(selectPageList);
+  const layoutList = useAppSelector(selectPageLayoutList);
+  const deleList = useAppSelector(selectPageDeleList);
   const [saveModalOpen, setSaveModalOpen] = useState<boolean>(false);
-
-  const getPage = async () => {
-    await Axios.get(api.setting.getPage(accessToken, githubId))
-      .then((res: any) => {
-        const result = res.data.pages;
-        const tmpPageList: PageConfig[] = [];
-        const tmpIsEdit: editList[] = [];
-        let i = 0;
-        result.map((it: any) => {
-          tmpPageList.push({ label: it.label, posts: it.posts, id: i, type: "unchanging" });
-          tmpIsEdit.push({ key: it.label, id: i, editable: false });
-          setPageCnt(result.length);
-          i++;
-        });
-        setPageList(tmpPageList);
-        setIsEdit(tmpIsEdit);
-      })
-      .catch((err: any) => {
-        console.error(err);
-      });
-  };
 
   const savePageList = () => {
     // 페이지리스트 + 삭제리스트
@@ -85,10 +76,6 @@ const PageSettingPage = () => {
     setSaveModalOpen(true);
   };
 
-  useEffect(() => {
-    getPage();
-  }, []);
-
   return (
     <div>
       <div className={styles.textPadding} style={{ paddingTop: "0", paddingBottom: "10px" }}>
@@ -97,18 +84,7 @@ const PageSettingPage = () => {
       <div style={{ paddingLeft: "20px" }}>
         <Text value="드래그 앤 드롭으로 페이지 순서를 변경할 수 있습니다." type="caption" />
       </div>
-      <PageLayout
-        pageList={pageList}
-        layoutList={layoutList}
-        pageCnt={pageCnt}
-        deleList={deleList}
-        isEdit={isEdit}
-        setPageList={setPageList}
-        setLayoutList={setLayoutList}
-        setPageCnt={setPageCnt}
-        setDeleList={setDeleList}
-        setIsEdit={setIsEdit}
-      />
+      <PageLayout />
       <div className={styles.confirmButton}>
         <div style={{ margin: "10px" }}>
           <ButtonStyled color="sky" label="취소" />
