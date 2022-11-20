@@ -46,8 +46,9 @@ public class DashBoardController {
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
     public ResponseEntity<? extends BaseResponseBody> getRepositorySize(@RequestParam @ApiParam(value = "accessToken", required = true) String accessToken,
-                                                                        @RequestParam @ApiParam(value = "사용자 깃허브 아이디", required = true) String githubId) throws Exception {
-        Double size = dashBoardService.getRepositorySize(accessToken, githubId);
+                                                                        @RequestParam @ApiParam(value = "사용자 깃허브 아이디", required = true) String githubId,
+                                                                        @RequestParam @ApiParam(value = "사용자 블로그 템플릿", required = true) String template) throws Exception {
+        Double size = dashBoardService.getRepositorySize(accessToken, githubId, template);
         return ResponseEntity.status(200).body(RepositorySizeResponse.of(size, 200, "레포지토리 사용량 조회 성공"));
     }
 
