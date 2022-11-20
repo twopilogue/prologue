@@ -116,6 +116,7 @@ function DashboardInfo(props: { buildState: boolean; setBuildState: (state: bool
       const second = moment.duration(nowTime.diff(bildTimes)).seconds();
 
       if (minute < 1) setBuilTimer(second + "초 전");
+      else if (minute <= 59) setBuilTimer(minute + "분 전");
 
       setProgressCount(Math.trunc(((minute * 60 + second) / 200) * 100));
     }, 1000);
@@ -179,6 +180,8 @@ function DashboardInfo(props: { buildState: boolean; setBuildState: (state: bool
   }
 
   async function getNewBuildTime() {
+    if (buildTimer.includes("초")) return;
+
     await Axios.get(api.dashboard.getNewBuildTime(accessToken, githubId))
       .then((res) => {
         const value = res.data.latestBuildTime;
