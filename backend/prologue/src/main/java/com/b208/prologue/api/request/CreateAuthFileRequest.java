@@ -27,4 +27,7 @@ public class CreateAuthFileRequest {
     @ApiModelProperty(name = "블로그 타입", example = "0", required = true)
     int blogType;
 
+    @NotNull
+    @ApiModelProperty(name = "블로그 템플릿", example = "prologue-template", required = true)
+    String template;
 }
