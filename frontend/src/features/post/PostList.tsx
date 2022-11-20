@@ -8,6 +8,7 @@ import { Stack } from "@mui/system";
 import { useAppDispatch, useAppSelector } from "app/hooks";
 import {
   postListConfig,
+  resetPostList,
   selectPostIndex,
   selectPostIsLast,
   selectPostList,
@@ -68,6 +69,7 @@ const PostList = ({ category }: PostListProps) => {
 
   useEffect(() => {
     console.log(category);
+    dispatch(resetPostList());
     getPostList();
   }, [category]);
 
@@ -120,7 +122,6 @@ const PostList = ({ category }: PostListProps) => {
           <div
             className={styles.moreListBtn}
             onClick={() => {
-              // getPostList(currentPage);
               setItemCnt(itemCnt + 6);
               getPostList();
               console.log(category);
