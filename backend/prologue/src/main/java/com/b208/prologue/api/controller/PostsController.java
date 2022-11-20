@@ -33,8 +33,7 @@ public class PostsController {
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
     public ResponseEntity<? extends BaseResponseBody> getPost(@RequestParam String accessToken, @RequestParam String githubId,
-                                                              @RequestParam int index,
-                                                              @RequestParam(required = false) String category) {
+                                                              @RequestParam int index, @RequestParam String category) {
 
         try {
             Map<String, Object> result = postService.getList(accessToken, githubId, index, category);
