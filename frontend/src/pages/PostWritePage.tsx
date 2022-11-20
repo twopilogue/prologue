@@ -98,11 +98,11 @@ const PostWritePage = () => {
     );
 
     Axios.post(api.posts.writePost(), formData)
-      .then((res: any) => {
+      .then((res) => {
         console.log(res);
         navigate("/post");
       })
-      .catch((err: any) => {
+      .catch((err) => {
         console.log(err);
       });
     dispatch(resetPostFileList());
