@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styles from "features/post/PostWrite.module.css";
 import Text from "components/Text";
 import ButtonStyled from "components/Button";
-import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
+import MeetingRoomOutlinedIcon from "@mui/icons-material/MeetingRoomOutlined";
 import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
 import PostWriteTitle from "../features/post/PostWriteTitle";
 import PostWriteContents from "../features/post/PostWriteContents";
@@ -20,7 +20,6 @@ import {
   selectPostFiles,
   selectPostTagList,
   selectPostTitle,
-  setPostFileList,
 } from "slices/postSlice";
 import Modal from "components/Modal";
 import { useNavigate } from "react-router-dom";
@@ -98,11 +97,11 @@ const PostWritePage = () => {
     );
 
     Axios.post(api.posts.writePost(), formData)
-      .then((res: any) => {
+      .then((res) => {
         console.log(res);
         navigate("/post");
       })
-      .catch((err: any) => {
+      .catch((err) => {
         console.log(err);
       });
     dispatch(resetPostFileList());
@@ -129,7 +128,7 @@ const PostWritePage = () => {
             label="돌아가기"
             color="sky"
             width="10vw"
-            icon={<RefreshOutlinedIcon />}
+            icon={<MeetingRoomOutlinedIcon />}
             onClick={showCancelModal}
           />
           &nbsp; &nbsp; &nbsp;
