@@ -52,32 +52,20 @@ function BlogCustomInfo(props: { template: string }) {
         github: "",
       },
     };
-    console.log("Json", modified);
 
     formData.append("modifyBlogSettingRequest", new Blob([JSON.stringify(modified)], { type: "application/json" }));
     formData.append("imageFile", isInfo.profile_image);
-    console.log("폼 데이터", formData);
 
     //axios 보내기
-    await Axios.put(api.setting.modifyBlog(), formData)
-      .then((res) => {
-        console.log("블로그 정보 데이터 보내기", res.data);
-        triggerStart();
-      })
-      .catch((err) => {
-        console.error("블로그 정보 데이터 보내기", err);
-      });
+    await Axios.put(api.setting.modifyBlog(), formData).then(() => {
+      triggerStart();
+    });
   };
 
   async function triggerStart() {
-    await Axios.put(api.blog.triggerStart(accessToken, githubId))
-      .then((res) => {
-        console.log("빌드-배포 트리거 실행", res.data);
-        getDashboardInfo();
-      })
-      .catch((err) => {
-        console.error("빌드-배포 트리거 실행", err);
-      });
+    await Axios.put(api.blog.triggerStart(accessToken, githubId)).then(() => {
+      getDashboardInfo();
+    });
   }
 
   function getDashboardInfo() {

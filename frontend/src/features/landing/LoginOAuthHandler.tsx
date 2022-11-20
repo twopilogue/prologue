@@ -63,14 +63,9 @@ function LoginOAuthHandler() {
   }
 
   async function setSecretRepo(accessToken: string, githubId: string) {
-    await Axios.put(api.auth.setSecretRepo(accessToken, githubId))
-      .then((res) => {
-        console.log("레포지토리 Secret", res);
-        navigate("/dashboard");
-      })
-      .catch((err) => {
-        console.error("레포지토리 Secret", err);
-      });
+    await Axios.put(api.auth.setSecretRepo(accessToken, githubId)).then(() => {
+      navigate("/dashboard");
+    });
   }
 
   return (

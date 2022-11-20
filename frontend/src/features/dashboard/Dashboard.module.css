@@ -46,6 +46,14 @@
   height: 41vh;
 }
 
+.calendarNowDate {
+  justify-content: space-between;
+  align-items: flex-end;
+  color: lightgray;
+  cursor: pointer;
+}
+
+
 /* 블로그 바로가기 */
 .preview {
   position: relative;
@@ -291,30 +299,6 @@ iframe {
   height: 8.7vh;
 }
 
-.buildButton:hover {
-  background-color: "#8ba8bd";
-}
-
-.build_possible_Button {
-  animation: blink 4s infinite both;
-  background-color: #5cbac3;
-}
-
-
-@keyframes blink {
-
-  0%,
-  10%,
-  20%,
-  100% {
-    opacity: 1
-  }
-
-  5%,
-  15% {
-    opacity: 0.5
-  }
-}
 
 /* 페이지 이동 메뉴 */
 .menuBox {

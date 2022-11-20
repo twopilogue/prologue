@@ -24,36 +24,21 @@ const LayoutChoicePage = () => {
       accessToken: accessToken,
       githubId: githubId,
       template: isChoiceTheme,
-    })
-      .then((res) => {
-        console.log("1. 개츠비 테마적용 성공", res.data);
-        setTimeout(() => [setSecretRepo()], 200);
-      })
-      .catch((err) => {
-        console.error("1. 개츠비 테마적용 err", err);
-      });
+    }).then(() => {
+      setTimeout(() => [setSecretRepo()], 200);
+    });
   };
 
   const setSecretRepo = async () => {
-    await Axios.put(api.auth.setSecretRepo(accessToken, githubId))
-      .then((res) => {
-        console.log("2. Repo secrets 생성", res.data);
-        setTimeout(() => [changeBuildType()], isChoiceTheme === "gatsby-starter-netlify-cms" ? 3000 : 200);
-      })
-      .catch((err) => {
-        console.error("2. Repo secrets 생성", err);
-      });
+    await Axios.put(api.auth.setSecretRepo(accessToken, githubId)).then(() => {
+      setTimeout(() => [changeBuildType()], isChoiceTheme === "gatsby-starter-netlify-cms" ? 3000 : 200);
+    });
   };
 
   const changeBuildType = async () => {
-    await Axios.put(api.blog.changeBuildType(accessToken, githubId))
-      .then(async (res) => {
-        console.log("3. 블로그 빌드타입 변경", res.data);
-        setAuthFile();
-      })
-      .catch((err) => {
-        console.error("3. 블로그 빌드타입 변경", err);
-      });
+    await Axios.put(api.blog.changeBuildType(accessToken, githubId)).then(async () => {
+      setAuthFile();
+    });
   };
 
   const setAuthFile = async () => {
@@ -62,14 +47,9 @@ const LayoutChoicePage = () => {
       githubId: githubId,
       blogType: 1,
       template: isChoiceTheme,
-    })
-      .then((res) => {
-        console.log("4. 블로그 인증 파일 생성", res.data);
-        navigate("/create", { state: { setStepNumber: 2, setTemplate: isChoiceTheme } });
-      })
-      .catch((err) => {
-        console.error("4. 블로그 인증 파일 생성", err);
-      });
+    }).then(() => {
+      navigate("/create", { state: { setStepNumber: 2, setTemplate: isChoiceTheme } });
+    });
   };
 
   return (

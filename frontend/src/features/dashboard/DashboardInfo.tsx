@@ -18,6 +18,7 @@ import {
   Stack,
   styled,
   Typography,
+  keyframes,
 } from "@mui/material";
 import axios from "axios";
 import "moment/locale/ko";
@@ -41,16 +42,21 @@ const BuildButton = styled(ButtonBase)(() => ({
   fontFamily: "Pretendard-Regular",
   transition: "all 0.1s",
   animation: "blink 1s step-end infinite",
-  "&:hover": {
-    backgroundColor: "#8ba8bd",
-  },
-  "&.Mui-disabled": {
-    // backgroundColor: "#8198aa",
-    // backgroundColor: "#D6E5F3",
-    backgroundColor: "#ecf2f7",
-    color: "#abb5c0",
-  },
 }));
+
+const blink_1 = keyframes`
+  0%,
+  10%,
+  20%,
+  100% {
+    opacity: 1
+  }
+
+  5%,
+  15% {
+    opacity: 0.5
+  }
+`;
 
 function CircularProgressWithLabel(props: CircularProgressProps & { value: number }) {
   return (
@@ -99,7 +105,7 @@ function DashboardInfo(props: { buildState: boolean; setBuildState: (state: bool
   const countRef = useRef(null);
 
   const startHandler = () => {
-    if (!props.buildState) {
+    if (!props.buildState || uploadClick == false) {
       clearInterval(countRef.current);
       countRef.current = 0;
       return;
@@ -110,6 +116,7 @@ function DashboardInfo(props: { buildState: boolean; setBuildState: (state: bool
       const second = moment.duration(nowTime.diff(bildTimes)).seconds();
 
       if (minute < 1) setBuilTimer(second + "초 전");
+      else if (minute <= 59) setBuilTimer(minute + "분 전");
 
       setProgressCount(Math.trunc(((minute * 60 + second) / 200) * 100));
     }, 1000);
@@ -130,9 +137,14 @@ function DashboardInfo(props: { buildState: boolean; setBuildState: (state: bool
 
   useEffect(() => {
     startHandler();
+    setUploadClick(props.buildState);
+  }, [uploadClick]);
+
+  useEffect(() => {
+    startHandler();
+    getBlogInfo();
     Axios.get(api.dashboard.getChangeState(accessToken, githubId)).then((res) => {
       setChangeState(res.data.checkUpdate);
-      console.log("변경사항있나", res.data.checkUpdate);
     });
   }, []);
 
@@ -142,9 +154,10 @@ function DashboardInfo(props: { buildState: boolean; setBuildState: (state: bool
   }, [timerChange]);
 
   useEffect(() => {
-    if (!props.buildState) return;
+    if (!props.buildState || uploadClick == false) return;
     if (progressCount >= 100) {
       resetHandler();
+      window.location.reload();
     }
   }, [progressCount]);
 
@@ -167,51 +180,45 @@ function DashboardInfo(props: { buildState: boolean; setBuildState: (state: bool
   }
 
   async function getNewBuildTime() {
-    await Axios.get(api.dashboard.getNewBuildTime(accessToken, githubId))
-      .then((res) => {
-        const value = res.data.latestBuildTime;
-        dispatch(
-          dashboardActions.buildTime({
-            buildTime: moment(value, "YYYYMMDDHHmmss").format("YYYY MM/DD HH:mm"),
-          }),
-        );
+    if (buildTimer.includes("초")) return;
 
-        setBildTimes(moment(value, "YYYYMMDDHHmmss"));
-        const nowTime = moment();
-        const bildTimes = moment(value, "YYYYMMDDHHmmss");
+    await Axios.get(api.dashboard.getNewBuildTime(accessToken, githubId)).then((res) => {
+      const value = res.data.latestBuildTime;
+      dispatch(
+        dashboardActions.buildTime({
+          buildTime: moment(value, "YYYYMMDDHHmmss").format("YYYY MM/DD HH:mm"),
+        }),
+      );
 
-        const diffTime = {
-          day: moment.duration(nowTime.diff(bildTimes)).days(),
-          hour: moment.duration(nowTime.diff(bildTimes)).hours(),
-          minute: moment.duration(nowTime.diff(bildTimes)).minutes(),
-          second: moment.duration(nowTime.diff(bildTimes)).seconds(),
-        };
-        if (diffTime.day != 0) setBuilTimer(diffTime.day + "일 전");
-        else if (diffTime.hour != 0) setBuilTimer(diffTime.hour + "시간 전");
-        else if (diffTime.minute != 0) setBuilTimer(diffTime.minute + "분 전");
-        else setBuilTimer(diffTime.second + "초 전");
-
-        setnewBuildTime({
-          year: moment(value, "YYYYMMDDHHmmss").format("YYYY"),
-          day: moment(value, "YYYYMMDDHHmmss").format("MM/DD HH:mm"),
-        });
-      })
-      .catch((err) => {
-        console.error("최신 빌드 시간 가져오기", err);
+      setnewBuildTime({
+        year: moment(value, "YYYYMMDDHHmmss").format("YYYY"),
+        day: moment(value, "YYYYMMDDHHmmss").format("MM/DD HH:mm"),
       });
+
+      const nowTime = moment();
+      const bildTimes = moment(value, "YYYYMMDDHHmmss");
+
+      const diffTime = {
+        day: moment.duration(nowTime.diff(bildTimes)).days(),
+        hour: moment.duration(nowTime.diff(bildTimes)).hours(),
+        minute: moment.duration(nowTime.diff(bildTimes)).minutes(),
+        second: moment.duration(nowTime.diff(bildTimes)).seconds(),
+      };
+
+      if (diffTime.day != 0) setBuilTimer(diffTime.day + "일 전");
+      else if (diffTime.hour != 0) setBuilTimer(diffTime.hour + "시간 전");
+      else if (diffTime.minute != 0) setBuilTimer(diffTime.minute + "분 전");
+      else setBuilTimer(diffTime.second + "초 전");
+    });
   }
 
   async function triggerStart() {
     props.setBuildState(true);
     setUploadClick(true);
     setBildTimes(moment());
-    await Axios.put(api.blog.triggerStart(accessToken, githubId))
-      .then(() => {
-        startHandler();
-      })
-      .catch((err) => {
-        console.error("빌드-배포 트리거 실행", err);
-      });
+    await Axios.put(api.blog.triggerStart(accessToken, githubId)).then(() => {
+      startHandler();
+    });
   }
 
   return (
@@ -275,11 +282,29 @@ function DashboardInfo(props: { buildState: boolean; setBuildState: (state: bool
                 <BuildButton disabled>
                   <CircularProgressWithLabel value={progressCount} size={36} />
                 </BuildButton>
+              ) : changeState ? (
+                <BuildButton
+                  onClick={triggerStart}
+                  sx={{
+                    animation: `${blink_1} 4s infinite both`,
+                    backgroundColor: "#5cbac3",
+                    "&:hover": {
+                      backgroundColor: "#40696c",
+                    },
+                  }}
+                >
+                  변경사항 배포
+                </BuildButton>
               ) : (
                 <BuildButton
                   onClick={triggerStart}
-                  disabled={!changeState}
-                  className={changeState ? `${styles.build_possible_Button}` : `${styles.build_none_Button}`}
+                  disabled
+                  sx={{
+                    "&.Mui-disabled": {
+                      backgroundColor: "#ecf2f7",
+                      color: "#abb5c0",
+                    },
+                  }}
                 >
                   변경사항 배포
                 </BuildButton>
