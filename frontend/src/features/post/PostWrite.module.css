@@ -38,6 +38,23 @@
   display: none;
 }
 
+.categoryBox {
+  width: 100%;
+  height: 4vh;
+  padding: 2%;
+  border-radius: 5px;
+  border: 1px solid #a4a4a4;
+}
+
+.categoryBox:focus {
+  border: 1px solid #a2a5dc;
+  outline: none;
+}
+
+.categoryBox option {
+  width: 100%;
+}
+
 /* PostWriteContents */
 .postWriteContents {
   position: absolute;
