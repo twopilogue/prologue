@@ -38,6 +38,7 @@ const PostWritePage = () => {
 
   const { accessToken, githubId, blogType } = useSelector((state: rootState) => state.auth);
 
+  const [loading, setLoading] = useState(false);
   const [cancelModalOpen, setCancelModalOpen] = useState(false);
   const [saveModalOpen, setSaveModalOpen] = useState(false);
 
@@ -49,7 +50,7 @@ const PostWritePage = () => {
   const fileList = useAppSelector(selectPostFileList);
   const files = useAppSelector(selectPostFiles);
 
-  const savePost = () => {
+  const savePost = async () => {
     if (title == "") {
       setSaveModalOpen(false);
       document.getElementById("titleError").style.display = "inline";
@@ -115,13 +116,17 @@ const PostWritePage = () => {
         new Blob([JSON.stringify(writeDetailPostRequest)], { type: "application/json" }),
       );
 
-      Axios.post(api.posts.writePost(), formData)
+      setSaveModalOpen(false);
+      setLoading(true);
+      await Axios.post(api.posts.writePost(), formData)
         .then((res) => {
           console.log(res);
+          setLoading(false);
           navigate("/post");
         })
         .catch((err) => {
           console.log(err);
+          setLoading(false);
         });
       dispatch(resetPostFileList());
     }
@@ -161,6 +166,8 @@ const PostWritePage = () => {
         <PostWriteTitle />
         <PostWriteContents />
       </div>
+
+      {loading && <Modal text={`게시글 작성을 완료하시겠습니까?`} loding />}
 
       {cancelModalOpen && (
         <Modal
