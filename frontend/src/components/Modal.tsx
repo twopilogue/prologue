@@ -52,14 +52,14 @@ function Modal({
             </>
           ) : save ? (
             <>
-              <p>
+              <div style={{ margin: "1rem 0" }}>
                 <Stack spacing={2}>
                   <span>저장이 완료되었습니다.</span>
                   <span style={{ fontSize: "0.875rem", color: "gray" }}>
-                    저장된 내용은 대시보드의 <b>변경사항 업로드</b> 클릭 시 반영됩니다.
+                    저장된 내용은 대시보드의 <b>변경사항 배포</b> 클릭 시 반영됩니다.
                   </span>
                 </Stack>
-              </p>
+              </div>
 
               <Stack direction="row" spacing={2}>
                 <Button label="닫기" color="sky" onClick={saveButtonClose} />
