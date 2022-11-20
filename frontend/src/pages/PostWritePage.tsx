@@ -57,7 +57,6 @@ const PostWritePage = () => {
       setTimeout(() => {
         document.getElementById("titleError").style.display = "none";
       }, 3500);
-      console.log("제목 비었음");
     }
 
     if (description == "") {
@@ -66,10 +65,9 @@ const PostWritePage = () => {
       setTimeout(() => {
         document.getElementById("descriptionError").style.display = "none";
       }, 3500);
-      console.log("설명 비었음");
     }
 
-    if (title != "" && description != "") {
+    if (title != "" && description != "" && content != "") {
       const formData = new FormData();
       console.log("files : ", files);
       for (let i = 0; i < files.length; i++) {
@@ -157,7 +155,6 @@ const PostWritePage = () => {
             onClick={showCancelModal}
           />
           &nbsp; &nbsp; &nbsp;
-          {/* <ButtonStyled label="미리보기" width="10vw" /> */}
           <ButtonStyled label="작성완료" width="10vw" icon={<CheckOutlinedIcon />} onClick={showSaveModal} />
         </div>
       </div>
