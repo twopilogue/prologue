@@ -6,6 +6,7 @@ import { SketchPicker } from "react-color";
 import { useAppSelector } from "app/hooks";
 import { colorsConfig, getTextColor, selectColors, setColors } from "slices/settingSlice";
 import { useDispatch } from "react-redux";
+import { detailItemUnfolded } from "./LogoSetting";
 
 const CategorySetting = () => {
   const colors: colorsConfig = useAppSelector(selectColors);
@@ -23,8 +24,10 @@ const CategorySetting = () => {
       </div>
       <div className={styles.detailContainer}>
         <div className={styles.detailItem}>
-          <RadioButton label="색상 설정" value="color" checked />
-          <div>
+          <div className={styles.textPaddingSm}>
+            <Text value="배경색" type="text" bold />
+          </div>
+          <div style={detailItemUnfolded}>
             <SketchPicker
               color={colors.category.background}
               onChangeComplete={(color) => handleChangeComplete(color.hex)}

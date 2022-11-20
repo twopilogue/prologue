@@ -19,10 +19,12 @@ import DetailSelector from "features/setting/detail/DetailSelector";
 import Axios from "api/MultipartAxios";
 import api from "api/Api";
 import { toJSON } from "cssjson";
+import Modal from "components/Modal";
 
 const DetailSettingPage = () => {
   const [titleImg, setTitleImg] = useState(null);
   const [logoImg, setLogoImg] = useState(null);
+  const [saveModalOpen, setSaveModalOpen] = useState<boolean>(false);
   const { githubId, accessToken } = useSelector((state: rootState) => state.auth);
   const colors: colorsConfig = useAppSelector(selectColors);
 
@@ -107,10 +109,15 @@ const DetailSettingPage = () => {
       .then((res: any) => {
         console.log("디테일 전송됨? ", res);
         alert("저장되었습니다.");
+        setSaveModalOpen(false);
       })
       .catch((err: any) => {
         console.log(err);
       });
+  };
+
+  const showSaveModal = () => {
+    setSaveModalOpen(true);
   };
 
   useEffect(() => {
@@ -142,9 +149,16 @@ const DetailSettingPage = () => {
           <ButtonStyled color="sky" label="취소" />
         </div>
         <div style={{ margin: "10px" }}>
-          <ButtonStyled label="저장" onClick={handleOnSave} />
+          <ButtonStyled label="저장" onClick={showSaveModal} />
         </div>
       </div>
+      {saveModalOpen && (
+        <Modal
+          text={`변경된 디자인을 저장하시겠습니까?`}
+          twoButtonCancle={() => setSaveModalOpen(false)}
+          twoButtonConfirm={handleOnSave}
+        />
+      )}
     </div>
   );
 };

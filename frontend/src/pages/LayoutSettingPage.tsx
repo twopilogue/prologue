@@ -3,12 +3,13 @@ import Axios from "api/JsonAxios";
 import { useAppSelector } from "app/hooks";
 import { rootState } from "app/store";
 import ButtonStyled from "components/Button";
+import Modal from "components/Modal";
 import Text from "components/Text";
 import DefaultLayoutStyles from "features/setting/layout/DefaultLayoutStyles";
 import LayoutContainer from "features/setting/layout/LayoutContainer";
 import LayoutSample from "features/setting/layout/LayoutSample";
 import LayoutSelector from "features/setting/layout/LayoutSelector";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Layout } from "react-grid-layout";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -27,6 +28,7 @@ const LayoutSettingPage = () => {
   const clickedIdx = useAppSelector(selectClickedLayoutIdx);
   const { githubId, accessToken } = useSelector((state: rootState) => state.auth);
   const DefaultLayoutList = DefaultLayoutStyles();
+  const [saveModalOpen, setSaveModalOpen] = useState<boolean>(false);
 
   const getUserLayout = async () => {
     await Axios.get(api.setting.getLayout(accessToken, githubId))
@@ -81,10 +83,15 @@ const LayoutSettingPage = () => {
       .then((res: any) => {
         console.log("레이아웃 수정 완!", res);
         alert("저장되었습니다.");
+        setSaveModalOpen(false);
       })
       .catch((err: any) => {
         console.log("ㅡㅡ빠꾸", err);
       });
+  };
+
+  const showSaveModal = () => {
+    setSaveModalOpen(true);
   };
 
   useEffect(() => {
@@ -94,10 +101,10 @@ const LayoutSettingPage = () => {
   return (
     <>
       <div className={styles.textPadding} style={{ paddingTop: "0", paddingBottom: "10px" }}>
-        <Text value="기본 레이아웃 선택" type="groupTitle" bold />
+        <Text value="레이아웃 선택" type="groupTitle" bold />
       </div>
       <div style={{ paddingLeft: "20px" }}>
-        <Text value="기본으로 사용할 레이아웃을 선택하세요." type="caption" />
+        <Text value="블로그에 적용할 레이아웃을 선택하세요." type="caption" />
       </div>
       <LayoutSelector />
       <LayoutContainer />
@@ -106,9 +113,16 @@ const LayoutSettingPage = () => {
           <ButtonStyled color="sky" label="취소" />
         </div>
         <div style={{ margin: "10px" }}>
-          <ButtonStyled label="저장 후 레이아웃 설정" onClick={handleOnSave} />
+          <ButtonStyled label="저장 후 레이아웃 설정" onClick={showSaveModal} />
         </div>
       </div>
+      {saveModalOpen && (
+        <Modal
+          text={`설정한 레이아웃을 저장하시겠습니까?`}
+          twoButtonCancle={() => setSaveModalOpen(false)}
+          twoButtonConfirm={handleOnSave}
+        />
+      )}
     </>
   );
 };
