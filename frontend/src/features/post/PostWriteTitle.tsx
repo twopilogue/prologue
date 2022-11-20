@@ -106,18 +106,22 @@ const PostWriteTitle = ({ savedTitle, savedDescription, savedCategory, savedTag 
       <div style={{ marginTop: "1%" }}>
         <Input placeholder="제목을 입력해주세요" onChange={titleChange} value={title} />
       </div>
-      {/* <Text value="제목은 필수 입력값입니다." type="caption" color="red" /> */}
+      <div id="titleError" style={{ display: "none" }}>
+        <Text value="제목은 필수 입력값입니다." type="caption" color="red" />
+      </div>
       <br /> <br /> <br />
       <Text value="설명" type="text" />
       <div style={{ marginTop: "1%" }}>
         <Input placeholder="설명을 입력해주세요" onChange={descriptionChange} value={description} />
       </div>
-      {/* <Text value="설명은 필수 입력값입니다." type="caption" color="red" /> */}
+      <div id="descriptionError" style={{ display: "none" }}>
+        <Text value="설명은 필수 입력값입니다." type="caption" color="red" />
+      </div>
       <br /> <br /> <br />
       <div className={blogType == 0 ? `${styles.showSelectBox}` : `${styles.hideSelectBox}`} style={{ width: "15vw" }}>
         <Text value="카테고리" type="text" /> <br />
         <select name="cateogry" value={category} onChange={categoryChange}>
-          <option value="">카테고리</option>
+          <option value="">설정 안 함</option>
           {categoryList.map((value, key) => (
             <option key={key} value={value}>
               {value}
