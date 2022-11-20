@@ -21,14 +21,9 @@ const PostCategoryList = ({ setCategory }: PostCategoryListProps) => {
 
   const getCategoryList = () => {
     if (blogType == 0) {
-      Axios.get(api.setting.getCategory(accessToken, githubId))
-        .then((res) => {
-          console.log(res.data.category);
-          setCategoryList(["전체보기", ...res.data.category]);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      Axios.get(api.setting.getCategory(accessToken, githubId)).then((res) => {
+        setCategoryList(["전체보기", ...res.data.category]);
+      });
     } else {
       setCategoryList(["전체보기"]);
     }
