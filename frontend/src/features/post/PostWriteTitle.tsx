@@ -1,9 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "features/post/PostWrite.module.css";
 import Text from "components/Text";
 import Input from "components/Input";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
 import Tag from "components/Tag";
 import { useAppDispatch } from "app/hooks";
 import { setPostCategory, setPostDescription, setPostTagList, setPostTitle } from "slices/postSlice";
@@ -121,14 +119,16 @@ const PostWriteTitle = ({ savedTitle, savedDescription, savedCategory, savedTag 
       <br /> <br /> <br />
       <div className={blogType == 0 ? `${styles.showSelectBox}` : `${styles.hideSelectBox}`} style={{ width: "15vw" }}>
         <Text value="카테고리" type="text" /> <br />
-        <select name="cateogry" value={category} onChange={categoryChange}>
-          <option value="">설정 안 함</option>
-          {categoryList.map((value, key) => (
-            <option key={key} value={value}>
-              {value}
-            </option>
-          ))}
-        </select>
+        <div style={{ marginTop: "1%" }}>
+          <select className={styles.categoryBox} name="cateogry" value={category} onChange={categoryChange}>
+            <option value="">설정 안 함</option>
+            {categoryList.map((value, key) => (
+              <option key={key} value={value}>
+                {value}
+              </option>
+            ))}
+          </select>
+        </div>
         {/* <Select value={category} onChange={categoryChange} displayEmpty inputProps={{ "aria-label": "Without label" }}>
           <MenuItem value="">카테고리</MenuItem>
           {categoryList.map((value, key) => (
