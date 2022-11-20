@@ -1,7 +1,5 @@
-import { useAppSelector } from "app/hooks";
 import React from "react";
-import { colorsConfig, selectColors } from "slices/settingSlice";
-import DetailSetting from "pages/DetailSettingPage";
+import { colorsConfig } from "slices/settingSlice";
 
 export const DetailSettingStyles = (styles: colorsConfig) => {
   const result = `
@@ -35,6 +33,10 @@ export const DetailSettingStyles = (styles: colorsConfig) => {
     background-color: ${styles.contents.background};
     color: ${styles.contents.text};
   }
+
+  .post-list-container-title {
+    border-bottom: 1px solid ${styles.contents.text};
+  }
   
   .post-list-item h2 {
     color: ${styles.contents.text};
@@ -42,10 +44,7 @@ export const DetailSettingStyles = (styles: colorsConfig) => {
 
   .page-container {
     background-color: ${styles.page.background};
-  
-    /* justify-content: flex-start; */
     justify-content: ${styles.page.sort};
-    /* justify-content: center; */
   }
 
   .page a {
