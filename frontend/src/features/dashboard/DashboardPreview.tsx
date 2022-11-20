@@ -9,8 +9,6 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 
 function DashboardPreview(props: { buildState: boolean }) {
-  const [random, setState] = useState<number>();
-
   const { githubId } = useSelector((state: rootState) => state.auth);
 
   const blogLink = `https://${githubId}.github.io/`;
@@ -22,10 +20,6 @@ function DashboardPreview(props: { buildState: boolean }) {
       iframe.style.backgroundColor = "OldLace";
     });
   }, []);
-
-  useEffect(() => {
-    setState(random + 1);
-  }, [props.buildState]);
 
   return (
     <div className={styles.container}>
@@ -46,7 +40,7 @@ function DashboardPreview(props: { buildState: boolean }) {
         )}
         <Link href={blogLink} target="_blank">
           <div id="iframeDiv" className={styles.previewIframe} />
-          <iframe id="iframe" key={random} src={blogLink} scrolling="no" />
+          <iframe id="iframe" src={blogLink} scrolling="no" />
         </Link>
         <div className={styles.previewInfo}>
           <div className={styles.flexRow}>

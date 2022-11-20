@@ -157,6 +157,7 @@ function DashboardInfo(props: { buildState: boolean; setBuildState: (state: bool
     if (!props.buildState || uploadClick == false) return;
     if (progressCount >= 100) {
       resetHandler();
+      window.location.reload();
     }
   }, [progressCount]);
 
@@ -189,7 +190,11 @@ function DashboardInfo(props: { buildState: boolean; setBuildState: (state: bool
         }),
       );
 
-      setBildTimes(moment(value, "YYYYMMDDHHmmss"));
+      setnewBuildTime({
+        year: moment(value, "YYYYMMDDHHmmss").format("YYYY"),
+        day: moment(value, "YYYYMMDDHHmmss").format("MM/DD HH:mm"),
+      });
+
       const nowTime = moment();
       const bildTimes = moment(value, "YYYYMMDDHHmmss");
 
@@ -199,15 +204,11 @@ function DashboardInfo(props: { buildState: boolean; setBuildState: (state: bool
         minute: moment.duration(nowTime.diff(bildTimes)).minutes(),
         second: moment.duration(nowTime.diff(bildTimes)).seconds(),
       };
+
       if (diffTime.day != 0) setBuilTimer(diffTime.day + "일 전");
       else if (diffTime.hour != 0) setBuilTimer(diffTime.hour + "시간 전");
       else if (diffTime.minute != 0) setBuilTimer(diffTime.minute + "분 전");
       else setBuilTimer(diffTime.second + "초 전");
-
-      setnewBuildTime({
-        year: moment(value, "YYYYMMDDHHmmss").format("YYYY"),
-        day: moment(value, "YYYYMMDDHHmmss").format("MM/DD HH:mm"),
-      });
     });
   }
 
