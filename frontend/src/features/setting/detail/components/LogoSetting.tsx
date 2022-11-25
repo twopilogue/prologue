@@ -57,7 +57,7 @@ const LogoSetting = ({ logoImg, setLogoImg, logoType, setLogoType }: LogoSetting
     if (e.length > maxTextLength) {
       e = e.substring(0, maxTextLength);
     }
-    dispatch(setColors({ ...colors, logo: { ...colors.logo, inputText: e } }));
+    dispatch(setColors({ ...colors, logo: { ...colors.logo, logoText: e } }));
   };
 
   const controlImgRef = (type: MutableRefObject<HTMLInputElement>) => {
