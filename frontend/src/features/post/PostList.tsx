@@ -3,12 +3,10 @@ import styles from "features/post/Post.module.css";
 import FormatAlignLeftIcon from "@mui/icons-material/FormatAlignLeft";
 import GridViewOutlinedIcon from "@mui/icons-material/GridViewOutlined";
 import PostListCard from "./PostListCard";
-import PostListImgCard from "./PostListImgCard";
 import { Stack } from "@mui/system";
 import { useAppDispatch, useAppSelector } from "app/hooks";
 import {
   postListConfig,
-  resetPostList,
   selectPostIndex,
   selectPostIsLast,
   selectPostList,
@@ -58,7 +56,12 @@ const PostList = ({ category }: PostListProps) => {
           };
           tmpList.push(post);
         }
+
+        console.log(res.data.result);
+        console.log(category);
+
         dispatch(setPostList([...postList, ...tmpList]));
+
         dispatch(setPostIndex(res.data.result.index));
         dispatch(setPostIsLast(res.data.result.isLast));
         setLoading(false);
@@ -71,14 +74,6 @@ const PostList = ({ category }: PostListProps) => {
   useEffect(() => {
     getPostList();
   }, [category]);
-
-  useEffect(() => {
-    dispatch(resetPostList());
-    dispatch(setPostIndex(-1));
-    // getPostList(category);
-    // console.log(postList);
-    // console.log(postIndex);
-  }, []);
 
   return (
     <div className={styles.postList}>
@@ -123,7 +118,6 @@ const PostList = ({ category }: PostListProps) => {
               className={styles.moreListBtn}
               onClick={() => {
                 getPostList();
-                // console.log("page : ", currentPage);
               }}
             >
               글 목록 더 보기
