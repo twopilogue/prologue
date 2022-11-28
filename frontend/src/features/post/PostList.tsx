@@ -57,10 +57,11 @@ const PostList = ({ category }: PostListProps) => {
           tmpList.push(post);
         }
 
-        console.log(res.data.result);
-        console.log(category);
-
-        dispatch(setPostList([...postList, ...tmpList]));
+        if (res.data.result.index !== -1) {
+          dispatch(setPostList([...postList, ...tmpList]));
+        } else {
+          dispatch(setPostList(tmpList));
+        }
 
         dispatch(setPostIndex(res.data.result.index));
         dispatch(setPostIsLast(res.data.result.isLast));
