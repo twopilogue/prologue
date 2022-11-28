@@ -82,13 +82,6 @@ const PostList = ({ category }: PostListProps) => {
 
   return (
     <div className={styles.postList}>
-      <div className={styles.postSettings}>
-        <Stack direction="row" justifyContent="flex-end" alignItems="center" spacing={2}>
-          <FormatAlignLeftIcon />
-          <GridViewOutlinedIcon />
-        </Stack>
-      </div>
-
       {loading ? (
         <CircularProgress className={styles.postListLoading} sx={{ color: "gray" }} />
       ) : (
