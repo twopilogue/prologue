@@ -5,11 +5,19 @@ import ButtonStyled from "components/Button";
 import PostCategoryList from "features/post/PostCategoryList";
 import PostList from "features/post/PostList";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { resetPostIndex, resetPostList } from "slices/postSlice";
 
 const PostManagementPage = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [category, setCategory] = useState("전체보기");
+
+  useEffect(() => {
+    dispatch(resetPostList());
+    dispatch(resetPostIndex());
+  }, []);
 
   return (
     <div>
