@@ -6,7 +6,7 @@ import { rootState } from "app/store";
 import Axios from "api/JsonAxios";
 import api from "api/Api";
 import { useAppDispatch } from "app/hooks";
-import { resetPostList } from "slices/postSlice";
+import { resetPostIndex, resetPostList } from "slices/postSlice";
 
 interface PostCategoryListProps {
   setCategory: Dispatch<SetStateAction<string>>;
@@ -47,6 +47,7 @@ const PostCategoryList = ({ setCategory }: PostCategoryListProps) => {
             className={styles.categoryName}
             onClick={() => {
               dispatch(resetPostList());
+              dispatch(resetPostIndex());
               setCategory(value);
               setSelect(value);
             }}
