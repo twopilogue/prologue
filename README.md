@@ -1,6 +1,8 @@
 
 
-### 😼 Git
+## 🐦‍🔥 2024 Refactoring 
+
+### 😼 Git 
 
 <details>
 
@@ -45,8 +47,6 @@ ex) develop
 ```
  ex) 🐛 메인 페이지 버그 수정
 ```
-
-**[파트] 태그: 제목**의 형태로 ], **:** 뒤에는 **space**가 있다.
 
 - :sparkles: 기능 추가
 - :white_check_mark: 테스트 코드 작성 및 수정
