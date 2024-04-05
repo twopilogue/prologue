@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import styles from "features/post/Post.module.css";
 import Text from "components/Text";
 import { useSelector } from "react-redux";
@@ -6,7 +6,7 @@ import { rootState } from "app/store";
 import Axios from "api/JsonAxios";
 import api from "api/Api";
 import { useAppDispatch } from "app/hooks";
-import { resetPostList } from "slices/postSlice";
+import { resetPostIndex, resetPostList } from "slices/postSlice";
 
 interface PostCategoryListProps {
   setCategory: Dispatch<SetStateAction<string>>;
@@ -18,6 +18,7 @@ const PostCategoryList = ({ setCategory }: PostCategoryListProps) => {
   const { accessToken, githubId, blogType } = useSelector((state: rootState) => state.auth);
 
   const [categoryList, setCategoryList] = useState([]);
+  const [select, setSelect] = useState<string>("전체보기");
 
   const getCategoryList = () => {
     if (blogType == 0) {
@@ -46,12 +47,14 @@ const PostCategoryList = ({ setCategory }: PostCategoryListProps) => {
             className={styles.categoryName}
             onClick={() => {
               dispatch(resetPostList());
+              dispatch(resetPostIndex());
               setCategory(value);
+              setSelect(value);
             }}
           >
-            <div id="categoryName">
-              <Text value={value} type="text" color="dark_gray" /> <hr />
-            </div>
+            <p className={value === select ? styles.categoryNameTextClicked : styles.categoryNameTextNonClicked}>
+              {value}
+            </p>
           </div>
         ))}
       </div>
