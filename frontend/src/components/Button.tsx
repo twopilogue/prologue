@@ -1,4 +1,4 @@
-import React from "react";
+import { ReactElement } from "react";
 import palette from "../styles/colorPalette";
 import Button from "@mui/material/Button";
 
@@ -6,7 +6,7 @@ interface Props {
   label: string;
   color?: "blue" | "sky";
   width?: string;
-  icon?: React.ReactElement;
+  icon?: ReactElement;
   disabled?: boolean;
   onClick?: () => void | undefined;
 }

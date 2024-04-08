@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import Text from "components/Text";
 import RadioButton from "components/RadioButton";
 import styles from "../../Setting.module.css";

@@ -1,4 +1,3 @@
-import React from "react";
 import { Box, Stack, styled } from "@mui/material";
 import Text from "components/Text";
 import Modal from "components/Modal";
@@ -10,6 +9,7 @@ import api from "api/Api";
 import Axios from "api/JsonAxios";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const BoxNoneClickStyle = styled(Box)(() => ({
   display: "flex",
@@ -35,8 +35,8 @@ function BlogResetPage() {
 
   const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
 
-  const [repositoryModalOpen, setRepositoryModalOpen] = React.useState(false);
-  const [ManageModalOpen, setManageModalOpen] = React.useState(false);
+  const [repositoryModalOpen, setRepositoryModalOpen] = useState(false);
+  const [ManageModalOpen, setManageModalOpen] = useState(false);
 
   const showRepositoryModal = () => {
     setRepositoryModalOpen(true);
@@ -47,7 +47,7 @@ function BlogResetPage() {
   };
 
   async function deleteRepo() {
-    await Axios.delete(api.blog.deleteRepo(accessToken, githubId)).then((res) => {
+    await Axios.delete(api.blog.deleteRepo(accessToken, githubId)).then(() => {
       navigate("/create");
     });
   }

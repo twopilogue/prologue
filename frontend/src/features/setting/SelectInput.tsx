@@ -1,8 +1,6 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
-import { styled } from "@mui/material/styles";
-import palette from "../../styles/colorPalette";
+import { Dispatch, SetStateAction } from "react";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import { FormControl, InputLabel, MenuItem } from "@mui/material";
+import { FormControl, MenuItem } from "@mui/material";
 import { linkConfig } from "./myinfo/MyBlogInfoInput";
 
 interface Props {

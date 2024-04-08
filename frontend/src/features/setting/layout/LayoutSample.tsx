@@ -1,5 +1,6 @@
+import { Fragment } from "react";
 import { useAppSelector } from "app/hooks";
-import React from "react";
+
 import GridLayout from "react-grid-layout";
 import { ComponentConfig, selectClickedLayoutIdx } from "slices/settingSlice";
 import styles from "../Setting.module.css";
@@ -30,7 +31,7 @@ const LayoutSample = (layoutWidth: any) => {
         isDraggable={false}
         isResizable={false}
       >
-        {getComponents().map((item: ComponentConfig, i: number) => {
+        {getComponents().map((item: ComponentConfig) => {
           {
             return DefaultLayoutList[clickedIdx].checkList[item.id] ? (
               <div className={styles.layout_colored} key={item.key}>
@@ -40,7 +41,7 @@ const LayoutSample = (layoutWidth: any) => {
                 </div>
               </div>
             ) : (
-              <React.Fragment />
+              <Fragment />
             );
           }
         })}

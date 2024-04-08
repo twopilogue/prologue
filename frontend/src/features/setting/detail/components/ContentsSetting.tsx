@@ -1,6 +1,4 @@
-import React from "react";
 import styles from "../../Setting.module.css";
-import RadioButton from "components/RadioButton";
 import Text from "components/Text";
 import { colorsConfig, getTextColor, selectColors, setColors } from "slices/settingSlice";
 import { useAppSelector } from "app/hooks";

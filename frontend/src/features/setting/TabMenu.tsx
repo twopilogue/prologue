@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import { Fragment, ReactNode, SyntheticEvent } from "react";
+import { useState } from "react";
 import { styled } from "@mui/material/styles";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
@@ -9,15 +10,15 @@ import { useAppSelector } from "app/hooks";
 import { rootState } from "app/store";
 
 export interface TabPanelProps {
-  children?: React.ReactNode;
+  children?: ReactNode;
   index: number;
   value: number;
 }
 
 interface StyledTabsProps {
-  children?: React.ReactNode;
+  children?: ReactNode;
   value: number;
-  onChange: (event: React.SyntheticEvent, newValue: number) => void;
+  onChange: (event: SyntheticEvent, newValue: number) => void;
 }
 
 interface StyledTabProps {
@@ -81,7 +82,7 @@ const TabMenu = () => {
   const { blogType } = useAppSelector((state: rootState) => state.auth);
   const [value, setValue] = useState(0);
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleChange = (event: SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
@@ -91,7 +92,7 @@ const TabMenu = () => {
         <StyledTabs value={value} onChange={handleChange}>
           <StyledTab label="블로그 설정" />
           {/* 에러남. 근데 돌아감. */}
-          {blogType === 1 ? <React.Fragment /> : <StyledTab label="레이아웃 설정" />}
+          {blogType === 1 ? <Fragment /> : <StyledTab label="레이아웃 설정" />}
         </StyledTabs>
       </Box>
       {blogType === 1 ? (

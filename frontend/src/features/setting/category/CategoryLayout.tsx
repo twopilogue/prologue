@@ -1,4 +1,4 @@
-import React, { useState, useCallback, ChangeEvent, useEffect, Dispatch } from "react";
+import { useState, useCallback, ChangeEvent, useEffect } from "react";
 import { Layout } from "react-grid-layout";
 import GridLayout from "react-grid-layout";
 import styles from "../Setting.module.css";

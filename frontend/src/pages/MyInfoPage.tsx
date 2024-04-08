@@ -1,26 +1,22 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import styles from "features/setting/Setting.module.css";
 import MyGitInfo from "features/setting/myinfo/MyGitInfo";
 import MyInfoInput from "features/setting/myinfo/MyInfoInput";
 import MyBlogInfoInput from "features/setting/myinfo/MyBlogInfoInput";
 import axios from "axios";
 import api from "api/Api";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { rootState } from "app/store";
 
 import ButtonStyled from "components/Button";
 
 import Modal from "components/Modal";
-import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "app/hooks";
 import { selectMyBlogInfo, selectMyInfo } from "slices/settingSlice";
 
 const MyInfoPage = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { githubId, accessToken } = useSelector((state: rootState) => state.auth);
   const [newPic, setNewPic] = useState<Blob>(null);
-  const [socialList, setSocialList] = useState({});
   const myBlogInfo = useAppSelector(selectMyBlogInfo);
   const myInfo = useAppSelector(selectMyInfo);
   const [saveModalOpen, setSaveModalOpen] = useState<boolean>(false);
@@ -54,12 +50,12 @@ const MyInfoPage = () => {
       .put(api.setting.modifyBlog(), formData, {
         headers: { "Content-Type": `multipart/form-data` },
       })
-      .then((res: any) => {
+      .then(() => {
         setLoadingModalOpen(false);
         setFinModalOpen(true);
       })
-      .catch((err: any) => {
-        console.log(err);
+      .catch((err) => {
+        console.error(err);
       });
   };
 

@@ -1,5 +1,5 @@
-import React, { useRef, useState } from "react";
-import { Avatar, Box, Button, ButtonBase, Paper, Stack } from "@mui/material";
+import { ChangeEvent, useRef, useState } from "react";
+import { Avatar, Button, Paper, Stack } from "@mui/material";
 import ButtonCoustom from "components/Button";
 import ModeIcon from "@mui/icons-material/Mode";
 import Input from "components/Input";
@@ -22,7 +22,7 @@ function BlogCustomInfo(props: { template: string }) {
 
   const { githubId, accessToken } = useSelector((state: rootState) => state.auth);
   const [imgPreview, setImgPreview] = useState(null);
-  const [lodingView, openLodingView] = React.useState(false);
+  const [lodingView, openLodingView] = useState(false);
 
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [successModal, openSuccessModal] = useState(false);
@@ -127,11 +127,11 @@ function BlogCustomInfo(props: { template: string }) {
     });
   }
 
-  const profileOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const profileOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     setInfo({ ...isInfo, [e.target.name]: e.target.value });
   };
 
-  const onUploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onUploadImage = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) {
       return;
     }

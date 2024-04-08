@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "features/post/PostWrite.module.css";
 import Text from "components/Text";
 import Button from "components/Button";
 import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
 import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
-import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
-import PostWriteContents from "features/post/PostWriteContents";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { rootState } from "app/store";
@@ -33,7 +31,7 @@ const PageEditPage = () => {
 
   const [loading, setLoading] = useState(false);
   const [contentData, setContentData] = useState("");
-  const [savedFileList, setSavedFileList] = useState([]);
+  const [savedFileList] = useState([]);
   const [cancelModalOpen, setCancelModalOpen] = useState(false);
   const [saveModalOpen, setSaveModalOpen] = useState(false);
 
@@ -64,7 +62,6 @@ const PageEditPage = () => {
 
     for (let i = 0; i < files.length; i++) {
       formData.append("files", files[i]);
-      const file: File = files[i];
     }
 
     const modifyDetailPageRequest: modifyDetailPageRequestProps = {
@@ -90,7 +87,7 @@ const PageEditPage = () => {
       new Blob([JSON.stringify(modifyDetailPageRequest)], { type: "application/json" }),
     );
 
-    Axios.put(api.posts.modifyPage(), formData).then((res) => {
+    Axios.put(api.posts.modifyPage(), formData).then(() => {
       // navigate(-1);
     });
 

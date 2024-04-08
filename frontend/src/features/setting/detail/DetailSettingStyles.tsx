@@ -1,4 +1,3 @@
-import React from "react";
 import { colorsConfig } from "slices/settingSlice";
 
 export const DetailSettingStyles = (styles: colorsConfig) => {

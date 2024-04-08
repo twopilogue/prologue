@@ -1,9 +1,6 @@
-import React from "react";
 import { CircularProgress, Stack } from "@mui/material";
-import Text from "./Text";
 import Button from "./Button";
 import styles from "./css/Modal.module.css";
-import palette from "styles/colorPalette";
 import { useNavigate } from "react-router-dom";
 
 interface Props {

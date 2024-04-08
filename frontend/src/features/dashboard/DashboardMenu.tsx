@@ -1,4 +1,3 @@
-import React from "react";
 import styles from "features/dashboard/Dashboard.module.css";
 import { Container, Stack } from "@mui/system";
 import { Avatar, Link } from "@mui/material";

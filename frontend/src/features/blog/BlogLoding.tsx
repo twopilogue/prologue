@@ -1,4 +1,3 @@
-import React from "react";
 import styles from "features/blog/Blog.module.css";
 
 function BlogLoding() {

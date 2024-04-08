@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import styles from "features/post/Post.module.css";
 import Text from "components/Text";
 import { useSelector } from "react-redux";

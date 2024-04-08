@@ -1,4 +1,3 @@
-import React from "react";
 import styles from "features/post/Post.module.css";
 
 const PostListImgCard = () => {

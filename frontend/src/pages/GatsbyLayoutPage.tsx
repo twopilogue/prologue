@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Box, Stack } from "@mui/material";
 import GatsbyLayoutCard from "features/blog/BlogGatsbyTheme";
 import Text from "components/Text";
@@ -16,7 +16,7 @@ const LayoutChoicePage = () => {
   const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
 
   const [isChoiceTheme, setChoiceTheme] = useState("gatsby-starter-foundation");
-  const [lodingView, openLodingView] = React.useState(false);
+  const [lodingView, openLodingView] = useState(false);
 
   const showNextModal = () => {
     openLodingView(true);

@@ -1,4 +1,4 @@
-import * as React from "react";
+import { ChangeEvent } from "react";
 import { styled } from "@mui/material/styles";
 import Switch from "@mui/material/Switch";
 import Stack from "@mui/material/Stack";
@@ -25,8 +25,7 @@ const SwitchButton = styled(Switch)(({ theme }) => ({
       color: "#f3ebfb",
       "& + .MuiSwitch-track": {
         opacity: 1,
-        backgroundColor:
-          theme.palette.mode === "dark" ? palette.blue_3 : palette.blue_4,
+        backgroundColor: theme.palette.mode === "dark" ? palette.blue_3 : palette.blue_4,
       },
     },
   },
@@ -42,10 +41,7 @@ const SwitchButton = styled(Switch)(({ theme }) => ({
   "& .MuiSwitch-track": {
     borderRadius: 16 / 2,
     opacity: 1,
-    backgroundColor:
-      theme.palette.mode === "dark"
-        ? "rgba(255,255,255,.35)"
-        : "rgba(0,0,0,.25)",
+    backgroundColor: theme.palette.mode === "dark" ? "rgba(255,255,255,.35)" : "rgba(0,0,0,.25)",
     boxSizing: "border-box",
   },
 }));
@@ -55,9 +51,7 @@ interface Props {
   name: string;
   checked: boolean;
   disabled?: boolean;
-  onChange:
-    | ((event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void)
-    | undefined;
+  onChange: ((event: ChangeEvent<HTMLInputElement>, checked: boolean) => void) | undefined;
 }
 
 SwitchWithLabel.defaultProps = {
@@ -70,11 +64,7 @@ SwitchWithLabel.defaultProps = {
 function SwitchWithLabel({ label, ...rest }: Props) {
   return (
     <Stack direction="row" spacing={1} alignItems="center">
-      <SwitchButton
-        color="info"
-        inputProps={{ "aria-label": "ant design" }}
-        {...rest}
-      />
+      <SwitchButton color="info" inputProps={{ "aria-label": "ant design" }} {...rest} />
       <Text value={label} />
     </Stack>
   );

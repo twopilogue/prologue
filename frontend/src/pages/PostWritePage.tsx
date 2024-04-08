@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import styles from "features/post/PostWrite.module.css";
 import Text from "components/Text";
 import ButtonStyled from "components/Button";
@@ -72,7 +72,6 @@ const PostWritePage = () => {
       const formData = new FormData();
       for (let i = 0; i < files.length; i++) {
         formData.append("files", files[i]);
-        const file: File = files[i];
       }
 
       const frontMatter =
@@ -114,12 +113,12 @@ const PostWritePage = () => {
       setSaveModalOpen(false);
       setLoading(true);
       await Axios.post(api.posts.writePost(), formData)
-        .then((res) => {
+        .then(() => {
           setLoading(false);
           setUploadModalOpen(true);
           navigate("/post");
         })
-        .catch((err) => {
+        .catch(() => {
           setLoading(false);
         });
       dispatch(resetPostFileList());

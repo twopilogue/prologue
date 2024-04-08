@@ -1,13 +1,13 @@
-import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setClickedLayoutIdx } from "slices/settingSlice";
 import styles from "../Setting.module.css";
 import { layoutsConfig } from "./LayoutSelector";
+import { Dispatch, SetStateAction } from "react";
 
 interface Props {
   index: number;
   layoutList: layoutsConfig[];
-  setLayoutList: React.Dispatch<React.SetStateAction<layoutsConfig[]>>;
+  setLayoutList: Dispatch<SetStateAction<layoutsConfig[]>>;
 }
 
 const LayoutSelectorItem = ({ index, layoutList, setLayoutList }: Props) => {

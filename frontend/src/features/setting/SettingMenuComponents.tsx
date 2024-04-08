@@ -1,5 +1,3 @@
-import React from "react";
-
 import DetailSettingPage from "pages/DetailSettingPage";
 import MyInfoPage from "pages/MyInfoPage";
 import CategoryPage from "pages/CategoryPage";

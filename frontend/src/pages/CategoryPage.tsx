@@ -1,14 +1,6 @@
 import CategoryLayout from "features/setting/category/CategoryLayout";
-import React, { useEffect, useState } from "react";
-import { Layout } from "react-grid-layout";
-import {
-  KeyConfig,
-  editList,
-  selectCategoryList,
-  selectCategoryLayoutList,
-  selectIsEditCategory,
-  selectCategoryCnt,
-} from "slices/settingSlice";
+import { useState } from "react";
+import { selectCategoryList, selectCategoryLayoutList } from "slices/settingSlice";
 import ButtonStyled from "components/Button";
 import styles from "features/setting/Setting.module.css";
 import Axios from "api/JsonAxios";
@@ -49,11 +41,11 @@ const CategoryPage = () => {
       githubId: githubId,
       category: result,
     })
-      .then((res: any) => {
+      .then(() => {
         setLoadingModalOpen(false);
         setFinModalOpen(true);
       })
-      .catch((err: any) => {
+      .catch((err) => {
         console.error(err);
       });
   };

@@ -1,6 +1,4 @@
-import React from "react";
 import Text from "components/Text";
-import RadioButton from "components/RadioButton";
 import styles from "../../Setting.module.css";
 import { SketchPicker } from "react-color";
 import { useAppSelector } from "app/hooks";

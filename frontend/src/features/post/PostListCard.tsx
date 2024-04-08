@@ -1,19 +1,16 @@
-import React, { useState } from "react";
 import styles from "features/post/Post.module.css";
 import Text from "components/Text";
 
 interface PostListCardProps {
   title: string;
   date: string;
-  tag: [];
+  // tag: [];
   category: string;
   description: string;
   imgUrl: string;
 }
 
-const PostListCard = ({ title, date, tag, category, description, imgUrl }: PostListCardProps) => {
-  const [tagList, setTagList] = useState<[]>(tag);
-
+const PostListCard = ({ title, date, category, description, imgUrl }: PostListCardProps) => {
   return (
     <div className={styles.postListCard}>
       <div className={styles.postCardTextBox}>

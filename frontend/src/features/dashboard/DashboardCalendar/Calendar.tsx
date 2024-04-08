@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import moment from "moment";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
@@ -96,7 +96,7 @@ function CalenderCustom() {
         showNeighboringMonth={false}
         calendarType="Hebrew"
         locale="en-EN"
-        tileClassName={({ date, view }) => {
+        tileClassName={({ date }) => {
           if (marks.find((x) => x === moment(date).format("YYYY-MM-DD"))) {
             return "mark";
           }

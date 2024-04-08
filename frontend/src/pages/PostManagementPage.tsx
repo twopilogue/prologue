@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "features/post/Post.module.css";
 import Text from "components/Text";
 import ButtonStyled from "components/Button";

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import moment from "moment";
 import styles from "features/dashboard/Dashboard.module.css";
 import Text from "components/Text";

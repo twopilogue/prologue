@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { rootState } from "app/store";
 import styles from "features/setting/Setting.module.css";
@@ -100,7 +100,7 @@ const DetailSettingPage = () => {
 
   const sendDetailSetting = async (formData: FormData) => {
     await Axios.put(api.setting.modifyDetail(), formData)
-      .then((res: any) => {
+      .then(() => {
         setLoadingModalOpen(false);
         setFinModalOpen(true);
       })

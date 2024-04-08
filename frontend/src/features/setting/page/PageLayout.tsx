@@ -1,4 +1,4 @@
-import React, { ChangeEvent, Dispatch, useCallback, useEffect, useState } from "react";
+import { ChangeEvent, useCallback, useState } from "react";
 import Text from "components/Text";
 import styles from "../Setting.module.css";
 

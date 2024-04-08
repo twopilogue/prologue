@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "features/dashboard/Dashboard.module.css";
 import Text from "components/Text";
 import { useDispatch, useSelector } from "react-redux";

@@ -1,4 +1,3 @@
-import React from "react";
 import { rootState } from "app/store";
 import { useSelector } from "react-redux";
 import { Navigate, useLocation } from "react-router-dom";

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { ChangeEvent, Dispatch, SetStateAction, useEffect } from "react";
 import styles from "features/blog/Blog.module.css";
 import Text from "components/Text";
 import { Box, FormControl, Paper, RadioGroup, Stack } from "@mui/material";
@@ -9,7 +9,7 @@ import Button from "components/Button";
 
 interface Props {
   radioValue: string;
-  setValue: React.Dispatch<React.SetStateAction<string>>;
+  setValue: Dispatch<SetStateAction<string>>;
   onClick?: () => void;
 }
 
@@ -18,7 +18,7 @@ function BlogLayoutSetting({ radioValue, setValue, onClick }: Props) {
     AOS.init();
   });
 
-  const radioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const radioChange = (event: ChangeEvent<HTMLInputElement>) => {
     setValue((event.target as HTMLInputElement).value);
   };
 

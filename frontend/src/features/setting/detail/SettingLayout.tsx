@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "../Setting.module.css";
-import { Layout } from "react-grid-layout";
 import GridLayout from "react-grid-layout";
 import { useAppSelector } from "app/hooks";
 import {

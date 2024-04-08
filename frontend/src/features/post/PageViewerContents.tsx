@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Editor } from "@toast-ui/react-editor";
 import "@toast-ui/editor/dist/toastui-editor.css";
 import "tui-color-picker/dist/tui-color-picker.css";
@@ -22,8 +22,8 @@ const PageViewerContents = ({ content }: PageViewerContentsProps) => {
 
   const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
 
-  const [fileList, setFileList] = useState([]);
-  const [files, setFiles] = useState([]);
+  const [fileList] = useState([]);
+  const [files] = useState([]);
 
   const editorRef = useRef<Editor>();
 

@@ -1,11 +1,11 @@
 import { Tab, Tabs } from "@mui/material";
 import { Box } from "@mui/system";
-import { styled } from "@mui/material/styles";
-import React from "react";
-import { TabPanel, TabPanelProps } from "./TabMenu";
+
+import { TabPanel } from "./TabMenu";
+import { SyntheticEvent, useState } from "react";
 
 const SideMenu = ({ tabs }: any) => {
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
 
   const a11yProps = (index: number) => {
     return {
@@ -14,7 +14,7 @@ const SideMenu = ({ tabs }: any) => {
     };
   };
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleChange = (event: SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 

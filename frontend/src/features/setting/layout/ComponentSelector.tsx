@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import styles from "../Setting.module.css";
 import SwitchButton from "components/SwitchButton";
 import Text from "components/Text";
@@ -21,9 +21,9 @@ const ComponentSelector = () => {
   const userComponentList = useAppSelector(selectUserComponentList);
   const checkList = useAppSelector(selectUserCheckList);
 
-  const isComponent = (ele: Layout, target: string) => {
-    if (ele.i === target) return true;
-  };
+  // const isComponent = (ele: Layout, target: string) => {
+  //   if (ele.i === target) return true;
+  // };
 
   // 미사용 체크 시:
   // 1) unCheckedList(Layout)에 넣어주기.

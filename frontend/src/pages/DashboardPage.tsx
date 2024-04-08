@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import DashboardCalendar from "features/dashboard/DashboardCalendar/DashboardCalendar";
 import DashboardInfo from "features/dashboard/DashboardInfo";
 import DashboardList from "features/dashboard/DashboardList";

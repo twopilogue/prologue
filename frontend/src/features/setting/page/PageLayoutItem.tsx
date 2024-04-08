@@ -1,5 +1,3 @@
-import React from "react";
-
 import MenuIcon from "@mui/icons-material/Menu";
 import Text from "components/Text";
 import styles from "../Setting.module.css";

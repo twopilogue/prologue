@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Carousel from "react-material-ui-carousel";
 import { Box, Stack } from "@mui/system";
 import Button from "@mui/material/Button";
@@ -15,7 +15,7 @@ import Axios from "api/JsonAxios";
 import api from "api/Api";
 
 function LandingMain() {
-  const [state, setState] = useState({ height: 0 });
+  const [state] = useState({ height: 0 });
   const [isTextTyping, setIsTextTyping] = useState<boolean>(false);
 
   const content = "1분만에 만드는\n나만의 깃허브 블로그";
@@ -41,20 +41,15 @@ function LandingMain() {
 
   const images = [landingMainImg1, landingMainImg2, landingMainImg3, landingMainImg4];
 
-  const getMainDivHeight = () => {
-    const mainImageWidth = 1668;
-    const mainImageHeight = 1039;
-    return Math.floor((window.innerWidth * mainImageHeight) / mainImageWidth);
-  };
+  // const getMainDivHeight = () => {
+  //   const mainImageWidth = 1668;
+  //   const mainImageHeight = 1039;
+  //   return Math.floor((window.innerWidth * mainImageHeight) / mainImageWidth);
+  // };
 
-  const updateDimensions = () => {
-    setState({ height: getMainDivHeight() });
-  };
-
-  const componentDidMount = () => {
-    window.addEventListener("resize", updateDimensions);
-    updateDimensions(); //최초로 한번 실행하기
-  };
+  // const updateDimensions = () => {
+  //   setState({ height: getMainDivHeight() });
+  // };
 
   const githubOnClick = () => {
     Axios.get(api.auth.getUri()).then((res) => {

@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import { MouseEvent, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
-import { Avatar, Box, Menu, MenuItem, Stack, Button, Link, ButtonBase } from "@mui/material";
+import { Avatar, Box, Menu, MenuItem, Stack, Link, ButtonBase } from "@mui/material";
 import { GitHub, Logout, KeyboardArrowUp, KeyboardArrowDown } from "@mui/icons-material";
 import Text from "./Text";
 import Logo from "assets/Logo.svg";
@@ -39,9 +39,9 @@ function Header() {
   const { login, authFile, githubId, githubImage } = useSelector((state: rootState) => state.auth);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+  const handleOpenUserMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
     setMenuOpen(true);
   };
