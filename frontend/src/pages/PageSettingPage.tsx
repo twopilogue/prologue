@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import styles from "features/setting/Setting.module.css";
 import Text from "components/Text";
 import PageLayout from "features/setting/page/PageLayout";
@@ -6,17 +6,8 @@ import Axios from "api/JsonAxios";
 import api from "api/Api";
 import { useSelector } from "react-redux";
 import { rootState } from "app/store";
-import {
-  PageConfig,
-  editList,
-  selectPageList,
-  selectPageLayoutList,
-  selectPageCnt,
-  selectIsEditPage,
-  selectPageDeleList,
-} from "slices/settingSlice";
+import { PageConfig, selectPageList, selectPageLayoutList, selectPageDeleList } from "slices/settingSlice";
 import ButtonStyled from "components/Button";
-import { Layout } from "react-grid-layout";
 import Modal from "components/Modal";
 import { useAppSelector } from "app/hooks";
 
@@ -67,12 +58,12 @@ const PageSettingPage = () => {
 
   const sendPage = async (result: resultConfig[]) => {
     await Axios.put(api.setting.modifyPage(), { accessToken: accessToken, githubId: githubId, pages: result })
-      .then((res: any) => {
+      .then(() => {
         setLoadingModalOpen(false);
         setFinModalOpen(true);
       })
       .catch((err: any) => {
-        console.log(err);
+        console.error(err);
       });
   };
 

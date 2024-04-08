@@ -1,4 +1,3 @@
-import React, { useEffect } from "react";
 import Text from "components/Text";
 import styles from "../Setting.module.css";
 import ButtonStyled from "components/Button";

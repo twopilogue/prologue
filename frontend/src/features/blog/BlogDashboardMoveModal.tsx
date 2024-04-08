@@ -1,4 +1,3 @@
-import React from "react";
 import Modal from "components/Modal";
 import { useNavigate } from "react-router-dom";
 import confetti from "canvas-confetti";

@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { Fragment } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Layout } from "react-grid-layout";
 import GridLayout from "react-grid-layout";
@@ -13,7 +14,6 @@ import {
   setUserComponentLayoutList,
   setUserComponentList,
   setUserCheckList,
-  setClickedLayoutIdx,
 } from "slices/settingSlice";
 import styles from "../Setting.module.css";
 import DragHandleIcon from "@mui/icons-material/DragHandle";
@@ -42,7 +42,7 @@ const LayoutCustom = (layoutWidth: any) => {
   };
 
   const saveCurrentLayout = () => {
-    const newHeight = (document.querySelector(".react-grid-layout") as HTMLElement).offsetHeight;
+    // const newHeight = (document.querySelector(".react-grid-layout") as HTMLElement).offsetHeight;
   };
 
   const getLayout = () => {
@@ -78,7 +78,7 @@ const LayoutCustom = (layoutWidth: any) => {
         isDraggable={true}
         isResizable={false}
       >
-        {userComponentList.map((item: ComponentConfig, i: number) => {
+        {userComponentList.map((item: ComponentConfig) => {
           {
             return userCheckList[item.id] ? (
               <div className={styles.layout_colored} key={item.key}>
@@ -94,7 +94,7 @@ const LayoutCustom = (layoutWidth: any) => {
                 </div>
               </div>
             ) : (
-              <React.Fragment />
+              <Fragment />
             );
           }
         })}

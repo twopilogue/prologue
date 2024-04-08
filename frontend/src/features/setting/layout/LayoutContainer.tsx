@@ -1,5 +1,5 @@
 import { useAppSelector } from "app/hooks";
-import React, { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { selectClickedLayoutIdx } from "slices/settingSlice";
 import ComponentSelector from "../layout/ComponentSelector";
 import styles from "../Setting.module.css";

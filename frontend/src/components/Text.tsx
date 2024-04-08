@@ -1,16 +1,9 @@
-import React from "react";
 import styles from "components/css/Text.module.css";
-import palette,{ PaletteKeyTypes } from "styles/colorPalette";
+import palette, { PaletteKeyTypes } from "styles/colorPalette";
 
 interface Props {
   value: string;
-  type?:
-    | "caption"
-    | "text"
-    | "groupTitle"
-    | "textTitle"
-    | "pageTitle"
-    | "title";
+  type?: "caption" | "text" | "groupTitle" | "textTitle" | "pageTitle" | "title";
   bold?: boolean;
   color?: PaletteKeyTypes;
 }

@@ -1,11 +1,10 @@
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Editor } from "@toast-ui/react-editor";
 import "@toast-ui/editor/dist/toastui-editor.css";
 import "tui-color-picker/dist/tui-color-picker.css";
 import "@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css";
 import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
 import styles from "features/post/PostWrite.module.css";
-import Text from "components/Text";
 import { useAppDispatch } from "app/hooks";
 import { setPostContent, setPostFileList, setPostFiles } from "slices/postSlice";
 import { useSelector } from "react-redux";
@@ -22,8 +21,8 @@ const PostViewerContents = ({ content }: PostViewerContentsProps) => {
 
   const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
 
-  const [fileList, setFileList] = useState([]);
-  const [files, setFiles] = useState([]);
+  const [fileList] = useState([]);
+  const [files] = useState([]);
 
   const editorRef = useRef<Editor>();
 

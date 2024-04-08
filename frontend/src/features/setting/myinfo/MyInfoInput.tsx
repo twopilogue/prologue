@@ -1,10 +1,10 @@
 import Input from "components/Input";
 import Text from "components/Text";
-import React, { Dispatch, SetStateAction, useCallback, useRef, useState } from "react";
+import { ChangeEvent, Dispatch, SetStateAction, useCallback, useRef, useState } from "react";
 import styles from "../Setting.module.css";
 import ModeIcon from "@mui/icons-material/Mode";
 import { useAppSelector } from "app/hooks";
-import { selectBlogSettingInfo, selectMyBlogInfo, selectMyInfo, setMyInfo } from "slices/settingSlice";
+import { selectMyInfo, setMyInfo } from "slices/settingSlice";
 import { Avatar } from "@mui/material";
 import { useDispatch } from "react-redux";
 
@@ -19,9 +19,8 @@ const MemberInfoInput = ({ setNewPic }: Props) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [imgPreview, setImgPreview] = useState(null);
   const myInfo = useAppSelector(selectMyInfo);
-  const myBlogInfo = useAppSelector(selectMyBlogInfo);
 
-  const onUploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onUploadImage = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) {
       return;
     }
@@ -52,7 +51,7 @@ const MemberInfoInput = ({ setNewPic }: Props) => {
               <Input
                 value={myInfo.nickName}
                 placeholder="닉네임을 입력하세요."
-                onChange={(e: any) => {
+                onChange={(e) => {
                   dispatch(
                     setMyInfo({
                       ...myInfo,
@@ -71,7 +70,7 @@ const MemberInfoInput = ({ setNewPic }: Props) => {
                 placeholder="나를 소개하는 글을 입력하세요."
                 multiline
                 rows={8}
-                onChange={(e: any) => {
+                onChange={(e) => {
                   dispatch(
                     setMyInfo({
                       ...myInfo,

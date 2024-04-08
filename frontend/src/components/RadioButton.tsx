@@ -1,9 +1,6 @@
-import * as React from "react";
 import { styled } from "@mui/material/styles";
 import { useRadioGroup } from "@mui/material/RadioGroup";
-import FormControlLabel, {
-  FormControlLabelProps,
-} from "@mui/material/FormControlLabel";
+import FormControlLabel, { FormControlLabelProps } from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 import palette from "../styles/colorPalette";
 
@@ -11,9 +8,7 @@ interface StyledFormControlLabelProps extends FormControlLabelProps {
   checked: boolean;
 }
 
-const StyledFormControlLabel = styled((props: StyledFormControlLabelProps) => (
-  <FormControlLabel {...props} />
-))(() => ({
+const StyledFormControlLabel = styled((props: StyledFormControlLabelProps) => <FormControlLabel {...props} />)(() => ({
   margin: "0px",
   ".MuiFormControlLabel-label": {
     lineHeight: 1.0,
@@ -44,11 +39,5 @@ interface Props {
 }
 
 export default function UseRadioGroup({ label, value, ...rest }: Props) {
-  return (
-    <MyFormControlLabel
-      value={value}
-      label={label}
-      control={<RaidoButton {...rest} />}
-    />
-  );
+  return <MyFormControlLabel value={value} label={label} control={<RaidoButton {...rest} />} />;
 }

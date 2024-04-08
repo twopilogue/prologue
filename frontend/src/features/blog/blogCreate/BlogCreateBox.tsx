@@ -1,4 +1,3 @@
-import React from "react";
 import styles from "features/blog/Blog.module.css";
 import Text from "components/Text";
 import Button from "components/Button";
@@ -23,4 +22,3 @@ function BlogCreateBox({ onClick }: Props) {
 }
 
 export default BlogCreateBox;
-

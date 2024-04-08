@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Box, Stack } from "@mui/system";
 import Button from "@mui/material/Button";
 import Text from "components/Text";

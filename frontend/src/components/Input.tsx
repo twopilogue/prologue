@@ -1,7 +1,7 @@
-import * as React from "react";
 import { FormControl, FormHelperText, OutlinedInput } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import palette from "../styles/colorPalette";
+import { ChangeEventHandler, KeyboardEventHandler } from "react";
 
 interface inputInfo {
   name: string;
@@ -14,8 +14,8 @@ interface inputInfo {
   textBool?: boolean; // helper 여부
   helperText?: string;
   size?: "medium" | "small";
-  onChange?: React.ChangeEventHandler<HTMLInputElement> | undefined;
-  onKeyPress?: React.KeyboardEventHandler<HTMLInputElement> | undefined;
+  onChange?: ChangeEventHandler<HTMLInputElement> | undefined;
+  onKeyPress?: KeyboardEventHandler<HTMLInputElement> | undefined;
 }
 
 const InputStyle = styled(OutlinedInput)(() => ({

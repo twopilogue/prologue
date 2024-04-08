@@ -1,4 +1,3 @@
-import React from "react";
 import { Route, Routes } from "react-router-dom";
 import styles from "features/post/Post.module.css";
 import PageEditPage from "./PageEditPage";

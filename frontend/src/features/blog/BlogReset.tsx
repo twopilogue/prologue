@@ -1,4 +1,3 @@
-import React from "react";
 import Text from "components/Text";
 import { Box, Stack } from "@mui/material";
 import Button from "components/Button";
@@ -14,12 +13,7 @@ interface Props {
 function BlogReset(value: Props) {
   return (
     <Box className={styles.BlogResetBox}>
-      <Stack
-        direction="column"
-        justifyContent="center"
-        alignItems="center"
-        spacing={3}
-      >
+      <Stack direction="column" justifyContent="center" alignItems="center" spacing={3}>
         <div className={styles.BlogResetBoxTitle}>
           <Text value={value.title} type="textTitle" bold />
         </div>

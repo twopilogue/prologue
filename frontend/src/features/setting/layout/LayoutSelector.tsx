@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { initialState, setClickedLayoutIdx } from "slices/settingSlice";
 import styles from "../Setting.module.css";
 import LayoutSelectorItem from "./../layout/LayoutSelectorItem";

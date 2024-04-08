@@ -1,9 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "features/post/Post.module.css";
-import FormatAlignLeftIcon from "@mui/icons-material/FormatAlignLeft";
-import GridViewOutlinedIcon from "@mui/icons-material/GridViewOutlined";
 import PostListCard from "./PostListCard";
-import { Stack } from "@mui/system";
 import { useAppDispatch, useAppSelector } from "app/hooks";
 import {
   postListConfig,
@@ -65,7 +62,7 @@ const PostList = ({ category }: PostListProps) => {
         dispatch(setPostIsLast(res.data.result.isLast));
         setLoading(false);
       })
-      .catch((err) => {
+      .catch(() => {
         setLoading(false);
       });
   };
@@ -98,7 +95,6 @@ const PostList = ({ category }: PostListProps) => {
               <PostListCard
                 title={value.title}
                 date={value.date}
-                tag={value.tag}
                 category={value.category}
                 description={value.description}
                 imgUrl={value.imgUrl}

@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import api from "api/Api";
 import Axios from "api/JsonAxios";
 import { useAppSelector } from "app/hooks";
@@ -8,7 +9,6 @@ import Text from "components/Text";
 import DefaultLayoutStyles from "features/setting/layout/DefaultLayoutStyles";
 import LayoutContainer from "features/setting/layout/LayoutContainer";
 import LayoutSelector from "features/setting/layout/LayoutSelector";
-import React, { useEffect, useState } from "react";
 import { Layout } from "react-grid-layout";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -33,7 +33,7 @@ const LayoutSettingPage = () => {
 
   const getUserLayout = async () => {
     await Axios.get(api.setting.getLayout(accessToken, githubId))
-      .then((res: any) => {
+      .then((res) => {
         const response = JSON.parse(res.data.layout);
         const userComponents: ComponentConfig[] = [];
         response.layout.map((it: Layout) => {
@@ -56,8 +56,8 @@ const LayoutSettingPage = () => {
         );
         dispatch(setComponentCreated(true));
       })
-      .catch((err: any) => {
-        console.log("실패@", err);
+      .catch((err) => {
+        console.error(err);
       });
   };
 
@@ -80,11 +80,11 @@ const LayoutSettingPage = () => {
 
   const sendUserLayout = async (result: object) => {
     await Axios.put(api.setting.modifyLayout(), result)
-      .then((res: any) => {
+      .then(() => {
         setLoadingModalOpen(false);
         setFinModalOpen(true);
       })
-      .catch((err: any) => {
+      .catch((err) => {
         console.log("실패", err);
       });
   };

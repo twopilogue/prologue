@@ -1,4 +1,4 @@
-import React, { ChangeEvent, Dispatch, SetStateAction, useRef, useState } from "react";
+import { ChangeEvent, Dispatch, SetStateAction, useRef, useState } from "react";
 import Text from "components/Text";
 import RadioButton from "components/RadioButton";
 import styles from "../../Setting.module.css";

@@ -1,4 +1,3 @@
-import React from "react";
 import BlogCreateBox from "features/blog/blogCreate/BlogCreateBox";
 import BlogLayoutSetting from "features/blog/blogCreate/BlogLayoutSetting";
 import BlogStepper from "features/blog/blogCreate/BlogStepper";
@@ -11,6 +10,7 @@ import { rootState } from "app/store";
 import { authActions } from "slices/authSlice";
 import BlogCustomInfo from "features/blog/BlogCustomInfo";
 import BlogLoding from "features/blog/BlogLoding";
+import { useState } from "react";
 
 const CreatePage = () => {
   const dispatch = useDispatch();
@@ -19,10 +19,11 @@ const CreatePage = () => {
 
   const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
 
-  const [isStepNumber, setStepNumber] = React.useState(state === null ? 0 : state.setStepNumber);
-  const [isThemplate] = React.useState(state === null ? "prologue-template" : state.setTemplate);
-  const [radioValue, setRadioValue] = React.useState("CustomLayout");
-  const [lodingView, openLodingView] = React.useState(false);
+  const [isStepNumber, setStepNumber] = useState(state === null ? 0 : state.setStepNumber);
+
+  const [isThemplate] = useState(state === null ? "prologue-template" : state.setTemplate);
+  const [radioValue, setRadioValue] = useState("CustomLayout");
+  const [lodingView, openLodingView] = useState(false);
 
   const layoutSetting = async () => {
     if (radioValue === "CustomLayout") {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "features/post/PostWrite.module.css";
 import Text from "components/Text";
 import Button from "components/Button";
@@ -43,10 +43,10 @@ const PostEditPage = () => {
   const { accessToken, githubId, blogType } = useSelector((state: rootState) => state.auth);
   const { directory } = useParams();
 
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [contentData, setContentData] = useState("");
-  const [saveData, setSaveData] = useState(useAppSelector(selectPostEditList));
-  const [savedFileList, setSavedFileList] = useState([]);
+  const [saveData] = useState(useAppSelector(selectPostEditList));
+  const [savedFileList] = useState([]);
   const [loadingModalOpen, setLoadingModalOpen] = useState(false);
   const [cancelModalOpen, setCancelModalOpen] = useState(false);
   const [saveModalOpen, setSaveModalOpen] = useState(false);
@@ -74,9 +74,9 @@ const PostEditPage = () => {
   };
 
   useEffect(() => {
-    setLoading(true);
+    // setLoading(true);
     getPostDetail();
-    setLoading(false);
+    // setLoading(false);
   }, []);
 
   const editPost = async () => {
@@ -84,7 +84,7 @@ const PostEditPage = () => {
 
     for (let i = 0; i < files.length; i++) {
       formData.append("files", files[i]);
-      const file: File = files[i];
+      // const file: File = files[i];
     }
 
     const frontMatter =
@@ -140,12 +140,12 @@ const PostEditPage = () => {
     setSaveModalOpen(false);
     setLoadingModalOpen(true);
     await Axios.put(api.posts.modifyPost(), formData)
-      .then((res) => {
+      .then(() => {
         setLoadingModalOpen(false);
         setUploadModalOpen(true);
         navigate("/post");
       })
-      .catch((err) => {
+      .catch(() => {
         setLoadingModalOpen(false);
       });
     dispatch(resetPostFileList());
@@ -161,12 +161,12 @@ const PostEditPage = () => {
         directory: directory,
       },
     })
-      .then((res) => {
+      .then(() => {
         setLoadingModalOpen(false);
         setUploadModalOpen(true);
         navigate("/post");
       })
-      .catch((err) => {
+      .catch(() => {
         setLoadingModalOpen(false);
       });
     dispatch(resetPostFileList());

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import TabMenu from "../features/setting/TabMenu";
 import Axios from "api/JsonAxios";
 import {
@@ -19,7 +19,6 @@ import {
 import api from "api/Api";
 import { useDispatch, useSelector } from "react-redux";
 import { rootState } from "app/store";
-import { useNavigate } from "react-router-dom";
 
 const SettingPage = () => {
   const dispatch = useDispatch();

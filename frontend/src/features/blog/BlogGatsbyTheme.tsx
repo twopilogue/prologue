@@ -1,4 +1,3 @@
-import React from "react";
 import { Box, Stack, Grid, IconButton, Tooltip } from "@mui/material";
 import foundation from "assets/blog/gatsbyTheme/foundation.png";
 import gatsbyAdvancedBlogSystem from "assets/blog/gatsbyTheme/gatsbyAdvancedBlogSystem.png";
@@ -9,6 +8,7 @@ import serialProgrammer from "assets/blog/gatsbyTheme/serialProgrammer.png";
 import styles from "features/blog/Blog.module.css";
 import Text from "components/Text";
 import TvIcon from "@mui/icons-material/Tv";
+import { ChangeEvent, useState } from "react";
 
 function GatsbyLayoutCard(props: { setChoiceTheme: (arg0: string) => void }) {
   const layouts = [
@@ -67,9 +67,9 @@ function GatsbyLayoutCard(props: { setChoiceTheme: (arg0: string) => void }) {
       preview: "https://gatsbyglass.netlify.app/",
     },
   ];
-  const [radioValue, setRadioValue] = React.useState("gatsby-starter-minimal-blog");
+  const [radioValue, setRadioValue] = useState("gatsby-starter-minimal-blog");
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setRadioValue(e.target.value);
     props.setChoiceTheme(e.target.value);
   };
