@@ -51,7 +51,7 @@ const PageViewerContents = ({ content }: PageViewerContentsProps) => {
           hooks={{
             addImageBlobHook: async (blob, callback) => {
               const formData = new FormData();
-              const file: any = blob;
+              const file: any = blob; // 추후 에디터 설정 변경 후 수정하기.
 
               const tempImageUploadRequest = {
                 accessToken: accessToken,
@@ -64,7 +64,7 @@ const PageViewerContents = ({ content }: PageViewerContentsProps) => {
               formData.append("file", blob);
 
               let imageUrl;
-              await Axios.put(api.posts.getImgUrl(), formData).then((res: any) => {
+              await Axios.put(api.posts.getImgUrl(), formData).then((res) => {
                 imageUrl = res.data.tempImageUrl;
               });
 

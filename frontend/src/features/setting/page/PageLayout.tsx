@@ -1,9 +1,7 @@
 import { ChangeEvent, useCallback, useState } from "react";
 import Text from "components/Text";
 import styles from "../Setting.module.css";
-
-import { Layout } from "react-grid-layout";
-import GridLayout from "react-grid-layout";
+import GridLayout, { Layout } from "react-grid-layout";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import {
   selectPageDeleList,
@@ -16,6 +14,8 @@ import {
   setPageCnt,
   setPageLayoutList,
   setPageDeleList,
+  PageConfig,
+  editList,
 } from "slices/settingSlice";
 import PageLayoutItem from "./PageLayoutItem";
 import { useAppSelector } from "app/hooks";
@@ -56,7 +56,7 @@ const PageLayout = () => {
     dispatch(setPageLayoutList(tmpList));
   };
 
-  const handleEdit = (item: any) => {
+  const handleEdit = (item: PageConfig) => {
     const unable: string[] = ["post", "posts", "blog"];
     if (unable.includes(item.label)) {
       alert("사용 불가능한 페이지명입니다. 다시 입력하세요.");
@@ -65,7 +65,7 @@ const PageLayout = () => {
     setNewName(item.label); // 이름으로 placeholder
     dispatch(
       setIsEditPage(
-        isEdit.map((it: any) => {
+        isEdit.map((it: editList) => {
           return it.id === item.id
             ? { key: it.key, id: it.id, editable: true }
             : { key: it.key, id: it.id, editable: false };
@@ -74,21 +74,21 @@ const PageLayout = () => {
     );
   };
 
-  const handleDele = (item: any) => {
+  const handleDele = (item: PageConfig) => {
     dispatch(setPageDeleList(deleList.concat({ label: item.label, id: item.id, posts: item.posts, type: "deleted" })));
     dispatch(setPageList(pageList.filter((it) => it.id !== item.id)));
     dispatch(setPageCnt(pageCnt - 1));
     dispatch(setIsEditPage(isEdit.filter((it) => it.id !== item.id)));
   };
 
-  const handleSave = (item: any) => {
+  const handleSave = (item: PageConfig) => {
     if (!newName) {
       alert("카테고리명을 입력해주세요.");
       return;
     }
     dispatch(
       setPageList(
-        pageList.map((it: any) => {
+        pageList.map((it: PageConfig) => {
           return it.id === item.id
             ? item.type === "new"
               ? { label: newName, id: it.id, posts: it.posts, type: "new" } // 추가한 것
@@ -99,7 +99,7 @@ const PageLayout = () => {
     );
     dispatch(
       setIsEditPage(
-        isEdit.map((it: any) => {
+        isEdit.map((it: editList) => {
           return it.id === item.id
             ? { key: newName, id: it.id, editable: false }
             : { key: it.key, id: it.id, editable: false };
@@ -125,7 +125,7 @@ const PageLayout = () => {
             isResizable={false}
             onLayoutChange={handleLayoutChange}
           >
-            {pageList.map((item: any, i: number) => {
+            {pageList.map((item: PageConfig, i: number) => {
               return (
                 <div key={i}>
                   <PageLayoutItem

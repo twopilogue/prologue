@@ -8,6 +8,8 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import CategoryLayoutItem from "./CategoryLayoutItem";
 
 import {
+  KeyConfig,
+  editList,
   selectCategoryCnt,
   selectCategoryLayoutList,
   selectCategoryList,
@@ -33,7 +35,7 @@ const useGettingWidth = () => {
 const CategoryLayout = () => {
   const dispatch = useDispatch();
   const [newName, setNewName] = useState<string>("");
-  const categoryList = useAppSelector(selectCategoryList);
+  const categoryList: KeyConfig[] = useAppSelector(selectCategoryList);
   const layoutList = useAppSelector(selectCategoryLayoutList);
   const isEdit = useAppSelector(selectIsEditCategory);
   const categoryCnt = useAppSelector(selectCategoryCnt);
@@ -46,11 +48,11 @@ const CategoryLayout = () => {
     dispatch(setCategoryCnt(categoryCnt + 1));
   };
 
-  const handleEdit = (item: any) => {
+  const handleEdit = (item: KeyConfig) => {
     setNewName(item.key); // 이름으로 placeholder
     dispatch(
       setIsEditCategory(
-        isEdit.map((it: any) => {
+        isEdit.map((it: editList) => {
           return it.id === item.id
             ? { key: it.key, id: it.id, editable: true }
             : { key: it.key, id: it.id, editable: false };
@@ -59,25 +61,25 @@ const CategoryLayout = () => {
     );
   };
 
-  const handleDele = (item: number) => {
-    dispatch(setCategoryList(categoryList.filter((it) => it.id !== item)));
+  const handleDele = (id: number) => {
+    dispatch(setCategoryList(categoryList.filter((it) => it.id !== id)));
     // set LayoutList( LayoutList.filter((it) => it.y !== item));
     dispatch(setCategoryCnt(categoryCnt - 1));
-    dispatch(setIsEditCategory(isEdit.filter((it) => it.id !== item)));
+    dispatch(setIsEditCategory(isEdit.filter((it) => it.id !== id)));
   };
 
-  const handleSave = (item: number) => {
+  const handleSave = (id: number) => {
     dispatch(
       setCategoryList(
-        categoryList.map((it: any) => {
-          return it.id === item ? { key: newName, id: it.id } : { key: it.key, id: it.id };
+        categoryList.map((it) => {
+          return it.id === id ? { key: newName, id: it.id } : { key: it.key, id: it.id };
         }),
       ),
     );
     dispatch(
       setIsEditCategory(
-        isEdit.map((it: any) => {
-          return it.id === item
+        isEdit.map((it: editList) => {
+          return it.id === id
             ? { key: newName, id: it.id, editable: false }
             : { key: it.key, id: it.id, editable: false };
         }),
@@ -129,7 +131,7 @@ const CategoryLayout = () => {
             isResizable={false}
             onLayoutChange={handleLayoutChange}
           >
-            {categoryList.map((item: any, i: number) => {
+            {categoryList.map((item, i) => {
               return (
                 <div key={i}>
                   <CategoryLayoutItem

@@ -104,7 +104,7 @@ const DetailSettingPage = () => {
         setLoadingModalOpen(false);
         setFinModalOpen(true);
       })
-      .catch((err: any) => {
+      .catch((err) => {
         console.log(err);
       });
   };

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import styles from "../Setting.module.css";
 import Text from "components/Text";
 import Input from "components/Input";
@@ -37,7 +37,7 @@ const MyBlogInfoInput = () => {
     setLink({ ...link, url: "" });
   };
 
-  const checkReg = (e: any, link: linkConfig) => {
+  const checkReg = (e: ChangeEvent<HTMLInputElement>, link: linkConfig) => {
     const reg = /([\w-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
     if (link.site === "email") {
       if (!reg.test(e.target.value) || !link.url) {
@@ -67,7 +67,7 @@ const MyBlogInfoInput = () => {
               <Input
                 value={myBlogInfo.title}
                 placeholder="블로그명을 입력하세요."
-                onChange={(e: any) => {
+                onChange={(e) => {
                   dispatch(
                     setMyBlogInfo({
                       ...myBlogInfo,
@@ -88,7 +88,7 @@ const MyBlogInfoInput = () => {
                 placeholder="블로그 소개글을 입력하세요."
                 multiline
                 rows={4}
-                onChange={(e: any) => {
+                onChange={(e) => {
                   dispatch(
                     setMyBlogInfo({
                       ...myBlogInfo,
@@ -113,7 +113,7 @@ const MyBlogInfoInput = () => {
                 textBool
                 placeholder="링크를 입력하세요."
                 value={link.url}
-                onChange={(e: any) => {
+                onChange={(e) => {
                   checkReg(e, link);
                 }}
               />

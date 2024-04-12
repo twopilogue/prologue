@@ -53,7 +53,7 @@ const TitleSetting = ({ titleImg, setTitleImg }: TitleSettingProps) => {
   //   dispatch(setColors({ ...colors, title: { ...colors.title, titleHeight: e.target.value } }));
   // };
 
-  const handleTitleText = (e: any) => {
+  const handleTitleText = (e: string) => {
     if (e.length > maxLength) {
       e = e.substring(0, maxLength);
     }

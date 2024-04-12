@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { ChangeEvent, KeyboardEvent, useEffect, useState } from "react";
 import styles from "features/post/PostWrite.module.css";
 import Text from "components/Text";
 import Input from "components/Input";
@@ -29,17 +29,17 @@ const PostWriteTitle = ({ savedTitle, savedDescription, savedCategory, savedTag 
 
   const { accessToken, githubId, blogType } = useSelector((state: rootState) => state.auth);
 
-  const titleChange = (event: any) => {
+  const titleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setTitle(event.target.value);
     dispatch(setPostTitle(event.target.value));
   };
 
-  const descriptionChange = (event: any) => {
+  const descriptionChange = (event: ChangeEvent<HTMLInputElement>) => {
     setDescription(event.target.value);
     dispatch(setPostDescription(event.target.value));
   };
 
-  const categoryChange = (event: any) => {
+  const categoryChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setCategory(event.target.value);
     dispatch(setPostCategory(event.target.value));
   };
@@ -52,25 +52,22 @@ const PostWriteTitle = ({ savedTitle, savedDescription, savedCategory, savedTag 
     }
   };
 
-  const enterKeyPress = (event: any) => {
+  const enterKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
     const english = /[^a-z]/g;
-
-    if (event.target.value.length !== 0 && event.key === "Enter") {
-      if (english.test(event.target.value)) {
-        event.target.value = event.target.value.replace(english, "");
+    if (tag.length === 0) return;
+    if (event.key === "Enter") {
+      if (english.test(tag)) {
+        setTag(tag.replace(english, " "));
       }
 
       const newTagList = [...tagList];
-
-      if (event.target.value.length) {
-        newTagList.push(event.target.value);
-        setTagList(newTagList);
-        setTag("");
-      }
+      newTagList.push(tag);
+      setTagList(newTagList);
+      setTag("");
     }
   };
 
-  const tagChange = (event: any) => {
+  const tagChange = (event: ChangeEvent<HTMLInputElement>) => {
     setTag(event.target.value);
   };
 

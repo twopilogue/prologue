@@ -19,7 +19,7 @@ const PageSetting = () => {
     dispatch(setColors({ ...colors, page: { ...colors.page, sort: (e.target as HTMLInputElement).value } }));
   };
 
-  const handleChangeComplete = (color: any) => {
+  const handleChangeComplete = (color: string) => {
     dispatch(setColors({ ...colors, page: { ...colors.page, background: color } }));
   };
 
