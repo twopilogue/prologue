@@ -1,3 +1,4 @@
+import { SyntheticEvent } from "react";
 import styles from "features/post/Post.module.css";
 import Text from "components/Text";
 
@@ -44,7 +45,7 @@ const PostListCard = ({ title, date, category, description, imgUrl }: PostListCa
           src={imgUrl}
           alt=""
           className={styles.postCardImg}
-          onError={(event: any) => (event.target.style.display = "none")}
+          onError={(e: SyntheticEvent<HTMLImageElement, Event>) => (e.currentTarget.src = "none")}
         />
       </div>
     </div>

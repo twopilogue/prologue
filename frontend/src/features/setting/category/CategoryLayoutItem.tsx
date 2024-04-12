@@ -1,17 +1,17 @@
 import styles from "../Setting.module.css";
 import Text from "components/Text";
 import MenuIcon from "@mui/icons-material/Menu";
-import { editList } from "slices/settingSlice";
+import { KeyConfig, editList } from "slices/settingSlice";
+import { ChangeEvent } from "react";
 
 interface Props {
   isEdit: editList[];
-  item: any;
+  item: KeyConfig;
   newName: string;
-  // 함수 타입 뭐로 해야함.?ㅜ
-  onChangeEdit: any;
-  handleSave: any;
-  handleEdit: any;
-  handleDele: any;
+  onChangeEdit: (e: ChangeEvent<HTMLInputElement>) => void;
+  handleSave: (id: number) => void;
+  handleEdit: (item: KeyConfig) => void;
+  handleDele: (id: number) => void;
 }
 
 const CategoryLayoutItem = ({ isEdit, item, newName, onChangeEdit, handleSave, handleEdit, handleDele }: Props) => {

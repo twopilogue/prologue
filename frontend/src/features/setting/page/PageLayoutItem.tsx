@@ -1,16 +1,17 @@
-import MenuIcon from "@mui/icons-material/Menu";
+import { ChangeEvent } from "react";
 import Text from "components/Text";
 import styles from "../Setting.module.css";
-import { editList } from "slices/settingSlice";
+import { PageConfig, editList } from "slices/settingSlice";
+import MenuIcon from "@mui/icons-material/Menu";
 
 interface Props {
-  item: any;
+  item: PageConfig;
   isEdit: editList[];
   newName: string;
-  onChangeEdit: any;
-  handleSave: any;
-  handleEdit: any;
-  handleDele: any;
+  onChangeEdit: (e: ChangeEvent<HTMLInputElement>) => void;
+  handleSave: (item: PageConfig) => void;
+  handleEdit: (item: PageConfig) => void;
+  handleDele: (item: PageConfig) => void;
 }
 
 const PageLayoutItem = ({ item, isEdit, newName, onChangeEdit, handleSave, handleEdit, handleDele }: Props) => {

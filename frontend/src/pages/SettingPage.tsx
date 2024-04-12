@@ -26,7 +26,7 @@ const SettingPage = () => {
 
   const getBlogInfo = async () => {
     await Axios.get(api.setting.getBlog(accessToken, githubId))
-      .then((res: any) => {
+      .then((res) => {
         const result: blogInfoConfig = res.data;
 
         dispatch(setBlogSettingInfo(result));
@@ -47,14 +47,14 @@ const SettingPage = () => {
         );
       })
 
-      .catch((err: any) => {
-        console.log(err);
+      .catch((err) => {
+        console.error(err);
       });
   };
 
   const getCategory = async () => {
     await Axios.get(api.setting.getCategory(accessToken, githubId))
-      .then((res: any) => {
+      .then((res) => {
         const response = res.data.category;
         const tmpList: KeyConfig[] = [];
         for (let i = 0; i < response.length; i++) {
@@ -73,19 +73,24 @@ const SettingPage = () => {
           );
         }
       })
-      .catch((err: any) => {
+      .catch((err) => {
         console.error(err);
       });
   };
 
-  const getPage = async () => {
-    await Axios.get(api.setting.getPage(accessToken, githubId))
-      .then((res: any) => {
-        const result = res.data.pages;
+  const getPage = () => {
+    Axios.get(api.setting.getPage(accessToken, githubId))
+      .then((res) => {
+        const result: [
+          {
+            label: string;
+            posts: boolean;
+          },
+        ] = res.data.pages;
         const tmpPageList: PageConfig[] = [];
         const tmpIsEdit: editList[] = [];
         let i = 0;
-        result.map((it: any) => {
+        result.map((it) => {
           tmpPageList.push({ label: it.label, posts: it.posts, id: i, type: "unchanging" });
           tmpIsEdit.push({ key: it.label, id: i, editable: false });
           i++;
@@ -94,7 +99,7 @@ const SettingPage = () => {
         dispatch(setIsEditPage(tmpIsEdit));
         dispatch(setPageCnt(result.length));
       })
-      .catch((err: any) => {
+      .catch((err) => {
         console.error(err);
       });
   };

@@ -10,7 +10,7 @@ const ProfileSetting = () => {
   const dispatch = useDispatch();
   const colors: colorsConfig = useAppSelector(selectColors);
 
-  const handleChangeComplete = (color: any) => {
+  const handleChangeComplete = (color: string) => {
     const textColor = getTextColor(color);
     dispatch(setColors({ ...colors, profile: { background: color, text: textColor } }));
   };

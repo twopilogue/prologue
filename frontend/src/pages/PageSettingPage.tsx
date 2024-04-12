@@ -62,7 +62,7 @@ const PageSettingPage = () => {
         setLoadingModalOpen(false);
         setFinModalOpen(true);
       })
-      .catch((err: any) => {
+      .catch((err) => {
         console.error(err);
       });
   };

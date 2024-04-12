@@ -29,10 +29,10 @@ const LayoutCustom = (layoutWidth: any) => {
   const [tmpLayoutList, setTmpLayoutList] = useState<Layout[]>([]);
   const width = layoutWidth["layoutWidth"];
 
-  const handleLayoutChange = (layouts: any) => {
+  const handleLayoutChange = (layouts: Layout[]) => {
     if (componentCreated) {
       const tmp: Layout[] = [];
-      layouts.map((it: Layout) => {
+      layouts.map((it) => {
         it.static
           ? tmp.push({ i: it.i, x: it.x, y: it.y, w: it.w, h: it.h, static: true })
           : tmp.push({ i: it.i, x: it.x, y: it.y, w: it.w, h: it.h });

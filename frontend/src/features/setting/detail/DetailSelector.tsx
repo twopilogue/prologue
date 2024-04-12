@@ -1,6 +1,5 @@
 import { Dispatch, MutableRefObject, SetStateAction, useState } from "react";
 import styles from "../Setting.module.css";
-
 import TitleSetting from "./components/TitleSetting";
 import LogoSetting from "./components/LogoSetting";
 import PageSetting from "./components/PageSetting";
@@ -22,10 +21,14 @@ interface Props {
   setTitleImg: Dispatch<SetStateAction<File>>;
 }
 
+interface ComponentConfig {
+  [key: string]: JSX.Element;
+}
+
 const DetailSelector = ({ logoImg, titleImg, setLogoImg, setTitleImg }: Props) => {
   const [logoType, setLogoType] = useState("logoText");
   const clicked: string = useAppSelector(selectClickedComp);
-  const components: any = {
+  const components: ComponentConfig = {
     profile: <ProfileSetting />,
     page: <PageSetting />,
     title: <TitleSetting titleImg={titleImg} setTitleImg={setTitleImg} />,
@@ -34,11 +37,7 @@ const DetailSelector = ({ logoImg, titleImg, setLogoImg, setTitleImg }: Props) =
     contents: <ContentsSetting />,
   };
 
-  return (
-    <>
-      <div className={styles.checkListContainer}>{components[clicked]}</div>
-    </>
-  );
+  return <div className={styles.checkListContainer}>{components[clicked]}</div>;
 };
 
 export default DetailSelector;

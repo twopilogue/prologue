@@ -10,7 +10,7 @@ const CategorySetting = () => {
   const colors: colorsConfig = useAppSelector(selectColors);
   const dispatch = useDispatch();
 
-  const handleChangeComplete = (color: any) => {
+  const handleChangeComplete = (color: string) => {
     const textColor = getTextColor(color);
     dispatch(setColors({ ...colors, category: { background: color, text: textColor } }));
   };
