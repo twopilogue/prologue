@@ -8,7 +8,7 @@ import landingMainImg1 from "assets/landing/landingMainImg1.png";
 import { Paper } from "@mui/material";
 import waveSvg from "assets/landing/wave.svg";
 import Axios from "api/JsonAxios";
-import api from "api/Api";
+import api from "api/BaseUrl";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { authActions } from "slices/authSlice";

@@ -9,7 +9,7 @@ import styles from "./css/Header.module.css";
 import palette from "../styles/colorPalette";
 import { useDispatch, useSelector } from "react-redux";
 import { rootState } from "app/store";
-import api from "api/Api";
+import api from "api/BaseUrl";
 import Axios from "api/JsonAxios";
 import { authActions } from "slices/authSlice";
 

@@ -11,7 +11,7 @@ import { DetailSettingStyles } from "features/setting/detail/DetailSettingStyles
 import SettingLayout from "features/setting/detail/SettingLayout";
 import DetailSelector from "features/setting/detail/DetailSelector";
 import Axios from "api/MultipartAxios";
-import api from "api/Api";
+import api from "api/BaseUrl";
 import { toJSON } from "cssjson";
 import Modal from "components/Modal";
 

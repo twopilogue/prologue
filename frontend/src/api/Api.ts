@@ -1,141 +1,94 @@
-// 기본 url
-const HOST = process.env.REACT_APP_API_BASE_URL + "/api/";
+import { AxiosRequestConfig } from "axios";
+import Axios from "./JsonAxios";
+import api from "./BaseUrl";
 
-// 세부 url
-const AUTH = "auth/";
-const BLOG = "blog/";
-const DASHBOARD = "dashboard/";
-const SETTING = "setting/";
-const POSTS = "posts";
-
-interface apiInterface {
-  auth: {
-    getUri: () => string;
-    login: (code: string) => string;
-    setSecretRepo: (accessToken: string, githubId: string) => string;
-    getAuthFile: (accessToken: string, githubId: string) => string;
-    setAuthFile: () => string;
-  };
-  blog: {
-    chooseTemplate: () => string;
-    getRepoList: (accessToken: string, githubId: string) => string;
-    deleteRepo: (accessToken: string, githubId: string) => string;
-    triggerStart: (accessToken: string, githubId: string) => string;
-    changeBuildType: (accessToken: string, githubId: string) => string;
-  };
-  dashboard: {
-    getNewPost: (accessToken: string, githubId: string) => string;
-    getNewBuildTime: (accessToken: string, githubId: string) => string;
-    getMonthPosts: (accessToken: string, githubId: string) => string;
-    getRepoSize: (accessToken: string, githubId: string, template: string) => string;
-    getTotalPost: (accessToken: string, githubId: string) => string;
-    getBildState: (accessToken: string, githubId: string) => string;
-    getChangeState: (accessToken: string, githubId: string) => string;
-  };
-  setting: {
-    getCategory: (accessToken: string, githubId: string) => string;
-    modifyCategory: () => string;
-    getBlog: (accessToken: string, githubId: string) => string;
-    modifyBlog: () => string;
-    getLayout: (accessToken: string, githubId: string) => string;
-    modifyLayout: () => string;
-    getLayoutDetail: () => string;
-    modifyLayoutDetail: () => string;
-    getPage: (accessToken: string, githubId: string) => string;
-    modifyPage: () => string;
-    getDetail: (accessToken: string, githubId: string) => string;
-    modifyDetail: () => string;
-  };
-  posts: {
-    writePost: () => string;
-    getImgUrl: () => string;
-    getPostDetail: (accessToken: string, githubId: string, directory: string) => string;
-    modifyPost: () => string;
-    deletePost: () => string;
-    getPostList: (accessToken: string, githubId: string, index: number, category: string) => string;
-    getPage: (accessToken: string, githubId: string, pageName: string) => string;
-    modifyPage: () => string;
-  };
+interface ServerResponse<T> {
+  message: string; // 메시지
+  data: T; // 데이터 내용
 }
 
-const api: apiInterface = {
-  auth: {
-    getUri: () => HOST + AUTH + "uri",
-    login: (code: string) => HOST + AUTH + "login?code=" + code,
-    setSecretRepo: (accessToken: string, githubId: string) =>
-      HOST + AUTH + "secrets?accessToken=" + accessToken + "&githubId=" + githubId,
-    getAuthFile: (accessToken: string, githubId: string) =>
-      HOST + AUTH + "check?accessToken=" + accessToken + "&githubId=" + githubId,
-    setAuthFile: () => HOST + AUTH + "check",
-  },
-  blog: {
-    chooseTemplate: () => HOST + BLOG + "template",
-    getRepoList: (accessToken: string, githubId: string) =>
-      HOST + BLOG + "list?accessToken=" + accessToken + "&githubId=" + githubId,
-    deleteRepo: (accessToken: string, githubId: string) =>
-      HOST + BLOG + "repo?accessToken=" + accessToken + "&githubId=" + githubId,
-    triggerStart: (accessToken: string, githubId: string) =>
-      HOST + BLOG + "workflow?accessToken=" + accessToken + "&githubId=" + githubId,
-    changeBuildType: (accessToken: string, githubId: string) =>
-      HOST + BLOG + "build-type?accessToken=" + accessToken + "&githubId=" + githubId,
-  },
-  dashboard: {
-    getNewPost: (accessToken: string, githubId: string) =>
-      HOST + DASHBOARD + "list?accessToken=" + accessToken + "&githubId=" + githubId,
-    getNewBuildTime: (accessToken: string, githubId: string) =>
-      HOST + DASHBOARD + "latest-build?accessToken=" + accessToken + "&githubId=" + githubId,
-    getMonthPosts: (accessToken: string, githubId: string) =>
-      HOST + DASHBOARD + "month-posts?accessToken=" + accessToken + "&githubId=" + githubId,
-    getRepoSize: (accessToken: string, githubId: string, template: string) =>
-      HOST + DASHBOARD + "size?accessToken=" + accessToken + "&githubId=" + githubId + "&template=" + template,
-    getTotalPost: (accessToken: string, githubId: string) =>
-      HOST + DASHBOARD + "total?accessToken=" + accessToken + "&githubId=" + githubId,
-    getBildState: (accessToken: string, githubId: string) =>
-      HOST + DASHBOARD + "build?accessToken=" + accessToken + "&githubId=" + githubId,
-    getChangeState: (accessToken: string, githubId: string) =>
-      HOST + DASHBOARD + "check?accessToken=" + accessToken + "&githubId=" + githubId,
-  },
-  setting: {
-    getCategory: (accessToken: string, githubId: string) =>
-      HOST + SETTING + "category?accessToken=" + accessToken + "&githubId=" + githubId,
-    modifyCategory: () => HOST + SETTING + "category",
-    getBlog: (accessToken: string, githubId: string) =>
-      HOST + SETTING + "blog?accessToken=" + accessToken + "&githubId=" + githubId,
-    modifyBlog: () => HOST + SETTING + "blog",
-    getLayout: (accessToken: string, githubId: string) =>
-      HOST + SETTING + "layout?accessToken=" + accessToken + "&githubId=" + githubId,
-    modifyLayout: () => HOST + SETTING + "layout",
-    getLayoutDetail: () => HOST + SETTING + "layout/css",
-    modifyLayoutDetail: () => HOST + SETTING + "layout/css",
-    getPage: (accessToken: string, githubId: string) =>
-      HOST + SETTING + "pages?accessToken=" + accessToken + "&githubId=" + githubId,
-    modifyPage: () => HOST + SETTING + "pages",
-    getDetail: (accessToken: string, githubId: string) =>
-      HOST + SETTING + "css?accessToken=" + accessToken + "&githubId=" + githubId,
-    modifyDetail: () => HOST + SETTING + "css",
-  },
-  posts: {
-    writePost: () => HOST + POSTS,
-    getImgUrl: () => HOST + POSTS + "/temp-image",
-    getPostDetail: (accessToken: string, githubId: string, directory: string) =>
-      HOST + POSTS + "?accessToken=" + accessToken + "&githubId=" + githubId + "&directory=" + directory,
-    modifyPost: () => HOST + POSTS,
-    deletePost: () => HOST + POSTS,
-    getPostList: (accessToken: string, githubId: string, index: number, category: string) =>
-      HOST +
-      POSTS +
-      "/list?accessToken=" +
-      accessToken +
-      "&githubId=" +
-      githubId +
-      "&index=" +
-      index +
-      "&category=" +
-      category,
-    getPage: (accessToken: string, githubId: string, pageName: string) =>
-      HOST + POSTS + "/pages?accessToken=" + accessToken + "&githubId=" + githubId + "&pageName=" + pageName,
-    modifyPage: () => HOST + POSTS + "/pages",
-  },
+export interface ServerErrorResponse {
+  code: string;
+  message: string;
+}
+
+const Get = async <T>(url: string, config?: AxiosRequestConfig) => {
+  return await Axios.get<ServerResponse<T>>(url, config);
+};
+const Post = async <T>(url: string, data?: Record<string, unknown | unknown[]>, config?: AxiosRequestConfig) => {
+  return await Axios.post<ServerResponse<T>>(url, data, config);
+};
+const Put = async <T>(url: string, data?: Record<string, unknown | unknown[]>, config?: AxiosRequestConfig) => {
+  return await Axios.put<ServerResponse<T>>(url, data, config);
+};
+const Delete = async <T>(url: string, data?: Record<string, unknown | unknown[]>) => {
+  return await Axios.delete<ServerResponse<T>>(url, { data });
 };
 
-export default api;
+export const authApi = {
+  getUri: () => Get(api.auth.getUri()),
+  login: (code: string) => Post(api.auth.login(code)),
+  putSecretRepo: (accessToken: string, githubId: string) => Put(api.auth.setSecretRepo(accessToken, githubId)),
+  getAuthFile: (accessToken: string, githubId: string) => Get(api.auth.getAuthFile(accessToken, githubId)),
+  putAuthFile: (data: { accessToken: string; githubId: string; blogType: number; template: string }) =>
+    Put(api.auth.setAuthFile(), data),
+};
+
+export const blogApi = {
+  postTemplate: (data: { accessToken: string; githubId: string; template: string }) =>
+    Post(api.blog.chooseTemplate(), data),
+  getRepoList: (accessToken: string, githubId: string) => Get(api.blog.getRepoList(accessToken, githubId)),
+  deleteRepo: (accessToken: string, githubId: string) => Delete(api.blog.deleteRepo(accessToken, githubId)),
+  putBuild: (accessToken: string, githubId: string) => Put(api.blog.triggerStart(accessToken, githubId)),
+  putBuildType: (accessToken: string, githubId: string) => Put(api.blog.changeBuildType(accessToken, githubId)),
+};
+
+export const dashboardApi = {
+  getNewPosts: (accessToken: string, githubId: string) => Get(api.dashboard.getNewPost(accessToken, githubId)),
+  getNewBuild: (accessToken: string, githubId: string) => Get(api.dashboard.getNewBuildTime(accessToken, githubId)),
+  getMonthPosts: (accessToken: string, githubId: string) => Get(api.dashboard.getMonthPosts(accessToken, githubId)),
+  getRepoSize: (accessToken: string, githubId: string, template: string) =>
+    Get(api.dashboard.getRepoSize(accessToken, githubId, template)),
+  getTotalPostCount: (accessToken: string, githubId: string) => Get(api.dashboard.getTotalPost(accessToken, githubId)),
+  getBuildState: (accessToken: string, githubId: string) => Get(api.dashboard.getBildState(accessToken, githubId)),
+  getChangeState: (accessToken: string, githubId: string) => Get(api.dashboard.getChangeState(accessToken, githubId)),
+};
+
+export const settingApi = {
+  getCategory: (accessToken: string, githubId: string) => Get(api.setting.getCategory(accessToken, githubId)),
+  putCategory: (data: { accessToken: string; githubId: string; category: [] }) =>
+    Put(api.setting.modifyCategory(), data),
+  getBlog: (accessToken: string, githubId: string) => Get(api.setting.getBlog(accessToken, githubId)),
+  putBlog: (data: {
+    accessToken: string;
+    githubId: string;
+    title: string;
+    summary: string;
+    nickName: string;
+    description: string;
+    social: Map<string, string>;
+    imageFile: Blob;
+  }) => Put(api.setting.modifyBlog(), data),
+  getLayout: (accessToken: string, githubId: string) => Get(api.setting.getLayout(accessToken, githubId)),
+  putLayout: (data: { accessToken: string; githubId: string; layout: string; layoutJson: string }) =>
+    Put(api.setting.modifyLayout(), data),
+  getPage: (accessToken: string, githubId: string) => Get(api.setting.getPage(accessToken, githubId)),
+  putPage: (data: { accessToken: string; githubId: string; pages: Blob }) => Put(api.setting.modifyPage(), data),
+  getDetail: (accessToken: string, githubId: string) => Get(api.setting.getDetail(accessToken, githubId)),
+  putDetail: (data: { data: Blob }) => Put(api.setting.modifyDetail(), data),
+};
+
+export const postApi = {
+  writePost: (data: { data: Blob }) => Post(api.posts.writePost(), data),
+  getPost: (accessToken: string, githubId: string, directory: string) =>
+    Get(api.posts.getPostDetail(accessToken, githubId, directory)),
+  putPost: (data: { data: Blob }) => Put(api.posts.modifyPost(), data),
+  deletePost: (data: { accessToken: string; githubId: string; directory: string }) =>
+    Delete(api.posts.deletePost(), data),
+  getPostList: (accessToken: string, githubId: string, index: number, category: string) =>
+    Get(api.posts.getPostList(accessToken, githubId, index, category)),
+  getImgUrl: (data: { data: Blob }) => Get(api.posts.getImgUrl(), data),
+  getPage: (accessToken: string, githubId: string, pageName: string) =>
+    Get(api.posts.getPage(accessToken, githubId, pageName)),
+  putPage: (data: { data: Blob }) => Put(api.posts.modifyPage(), data),
+};

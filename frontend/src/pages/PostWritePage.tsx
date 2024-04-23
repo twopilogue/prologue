@@ -9,7 +9,7 @@ import PostWriteContents from "../features/post/PostWriteContents";
 import { useSelector } from "react-redux";
 import { rootState } from "app/store";
 import Axios from "api/MultipartAxios";
-import api from "api/Api";
+import api from "api/BaseUrl";
 import { useAppDispatch, useAppSelector } from "app/hooks";
 import {
   resetPostFileList,

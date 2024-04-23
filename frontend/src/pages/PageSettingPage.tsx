@@ -3,7 +3,7 @@ import styles from "features/setting/Setting.module.css";
 import Text from "components/Text";
 import PageLayout from "features/setting/page/PageLayout";
 import Axios from "api/JsonAxios";
-import api from "api/Api";
+import api from "api/BaseUrl";
 import { useSelector } from "react-redux";
 import { rootState } from "app/store";
 import { PageConfig, selectPageList, selectPageLayoutList, selectPageDeleList } from "slices/settingSlice";

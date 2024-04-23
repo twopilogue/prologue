@@ -5,7 +5,7 @@ import BlogReset from "features/blog/BlogReset";
 import resetImg from "assets/blog/blogChoice/RepositoryReset.png";
 import manageImg from "assets/blog/blogChoice/ManageOnly.png";
 import { rootState } from "app/store";
-import api from "api/Api";
+import api from "api/BaseUrl";
 import Axios from "api/JsonAxios";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";

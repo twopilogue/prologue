@@ -12,7 +12,7 @@ import landingMainImg4 from "assets/landing/landingMainImg4.png";
 import { Paper } from "@mui/material";
 import waveSvg from "assets/landing/wave.svg";
 import Axios from "api/JsonAxios";
-import api from "api/Api";
+import api from "api/BaseUrl";
 
 function LandingMain() {
   const [state] = useState({ height: 0 });

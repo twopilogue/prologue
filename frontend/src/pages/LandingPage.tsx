@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { rootState } from "app/store";
 import LandingMain from "features/landing/LandingMain";
 import Axios from "api/JsonAxios";
-import api from "api/Api";
+import api from "api/BaseUrl";
 
 const LandingPage = () => {
   const navigate = useNavigate();

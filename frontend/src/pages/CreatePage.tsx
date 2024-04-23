@@ -4,7 +4,7 @@ import BlogStepper from "features/blog/blogCreate/BlogStepper";
 import { Stack } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 import Axios from "api/JsonAxios";
-import api from "api/Api";
+import api from "api/BaseUrl";
 import { useDispatch, useSelector } from "react-redux";
 import { rootState } from "app/store";
 import { authActions } from "slices/authSlice";

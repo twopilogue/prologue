@@ -4,7 +4,7 @@ import MyGitInfo from "features/setting/myinfo/MyGitInfo";
 import MyInfoInput from "features/setting/myinfo/MyInfoInput";
 import MyBlogInfoInput from "features/setting/myinfo/MyBlogInfoInput";
 import axios from "axios";
-import api from "api/Api";
+import api from "api/BaseUrl";
 import { useSelector } from "react-redux";
 import { rootState } from "app/store";
 

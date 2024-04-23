@@ -6,7 +6,7 @@ import DashboardMenu from "features/dashboard/DashboardMenu";
 import DashboardPreview from "features/dashboard/DashboardPreview";
 import { Box, Grid, Stack } from "@mui/material";
 import Axios from "api/JsonAxios";
-import api from "api/Api";
+import api from "api/BaseUrl";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { authActions } from "slices/authSlice";

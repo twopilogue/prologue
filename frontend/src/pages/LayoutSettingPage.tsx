@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import api from "api/Api";
+import api from "api/BaseUrl";
 import Axios from "api/JsonAxios";
 import { useAppSelector } from "app/hooks";
 import { rootState } from "app/store";

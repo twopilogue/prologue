@@ -16,7 +16,7 @@ import {
   setPageCnt,
   setPageList,
 } from "slices/settingSlice";
-import api from "api/Api";
+import api from "api/BaseUrl";
 import { useDispatch, useSelector } from "react-redux";
 import { rootState } from "app/store";
 

@@ -3,7 +3,7 @@ import { Box, Stack } from "@mui/material";
 import GatsbyLayoutCard from "features/blog/BlogGatsbyTheme";
 import Text from "components/Text";
 import Button from "components/Button";
-import api from "api/Api";
+import api from "api/BaseUrl";
 import Axios from "api/JsonAxios";
 import { useSelector } from "react-redux";
 import { rootState } from "app/store";

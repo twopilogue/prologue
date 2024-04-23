@@ -6,7 +6,7 @@ import Input from "components/Input";
 import Text from "components/Text";
 import styles from "features/blog/Blog.module.css";
 import BlogDashboardMoveModal from "./BlogDashboardMoveModal";
-import api from "api/Api";
+import api from "api/BaseUrl";
 import { useSelector } from "react-redux";
 import { rootState } from "app/store";
 import Axios from "api/MultipartAxios";

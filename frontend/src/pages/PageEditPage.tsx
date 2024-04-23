@@ -8,7 +8,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { rootState } from "app/store";
 import Axios from "api/MultipartAxios";
-import api from "api/Api";
+import api from "api/BaseUrl";
 import PageViewerContents from "features/post/PageViewerContents";
 import { useAppDispatch, useAppSelector } from "app/hooks";
 import { selectPostContent, selectPostFileList, selectPostFiles, setPostFileList } from "slices/postSlice";

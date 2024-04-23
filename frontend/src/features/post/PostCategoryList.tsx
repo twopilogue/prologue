@@ -4,7 +4,7 @@ import Text from "components/Text";
 import { useSelector } from "react-redux";
 import { rootState } from "app/store";
 import Axios from "api/JsonAxios";
-import api from "api/Api";
+import api from "api/BaseUrl";
 import { useAppDispatch } from "app/hooks";
 import { resetPostIndex, resetPostList } from "slices/postSlice";
 

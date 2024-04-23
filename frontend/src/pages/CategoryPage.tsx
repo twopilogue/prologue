@@ -4,7 +4,7 @@ import { selectCategoryList, selectCategoryLayoutList } from "slices/settingSlic
 import ButtonStyled from "components/Button";
 import styles from "features/setting/Setting.module.css";
 import Axios from "api/JsonAxios";
-import api from "api/Api";
+import api from "api/BaseUrl";
 import { useSelector } from "react-redux";
 import { rootState } from "app/store";
 import Modal from "components/Modal";

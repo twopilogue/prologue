@@ -11,7 +11,7 @@ import { rootState } from "app/store";
 import { useNavigate, useParams } from "react-router-dom";
 import Axios from "api/MultipartAxios";
 import JsonAxios from "api/JsonAxios";
-import api from "api/Api";
+import api from "api/BaseUrl";
 import PostViewerContents from "features/post/PostViewerContents";
 import { useAppDispatch, useAppSelector } from "app/hooks";
 import {
