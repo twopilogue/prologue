@@ -11,6 +11,12 @@ type ServerResponse = {
 //   uri: string;
 // }
 
+interface NewPostConfig {
+  date: string;
+  directory: string;
+  title: string;
+}
+
 export interface UserInfoConfig {
   accessToken: string;
   githubId: string;
@@ -56,14 +62,20 @@ export const blogApi = {
 };
 
 export const dashboardApi = {
-  getNewPosts: (accessToken: string, githubId: string) => Get(api.dashboard.getNewPost(accessToken, githubId)),
-  getNewBuild: (accessToken: string, githubId: string) => Get(api.dashboard.getNewBuildTime(accessToken, githubId)),
-  getMonthPosts: (accessToken: string, githubId: string) => Get(api.dashboard.getMonthPosts(accessToken, githubId)),
+  getNewPosts: (accessToken: string, githubId: string) =>
+    Get<{ currentPosts: NewPostConfig[] }>(api.dashboard.getNewPost(accessToken, githubId)),
+  getNewBuild: (accessToken: string, githubId: string) =>
+    Get<{ latestBuildTime: string }>(api.dashboard.getNewBuildTime(accessToken, githubId)),
+  getMonthPosts: (accessToken: string, githubId: string) =>
+    Get<{ dateList: string[] }>(api.dashboard.getMonthPosts(accessToken, githubId)),
   getRepoSize: (accessToken: string, githubId: string, template: string) =>
-    Get(api.dashboard.getRepoSize(accessToken, githubId, template)),
-  getTotalPostCount: (accessToken: string, githubId: string) => Get(api.dashboard.getTotalPost(accessToken, githubId)),
-  getBuildState: (accessToken: string, githubId: string) => Get(api.dashboard.getBildState(accessToken, githubId)),
-  getChangeState: (accessToken: string, githubId: string) => Get(api.dashboard.getChangeState(accessToken, githubId)),
+    Get<{ size: number }>(api.dashboard.getRepoSize(accessToken, githubId, template)),
+  getTotalPostCount: (accessToken: string, githubId: string) =>
+    Get<{ total: number }>(api.dashboard.getTotalPost(accessToken, githubId)),
+  getBuildState: (accessToken: string, githubId: string) =>
+    Get<{ buildState: "completed" | "progress" }>(api.dashboard.getBildState(accessToken, githubId)),
+  getChangeState: (accessToken: string, githubId: string) =>
+    Get<{ checkUpdate: boolean }>(api.dashboard.getChangeState(accessToken, githubId)),
 };
 
 export const settingApi = {

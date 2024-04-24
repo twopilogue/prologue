@@ -20,10 +20,10 @@ import {
   Typography,
   keyframes,
 } from "@mui/material";
-import axios from "axios";
 import "moment/locale/ko";
 import { dashboardActions } from "slices/dashboardSlice";
 import { useAuthStore } from "stores/authStore";
+import { getBuildTime, getChangeState, getRepoSize, getTotalPostCount } from "apis/api/dashboard";
 
 const CustomTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -143,12 +143,21 @@ function DashboardInfo(props: { buildState: boolean; setBuildState: (state: bool
     setUploadClick(props.buildState);
   }, [uploadClick]);
 
+  const getStateChange = async () => {
+    const checkUpdate = await getChangeState(accessToken, githubId);
+    setChangeState(checkUpdate);
+  };
+
+  const getBlogInfo = async () => {
+    const total = await getTotalPostCount(accessToken, githubId);
+    const size = await getRepoSize(accessToken, githubId, template);
+    dispatch(dashboardActions.blogInfo({ totalPost: String(total), repoSize: String(size) }));
+  };
+
   useEffect(() => {
     startHandler();
     getBlogInfo();
-    Axios.get(api.dashboard.getChangeState(accessToken, githubId)).then((res) => {
-      setChangeState(res.data.checkUpdate);
-    });
+    getStateChange();
   }, []);
 
   useEffect(() => {
@@ -164,56 +173,31 @@ function DashboardInfo(props: { buildState: boolean; setBuildState: (state: bool
     }
   }, [progressCount]);
 
-  async function getBlogInfo() {
-    await axios
-      .all([
-        Axios.get(api.dashboard.getTotalPost(accessToken, githubId)),
-        Axios.get(api.dashboard.getRepoSize(accessToken, githubId, template)),
-      ])
-      .then(
-        axios.spread((res1, res2) => {
-          dispatch(
-            dashboardActions.blogInfo({
-              totalPost: res1.data.total,
-              repoSize: res2.data.size,
-            }),
-          );
-        }),
-      );
-  }
-
-  async function getNewBuildTime() {
+  const getNewBuildTime = async () => {
     if (buildTimer.includes("초")) return;
 
-    await Axios.get(api.dashboard.getNewBuildTime(accessToken, githubId)).then((res) => {
-      const value = res.data.latestBuildTime;
-      dispatch(
-        dashboardActions.buildTime({
-          buildTime: moment(value, "YYYYMMDDHHmmss").format("YYYY MM/DD HH:mm"),
-        }),
-      );
-
-      setnewBuildTime({
-        year: moment(value, "YYYYMMDDHHmmss").format("YYYY"),
-        day: moment(value, "YYYYMMDDHHmmss").format("MM/DD HH:mm"),
-      });
-
-      const nowTime = moment();
-      const bildTimes = moment(value, "YYYYMMDDHHmmss");
-
-      const diffTime = {
-        day: moment.duration(nowTime.diff(bildTimes)).days(),
-        hour: moment.duration(nowTime.diff(bildTimes)).hours(),
-        minute: moment.duration(nowTime.diff(bildTimes)).minutes(),
-        second: moment.duration(nowTime.diff(bildTimes)).seconds(),
-      };
-
-      if (diffTime.day != 0) setBuilTimer(diffTime.day + "일 전");
-      else if (diffTime.hour != 0) setBuilTimer(diffTime.hour + "시간 전");
-      else if (diffTime.minute != 0) setBuilTimer(diffTime.minute + "분 전");
-      else setBuilTimer(diffTime.second + "초 전");
+    const buildTime = await getBuildTime(accessToken, githubId);
+    dispatch(dashboardActions.buildTime({ buildTime: moment(buildTime, "YYYYMMDDHHmmss").format("YYYY MM/DD HH:mm") }));
+    setnewBuildTime({
+      year: moment(buildTime, "YYYYMMDDHHmmss").format("YYYY"),
+      day: moment(buildTime, "YYYYMMDDHHmmss").format("MM/DD HH:mm"),
     });
-  }
+
+    const nowTime = moment();
+    const bildTimes = moment(buildTime, "YYYYMMDDHHmmss");
+
+    const diffTime = {
+      day: moment.duration(nowTime.diff(bildTimes)).days(),
+      hour: moment.duration(nowTime.diff(bildTimes)).hours(),
+      minute: moment.duration(nowTime.diff(bildTimes)).minutes(),
+      second: moment.duration(nowTime.diff(bildTimes)).seconds(),
+    };
+
+    if (diffTime.day != 0) setBuilTimer(diffTime.day + "일 전");
+    else if (diffTime.hour != 0) setBuilTimer(diffTime.hour + "시간 전");
+    else if (diffTime.minute != 0) setBuilTimer(diffTime.minute + "분 전");
+    else setBuilTimer(diffTime.second + "초 전");
+  };
 
   async function triggerStart() {
     props.setBuildState(true);

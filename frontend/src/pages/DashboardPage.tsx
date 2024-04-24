@@ -5,58 +5,50 @@ import DashboardList from "features/dashboard/DashboardList";
 import DashboardMenu from "features/dashboard/DashboardMenu";
 import DashboardPreview from "features/dashboard/DashboardPreview";
 import { Box, Grid, Stack } from "@mui/material";
-import Axios from "apis/JsonAxios";
-import api from "apis/BaseUrl";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { authActions } from "slices/authSlice";
-import { rootState } from "app/store";
-import { useAuthStore } from "stores/authStore";
+
+import { setAuthFile, useAuthStore } from "stores/authStore";
+import { getBuildState } from "apis/api/dashboard";
+import { authApi } from "apis/Api";
+import { getRepoList } from "apis/api/blog";
 
 const DashboardPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // const { login, accessToken, githubId } = useSelector((state: rootState) => state.auth);
-
   const login = useAuthStore((state) => state.login);
-  // const authFile = useAuthStore((state) => state.authFile);
   const accessToken = useAuthStore((state) => state.accessToken);
   const githubId = useAuthStore((state) => state.githubId);
 
   const [buildState, setBuildState] = useState<boolean>();
 
-  const getData = (state: boolean) => {
-    setBuildState(state);
+  const getBildState = async () => {
+    const buildState = await getBuildState(accessToken, githubId);
+    setBuildState(buildState === "progress");
+  };
+
+  // 서비스 인증 파일 존재 여부
+  const getAuthFile = async () => {
+    const res = await authApi.getAuthFile(accessToken, githubId);
+    if (res.data.checkAuthFile) {
+      dispatch(authActions.authFile({ authFile: true }));
+      setAuthFile(true);
+    } else {
+      dispatch(authActions.authFile({ authFile: false }));
+      setAuthFile(false);
+
+      const checkRepository = await getRepoList(accessToken, githubId);
+      if (checkRepository) navigate("create/reset");
+      else navigate("/create");
+    }
   };
 
   useEffect(() => {
-    {
-      login && getAuthFile();
-    }
+    if (login) getAuthFile();
     getBildState();
   }, []);
-
-  function getBildState() {
-    Axios.get(api.dashboard.getBildState(accessToken, githubId)).then((res) => {
-      setBuildState(res.data.buildState === "progress");
-    });
-  }
-
-  // 서비스 인증 파일 존재 여부
-  async function getAuthFile() {
-    await Axios.get(api.auth.getAuthFile(accessToken, githubId)).then((res) => {
-      if (res.data.checkAuthFile) {
-        dispatch(authActions.authFile({ authFile: true }));
-      } else {
-        dispatch(authActions.authFile({ authFile: false }));
-        Axios.get(api.blog.getRepoList(accessToken, githubId)).then((res) => {
-          if (res.data.checkRepository) navigate("create/reset");
-          else navigate("/create");
-        });
-      }
-    });
-  }
 
   return (
     <Box sx={{ mt: 3, minHeight: "88vh" }}>
@@ -72,7 +64,7 @@ const DashboardPage = () => {
         </Grid>
         <Grid item xs={3}>
           <Stack spacing={2} height="88vh">
-            <DashboardInfo buildState={buildState} setBuildState={getData} />
+            <DashboardInfo buildState={buildState} setBuildState={setBuildState} />
             <DashboardMenu />
           </Stack>
         </Grid>

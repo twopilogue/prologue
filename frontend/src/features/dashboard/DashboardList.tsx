@@ -4,34 +4,33 @@ import Text from "components/Text";
 import { useDispatch, useSelector } from "react-redux";
 import { dashboardActions } from "slices/dashboardSlice";
 import { rootState } from "app/store";
-import api from "apis/BaseUrl";
-import Axios from "apis/JsonAxios";
 import { Link } from "@mui/material";
+import { useAuthStore } from "stores/authStore";
+import { getNewPosts } from "apis/api/dashboard";
 
-function DashboardList() {
+const DashboardList = () => {
   const dispatch = useDispatch();
+  const accessToken = useAuthStore((state) => state.accessToken);
+  const githubId = useAuthStore((state) => state.githubId);
 
-  const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
   const { newPosts } = useSelector((state: rootState) => state.dashboard);
-
   const [newPost, setNewPost] = useState(newPosts);
 
-  useEffect(() => {
-    Axios.get(api.dashboard.getNewPost(accessToken, githubId)).then((res) => {
-      dispatch(
-        dashboardActions.newPosts({
-          newPosts: res.data.currentPosts,
-        }),
-      );
-      setNewPost(res.data.currentPosts);
-    });
-  }, []);
+  const getNewPost = async () => {
+    const newPosts = await getNewPosts(accessToken, githubId);
+    dispatch(dashboardActions.newPosts({ newPosts }));
+    setNewPost(newPosts);
+  };
 
   const textLimit = (props: string) => {
     let title = props;
     if (title.length > 30) title = title.substring(0, 30) + " ···";
     return title;
   };
+
+  useEffect(() => {
+    getNewPost();
+  }, []);
 
   return (
     <div className={`${styles.newPostContainer} ${styles.list}`}>
@@ -60,6 +59,6 @@ function DashboardList() {
       </div>
     </div>
   );
-}
+};
 
 export default DashboardList;
