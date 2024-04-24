@@ -4,12 +4,10 @@ import Modal from "components/Modal";
 import BlogReset from "features/blog/BlogReset";
 import resetImg from "assets/blog/blogChoice/RepositoryReset.png";
 import manageImg from "assets/blog/blogChoice/ManageOnly.png";
-import { rootState } from "app/store";
-import api from "apis/BaseUrl";
-import Axios from "apis/JsonAxios";
-import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { deleteRepo } from "apis/api/blog";
+import { useAuthStore } from "stores/authStore";
 
 const BoxNoneClickStyle = styled(Box)(() => ({
   display: "flex",
@@ -32,8 +30,8 @@ const BoxNoneClickStyle = styled(Box)(() => ({
 
 function BlogResetPage() {
   const navigate = useNavigate();
-
-  const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
+  const accessToken = useAuthStore((state) => state.accessToken);
+  const githubId = useAuthStore((state) => state.githubId);
 
   const [repositoryModalOpen, setRepositoryModalOpen] = useState(false);
   const [ManageModalOpen, setManageModalOpen] = useState(false);
@@ -46,11 +44,10 @@ function BlogResetPage() {
     setManageModalOpen(true);
   };
 
-  async function deleteRepo() {
-    await Axios.delete(api.blog.deleteRepo(accessToken, githubId)).then(() => {
-      navigate("/create");
-    });
-  }
+  const deleteRepository = async () => {
+    const code = await deleteRepo(accessToken, githubId);
+    if (code === 200) navigate("/create");
+  };
 
   const context = [
     {
@@ -105,7 +102,7 @@ function BlogResetPage() {
         <Modal
           buttonNum={2}
           twoButtonCancle={() => setRepositoryModalOpen(false)}
-          twoButtonConfirm={deleteRepo}
+          twoButtonConfirm={deleteRepository}
           text={`Repository 초기화를 선택했습니다.\ngithub.io 데이터들이 모두 삭제됩니다.`}
         />
       )}

@@ -10,9 +10,10 @@ import waveSvg from "assets/landing/wave.svg";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { authActions } from "slices/authSlice";
-import { getAuthFile, getLogin, getRepoList, setSecretRepo } from "apis/api/auth";
+import { getAuthFile, getLogin, setSecretRepo } from "apis/api/auth";
 import { getUserInfo } from "apis/services/auth";
 import { setAuthFile, setBlogType, setLogin, setTemplate } from "stores/authStore";
+import { getRepoList } from "apis/api/blog";
 
 const LoginOAuthHandler = () => {
   const dispatch = useDispatch();

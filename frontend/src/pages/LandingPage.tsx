@@ -5,6 +5,7 @@ import LandingMain from "features/landing/LandingMain";
 import Axios from "apis/JsonAxios";
 import api from "apis/BaseUrl";
 import { useAuthStore } from "stores/authStore";
+import { getRepoList } from "apis/api/blog";
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -15,15 +16,16 @@ const LandingPage = () => {
   const accessToken = useAuthStore((state) => state.accessToken);
   const githubId = useAuthStore((state) => state.githubId);
 
+  const getRepositoryList = async () => {
+    const checkRepository = await getRepoList(accessToken, githubId);
+    if (checkRepository) navigate("create/reset");
+    else navigate("/create");
+  };
+
   useEffect(() => {
     if (login) {
       if (authFile) navigate("/dashboard");
-      else {
-        Axios.get(api.blog.getRepoList(accessToken, githubId)).then((res) => {
-          if (res.data.checkRepository) navigate("create/reset");
-          else navigate("/create");
-        });
-      }
+      else getRepositoryList();
     }
   }, []);
 

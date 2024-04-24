@@ -9,7 +9,8 @@ import { useSelector } from "react-redux";
 import { rootState } from "app/store";
 import BlogLoding from "features/blog/BlogLoding";
 import { useNavigate } from "react-router-dom";
-import { putAuthFile } from "apis/api/auth";
+import { putAuthFile, setSecretRepo } from "apis/api/auth";
+import { selectTemplate, setBuildType } from "apis/api/blog";
 
 const LayoutChoicePage = () => {
   const navigate = useNavigate();
@@ -19,37 +20,31 @@ const LayoutChoicePage = () => {
   const [isChoiceTheme, setChoiceTheme] = useState("gatsby-starter-foundation");
   const [lodingView, openLodingView] = useState(false);
 
-  const showNextModal = () => {
+  const showNextModal = async () => {
     openLodingView(true);
-    Axios.post(api.blog.chooseTemplate(), {
-      accessToken: accessToken,
-      githubId: githubId,
-      template: isChoiceTheme,
-    }).then(() => {
-      setTimeout(() => [setSecretRepo()], 200);
-    });
+    const statusCode = await selectTemplate(accessToken, githubId, isChoiceTheme);
+    if (statusCode === 200) makeSecretRepo();
   };
 
-  const setSecretRepo = async () => {
-    await Axios.put(api.auth.setSecretRepo(accessToken, githubId)).then(() => {
-      setTimeout(() => [changeBuildType()], isChoiceTheme === "gatsby-starter-netlify-cms" ? 3000 : 200);
-    });
+  const makeSecretRepo = async () => {
+    const statusCode = await setSecretRepo(accessToken, githubId);
+    if (statusCode === 200) changeBuildType();
+    setTimeout(() => [changeBuildType()], isChoiceTheme === "gatsby-starter-netlify-cms" ? 3000 : 200);
   };
 
   const changeBuildType = async () => {
-    await Axios.put(api.blog.changeBuildType(accessToken, githubId)).then(async () => {
-      setAuthFile();
-    });
+    const statusCode = await setBuildType(accessToken, githubId);
+    if (statusCode === 200) setAuthFile();
   };
 
   const setAuthFile = async () => {
-    const res = await putAuthFile({
+    const statusCode = await putAuthFile({
       accessToken,
       githubId,
       blogType: 1,
       template: isChoiceTheme,
     });
-    if (res.statusCode === 200) navigate("/create", { state: { setStepNumber: 2, setTemplate: isChoiceTheme } });
+    if (statusCode === 200) navigate("/create", { state: { setStepNumber: 2, setTemplate: isChoiceTheme } });
   };
 
   return (

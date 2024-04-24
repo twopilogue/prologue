@@ -7,8 +7,6 @@ import SyncAltIcon from "@mui/icons-material/SyncAlt";
 import Tooltip, { TooltipProps } from "@mui/material/Tooltip";
 import { useDispatch, useSelector } from "react-redux";
 import { rootState } from "app/store";
-import api from "apis/BaseUrl";
-import Axios from "apis/JsonAxios";
 import {
   Box,
   ButtonBase,
@@ -24,6 +22,7 @@ import "moment/locale/ko";
 import { dashboardActions } from "slices/dashboardSlice";
 import { useAuthStore } from "stores/authStore";
 import { getBuildTime, getChangeState, getRepoSize, getTotalPostCount } from "apis/api/dashboard";
+import { putBuild } from "apis/api/blog";
 
 const CustomTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -95,7 +94,7 @@ function DashboardInfo(props: { buildState: boolean; setBuildState: (state: bool
   const { totalPost, repoSize, buildTime } = useSelector((state: rootState) => state.dashboard);
 
   const [changeState, setChangeState] = useState<boolean>();
-  const [buildTimer, setBuilTimer] = useState("");
+  const [buildTimer, setBuildTimer] = useState("");
   const [newBuildTime, setnewBuildTime] = useState<{ year: string; day: string }>({
     year: buildTime ? moment(buildTime, "YYYYMMDDHHmmss").format("YYYY") : moment().format("YYYY"),
     day: buildTime ? moment(buildTime, "YYYYMMDDHHmmss").format("MM/DD HH:mm") : "",
@@ -104,7 +103,7 @@ function DashboardInfo(props: { buildState: boolean; setBuildState: (state: bool
   const [progressCount, setProgressCount] = useState(0);
   const [uploadClick, setUploadClick] = useState(props.buildState);
 
-  const [bildTimes, setBildTimes] = useState(moment(buildTime, "YYYYMMDDHHmmss"));
+  const [buildTimes, setBuildTimes] = useState(moment(buildTime, "YYYYMMDDHHmmss"));
   const countRef = useRef(null);
 
   const startHandler = () => {
@@ -115,11 +114,11 @@ function DashboardInfo(props: { buildState: boolean; setBuildState: (state: bool
     }
     countRef.current = setInterval(() => {
       const nowTime = moment();
-      const minute = moment.duration(nowTime.diff(bildTimes)).minutes();
-      const second = moment.duration(nowTime.diff(bildTimes)).seconds();
+      const minute = moment.duration(nowTime.diff(buildTimes)).minutes();
+      const second = moment.duration(nowTime.diff(buildTimes)).seconds();
 
-      if (minute < 1) setBuilTimer(second + "초 전");
-      else if (minute <= 59) setBuilTimer(minute + "분 전");
+      if (minute < 1) setBuildTimer(second + "초 전");
+      else if (minute <= 59) setBuildTimer(minute + "분 전");
 
       setProgressCount(Math.trunc(((minute * 60 + second) / 200) * 100));
     }, 1000);
@@ -193,20 +192,19 @@ function DashboardInfo(props: { buildState: boolean; setBuildState: (state: bool
       second: moment.duration(nowTime.diff(bildTimes)).seconds(),
     };
 
-    if (diffTime.day != 0) setBuilTimer(diffTime.day + "일 전");
-    else if (diffTime.hour != 0) setBuilTimer(diffTime.hour + "시간 전");
-    else if (diffTime.minute != 0) setBuilTimer(diffTime.minute + "분 전");
-    else setBuilTimer(diffTime.second + "초 전");
+    if (diffTime.day != 0) setBuildTimer(diffTime.day + "일 전");
+    else if (diffTime.hour != 0) setBuildTimer(diffTime.hour + "시간 전");
+    else if (diffTime.minute != 0) setBuildTimer(diffTime.minute + "분 전");
+    else setBuildTimer(diffTime.second + "초 전");
   };
 
-  async function triggerStart() {
+  const triggerStart = async () => {
     props.setBuildState(true);
     setUploadClick(true);
-    setBildTimes(moment());
-    await Axios.put(api.blog.triggerStart(accessToken, githubId)).then(() => {
-      startHandler();
-    });
-  }
+    setBuildTimes(moment());
+    await putBuild(accessToken, githubId);
+    startHandler();
+  };
 
   return (
     <div className={`${styles.container} ${styles.info}`}>
