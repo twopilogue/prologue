@@ -23,6 +23,7 @@ import {
 import axios from "axios";
 import "moment/locale/ko";
 import { dashboardActions } from "slices/dashboardSlice";
+import { useAuthStore } from "stores/authStore";
 
 const CustomTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -87,8 +88,10 @@ function CircularProgressWithLabel(props: CircularProgressProps & { value: numbe
 
 function DashboardInfo(props: { buildState: boolean; setBuildState: (state: boolean) => void }) {
   const dispatch = useDispatch();
-
-  const { accessToken, githubId, template } = useSelector((state: rootState) => state.auth);
+  const accessToken = useAuthStore((state) => state.accessToken);
+  const githubId = useAuthStore((state) => state.githubId);
+  const template = useAuthStore((state) => state.template);
+  // const { accessToken, githubId, template } = useSelector((state: rootState) => state.auth);
   const { totalPost, repoSize, buildTime } = useSelector((state: rootState) => state.dashboard);
 
   const [changeState, setChangeState] = useState<boolean>();

@@ -11,12 +11,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { authActions } from "slices/authSlice";
 import { rootState } from "app/store";
+import { useAuthStore } from "stores/authStore";
 
 const DashboardPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { login, accessToken, githubId } = useSelector((state: rootState) => state.auth);
+  // const { login, accessToken, githubId } = useSelector((state: rootState) => state.auth);
+
+  const login = useAuthStore((state) => state.login);
+  // const authFile = useAuthStore((state) => state.authFile);
+  const accessToken = useAuthStore((state) => state.accessToken);
+  const githubId = useAuthStore((state) => state.githubId);
 
   const [buildState, setBuildState] = useState<boolean>();
 
