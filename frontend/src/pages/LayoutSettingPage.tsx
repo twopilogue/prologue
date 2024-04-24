@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import api from "api/BaseUrl";
-import Axios from "api/JsonAxios";
+import api from "apis/BaseUrl";
+import Axios from "apis/JsonAxios";
 import { useAppSelector } from "app/hooks";
 import { rootState } from "app/store";
 import ButtonStyled from "components/Button";

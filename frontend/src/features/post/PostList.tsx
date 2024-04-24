@@ -13,9 +13,9 @@ import {
   setPostList,
 } from "slices/postSlice";
 import { useNavigate } from "react-router-dom";
-import Axios from "api/JsonAxios";
+import Axios from "apis/JsonAxios";
 import { useSelector } from "react-redux";
-import api from "api/BaseUrl";
+import api from "apis/BaseUrl";
 import { rootState } from "app/store";
 import { CircularProgress } from "@mui/material";
 

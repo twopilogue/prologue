@@ -3,14 +3,15 @@ import BlogLayoutSetting from "features/blog/blogCreate/BlogLayoutSetting";
 import BlogStepper from "features/blog/blogCreate/BlogStepper";
 import { Stack } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
-import Axios from "api/JsonAxios";
-import api from "api/BaseUrl";
+import Axios from "apis/JsonAxios";
+import api from "apis/BaseUrl";
 import { useDispatch, useSelector } from "react-redux";
 import { rootState } from "app/store";
 import { authActions } from "slices/authSlice";
 import BlogCustomInfo from "features/blog/BlogCustomInfo";
 import BlogLoding from "features/blog/BlogLoding";
 import { useState } from "react";
+import { putAuthFile } from "apis/api/auth";
 
 const CreatePage = () => {
   const dispatch = useDispatch();
@@ -38,8 +39,8 @@ const CreatePage = () => {
   const chooseTemplate = async () => {
     openLodingView(true);
     await Axios.post(api.blog.chooseTemplate(), {
-      accessToken: accessToken,
-      githubId: githubId,
+      accessToken,
+      githubId,
       template: "prologue-template",
     }).then(async () => {
       setTimeout(() => [setSecretRepo()], 200);
@@ -53,22 +54,23 @@ const CreatePage = () => {
   };
 
   const changeBuildType = async () => {
-    await Axios.put(api.blog.changeBuildType(accessToken, githubId)).then(async () => {
+    await Axios.put(api.blog.changeBuildType(accessToken, githubId)).then((res) => {
       setAuthFile();
     });
   };
 
   // 인증 파일 생성
   const setAuthFile = async () => {
-    await Axios.put(api.auth.setAuthFile(), {
+    const res = await putAuthFile({
       accessToken: accessToken,
       githubId: githubId,
       blogType: 0,
       template: "prologue-template",
-    }).then(() => {
+    });
+    if (res.statusCode === 200) {
       openLodingView(false);
       setStepNumber(2);
-    });
+    }
   };
 
   return (

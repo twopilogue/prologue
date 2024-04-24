@@ -51,11 +51,7 @@ function Header() {
     setMenuOpen(false);
   };
 
-  const onLogin = () => {
-    Axios.get(api.auth.getUri()).then((res) => {
-      window.location.href = res.data.uri;
-    });
-  };
+  const onLogin = async () => await authLogin();
 
   const onLogout = () => {
     handleCloseUserMenu();

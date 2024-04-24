@@ -5,8 +5,8 @@ import Input from "components/Input";
 import Tag from "components/Tag";
 import { useAppDispatch } from "app/hooks";
 import { setPostCategory, setPostDescription, setPostTagList, setPostTitle } from "slices/postSlice";
-import axios from "api/JsonAxios";
-import api from "api/BaseUrl";
+import axios from "apis/JsonAxios";
+import api from "apis/BaseUrl";
 import { useSelector } from "react-redux";
 import { rootState } from "app/store";
 

@@ -3,12 +3,13 @@ import { Box, Stack } from "@mui/material";
 import GatsbyLayoutCard from "features/blog/BlogGatsbyTheme";
 import Text from "components/Text";
 import Button from "components/Button";
-import api from "api/BaseUrl";
-import Axios from "api/JsonAxios";
+import api from "apis/BaseUrl";
+import Axios from "apis/JsonAxios";
 import { useSelector } from "react-redux";
 import { rootState } from "app/store";
 import BlogLoding from "features/blog/BlogLoding";
 import { useNavigate } from "react-router-dom";
+import { putAuthFile } from "apis/api/auth";
 
 const LayoutChoicePage = () => {
   const navigate = useNavigate();
@@ -42,14 +43,13 @@ const LayoutChoicePage = () => {
   };
 
   const setAuthFile = async () => {
-    await Axios.put(api.auth.setAuthFile(), {
-      accessToken: accessToken,
-      githubId: githubId,
+    const res = await putAuthFile({
+      accessToken,
+      githubId,
       blogType: 1,
       template: isChoiceTheme,
-    }).then(() => {
-      navigate("/create", { state: { setStepNumber: 2, setTemplate: isChoiceTheme } });
     });
+    if (res.statusCode === 200) navigate("/create", { state: { setStepNumber: 2, setTemplate: isChoiceTheme } });
   };
 
   return (

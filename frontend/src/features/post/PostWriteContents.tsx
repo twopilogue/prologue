@@ -7,10 +7,10 @@ import "@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-sy
 import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
 import { useAppDispatch } from "app/hooks";
 import { setPostContent, setPostFileList, setPostFiles } from "slices/postSlice";
-import api from "api/BaseUrl";
+import api from "apis/BaseUrl";
 import { useSelector } from "react-redux";
 import { rootState } from "app/store";
-import Axios from "api/MultipartAxios";
+import Axios from "apis/MultipartAxios";
 
 const PostWriteContents = () => {
   const dispatch = useAppDispatch();

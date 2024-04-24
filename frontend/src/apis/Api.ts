@@ -2,9 +2,19 @@ import { AxiosRequestConfig } from "axios";
 import Axios from "./JsonAxios";
 import api from "./BaseUrl";
 
-interface ServerResponse<T> {
-  message: string; // 메시지
-  data: T; // 데이터 내용
+type ServerResponse = {
+  message?: string; // 메시지
+  statusCode?: number;
+};
+
+// export interface URIConfig extends ServerResponse {
+//   uri: string;
+// }
+
+export interface UserInfoConfig {
+  accessToken: string;
+  githubId: string;
+  githubImage: string;
 }
 
 export interface ServerErrorResponse {
@@ -13,31 +23,33 @@ export interface ServerErrorResponse {
 }
 
 const Get = async <T>(url: string, config?: AxiosRequestConfig) => {
-  return await Axios.get<ServerResponse<T>>(url, config);
+  return await Axios.get<ServerResponse & T>(url, config);
 };
 const Post = async <T>(url: string, data?: Record<string, unknown | unknown[]>, config?: AxiosRequestConfig) => {
-  return await Axios.post<ServerResponse<T>>(url, data, config);
+  return await Axios.post<ServerResponse & T>(url, data, config);
 };
 const Put = async <T>(url: string, data?: Record<string, unknown | unknown[]>, config?: AxiosRequestConfig) => {
-  return await Axios.put<ServerResponse<T>>(url, data, config);
+  return await Axios.put<ServerResponse & T>(url, data, config);
 };
 const Delete = async <T>(url: string, data?: Record<string, unknown | unknown[]>) => {
-  return await Axios.delete<ServerResponse<T>>(url, { data });
+  return await Axios.delete<ServerResponse & T>(url, { data });
 };
 
 export const authApi = {
-  getUri: () => Get(api.auth.getUri()),
-  login: (code: string) => Post(api.auth.login(code)),
+  getUri: () => Get<{ uri: string }>(api.auth.getUri()),
+  login: (code: string) => Get<UserInfoConfig>(api.auth.login(code)),
   putSecretRepo: (accessToken: string, githubId: string) => Put(api.auth.setSecretRepo(accessToken, githubId)),
-  getAuthFile: (accessToken: string, githubId: string) => Get(api.auth.getAuthFile(accessToken, githubId)),
+  getAuthFile: (accessToken: string, githubId: string) =>
+    Get<{ checkAuthFile: boolean; blogType: 0 | 1; template: string }>(api.auth.getAuthFile(accessToken, githubId)),
   putAuthFile: (data: { accessToken: string; githubId: string; blogType: number; template: string }) =>
-    Put(api.auth.setAuthFile(), data),
+    Put<{ checkAuthFile: boolean; blogType: 0 | 1; template: string }>(api.auth.setAuthFile(), data),
 };
 
 export const blogApi = {
   postTemplate: (data: { accessToken: string; githubId: string; template: string }) =>
     Post(api.blog.chooseTemplate(), data),
-  getRepoList: (accessToken: string, githubId: string) => Get(api.blog.getRepoList(accessToken, githubId)),
+  getRepoList: (accessToken: string, githubId: string) =>
+    Get<{ checkRepository: boolean }>(api.blog.getRepoList(accessToken, githubId)),
   deleteRepo: (accessToken: string, githubId: string) => Delete(api.blog.deleteRepo(accessToken, githubId)),
   putBuild: (accessToken: string, githubId: string) => Put(api.blog.triggerStart(accessToken, githubId)),
   putBuildType: (accessToken: string, githubId: string) => Put(api.blog.changeBuildType(accessToken, githubId)),

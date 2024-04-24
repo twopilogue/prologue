@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import TabMenu from "../features/setting/TabMenu";
-import Axios from "api/JsonAxios";
+import Axios from "apis/JsonAxios";
 import {
   blogInfoConfig,
   editList,
@@ -16,7 +16,7 @@ import {
   setPageCnt,
   setPageList,
 } from "slices/settingSlice";
-import api from "api/BaseUrl";
+import api from "apis/BaseUrl";
 import { useDispatch, useSelector } from "react-redux";
 import { rootState } from "app/store";
 

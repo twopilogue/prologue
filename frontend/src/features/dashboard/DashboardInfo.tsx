@@ -7,8 +7,8 @@ import SyncAltIcon from "@mui/icons-material/SyncAlt";
 import Tooltip, { TooltipProps } from "@mui/material/Tooltip";
 import { useDispatch, useSelector } from "react-redux";
 import { rootState } from "app/store";
-import api from "api/BaseUrl";
-import Axios from "api/JsonAxios";
+import api from "apis/BaseUrl";
+import Axios from "apis/JsonAxios";
 import {
   Box,
   ButtonBase,

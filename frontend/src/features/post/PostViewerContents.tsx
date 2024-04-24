@@ -9,8 +9,8 @@ import { useAppDispatch } from "app/hooks";
 import { setPostContent, setPostFileList, setPostFiles } from "slices/postSlice";
 import { useSelector } from "react-redux";
 import { rootState } from "app/store";
-import Axios from "api/MultipartAxios";
-import api from "api/BaseUrl";
+import Axios from "apis/MultipartAxios";
+import api from "apis/BaseUrl";
 
 interface PostViewerContentsProps {
   content: string;

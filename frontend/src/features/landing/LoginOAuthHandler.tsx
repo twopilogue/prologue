@@ -7,13 +7,14 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 import landingMainImg1 from "assets/landing/landingMainImg1.png";
 import { Paper } from "@mui/material";
 import waveSvg from "assets/landing/wave.svg";
-import Axios from "api/JsonAxios";
-import api from "api/BaseUrl";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { authActions } from "slices/authSlice";
+import { getAuthFile, getLogin, getRepoList, setSecretRepo } from "apis/api/auth";
+import { getUserInfo } from "apis/services/auth";
+import { setAuthFile, setBlogType, setLogin, setTemplate } from "stores/authStore";
 
-function LoginOAuthHandler() {
+const LoginOAuthHandler = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -23,50 +24,33 @@ function LoginOAuthHandler() {
     getAccessToken();
   }, []);
 
-  async function getAccessToken() {
-    await Axios.get(api.auth.login(code)).then((res) => {
-      dispatch(
-        authActions.login({
-          accessToken: res.data.accessToken,
-          githubId: res.data.githubId,
-          githubImage: res.data.githubImage,
-        }),
-      );
-      getRepoList(res.data.accessToken, res.data.githubId);
-    });
-  }
+  const getAccessToken = async () => {
+    const rawUserInfo = await getLogin(code);
+    const { accessToken, githubId, githubImage } = getUserInfo(rawUserInfo);
+    // dispatch(authActions.login({ accessToken, githubId, githubImage }));
+    setLogin(accessToken, githubId, githubImage); // zustand
 
-  // 깃허브 블로그 개설여부
-  async function getRepoList(accessToken: string, githubId: string) {
-    await Axios.get(api.blog.getRepoList(accessToken, githubId)).then((res) => {
-      if (res.data.checkRepository) {
-        getAuthFile(accessToken, githubId);
-      } else {
-        navigate("/create");
-      }
-    });
-  }
+    // 깃허브 블로그 개설여부
+    const checkRepo = await getRepoList(accessToken, githubId);
+    if (checkRepo) {
+      // 서비스 인증 파일 존재 여부
+      const res = await getAuthFile(accessToken, githubId);
+      if (res.checkAuthFile) {
+        // dispatch(authActions.blogType({ blogType: res.blogType }));
+        // dispatch(authActions.authFile({ authFile: true }));
+        // dispatch(authActions.template({ template: res.template }));
+        setBlogType(res.blogType);
+        setAuthFile(true);
+        setTemplate(res.template);
 
-  // 서비스 인증 파일 존재 여부
-  async function getAuthFile(accessToken: string, githubId: string) {
-    await Axios.get(api.auth.getAuthFile(accessToken, githubId)).then((res) => {
-      if (res.data.checkAuthFile) {
-        dispatch(authActions.blogType({ blogType: res.data.blogType }));
-        dispatch(authActions.authFile({ authFile: true }));
-        dispatch(authActions.template({ template: res.data.template }));
-        setTimeout(() => [setSecretRepo(accessToken, githubId)], 200);
+        const statusCode = await setSecretRepo(accessToken, githubId);
+        if (statusCode === 200) navigate("/dashboard");
       } else {
         dispatch(authActions.authFile({ authFile: false }));
         navigate("/create/reset");
       }
-    });
-  }
-
-  async function setSecretRepo(accessToken: string, githubId: string) {
-    await Axios.put(api.auth.setSecretRepo(accessToken, githubId)).then(() => {
-      navigate("/dashboard");
-    });
-  }
+    } else navigate("/create");
+  };
 
   return (
     <Box className={styles.mainBox}>
@@ -105,6 +89,6 @@ function LoginOAuthHandler() {
       </Stack>
     </Box>
   );
-}
+};
 
 export default LoginOAuthHandler;

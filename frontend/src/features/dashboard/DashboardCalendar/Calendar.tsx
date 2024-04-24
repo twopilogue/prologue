@@ -7,8 +7,8 @@ import palette from "styles/colorPalette";
 import { useDispatch, useSelector } from "react-redux";
 import { dashboardActions } from "slices/dashboardSlice";
 import { rootState } from "app/store";
-import api from "api/BaseUrl";
-import Axios from "api/JsonAxios";
+import api from "apis/BaseUrl";
+import Axios from "apis/JsonAxios";
 
 const CalendarStyled = styled(Calendar)(() => ({
   backgroundColor: "transparent",

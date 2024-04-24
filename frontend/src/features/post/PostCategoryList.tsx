@@ -3,8 +3,8 @@ import styles from "features/post/Post.module.css";
 import Text from "components/Text";
 import { useSelector } from "react-redux";
 import { rootState } from "app/store";
-import Axios from "api/JsonAxios";
-import api from "api/BaseUrl";
+import Axios from "apis/JsonAxios";
+import api from "apis/BaseUrl";
 import { useAppDispatch } from "app/hooks";
 import { resetPostIndex, resetPostList } from "slices/postSlice";
 
