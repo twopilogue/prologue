@@ -2,8 +2,6 @@ import { Stack } from "@mui/material";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import LandingMain from "features/landing/LandingMain";
-import Axios from "apis/JsonAxios";
-import api from "apis/BaseUrl";
 import { useAuthStore } from "stores/authStore";
 import { getRepoList } from "apis/api/blog";
 

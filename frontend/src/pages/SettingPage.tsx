@@ -1,8 +1,6 @@
 import { useEffect } from "react";
 import TabMenu from "../features/setting/TabMenu";
-import Axios from "apis/JsonAxios";
 import {
-  blogInfoConfig,
   editList,
   KeyConfig,
   PageConfig,
@@ -16,92 +14,59 @@ import {
   setPageCnt,
   setPageList,
 } from "slices/settingSlice";
-import api from "apis/BaseUrl";
-import { useDispatch, useSelector } from "react-redux";
-import { rootState } from "app/store";
+
+import { useDispatch } from "react-redux";
+import { useAuthStore } from "stores/authStore";
+import { getBlogInfoApi, getCategoryApi, getPageApi } from "apis/api/setting";
+import { getBlogInfoService } from "apis/services/setting";
 
 const SettingPage = () => {
   const dispatch = useDispatch();
-  const { githubId, accessToken, blogType } = useSelector((state: rootState) => state.auth);
+  const accessToken = useAuthStore((state) => state.accessToken);
+  const githubId = useAuthStore((state) => state.githubId);
+  const blogType = useAuthStore((state) => state.blogType);
 
   const getBlogInfo = async () => {
-    await Axios.get(api.setting.getBlog(accessToken, githubId))
-      .then((res) => {
-        const result: blogInfoConfig = res.data;
-
-        dispatch(setBlogSettingInfo(result));
-        dispatch(
-          setMyInfo({
-            nickName: result.nickName,
-            summary: result.summary,
-            profileImg: result.profileImg,
-          }),
-        );
-
-        dispatch(
-          setMyBlogInfo({
-            title: result.title,
-            description: result.description,
-            social: result.social,
-          }),
-        );
-      })
-
-      .catch((err) => {
-        console.error(err);
-      });
+    const res = await getBlogInfoApi(accessToken, githubId);
+    const { userInfo, blogInfo } = await getBlogInfoService(res);
+    dispatch(setBlogSettingInfo(res));
+    dispatch(setMyInfo(userInfo));
+    dispatch(setMyBlogInfo(blogInfo));
   };
 
   const getCategory = async () => {
-    await Axios.get(api.setting.getCategory(accessToken, githubId))
-      .then((res) => {
-        const response = res.data.category;
-        const tmpList: KeyConfig[] = [];
-        for (let i = 0; i < response.length; i++) {
-          tmpList.push({ key: response[i], id: i });
-        }
-        dispatch(setCategoryList(tmpList));
-        dispatch(setCategoryCnt(response.length));
+    const category = await getCategoryApi(accessToken, githubId);
+    const tmpCategoryList: KeyConfig[] = [];
+    category.map((c, i) => {
+      tmpCategoryList.push({ key: c, id: i });
+    });
+    dispatch(setCategoryList(tmpCategoryList));
+    dispatch(setCategoryCnt(category.length));
 
-        if (tmpList) {
-          dispatch(
-            setIsEditCategory(
-              tmpList.map((it) => {
-                return { key: it.key, id: it.id, editable: false };
-              }),
-            ),
-          );
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    if (tmpCategoryList.length > 0) {
+      dispatch(
+        setIsEditCategory(
+          tmpCategoryList.map((it) => {
+            return { key: it.key, id: it.id, editable: false };
+          }),
+        ),
+      );
+    }
   };
 
-  const getPage = () => {
-    Axios.get(api.setting.getPage(accessToken, githubId))
-      .then((res) => {
-        const result: [
-          {
-            label: string;
-            posts: boolean;
-          },
-        ] = res.data.pages;
-        const tmpPageList: PageConfig[] = [];
-        const tmpIsEdit: editList[] = [];
-        let i = 0;
-        result.map((it) => {
-          tmpPageList.push({ label: it.label, posts: it.posts, id: i, type: "unchanging" });
-          tmpIsEdit.push({ key: it.label, id: i, editable: false });
-          i++;
-        });
-        dispatch(setPageList(tmpPageList));
-        dispatch(setIsEditPage(tmpIsEdit));
-        dispatch(setPageCnt(result.length));
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+  const getPage = async () => {
+    const pages = await getPageApi(accessToken, githubId);
+    const tmpPageList: PageConfig[] = [];
+    const tmpIsEdit: editList[] = [];
+
+    pages.map((it, i) => {
+      tmpPageList.push({ label: it.label, posts: it.posts, id: i, type: "unchanging" });
+      tmpIsEdit.push({ key: it.label, id: i, editable: false });
+    });
+
+    dispatch(setPageList(tmpPageList));
+    dispatch(setIsEditPage(tmpIsEdit));
+    dispatch(setPageCnt(pages.length));
   };
 
   useEffect(() => {

@@ -3,12 +3,11 @@ import { useState } from "react";
 import { selectCategoryList, selectCategoryLayoutList } from "slices/settingSlice";
 import ButtonStyled from "components/Button";
 import styles from "features/setting/Setting.module.css";
-import Axios from "apis/JsonAxios";
-import api from "apis/BaseUrl";
 import { useSelector } from "react-redux";
 import { rootState } from "app/store";
 import Modal from "components/Modal";
 import { useAppSelector } from "app/hooks";
+import { modifyCategoryApi } from "apis/api/setting";
 
 const CategoryPage = () => {
   const { githubId, accessToken } = useSelector((state: rootState) => state.auth);
@@ -35,19 +34,12 @@ const CategoryPage = () => {
     sendCategory(result);
   };
 
-  const sendCategory = async (result: string[]) => {
-    await Axios.put(api.setting.modifyCategory(), {
-      accessToken: accessToken,
-      githubId: githubId,
-      category: result,
-    })
-      .then(() => {
-        setLoadingModalOpen(false);
-        setFinModalOpen(true);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+  const sendCategory = async (category: string[]) => {
+    const statusCode = await modifyCategoryApi(accessToken, githubId, category);
+    if (statusCode === 200) {
+      setLoadingModalOpen(false);
+      setFinModalOpen(true);
+    }
   };
 
   return (

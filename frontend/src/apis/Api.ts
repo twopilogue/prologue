@@ -1,6 +1,10 @@
 import { AxiosRequestConfig } from "axios";
 import Axios from "./JsonAxios";
 import api from "./BaseUrl";
+import { BlogInfoConfig } from "slices/settingSlice";
+import { DetailConfig } from "pages/DetailSettingPage";
+import { ModifiedPageConfig } from "pages/PageSettingPage";
+import { PostDetailConfig, PostListConfig } from "slices/postSlice";
 
 type ServerResponse = {
   message?: string; // 메시지
@@ -21,6 +25,11 @@ export interface UserInfoConfig {
   accessToken: string;
   githubId: string;
   githubImage: string;
+}
+
+export interface PageConfig {
+  label: string;
+  posts: boolean;
 }
 
 export interface ServerErrorResponse {
@@ -79,39 +88,42 @@ export const dashboardApi = {
 };
 
 export const settingApi = {
-  getCategory: (accessToken: string, githubId: string) => Get(api.setting.getCategory(accessToken, githubId)),
-  putCategory: (data: { accessToken: string; githubId: string; category: [] }) =>
+  getCategory: (accessToken: string, githubId: string) =>
+    Get<{ category: string[] }>(api.setting.getCategory(accessToken, githubId)),
+  putCategory: (data: { accessToken: string; githubId: string; category: string[] }) =>
     Put(api.setting.modifyCategory(), data),
-  getBlog: (accessToken: string, githubId: string) => Get(api.setting.getBlog(accessToken, githubId)),
-  putBlog: (data: {
-    accessToken: string;
-    githubId: string;
-    title: string;
-    summary: string;
-    nickName: string;
-    description: string;
-    social: Map<string, string>;
-    imageFile: Blob;
-  }) => Put(api.setting.modifyBlog(), data),
-  getLayout: (accessToken: string, githubId: string) => Get(api.setting.getLayout(accessToken, githubId)),
+  getBlog: (accessToken: string, githubId: string) => Get<BlogInfoConfig>(api.setting.getBlog(accessToken, githubId)),
+  putBlog: (data: { data: FormData }) => Put(api.setting.modifyBlog(), data),
+  getLayout: (accessToken: string, githubId: string) =>
+    Get<{ layout: string }>(api.setting.getLayout(accessToken, githubId)),
   putLayout: (data: { accessToken: string; githubId: string; layout: string; layoutJson: string }) =>
     Put(api.setting.modifyLayout(), data),
-  getPage: (accessToken: string, githubId: string) => Get(api.setting.getPage(accessToken, githubId)),
-  putPage: (data: { accessToken: string; githubId: string; pages: Blob }) => Put(api.setting.modifyPage(), data),
-  getDetail: (accessToken: string, githubId: string) => Get(api.setting.getDetail(accessToken, githubId)),
-  putDetail: (data: { data: Blob }) => Put(api.setting.modifyDetail(), data),
+  getPage: (accessToken: string, githubId: string) =>
+    Get<{
+      pages: PageConfig[];
+    }>(api.setting.getPage(accessToken, githubId)),
+  putPage: (data: { accessToken: string; githubId: string; pages: ModifiedPageConfig[] }) =>
+    Put(api.setting.modifyPage(), data),
+  getDetail: (accessToken: string, githubId: string) => Get<DetailConfig>(api.setting.getDetail(accessToken, githubId)),
+  putDetail: (data: { data: FormData }) => Put(api.setting.modifyDetail(), data),
 };
 
 export const postApi = {
-  writePost: (data: { data: Blob }) => Post(api.posts.writePost(), data),
+  writePost: (data: { data: FormData }) => Post(api.posts.writePost(), data),
   getPost: (accessToken: string, githubId: string, directory: string) =>
-    Get(api.posts.getPostDetail(accessToken, githubId, directory)),
-  putPost: (data: { data: Blob }) => Put(api.posts.modifyPost(), data),
+    Get<PostDetailConfig>(api.posts.getPostDetail(accessToken, githubId, directory)),
+  putPost: (data: { data: FormData }) => Put(api.posts.modifyPost(), data),
   deletePost: (data: { accessToken: string; githubId: string; directory: string }) =>
     Delete(api.posts.deletePost(), data),
   getPostList: (accessToken: string, githubId: string, index: number, category: string) =>
-    Get(api.posts.getPostList(accessToken, githubId, index, category)),
-  getImgUrl: (data: { data: Blob }) => Get(api.posts.getImgUrl(), data),
+    Get<{
+      result: {
+        Post: PostListConfig[];
+        index: number;
+        isLast: boolean;
+      };
+    }>(api.posts.getPostList(accessToken, githubId, index, category)),
+  getImgUrl: (data: { data: FormData }) => Get<{ tempImageUrl: string }>(api.posts.getImgUrl(), data),
   getPage: (accessToken: string, githubId: string, pageName: string) =>
     Get(api.posts.getPage(accessToken, githubId, pageName)),
   putPage: (data: { data: Blob }) => Put(api.posts.modifyPage(), data),

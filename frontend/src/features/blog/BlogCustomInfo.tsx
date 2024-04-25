@@ -57,9 +57,8 @@ function BlogCustomInfo(props: { template: string }) {
     formData.append("imageFile", isInfo.profile_image);
 
     //axios 보내기
-    await Axios.put(api.setting.modifyBlog(), formData).then(() => {
-      triggerStart();
-    });
+    await modifyBlogApi(formData);
+    triggerStart();
   };
 
   async function triggerStart() {
@@ -253,6 +252,6 @@ function BlogCustomInfo(props: { template: string }) {
       {successModal && <BlogDashboardMoveModal />}
     </>
   );
-}
+};
 
 export default BlogCustomInfo;

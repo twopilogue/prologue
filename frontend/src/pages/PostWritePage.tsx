@@ -23,6 +23,7 @@ import {
 } from "slices/postSlice";
 import Modal from "components/Modal";
 import { useNavigate } from "react-router-dom";
+import { writePostApi } from "apis/api/posts";
 
 interface writeDetailPostRequestProps {
   accessToken: string;
@@ -112,15 +113,13 @@ const PostWritePage = () => {
 
       setSaveModalOpen(false);
       setLoading(true);
-      await Axios.post(api.posts.writePost(), formData)
-        .then(() => {
-          setLoading(false);
-          setUploadModalOpen(true);
-          navigate("/post");
-        })
-        .catch(() => {
-          setLoading(false);
-        });
+
+      await writePostApi(formData);
+
+      setLoading(false);
+      setUploadModalOpen(true);
+      navigate("/post");
+
       dispatch(resetPostFileList());
     }
   };

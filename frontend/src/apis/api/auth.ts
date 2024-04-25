@@ -1,4 +1,4 @@
-import { authApi, blogApi } from "apis/Api";
+import { authApi } from "apis/Api";
 
 const authLogin = async () => {
   const res = await authApi.getUri();
@@ -10,11 +10,6 @@ const getLogin = async (code: string) => {
   return res.data;
 };
 
-const getRepoList = async (accessToken: string, githubId: string) => {
-  const res = await blogApi.getRepoList(accessToken, githubId);
-  return res.data.checkRepository;
-};
-
 const getAuthFile = async (accessToken: string, githubId: string) => {
   const res = await authApi.getAuthFile(accessToken, githubId);
   return res.data;
@@ -22,7 +17,7 @@ const getAuthFile = async (accessToken: string, githubId: string) => {
 
 const putAuthFile = async (data: { accessToken: string; githubId: string; blogType: 0 | 1; template: string }) => {
   const res = await authApi.putAuthFile(data);
-  return res.data;
+  return res.data.statusCode;
 };
 
 const setSecretRepo = async (accessToken: string, githubId: string) => {
@@ -30,4 +25,4 @@ const setSecretRepo = async (accessToken: string, githubId: string) => {
   return res.data.statusCode;
 };
 
-export { authLogin, getLogin, getRepoList, getAuthFile, putAuthFile, setSecretRepo };
+export { authLogin, getLogin, getAuthFile, putAuthFile, setSecretRepo };

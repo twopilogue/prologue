@@ -3,16 +3,13 @@ import styles from "features/setting/Setting.module.css";
 import MyGitInfo from "features/setting/myinfo/MyGitInfo";
 import MyInfoInput from "features/setting/myinfo/MyInfoInput";
 import MyBlogInfoInput from "features/setting/myinfo/MyBlogInfoInput";
-import axios from "axios";
-import api from "apis/BaseUrl";
 import { useSelector } from "react-redux";
 import { rootState } from "app/store";
-
 import ButtonStyled from "components/Button";
-
 import Modal from "components/Modal";
 import { useAppSelector } from "app/hooks";
 import { selectMyBlogInfo, selectMyInfo } from "slices/settingSlice";
+import { modifyBlogApi } from "apis/api/setting";
 
 const MyInfoPage = () => {
   const { githubId, accessToken } = useSelector((state: rootState) => state.auth);
@@ -46,17 +43,9 @@ const MyInfoPage = () => {
     formData.append("imageFile", newPic);
     formData.append("modifyBlogSettingRequest", new Blob([JSON.stringify(result)], { type: "application/json" }));
 
-    await axios
-      .put(api.setting.modifyBlog(), formData, {
-        headers: { "Content-Type": `multipart/form-data` },
-      })
-      .then(() => {
-        setLoadingModalOpen(false);
-        setFinModalOpen(true);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    await modifyBlogApi(formData);
+    setLoadingModalOpen(false);
+    setFinModalOpen(true);
   };
 
   return (

@@ -47,7 +47,7 @@ export interface ComponentCheckConfig {
   contents: boolean;
 }
 
-export interface blogInfoConfig {
+export interface BlogInfoConfig {
   nickName: string;
   summary: string;
   profileImg: string | FormData;
@@ -118,7 +118,7 @@ interface LayoutConfig {
 
   checkList: ComponentCheckConfig;
 
-  blogSettingInfo: blogInfoConfig;
+  blogSettingInfo: BlogInfoConfig;
 
   colorList: colorsConfig;
 
