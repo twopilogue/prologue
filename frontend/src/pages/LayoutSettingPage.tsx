@@ -1,8 +1,5 @@
 import { useEffect, useState } from "react";
-import api from "apis/BaseUrl";
-import Axios from "apis/JsonAxios";
 import { useAppSelector } from "app/hooks";
-import { rootState } from "app/store";
 import ButtonStyled from "components/Button";
 import Modal from "components/Modal";
 import Text from "components/Text";
@@ -10,7 +7,7 @@ import DefaultLayoutStyles from "features/setting/layout/DefaultLayoutStyles";
 import LayoutContainer from "features/setting/layout/LayoutContainer";
 import LayoutSelector from "features/setting/layout/LayoutSelector";
 import { Layout } from "react-grid-layout";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   ComponentConfig,
   selectClickedLayoutIdx,

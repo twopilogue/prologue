@@ -10,8 +10,6 @@ import { colorsConfig, initialState, selectColors, setClickedComp, setColors } f
 import { DetailSettingStyles } from "features/setting/detail/DetailSettingStyles";
 import SettingLayout from "features/setting/detail/SettingLayout";
 import DetailSelector from "features/setting/detail/DetailSelector";
-import Axios from "apis/MultipartAxios";
-import api from "apis/BaseUrl";
 import { toJSON } from "cssjson";
 import Modal from "components/Modal";
 import { getDetailApi, modifyDetailApi } from "apis/api/setting";

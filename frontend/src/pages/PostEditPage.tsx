@@ -9,9 +9,6 @@ import PostWriteTitle from "../features/post/PostWriteTitle";
 import { useSelector } from "react-redux";
 import { rootState } from "app/store";
 import { useNavigate, useParams } from "react-router-dom";
-import Axios from "apis/MultipartAxios";
-import JsonAxios from "apis/JsonAxios";
-import api from "apis/BaseUrl";
 import PostViewerContents from "features/post/PostViewerContents";
 import { useAppDispatch, useAppSelector } from "app/hooks";
 import {

@@ -16,6 +16,7 @@ import { dashboardActions } from "slices/dashboardSlice";
 import axios from "axios";
 import moment from "moment";
 import { authActions } from "slices/authSlice";
+import { modifyBlogApi } from "apis/api/setting";
 
 function BlogCustomInfo(props: { template: string }) {
   const dispatch = useDispatch();
@@ -252,6 +253,6 @@ function BlogCustomInfo(props: { template: string }) {
       {successModal && <BlogDashboardMoveModal />}
     </>
   );
-};
+}
 
 export default BlogCustomInfo;

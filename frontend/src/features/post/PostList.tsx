@@ -3,7 +3,6 @@ import styles from "features/post/Post.module.css";
 import PostListCard from "./PostListCard";
 import { useAppDispatch, useAppSelector } from "app/hooks";
 import {
-  postListConfig,
   selectPostIndex,
   selectPostIsLast,
   selectPostList,
@@ -13,9 +12,7 @@ import {
   setPostList,
 } from "slices/postSlice";
 import { useNavigate } from "react-router-dom";
-import Axios from "apis/JsonAxios";
 import { useSelector } from "react-redux";
-import api from "apis/BaseUrl";
 import { rootState } from "app/store";
 import { CircularProgress } from "@mui/material";
 import { getPostListApi } from "apis/api/posts";
