@@ -7,8 +7,8 @@ import palette from "styles/colorPalette";
 import { useDispatch, useSelector } from "react-redux";
 import { dashboardActions } from "slices/dashboardSlice";
 import { rootState } from "app/store";
-import api from "api/Api";
-import Axios from "api/JsonAxios";
+import { useAuthStore } from "stores/authStore";
+import { getMonthPosts } from "apis/api/dashboard";
 
 const CalendarStyled = styled(Calendar)(() => ({
   backgroundColor: "transparent",
@@ -70,20 +70,20 @@ const CalendarStyled = styled(Calendar)(() => ({
 function CalenderCustom() {
   const dispatch = useDispatch();
 
-  const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
-  const { monthPosts } = useSelector((state: rootState) => state.dashboard);
+  const accessToken = useAuthStore((state) => state.accessToken);
+  const githubId = useAuthStore((state) => state.githubId);
 
+  const { monthPosts } = useSelector((state: rootState) => state.dashboard);
   const [marks, setMark] = useState(monthPosts);
 
+  const getMonthPost = async () => {
+    const dateList = await getMonthPosts(accessToken, githubId);
+    dispatch(dashboardActions.monthPosts({ monthPosts: dateList }));
+    setMark(dateList);
+  };
+
   useEffect(() => {
-    Axios.get(api.dashboard.getMonthPosts(accessToken, githubId)).then((res) => {
-      dispatch(
-        dashboardActions.monthPosts({
-          monthPosts: res.data.dateList,
-        }),
-      );
-      setMark(res.data.dateList);
-    });
+    getMonthPost();
   }, []);
 
   return (

@@ -5,10 +5,9 @@ import Input from "components/Input";
 import Tag from "components/Tag";
 import { useAppDispatch } from "app/hooks";
 import { setPostCategory, setPostDescription, setPostTagList, setPostTitle } from "slices/postSlice";
-import axios from "api/JsonAxios";
-import api from "api/Api";
 import { useSelector } from "react-redux";
 import { rootState } from "app/store";
+import { getCategoryApi } from "apis/api/setting";
 
 interface PostWriteTitleProps {
   savedTitle: string;
@@ -44,11 +43,10 @@ const PostWriteTitle = ({ savedTitle, savedDescription, savedCategory, savedTag 
     dispatch(setPostCategory(event.target.value));
   };
 
-  const getCategoryList = () => {
+  const getCategoryList = async () => {
     if (blogType == 0) {
-      axios.get(api.setting.getCategory(accessToken, githubId)).then((res) => {
-        setCategoryList(res.data.category);
-      });
+      const category = await getCategoryApi(accessToken, githubId);
+      setCategoryList(category);
     }
   };
 

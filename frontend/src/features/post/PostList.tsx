@@ -3,7 +3,6 @@ import styles from "features/post/Post.module.css";
 import PostListCard from "./PostListCard";
 import { useAppDispatch, useAppSelector } from "app/hooks";
 import {
-  postListConfig,
   selectPostIndex,
   selectPostIsLast,
   selectPostList,
@@ -13,11 +12,10 @@ import {
   setPostList,
 } from "slices/postSlice";
 import { useNavigate } from "react-router-dom";
-import Axios from "api/JsonAxios";
 import { useSelector } from "react-redux";
-import api from "api/Api";
 import { rootState } from "app/store";
 import { CircularProgress } from "@mui/material";
+import { getPostListApi } from "apis/api/posts";
 
 interface PostListProps {
   category: string;
@@ -36,35 +34,18 @@ const PostList = ({ category }: PostListProps) => {
   const [loading, setLoading] = useState(false);
 
   const getPostList = async () => {
-    const tmpList: postListConfig[] = [];
+    const res = await getPostListApi(accessToken, githubId, postIndex, category);
+    const { Post: posts, index, isLast } = res;
 
     setLoading(true);
-    await Axios.get(api.posts.getPostList(accessToken, githubId, postIndex, category))
-      .then((res) => {
-        for (let i = 0; i < res.data.result.Post.length; i++) {
-          const post: postListConfig = {
-            title: res.data.result.Post[i].title,
-            date: res.data.result.Post[i].date,
-            description: res.data.result.Post[i].description,
-            category: res.data.result.Post[i].category,
-            tag: res.data.result.Post[i].tag,
-            directory: res.data.result.Post[i].directory,
-            imgUrl: res.data.result.Post[i].imgUrl,
-          };
-          tmpList.push(post);
-        }
-        if (res.data.result.index !== -1) {
-          dispatch(setPostList([...postList, ...tmpList]));
-        } else {
-          dispatch(setPostList(tmpList));
-        }
-        dispatch(setPostIndex(res.data.result.index));
-        dispatch(setPostIsLast(res.data.result.isLast));
-        setLoading(false);
-      })
-      .catch(() => {
-        setLoading(false);
-      });
+    if (index !== -1) {
+      dispatch(setPostList([...postList, ...posts]));
+    } else {
+      dispatch(setPostList(posts));
+    }
+    dispatch(setPostIndex(index));
+    dispatch(setPostIsLast(isLast));
+    setLoading(false);
   };
 
   useEffect(() => {

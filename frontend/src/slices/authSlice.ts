@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { UserInfoConfig } from "apis/Api";
 
 interface authConfig {
   accessToken: string;
@@ -8,12 +9,6 @@ interface authConfig {
   authFile: boolean;
   blogType: null | 0 | 1;
   template: string;
-}
-
-interface loginConfig {
-  accessToken: string;
-  githubId: string;
-  githubImage: string;
 }
 
 interface blogTypeConfig {
@@ -42,7 +37,7 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    login: (state, action: PayloadAction<loginConfig>) => {
+    login: (state, action: PayloadAction<UserInfoConfig>) => {
       state.accessToken = action.payload.accessToken;
       state.githubId = action.payload.githubId;
       state.githubImage = action.payload.githubImage;

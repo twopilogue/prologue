@@ -1,14 +1,22 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { rootState } from "app/store";
 
-export interface postListConfig {
+export interface PostListConfig {
   title: string;
   date: string;
   description: string;
   category: string;
-  tag: [];
+  tag: string[];
   directory: string;
   imgUrl: string;
+}
+
+export interface PostDetailConfig {
+  content: string;
+  image: {
+    name: string;
+    url: string;
+  }[];
 }
 
 interface editListConfig {
@@ -27,7 +35,7 @@ interface postConfig {
   fileList: any[];
   files: [];
 
-  postList: postListConfig[];
+  postList: PostListConfig[];
   postIndex: number;
   postIsLast: boolean;
 
@@ -87,7 +95,7 @@ const postSlice = createSlice({
       state.postList = payload;
     },
     resetPostList: (state) => {
-      const tmp: postListConfig[] = [];
+      const tmp: PostListConfig[] = [];
       state.postList = [...tmp];
     },
     setPostIndex: (state, { payload }) => {

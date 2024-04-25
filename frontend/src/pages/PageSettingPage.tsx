@@ -2,16 +2,15 @@ import { useState } from "react";
 import styles from "features/setting/Setting.module.css";
 import Text from "components/Text";
 import PageLayout from "features/setting/page/PageLayout";
-import Axios from "api/JsonAxios";
-import api from "api/Api";
 import { useSelector } from "react-redux";
 import { rootState } from "app/store";
 import { PageConfig, selectPageList, selectPageLayoutList, selectPageDeleList } from "slices/settingSlice";
 import ButtonStyled from "components/Button";
 import Modal from "components/Modal";
 import { useAppSelector } from "app/hooks";
+import { modifyPageApi } from "apis/api/setting";
 
-interface resultConfig {
+export interface ModifiedPageConfig {
   label: string;
   posts: boolean;
   type: string;
@@ -47,7 +46,7 @@ const PageSettingPage = () => {
 
     // 정렬
     const sorted = merged.sort((a, b) => a.y - b.y);
-    const result: resultConfig[] = [];
+    const result: ModifiedPageConfig[] = [];
     sorted.map((item) =>
       item.oldName
         ? result.push({ label: item.label, posts: item.posts, type: item.type, oldName: item.oldName })
@@ -56,15 +55,10 @@ const PageSettingPage = () => {
     sendPage(result);
   };
 
-  const sendPage = async (result: resultConfig[]) => {
-    await Axios.put(api.setting.modifyPage(), { accessToken: accessToken, githubId: githubId, pages: result })
-      .then(() => {
-        setLoadingModalOpen(false);
-        setFinModalOpen(true);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+  const sendPage = async (result: ModifiedPageConfig[]) => {
+    await modifyPageApi(accessToken, githubId, result);
+    setLoadingModalOpen(false);
+    setFinModalOpen(true);
   };
 
   return (

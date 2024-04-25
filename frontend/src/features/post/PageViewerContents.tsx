@@ -10,8 +10,7 @@ import { useAppDispatch } from "app/hooks";
 import { setPostContent, setPostFileList, setPostFiles } from "slices/postSlice";
 import { useSelector } from "react-redux";
 import { rootState } from "app/store";
-import Axios from "api/MultipartAxios";
-import api from "api/Api";
+import { getImgUrlApi } from "apis/api/posts";
 
 interface PageViewerContentsProps {
   content: string;
@@ -63,11 +62,7 @@ const PageViewerContents = ({ content }: PageViewerContentsProps) => {
               );
               formData.append("file", blob);
 
-              let imageUrl;
-              await Axios.put(api.posts.getImgUrl(), formData).then((res) => {
-                imageUrl = res.data.tempImageUrl;
-              });
-
+              const imageUrl = await getImgUrlApi(formData);
               const newFile = { name: file.name, url: imageUrl };
 
               fileList.push(newFile);

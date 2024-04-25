@@ -8,8 +8,8 @@ import PostWriteTitle from "../features/post/PostWriteTitle";
 import PostWriteContents from "../features/post/PostWriteContents";
 import { useSelector } from "react-redux";
 import { rootState } from "app/store";
-import Axios from "api/MultipartAxios";
-import api from "api/Api";
+import Axios from "apis/MultipartAxios";
+import api from "apis/BaseUrl";
 import { useAppDispatch, useAppSelector } from "app/hooks";
 import {
   resetPostFileList,
@@ -23,6 +23,7 @@ import {
 } from "slices/postSlice";
 import Modal from "components/Modal";
 import { useNavigate } from "react-router-dom";
+import { writePostApi } from "apis/api/posts";
 
 interface writeDetailPostRequestProps {
   accessToken: string;
@@ -112,15 +113,13 @@ const PostWritePage = () => {
 
       setSaveModalOpen(false);
       setLoading(true);
-      await Axios.post(api.posts.writePost(), formData)
-        .then(() => {
-          setLoading(false);
-          setUploadModalOpen(true);
-          navigate("/post");
-        })
-        .catch(() => {
-          setLoading(false);
-        });
+
+      await writePostApi(formData);
+
+      setLoading(false);
+      setUploadModalOpen(true);
+      navigate("/post");
+
       dispatch(resetPostFileList());
     }
   };

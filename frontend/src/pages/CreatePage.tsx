@@ -3,21 +3,22 @@ import BlogLayoutSetting from "features/blog/blogCreate/BlogLayoutSetting";
 import BlogStepper from "features/blog/blogCreate/BlogStepper";
 import { Stack } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
-import Axios from "api/JsonAxios";
-import api from "api/Api";
-import { useDispatch, useSelector } from "react-redux";
-import { rootState } from "app/store";
+import { useDispatch } from "react-redux";
 import { authActions } from "slices/authSlice";
 import BlogCustomInfo from "features/blog/BlogCustomInfo";
 import BlogLoding from "features/blog/BlogLoding";
 import { useState } from "react";
+import { putAuthFile, setSecretRepo } from "apis/api/auth";
+import { selectTemplate, setBuildType } from "apis/api/blog";
+import { useAuthStore } from "stores/authStore";
 
 const CreatePage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { state } = useLocation();
 
-  const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
+  const accessToken = useAuthStore((state) => state.accessToken);
+  const githubId = useAuthStore((state) => state.githubId);
 
   const [isStepNumber, setStepNumber] = useState(state === null ? 0 : state.setStepNumber);
 
@@ -37,38 +38,32 @@ const CreatePage = () => {
 
   const chooseTemplate = async () => {
     openLodingView(true);
-    await Axios.post(api.blog.chooseTemplate(), {
-      accessToken: accessToken,
-      githubId: githubId,
-      template: "prologue-template",
-    }).then(async () => {
-      setTimeout(() => [setSecretRepo()], 200);
-    });
+    const statusCode = await selectTemplate(accessToken, githubId, "prologue-template");
+    if (statusCode === 200) makeSecretRepo();
   };
 
-  const setSecretRepo = async () => {
-    await Axios.put(api.auth.setSecretRepo(accessToken, githubId)).then(() => {
-      changeBuildType();
-    });
+  const makeSecretRepo = async () => {
+    const statusCode = await setSecretRepo(accessToken, githubId);
+    if (statusCode === 200) changeBuildType();
   };
 
   const changeBuildType = async () => {
-    await Axios.put(api.blog.changeBuildType(accessToken, githubId)).then(async () => {
-      setAuthFile();
-    });
+    const statusCode = await setBuildType(accessToken, githubId);
+    if (statusCode === 200) setAuthFile();
   };
 
   // 인증 파일 생성
   const setAuthFile = async () => {
-    await Axios.put(api.auth.setAuthFile(), {
+    const statusCode = await putAuthFile({
       accessToken: accessToken,
       githubId: githubId,
       blogType: 0,
       template: "prologue-template",
-    }).then(() => {
+    });
+    if (statusCode === 200) {
       openLodingView(false);
       setStepNumber(2);
-    });
+    }
   };
 
   return (

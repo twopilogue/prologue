@@ -6,16 +6,17 @@ import Input from "components/Input";
 import Text from "components/Text";
 import styles from "features/blog/Blog.module.css";
 import BlogDashboardMoveModal from "./BlogDashboardMoveModal";
-import api from "api/Api";
+import api from "apis/BaseUrl";
 import { useSelector } from "react-redux";
 import { rootState } from "app/store";
-import Axios from "api/MultipartAxios";
+import Axios from "apis/MultipartAxios";
 import BlogLoding from "features/blog/BlogLoding";
 import { useDispatch } from "react-redux";
 import { dashboardActions } from "slices/dashboardSlice";
 import axios from "axios";
 import moment from "moment";
 import { authActions } from "slices/authSlice";
+import { modifyBlogApi } from "apis/api/setting";
 
 function BlogCustomInfo(props: { template: string }) {
   const dispatch = useDispatch();
@@ -57,9 +58,8 @@ function BlogCustomInfo(props: { template: string }) {
     formData.append("imageFile", isInfo.profile_image);
 
     //axios 보내기
-    await Axios.put(api.setting.modifyBlog(), formData).then(() => {
-      triggerStart();
-    });
+    await modifyBlogApi(formData);
+    triggerStart();
   };
 
   async function triggerStart() {

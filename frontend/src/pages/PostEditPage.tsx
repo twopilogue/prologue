@@ -9,9 +9,6 @@ import PostWriteTitle from "../features/post/PostWriteTitle";
 import { useSelector } from "react-redux";
 import { rootState } from "app/store";
 import { useNavigate, useParams } from "react-router-dom";
-import Axios from "api/MultipartAxios";
-import JsonAxios from "api/JsonAxios";
-import api from "api/Api";
 import PostViewerContents from "features/post/PostViewerContents";
 import { useAppDispatch, useAppSelector } from "app/hooks";
 import {
@@ -26,6 +23,7 @@ import {
   selectPostTitle,
 } from "slices/postSlice";
 import Modal from "components/Modal";
+import { deletePostApi, getPostDetailApi, modifyPostApi } from "apis/api/posts";
 
 interface modifyDetailPostRequestProps {
   accessToken: string;
@@ -46,7 +44,7 @@ const PostEditPage = () => {
   // const [loading, setLoading] = useState(false);
   const [contentData, setContentData] = useState("");
   const [saveData] = useState(useAppSelector(selectPostEditList));
-  const [savedFileList] = useState([]);
+  const [savedFileList, setSavedFileList] = useState([]);
   const [loadingModalOpen, setLoadingModalOpen] = useState(false);
   const [cancelModalOpen, setCancelModalOpen] = useState(false);
   const [saveModalOpen, setSaveModalOpen] = useState(false);
@@ -62,15 +60,11 @@ const PostEditPage = () => {
   const files = useAppSelector(selectPostFiles);
 
   const getPostDetail = async () => {
-    await Axios.get(api.posts.getPostDetail(accessToken, githubId, directory)).then((res) => {
-      setContentData(res.data.content);
+    const res = await getPostDetailApi(accessToken, githubId, directory);
+    const { content, image } = res;
 
-      for (let i = 0; i < res.data.images.length; i++) {
-        const image = { name: res.data.images[i].name, url: res.data.images[i].url };
-        savedFileList.push(image);
-        // dispatch(setPostFileList([...fileList, ...savedFileList]));
-      }
-    });
+    setContentData(content);
+    setSavedFileList(image);
   };
 
   useEffect(() => {
@@ -139,36 +133,24 @@ const PostEditPage = () => {
 
     setSaveModalOpen(false);
     setLoadingModalOpen(true);
-    await Axios.put(api.posts.modifyPost(), formData)
-      .then(() => {
-        setLoadingModalOpen(false);
-        setUploadModalOpen(true);
-        navigate("/post");
-      })
-      .catch(() => {
-        setLoadingModalOpen(false);
-      });
+
+    await modifyPostApi(formData);
+    setLoadingModalOpen(false);
+    setUploadModalOpen(true);
+    navigate("/post");
+
     dispatch(resetPostFileList());
   };
 
   const deletePost = async () => {
     setDeleteModalOpen(false);
     setLoadingModalOpen(true);
-    await JsonAxios.delete(api.posts.deletePost(), {
-      data: {
-        accessToken: accessToken,
-        githubId: githubId,
-        directory: directory,
-      },
-    })
-      .then(() => {
-        setLoadingModalOpen(false);
-        setUploadModalOpen(true);
-        navigate("/post");
-      })
-      .catch(() => {
-        setLoadingModalOpen(false);
-      });
+    await deletePostApi(accessToken, githubId, directory);
+
+    setLoadingModalOpen(false);
+    setUploadModalOpen(true);
+    navigate("/post");
+
     dispatch(resetPostFileList());
   };
 

@@ -1,26 +1,29 @@
 import { Stack } from "@mui/material";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { rootState } from "app/store";
 import LandingMain from "features/landing/LandingMain";
-import Axios from "api/JsonAxios";
-import api from "api/Api";
+import { useAuthStore } from "stores/authStore";
+import { getRepoList } from "apis/api/blog";
 
 const LandingPage = () => {
   const navigate = useNavigate();
 
-  const { login, authFile, accessToken, githubId } = useSelector((state: rootState) => state.auth);
+  // const { login, authFile, accessToken, githubId } = useSelector((state: rootState) => state.auth);
+  const login = useAuthStore((state) => state.login);
+  const authFile = useAuthStore((state) => state.authFile);
+  const accessToken = useAuthStore((state) => state.accessToken);
+  const githubId = useAuthStore((state) => state.githubId);
+
+  const getRepositoryList = async () => {
+    const checkRepository = await getRepoList(accessToken, githubId);
+    if (checkRepository) navigate("create/reset");
+    else navigate("/create");
+  };
 
   useEffect(() => {
     if (login) {
       if (authFile) navigate("/dashboard");
-      else {
-        Axios.get(api.blog.getRepoList(accessToken, githubId)).then((res) => {
-          if (res.data.checkRepository) navigate("create/reset");
-          else navigate("/create");
-        });
-      }
+      else getRepositoryList();
     }
   }, []);
 

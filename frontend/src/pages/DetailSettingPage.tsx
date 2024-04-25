@@ -10,10 +10,17 @@ import { colorsConfig, initialState, selectColors, setClickedComp, setColors } f
 import { DetailSettingStyles } from "features/setting/detail/DetailSettingStyles";
 import SettingLayout from "features/setting/detail/SettingLayout";
 import DetailSelector from "features/setting/detail/DetailSelector";
-import Axios from "api/MultipartAxios";
-import api from "api/Api";
 import { toJSON } from "cssjson";
 import Modal from "components/Modal";
+import { getDetailApi, modifyDetailApi } from "apis/api/setting";
+import { getDetailService } from "apis/services/setting";
+
+export interface DetailConfig {
+  css: string;
+  logoText: string;
+  titleText: string;
+  titleColor: boolean;
+}
 
 const DetailSettingPage = () => {
   const [titleImg, setTitleImg] = useState(null);
@@ -30,51 +37,48 @@ const DetailSettingPage = () => {
   const dispatch = useDispatch();
 
   const getDetailSetting = async () => {
-    await Axios.get(api.setting.getDetail(accessToken, githubId))
-      .then((res) => {
-        if (res.data.css === "\n") {
-          console.log("설정 없음");
-        } else {
-          const removedResult = res.data.css.replaceAll(".", "").replaceAll(" ", "");
-          const result = toJSON(removedResult);
+    const data = await getDetailApi(accessToken, githubId);
+    const { css, logoText, titleText, titleColor } = await getDetailService(data);
 
-          const colors = {
-            title: {
-              background: result.children.title.attributes["background-color"],
-              text: result.children.titleh3.attributes["color"],
-              type: res.data.titleColor, // 색이면 true, 이미지면 false
-              titleText: res.data.titleText,
-            },
-            category: {
-              background: result.children.category.attributes["background-color"],
-              text: result.children.categorya.attributes["color"],
-            },
-            page: {
-              background: result.children["page-container"].attributes["background-color"],
-              text: result.children.pagea.attributes["color"],
-              sort: result.children["page-container"].attributes["justify-content"],
-            },
-            profile: {
-              background: result.children.profile.attributes["background-color"],
-              text: result.children.profile.attributes["color"],
-            },
-            contents: {
-              background: result.children["post-list-container"].attributes["background-color"],
-              text: result.children["post-list-container"].attributes["color"],
-            },
-            logo: {
-              background: "#ffffff",
-              text: "#000000",
-              logoText: res.data.logoText,
-            },
-          };
-          dispatch(setColors(colors));
-          setOriginColors(colors);
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    if (css === "\n") {
+      console.log("설정 없음");
+    } else {
+      const removedResult = css.replaceAll(".", "").replaceAll(" ", "");
+      const result = toJSON(removedResult);
+
+      const colors = {
+        title: {
+          background: result.children.title.attributes["background-color"],
+          text: result.children.titleh3.attributes["color"],
+          type: titleColor, // 색이면 true, 이미지면 false
+          titleText,
+        },
+        category: {
+          background: result.children.category.attributes["background-color"],
+          text: result.children.categorya.attributes["color"],
+        },
+        page: {
+          background: result.children["page-container"].attributes["background-color"],
+          text: result.children.pagea.attributes["color"],
+          sort: result.children["page-container"].attributes["justify-content"],
+        },
+        profile: {
+          background: result.children.profile.attributes["background-color"],
+          text: result.children.profile.attributes["color"],
+        },
+        contents: {
+          background: result.children["post-list-container"].attributes["background-color"],
+          text: result.children["post-list-container"].attributes["color"],
+        },
+        logo: {
+          background: "#ffffff",
+          text: "#000000",
+          logoText,
+        },
+      };
+      dispatch(setColors(colors));
+      setOriginColors(colors);
+    }
   };
 
   const handleOnSave = () => {
@@ -99,14 +103,9 @@ const DetailSettingPage = () => {
   };
 
   const sendDetailSetting = async (formData: FormData) => {
-    await Axios.put(api.setting.modifyDetail(), formData)
-      .then(() => {
-        setLoadingModalOpen(false);
-        setFinModalOpen(true);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    await modifyDetailApi(formData);
+    setLoadingModalOpen(false);
+    setFinModalOpen(true);
   };
 
   const onReset = () => {

@@ -1,8 +1,5 @@
 import { useEffect, useState } from "react";
-import api from "api/Api";
-import Axios from "api/JsonAxios";
 import { useAppSelector } from "app/hooks";
-import { rootState } from "app/store";
 import ButtonStyled from "components/Button";
 import Modal from "components/Modal";
 import Text from "components/Text";
@@ -10,7 +7,7 @@ import DefaultLayoutStyles from "features/setting/layout/DefaultLayoutStyles";
 import LayoutContainer from "features/setting/layout/LayoutContainer";
 import LayoutSelector from "features/setting/layout/LayoutSelector";
 import { Layout } from "react-grid-layout";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   ComponentConfig,
   selectClickedLayoutIdx,
@@ -21,47 +18,42 @@ import {
   setUserComponentList,
 } from "slices/settingSlice";
 import styles from "../features/setting/Setting.module.css";
+import { getLayoutApi, modifyLayoutApi } from "apis/api/setting";
 
 const LayoutSettingPage = () => {
   const dispatch = useDispatch();
   const clickedIdx = useAppSelector(selectClickedLayoutIdx);
-  const { githubId, accessToken } = useSelector((state: rootState) => state.auth);
   const DefaultLayoutList = DefaultLayoutStyles();
   const [saveModalOpen, setSaveModalOpen] = useState<boolean>(false);
   const [loadingModalOpen, setLoadingModalOpen] = useState<boolean>(false);
   const [finModalOpen, setFinModalOpen] = useState<boolean>(false);
 
   const getUserLayout = async () => {
-    await Axios.get(api.setting.getLayout(accessToken, githubId))
-      .then((res) => {
-        const response = JSON.parse(res.data.layout);
-        const userComponents: ComponentConfig[] = [];
-        response.layout.map((it: Layout) => {
-          if (it.i === "블로그 로고") userComponents.push({ key: "블로그 로고", id: "logo" });
-          else if (it.i === "프로필") userComponents.push({ key: "프로필", id: "profile" });
-          else if (it.i === "카테고리") userComponents.push({ key: "카테고리", id: "category" });
-          else if (it.i === "페이지") userComponents.push({ key: "페이지", id: "page" });
-          else if (it.i === "타이틀") userComponents.push({ key: "타이틀", id: "title" });
-          else if (it.i === "글 목록") userComponents.push({ key: "글 목록", id: "contents" });
-        });
-        dispatch(setUserComponentLayoutList(response.layout));
-        dispatch(setUserComponentList(userComponents));
-        dispatch(setUserCheckList(response.checkList));
-        dispatch(
-          setOrigin({
-            originComponentLayoutList: response.layout,
-            originComponentList: userComponents,
-            originCheckList: response.checkList,
-          }),
-        );
-        dispatch(setComponentCreated(true));
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    const res = await getLayoutApi(accessToken, githubId);
+    const layout = JSON.parse(res);
+    const userComponents: ComponentConfig[] = [];
+    layout.map((it: Layout) => {
+      if (it.i === "블로그 로고") userComponents.push({ key: "블로그 로고", id: "logo" });
+      else if (it.i === "프로필") userComponents.push({ key: "프로필", id: "profile" });
+      else if (it.i === "카테고리") userComponents.push({ key: "카테고리", id: "category" });
+      else if (it.i === "페이지") userComponents.push({ key: "페이지", id: "page" });
+      else if (it.i === "타이틀") userComponents.push({ key: "타이틀", id: "title" });
+      else if (it.i === "글 목록") userComponents.push({ key: "글 목록", id: "contents" });
+    });
+    dispatch(setUserComponentLayoutList(layout));
+    dispatch(setUserComponentList(userComponents));
+    // dispatch(setUserCheckList(response.checkList)); // checklist가 뭐지
+    dispatch(
+      setOrigin({
+        originComponentLayoutList: layout,
+        originComponentList: userComponents,
+        // originCheckList: response.checkList,
+      }),
+    );
+    dispatch(setComponentCreated(true));
   };
 
-  const handleOnSave = () => {
+  const handleOnSave = async () => {
     setSaveModalOpen(false);
     setLoadingModalOpen(true);
     const layoutJson = {
@@ -69,24 +61,9 @@ const LayoutSettingPage = () => {
       checkList: DefaultLayoutList[clickedIdx].checkList,
     };
 
-    const result = {
-      accessToken: accessToken,
-      githubId: githubId,
-      layout: DefaultLayoutList[clickedIdx].struct,
-      layoutJson: JSON.stringify(layoutJson),
-    };
-    sendUserLayout(result);
-  };
-
-  const sendUserLayout = async (result: object) => {
-    await Axios.put(api.setting.modifyLayout(), result)
-      .then(() => {
-        setLoadingModalOpen(false);
-        setFinModalOpen(true);
-      })
-      .catch((err) => {
-        console.log("실패", err);
-      });
+    await modifyLayoutApi(accessToken, githubId, DefaultLayoutList[clickedIdx].struct, JSON.stringify(layoutJson));
+    setLoadingModalOpen(false);
+    setFinModalOpen(true);
   };
 
   useEffect(() => {

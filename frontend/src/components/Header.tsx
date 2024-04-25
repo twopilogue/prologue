@@ -9,9 +9,9 @@ import styles from "./css/Header.module.css";
 import palette from "../styles/colorPalette";
 import { useDispatch, useSelector } from "react-redux";
 import { rootState } from "app/store";
-import api from "api/Api";
-import Axios from "api/JsonAxios";
 import { authActions } from "slices/authSlice";
+import { authLogin } from "apis/api/auth";
+import { useAuthStore } from "stores/authStore";
 
 const GithubButton = styled(ButtonBase)(() => ({
   margin: 3,
@@ -36,7 +36,12 @@ function Header() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { login, authFile, githubId, githubImage } = useSelector((state: rootState) => state.auth);
+  // const { login, authFile, githubId, githubImage } = useSelector((state: rootState) => state.auth);
+  const login = useAuthStore((state) => state.login);
+  const authFile = useAuthStore((state) => state.authFile);
+  const githubId = useAuthStore((state) => state.githubId);
+  const githubImage = useAuthStore((state) => state.githubImage);
+
   const [menuOpen, setMenuOpen] = useState(false);
 
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
@@ -51,11 +56,7 @@ function Header() {
     setMenuOpen(false);
   };
 
-  const onLogin = () => {
-    Axios.get(api.auth.getUri()).then((res) => {
-      window.location.href = res.data.uri;
-    });
-  };
+  const onLogin = async () => await authLogin();
 
   const onLogout = () => {
     handleCloseUserMenu();
