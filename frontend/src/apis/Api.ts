@@ -5,26 +5,17 @@ import { BlogInfoConfig } from "slices/settingSlice";
 import { DetailConfig } from "pages/DetailSettingPage";
 import { ModifiedPageConfig } from "pages/PageSettingPage";
 import { PostDetailConfig, PostListConfig } from "slices/postSlice";
+import { UserInfoConfig } from "interfaces/auth.interface";
 
 type ServerResponse = {
   message?: string; // 메시지
   statusCode?: number;
 };
 
-// export interface URIConfig extends ServerResponse {
-//   uri: string;
-// }
-
 interface NewPostConfig {
   date: string;
   directory: string;
   title: string;
-}
-
-export interface UserInfoConfig {
-  accessToken: string;
-  githubId: string;
-  githubImage: string;
 }
 
 export interface PageConfig {
