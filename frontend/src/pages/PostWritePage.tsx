@@ -24,6 +24,10 @@ import {
 import Modal from "components/Modal";
 import { useNavigate } from "react-router-dom";
 import { writePostApi } from "apis/api/posts";
+import { usePostStore } from "stores/postStore";
+import { useShallow } from "zustand/react/shallow";
+import PostWrite from "features/post/PostWrite";
+import { useAuthStore } from "stores/authStore";
 
 interface writeDetailPostRequestProps {
   accessToken: string;
@@ -36,21 +40,26 @@ interface writeDetailPostRequestProps {
 const PostWritePage = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-
-  const { accessToken, githubId, blogType } = useSelector((state: rootState) => state.auth);
+  const [accessToken, githubId, blogType] = useAuthStore(
+    useShallow((state) => [state.accessToken, state.githubId, state.blogType]),
+  );
 
   const [loading, setLoading] = useState(false);
   const [cancelModalOpen, setCancelModalOpen] = useState(false);
   const [saveModalOpen, setSaveModalOpen] = useState(false);
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
 
-  const title = useAppSelector(selectPostTitle);
-  const description = useAppSelector(selectPostDescription);
-  const category = useAppSelector(selectPostCategory);
-  const tagList = useAppSelector(selectPostTagList);
-  const content = useAppSelector(selectPostContent);
-  const fileList = useAppSelector(selectPostFileList);
-  const files = useAppSelector(selectPostFiles);
+  const [{ title, description, category, tagList, content, fileList, files }] = usePostStore(
+    useShallow((state) => [state.post]),
+  );
+
+  // const title = useAppSelector(selectPostTitle);
+  // const description = useAppSelector(selectPostDescription);
+  // const category = useAppSelector(selectPostCategory);
+  // const tagList = useAppSelector(selectPostTagList);
+  // const content = useAppSelector(selectPostContent);
+  // const fileList = useAppSelector(selectPostFileList);
+  // const files = useAppSelector(selectPostFiles);
 
   const savePost = async () => {
     if (title == "") {

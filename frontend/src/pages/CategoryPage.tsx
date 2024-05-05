@@ -3,14 +3,14 @@ import { useState } from "react";
 import { selectCategoryList, selectCategoryLayoutList } from "slices/settingSlice";
 import ButtonStyled from "components/Button";
 import styles from "features/setting/Setting.module.css";
-import { useSelector } from "react-redux";
-import { rootState } from "app/store";
 import Modal from "components/Modal";
 import { useAppSelector } from "app/hooks";
 import { modifyCategoryApi } from "apis/api/setting";
+import { useAuthStore } from "stores/authStore";
+import { useShallow } from "zustand/react/shallow";
 
 const CategoryPage = () => {
-  const { githubId, accessToken } = useSelector((state: rootState) => state.auth);
+  const [accessToken, githubId] = useAuthStore(useShallow((state) => [state.accessToken, state.githubId]));
   const categoryList = useAppSelector(selectCategoryList);
   const layoutList = useAppSelector(selectCategoryLayoutList);
   const [saveModalOpen, setSaveModalOpen] = useState<boolean>(false);

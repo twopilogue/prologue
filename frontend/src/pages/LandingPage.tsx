@@ -4,15 +4,13 @@ import { useNavigate } from "react-router-dom";
 import LandingMain from "features/landing/LandingMain";
 import { useAuthStore } from "stores/authStore";
 import { getRepoList } from "apis/api/blog";
+import { useShallow } from "zustand/react/shallow";
 
 const LandingPage = () => {
   const navigate = useNavigate();
-
-  // const { login, authFile, accessToken, githubId } = useSelector((state: rootState) => state.auth);
-  const login = useAuthStore((state) => state.login);
-  const authFile = useAuthStore((state) => state.authFile);
-  const accessToken = useAuthStore((state) => state.accessToken);
-  const githubId = useAuthStore((state) => state.githubId);
+  const [accessToken, githubId, isLogin, hasAuthFile] = useAuthStore(
+    useShallow((state) => [state.accessToken, state.githubId, state.isLogin, state.hasAuthFile]),
+  );
 
   const getRepositoryList = async () => {
     const checkRepository = await getRepoList(accessToken, githubId);
@@ -21,8 +19,8 @@ const LandingPage = () => {
   };
 
   useEffect(() => {
-    if (login) {
-      if (authFile) navigate("/dashboard");
+    if (isLogin) {
+      if (hasAuthFile) navigate("/dashboard");
       else getRepositoryList();
     }
   }, []);

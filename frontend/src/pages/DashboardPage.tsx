@@ -5,22 +5,20 @@ import DashboardList from "features/dashboard/DashboardList";
 import DashboardMenu from "features/dashboard/DashboardMenu";
 import DashboardPreview from "features/dashboard/DashboardPreview";
 import { Box, Grid, Stack } from "@mui/material";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { authActions } from "slices/authSlice";
 
-import { setAuthFile, useAuthStore } from "stores/authStore";
+import { useAuthActions, useAuthStore } from "stores/authStore";
 import { getBuildState } from "apis/api/dashboard";
 import { authApi } from "apis/Api";
 import { getRepoList } from "apis/api/blog";
+import { useShallow } from "zustand/react/shallow";
 
 const DashboardPage = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const login = useAuthStore((state) => state.login);
-  const accessToken = useAuthStore((state) => state.accessToken);
-  const githubId = useAuthStore((state) => state.githubId);
+  const [accessToken, githubId, isLogin] = useAuthStore(
+    useShallow((state) => [state.accessToken, state.githubId, state.isLogin]),
+  );
+  const { setAuthFileAction } = useAuthActions();
 
   const [buildState, setBuildState] = useState<boolean>();
 
@@ -32,12 +30,9 @@ const DashboardPage = () => {
   // 서비스 인증 파일 존재 여부
   const getAuthFile = async () => {
     const res = await authApi.getAuthFile(accessToken, githubId);
-    if (res.data.checkAuthFile) {
-      dispatch(authActions.authFile({ authFile: true }));
-      setAuthFile(true);
-    } else {
-      dispatch(authActions.authFile({ authFile: false }));
-      setAuthFile(false);
+    if (res.data.checkAuthFile) setAuthFileAction(true);
+    else {
+      setAuthFileAction(false);
 
       const checkRepository = await getRepoList(accessToken, githubId);
       if (checkRepository) navigate("create/reset");
@@ -46,7 +41,7 @@ const DashboardPage = () => {
   };
 
   useEffect(() => {
-    if (login) getAuthFile();
+    if (isLogin) getAuthFile();
     getBildState();
   }, []);
 

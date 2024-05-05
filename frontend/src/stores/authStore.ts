@@ -1,25 +1,54 @@
 import { create } from "zustand";
+import { immer } from "zustand/middleware/immer";
 
-export const useAuthStore = create(() => ({
-  accessToken: "",
-  githubId: "",
-  githubImage: "",
-  login: false,
-  authFile: false,
-  blogType: null,
-  template: "",
-}));
+interface AuthConfig {
+  accessToken: string;
+  githubId: string;
+  githubImage: string;
+  isLogin: boolean;
+  hasAuthFile: boolean;
+  blogType: 0 | 1 | null;
+  template: string;
+  actions: {
+    setLoginAction: (accessToken: string, githubId: string, githubImage: string) => void;
+    setLogoutAction: () => void;
+    setBlogTypeAction: (blogType: 0 | 1) => void;
+    setAuthFileAction: (hasAuthFile: boolean) => void;
+    setTemplateAction: (template: string) => void;
+  };
+}
 
-export const setLogin = (accessToken: string, githubId: string, githubImage: string) => {
-  console.log(`accessToken 저장: ${accessToken}`);
-  useAuthStore.setState({
-    accessToken,
-    githubId,
-    githubImage,
-    login: true,
-  });
-};
+export const useAuthStore = create<AuthConfig>()(
+  immer((set) => ({
+    accessToken: "",
+    githubId: "",
+    githubImage: "",
+    isLogin: false,
+    hasAuthFile: false,
+    blogType: null,
+    template: "",
+    actions: {
+      setLoginAction: (accessToken: string, githubId: string, githubImage: string) =>
+        set(() => ({
+          accessToken,
+          githubId,
+          githubImage,
+          isLogin: true,
+        })),
+      setLogoutAction: () =>
+        set(() => ({
+          accessToken: "",
+          githubId: "",
+          githubImage: "",
+          isLogin: false,
+          hasAuthFile: false,
+          blogType: null,
+        })),
+      setBlogTypeAction: (blogType: 0 | 1 | null) => set(() => ({ blogType })),
+      setAuthFileAction: (hasAuthFile: boolean) => set(() => ({ hasAuthFile })),
+      setTemplateAction: (template: string) => set(() => ({ template })),
+    },
+  })),
+);
 
-export const setBlogType = (blogType: 0 | 1) => useAuthStore.setState({ blogType });
-export const setAuthFile = (authFile: boolean) => useAuthStore.setState({ authFile });
-export const setTemplate = (template: string) => useAuthStore.setState({ template });
+export const useAuthActions = () => useAuthStore((state) => state.actions);

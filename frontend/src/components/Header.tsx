@@ -7,11 +7,9 @@ import Text from "./Text";
 import Logo from "assets/Logo.svg";
 import styles from "./css/Header.module.css";
 import palette from "../styles/colorPalette";
-import { useDispatch, useSelector } from "react-redux";
-import { rootState } from "app/store";
-import { authActions } from "slices/authSlice";
 import { authLogin } from "apis/api/auth";
-import { useAuthStore } from "stores/authStore";
+import { useAuthActions, useAuthStore } from "stores/authStore";
+import { useShallow } from "zustand/react/shallow";
 
 const GithubButton = styled(ButtonBase)(() => ({
   margin: 3,
@@ -32,15 +30,13 @@ const AvatarStyled = styled(Avatar)(() => ({
 }));
 
 function Header() {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
 
-  // const { login, authFile, githubId, githubImage } = useSelector((state: rootState) => state.auth);
-  const login = useAuthStore((state) => state.login);
-  const authFile = useAuthStore((state) => state.authFile);
-  const githubId = useAuthStore((state) => state.githubId);
-  const githubImage = useAuthStore((state) => state.githubImage);
+  const [isLogin, hasAuthFile, githubId, githubImage] = useAuthStore(
+    useShallow((state) => [state.isLogin, state.hasAuthFile, state.githubId, state.githubImage]),
+  );
+  const { setLogoutAction } = useAuthActions();
 
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -60,7 +56,7 @@ function Header() {
 
   const onLogout = () => {
     handleCloseUserMenu();
-    dispatch(authActions.logout());
+    setLogoutAction();
     navigate("/");
   };
 
@@ -77,7 +73,7 @@ function Header() {
             <img width="32" height="32" src={Logo} />
             <h1>Prologue</h1>
           </NavLink>
-          {login && authFile && (
+          {isLogin && hasAuthFile && (
             <Stack direction="row" spacing={3}>
               <NavLink to="/dashboard" className={styles.link}>
                 대시보드
@@ -93,7 +89,7 @@ function Header() {
         </Stack>
 
         <Stack direction="row" spacing={2} alignItems="center">
-          {login ? (
+          {isLogin ? (
             <>
               <Box sx={{ flexGrow: 0 }}>
                 <ButtonBase onClick={handleOpenUserMenu} disableRipple>

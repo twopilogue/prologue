@@ -4,11 +4,10 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import styled from "@emotion/styled";
 import palette from "styles/colorPalette";
-import { useDispatch, useSelector } from "react-redux";
-import { dashboardActions } from "slices/dashboardSlice";
-import { rootState } from "app/store";
 import { useAuthStore } from "stores/authStore";
 import { getMonthPosts } from "apis/api/dashboard";
+import { useShallow } from "zustand/react/shallow";
+import { useDashboardActions, useDashboardStore } from "stores/dashboardStore";
 
 const CalendarStyled = styled(Calendar)(() => ({
   backgroundColor: "transparent",
@@ -68,17 +67,14 @@ const CalendarStyled = styled(Calendar)(() => ({
 }));
 
 function CalenderCustom() {
-  const dispatch = useDispatch();
-
-  const accessToken = useAuthStore((state) => state.accessToken);
-  const githubId = useAuthStore((state) => state.githubId);
-
-  const { monthPosts } = useSelector((state: rootState) => state.dashboard);
+  const [accessToken, githubId] = useAuthStore(useShallow((state) => [state.accessToken, state.githubId]));
+  const monthPosts = useDashboardStore((state) => state.monthPosts);
+  const { setMonthPostsAction } = useDashboardActions();
   const [marks, setMark] = useState(monthPosts);
 
   const getMonthPost = async () => {
     const dateList = await getMonthPosts(accessToken, githubId);
-    dispatch(dashboardActions.monthPosts({ monthPosts: dateList }));
+    setMonthPostsAction(monthPosts);
     setMark(dateList);
   };
 

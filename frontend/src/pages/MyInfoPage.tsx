@@ -3,16 +3,16 @@ import styles from "features/setting/Setting.module.css";
 import MyGitInfo from "features/setting/myinfo/MyGitInfo";
 import MyInfoInput from "features/setting/myinfo/MyInfoInput";
 import MyBlogInfoInput from "features/setting/myinfo/MyBlogInfoInput";
-import { useSelector } from "react-redux";
-import { rootState } from "app/store";
 import ButtonStyled from "components/Button";
 import Modal from "components/Modal";
 import { useAppSelector } from "app/hooks";
 import { selectMyBlogInfo, selectMyInfo } from "slices/settingSlice";
 import { modifyBlogApi } from "apis/api/setting";
+import { useAuthStore } from "stores/authStore";
+import { useShallow } from "zustand/react/shallow";
 
 const MyInfoPage = () => {
-  const { githubId, accessToken } = useSelector((state: rootState) => state.auth);
+  const [accessToken, githubId] = useAuthStore(useShallow((state) => [state.accessToken, state.githubId]));
   const [newPic, setNewPic] = useState<Blob>(null);
   const myBlogInfo = useAppSelector(selectMyBlogInfo);
   const myInfo = useAppSelector(selectMyInfo);

@@ -1,24 +1,21 @@
 import { useEffect, useState } from "react";
 import styles from "features/dashboard/Dashboard.module.css";
 import Text from "components/Text";
-import { useDispatch, useSelector } from "react-redux";
-import { dashboardActions } from "slices/dashboardSlice";
-import { rootState } from "app/store";
 import { Link } from "@mui/material";
 import { useAuthStore } from "stores/authStore";
 import { getNewPosts } from "apis/api/dashboard";
+import { useShallow } from "zustand/react/shallow";
+import { useDashboardActions, useDashboardStore } from "stores/dashboardStore";
 
 const DashboardList = () => {
-  const dispatch = useDispatch();
-  const accessToken = useAuthStore((state) => state.accessToken);
-  const githubId = useAuthStore((state) => state.githubId);
-
-  const { newPosts } = useSelector((state: rootState) => state.dashboard);
+  const [accessToken, githubId] = useAuthStore(useShallow((state) => [state.accessToken, state.githubId]));
+  const newPosts = useDashboardStore((state) => state.newPosts);
+  const { setNewPostsAction } = useDashboardActions();
   const [newPost, setNewPost] = useState(newPosts);
 
   const getNewPost = async () => {
     const newPosts = await getNewPosts(accessToken, githubId);
-    dispatch(dashboardActions.newPosts({ newPosts }));
+    setNewPostsAction(newPosts);
     setNewPost(newPosts);
   };
 

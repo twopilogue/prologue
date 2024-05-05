@@ -7,8 +7,6 @@ import Text from "components/Text";
 import styles from "features/blog/Blog.module.css";
 import BlogDashboardMoveModal from "./BlogDashboardMoveModal";
 import api from "apis/BaseUrl";
-import { useSelector } from "react-redux";
-import { rootState } from "app/store";
 import Axios from "apis/MultipartAxios";
 import BlogLoding from "features/blog/BlogLoding";
 import { useDispatch } from "react-redux";
@@ -17,11 +15,12 @@ import axios from "axios";
 import moment from "moment";
 import { authActions } from "slices/authSlice";
 import { modifyBlogApi } from "apis/api/setting";
+import { useAuthStore } from "stores/authStore";
+import { useShallow } from "zustand/react/shallow";
 
 function BlogCustomInfo(props: { template: string }) {
   const dispatch = useDispatch();
-
-  const { githubId, accessToken } = useSelector((state: rootState) => state.auth);
+  const [accessToken, githubId] = useAuthStore(useShallow((state) => [state.accessToken, state.githubId]));
   const [imgPreview, setImgPreview] = useState(null);
   const [lodingView, openLodingView] = useState(false);
 
