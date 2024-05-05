@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 import styles from "features/post_before/Post.module.css";
 import PostListCard from "../post_before/PostListCard";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { rootState } from "app/store";
 import { CircularProgress } from "@mui/material";
 import { getPostListApi } from "apis/api/posts";
+import { PostListConfig, usePostActions, usePostStore } from "stores/postStore";
+import { useShallow } from "zustand/react/shallow";
+import { useAuthStore } from "stores/authStore";
 
 interface PostListProps {
   category: string;
@@ -21,6 +22,8 @@ const PostList = ({ category }: PostListProps) => {
   const [loading, setLoading] = useState(false);
 
   const getPostList = async () => {
+    setLoading(true);
+
     const res = await getPostListApi(accessToken, githubId, postIndex, category);
     const { Post: posts, index, isLast } = res;
 
@@ -30,6 +33,17 @@ const PostList = ({ category }: PostListProps) => {
     setPostIsLastAction(isLast);
 
     setLoading(false);
+  };
+
+  const moveToPostDetail = (post: PostListConfig) => {
+    const postInfo = {
+      title: post.title,
+      description: post.description,
+      category: post.category,
+      tag: post.tag,
+    };
+    setPostEditListAction(postInfo);
+    navigate("/post/edit/" + post.directory);
   };
 
   useEffect(() => {
@@ -42,44 +56,24 @@ const PostList = ({ category }: PostListProps) => {
         <CircularProgress className={styles.postListLoading} sx={{ color: "gray" }} />
       ) : (
         <div className={styles.postDataList}>
-          {postList.map((value, key) => (
-            <div
-              key={key}
-              className={styles.postCards}
-              onClick={() => {
-                const tmp = {
-                  title: value.title,
-                  description: value.description,
-                  category: value.category,
-                  tag: value.tag,
-                };
-                dispatch(setPostEditList(tmp));
-                navigate("/post/edit/" + value.directory);
-              }}
-            >
+          {postList.map((post, key) => (
+            <div key={key} className={styles.postCards} onClick={() => moveToPostDetail(post)}>
               <PostListCard
-                title={value.title}
-                date={value.date}
-                category={value.category}
-                description={value.description}
-                imgUrl={value.imgUrl}
+                title={post.title}
+                date={post.date}
+                category={post.category}
+                description={post.description}
+                imgUrl={post.imgUrl}
               />
             </div>
           ))}
           {!postIsLast && (
-            <div
-              className={styles.moreListBtn}
-              onClick={() => {
-                getPostList();
-              }}
-            >
+            <div className={styles.moreListBtn} onClick={getPostList}>
               글 목록 더 보기
             </div>
           )}
         </div>
       )}
-
-      {/* <PostListImgCard /> */}
     </div>
   );
 };

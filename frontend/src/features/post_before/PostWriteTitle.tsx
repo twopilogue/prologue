@@ -1,13 +1,14 @@
 import { ChangeEvent, KeyboardEvent, useEffect, useState } from "react";
-import styles from "features/post/PostWrite.module.css";
+import styles from "features/post_before/PostWrite.module.css";
 import Text from "components/Text";
 import Input from "components/Input";
 import Tag from "components/Tag";
 import { useAppDispatch } from "app/hooks";
-import { setPostCategory, setPostDescription, setPostTagList, setPostTitle } from "slices/postSlice";
-import { useSelector } from "react-redux";
-import { rootState } from "app/store";
+import { setPostCategory, setPostDescription, setPostTagList } from "slices/postSlice";
 import { getCategoryApi } from "apis/api/setting";
+import { usePostActions } from "stores/postStore";
+import { useAuthStore } from "stores/authStore";
+import { useShallow } from "zustand/react/shallow";
 
 interface PostWriteTitleProps {
   savedTitle: string;
@@ -18,7 +19,10 @@ interface PostWriteTitleProps {
 
 const PostWriteTitle = ({ savedTitle, savedDescription, savedCategory, savedTag }: PostWriteTitleProps) => {
   const dispatch = useAppDispatch();
-
+  const [accessToken, githubId, blogType] = useAuthStore(
+    useShallow((state) => [state.accessToken, state.githubId, state.blogType]),
+  );
+  const { setPostTitleAction } = usePostActions();
   const [title, setTitle] = useState(savedTitle);
   const [description, setDescription] = useState(savedDescription);
   const [category, setCategory] = useState(savedCategory);
@@ -26,12 +30,7 @@ const PostWriteTitle = ({ savedTitle, savedDescription, savedCategory, savedTag 
   const [tag, setTag] = useState("");
   const [tagList, setTagList] = useState(savedTag);
 
-  const { accessToken, githubId, blogType } = useSelector((state: rootState) => state.auth);
-
-  const titleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setTitle(event.target.value);
-    dispatch(setPostTitle(event.target.value));
-  };
+  // const { accessToken, githubId, blogType } = useSelector((state: rootState) => state.auth);
 
   const descriptionChange = (event: ChangeEvent<HTMLInputElement>) => {
     setDescription(event.target.value);
@@ -89,7 +88,7 @@ const PostWriteTitle = ({ savedTitle, savedDescription, savedCategory, savedTag 
     <div className={styles.postWriteTitle}>
       <Text value="제목" type="text" />
       <div style={{ marginTop: "1%" }}>
-        <Input placeholder="제목을 입력해주세요" onChange={titleChange} value={title} />
+        <Input placeholder="제목을 입력해주세요" onChange={(e) => setPostTitleAction(e.target.value)} value={title} />
       </div>
       <div id="titleError" style={{ display: "none" }}>
         <Text value="제목은 필수 입력값입니다." type="caption" color="red" />

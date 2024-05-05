@@ -1,22 +1,20 @@
 import { useEffect, useState } from "react";
-import styles from "features/post/Post.module.css";
+import styles from "features/post_before/Post.module.css";
 import Text from "components/Text";
 import ButtonStyled from "components/Button";
-import PostCategoryList from "features/post/PostCategoryList";
+import PostCategory from "features/post/PostCategory";
 import PostList from "features/post/PostList";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { resetPostIndex, resetPostList } from "slices/postSlice";
+import { usePostActions } from "stores/postStore";
 
 const PostManagementPage = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-
   const [category, setCategory] = useState("전체보기");
+  const { resetPostListAction, resetPostIndexAction } = usePostActions();
 
   useEffect(() => {
-    dispatch(resetPostList());
-    dispatch(resetPostIndex());
+    resetPostListAction();
+    resetPostIndexAction();
   }, []);
 
   return (
@@ -36,7 +34,7 @@ const PostManagementPage = () => {
         />
       </div>
       <div style={{ display: "flex", marginTop: "1%" }}>
-        <PostCategoryList setCategory={setCategory} />
+        <PostCategory setCategory={setCategory} />
         <PostList category={category} />
       </div>
     </div>
