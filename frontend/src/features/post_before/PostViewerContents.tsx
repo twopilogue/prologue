@@ -4,22 +4,19 @@ import "@toast-ui/editor/dist/toastui-editor.css";
 import "tui-color-picker/dist/tui-color-picker.css";
 import "@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css";
 import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
-import styles from "features/post/PostWrite.module.css";
-import Text from "components/Text";
-import { useAppDispatch } from "app/hooks";
-import { setPostContent, setPostFileList, setPostFiles } from "slices/postSlice";
-import { useSelector } from "react-redux";
-import { rootState } from "app/store";
+import styles from "features/post_before/PostWrite.module.css";
 import { getImgUrlApi } from "apis/api/posts";
+import { useAuthStore } from "stores/authStore";
+import { useShallow } from "zustand/react/shallow";
+import { usePostActions } from "stores/postStore";
 
-interface PageViewerContentsProps {
+interface PostViewerContentsProps {
   content: string;
 }
 
-const PageViewerContents = ({ content }: PageViewerContentsProps) => {
-  const dispatch = useAppDispatch();
-
-  const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
+const PostViewerContents = ({ content }: PostViewerContentsProps) => {
+  const [accessToken, githubId] = useAuthStore(useShallow((state) => [state.accessToken, state.githubId]));
+  const { setPostContentAction, setPostFileListAction, setPostFileAction } = usePostActions();
 
   const [fileList] = useState([]);
   const [files] = useState([]);
@@ -27,15 +24,11 @@ const PageViewerContents = ({ content }: PageViewerContentsProps) => {
   const editorRef = useRef<Editor>();
 
   const contentChange = () => {
-    dispatch(setPostContent(editorRef.current?.getInstance().getMarkdown()));
-    // dispatch(setPostFileList(fileList));
+    setPostContentAction(editorRef.current?.getInstance().getMarkdown());
   };
 
   return (
-    <div className={styles.pageWriteContents}>
-      <Text value="내용" type="text" />
-      <div style={{ marginTop: "1%" }}></div>
-
+    <div className={styles.postWriteContents}>
       {content && (
         <Editor
           usageStatistics={false}
@@ -50,7 +43,7 @@ const PageViewerContents = ({ content }: PageViewerContentsProps) => {
           hooks={{
             addImageBlobHook: async (blob, callback) => {
               const formData = new FormData();
-              const file: any = blob; // 추후 에디터 설정 변경 후 수정하기.
+              const file: any = blob;
 
               const tempImageUploadRequest = {
                 accessToken: accessToken,
@@ -66,10 +59,10 @@ const PageViewerContents = ({ content }: PageViewerContentsProps) => {
               const newFile = { name: file.name, url: imageUrl };
 
               fileList.push(newFile);
-              dispatch(setPostFileList([...fileList, newFile]));
+              setPostFileListAction([...fileList]);
 
               files.push(blob);
-              dispatch(setPostFiles([...files, blob]));
+              setPostFileAction([...files]);
 
               callback(imageUrl);
               return false;
@@ -81,4 +74,4 @@ const PageViewerContents = ({ content }: PageViewerContentsProps) => {
   );
 };
 
-export default PageViewerContents;
+export default PostViewerContents;

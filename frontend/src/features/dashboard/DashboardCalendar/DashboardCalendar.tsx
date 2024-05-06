@@ -2,11 +2,11 @@ import styles from "features/dashboard/Dashboard.module.css";
 import { Avatar, Box, Stack } from "@mui/material";
 import Text from "components/Text";
 import Calendar from "./Calendar";
-import { rootState } from "app/store";
-import { useSelector } from "react-redux";
+import { useAuthStore } from "stores/authStore";
+import { useShallow } from "zustand/react/shallow";
 
 function DashboardCalendar() {
-  const { githubId, githubImage } = useSelector((state: rootState) => state.auth);
+  const [githubId, githubImage] = useAuthStore(useShallow((state) => [state.githubId, state.githubImage]));
 
   return (
     <div className={`${styles.container} ${styles.calendar}`}>

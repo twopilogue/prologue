@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
-import styles from "features/post/PostWrite.module.css";
+import styles from "features/post_before/Post.module.css";
 import Text from "components/Text";
 import Button from "components/Button";
 import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
 import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
 import { useNavigate, useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { rootState } from "app/store";
 import Axios from "apis/MultipartAxios";
 import api from "apis/BaseUrl";
-import PageViewerContents from "features/post/PageViewerContents";
+import PageViewerContents from "pages/NotUsed/PageViewerContents";
 import { useAppDispatch, useAppSelector } from "app/hooks";
 import { selectPostContent, selectPostFileList, selectPostFiles, setPostFileList } from "slices/postSlice";
 import Modal from "components/Modal";
+import { useAuthStore } from "stores/authStore";
+import { useShallow } from "zustand/react/shallow";
 
 interface modifyDetailPageRequestProps {
   accessToken: string;
@@ -26,7 +26,7 @@ const PageEditPage = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
+  const [accessToken, githubId] = useAuthStore(useShallow((state) => [state.accessToken, state.githubId]));
   const { pageName } = useParams();
 
   const [loading, setLoading] = useState(false);

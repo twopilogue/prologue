@@ -1,4 +1,4 @@
-import { UserInfoConfig } from "apis/Api";
+import { UserInfoConfig } from "interfaces/auth.interface";
 
 const getUserInfo = (userInfo: UserInfoConfig) => {
   const { accessToken, githubId, githubImage } = userInfo;

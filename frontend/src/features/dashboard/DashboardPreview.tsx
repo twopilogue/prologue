@@ -4,13 +4,11 @@ import Text from "components/Text";
 import IconButton from "@mui/material/IconButton";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import { Box, Link, Tooltip } from "@mui/material";
-import { rootState } from "app/store";
-import { useSelector } from "react-redux";
 import axios from "axios";
+import { useAuthStore } from "stores/authStore";
 
 function DashboardPreview(props: { buildState: boolean }) {
-  const { githubId } = useSelector((state: rootState) => state.auth);
-
+  const githubId = useAuthStore((state) => state.githubId);
   const blogLink = `https://${githubId}.github.io/`;
   const repoLink = `https://github.com/${githubId}`;
 

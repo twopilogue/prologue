@@ -19,9 +19,13 @@ import {
 } from "slices/settingSlice";
 import styles from "../features/setting/Setting.module.css";
 import { getLayoutApi, modifyLayoutApi } from "apis/api/setting";
+import { useShallow } from "zustand/react/shallow";
+import { useAuthStore } from "stores/authStore";
 
 const LayoutSettingPage = () => {
   const dispatch = useDispatch();
+  const [accessToken, githubId] = useAuthStore(useShallow((state) => [state.accessToken, state.githubId]));
+
   const clickedIdx = useAppSelector(selectClickedLayoutIdx);
   const DefaultLayoutList = DefaultLayoutStyles();
   const [saveModalOpen, setSaveModalOpen] = useState<boolean>(false);

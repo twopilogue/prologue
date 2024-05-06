@@ -1,5 +1,5 @@
 import { SyntheticEvent } from "react";
-import styles from "features/post/Post.module.css";
+import styles from "features/post_before/Post.module.css";
 import Text from "components/Text";
 
 interface PostListCardProps {

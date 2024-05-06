@@ -3,18 +3,16 @@ import { Box, Stack } from "@mui/material";
 import GatsbyLayoutCard from "features/blog/BlogGatsbyTheme";
 import Text from "components/Text";
 import Button from "components/Button";
-import { useSelector } from "react-redux";
-import { rootState } from "app/store";
 import BlogLoding from "features/blog/BlogLoding";
 import { useNavigate } from "react-router-dom";
 import { putAuthFile, setSecretRepo } from "apis/api/auth";
 import { selectTemplate, setBuildType } from "apis/api/blog";
+import { useAuthStore } from "stores/authStore";
+import { useShallow } from "zustand/react/shallow";
 
 const LayoutChoicePage = () => {
   const navigate = useNavigate();
-
-  const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
-
+  const [accessToken, githubId] = useAuthStore(useShallow((state) => [state.accessToken, state.githubId]));
   const [isChoiceTheme, setChoiceTheme] = useState("gatsby-starter-foundation");
   const [lodingView, openLodingView] = useState(false);
 

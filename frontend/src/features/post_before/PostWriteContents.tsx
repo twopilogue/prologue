@@ -1,20 +1,18 @@
 import { useRef, useState } from "react";
-import styles from "features/post/PostWrite.module.css";
+import styles from "features/post_before/PostWrite.module.css";
 import { Editor } from "@toast-ui/react-editor";
 import "@toast-ui/editor/dist/toastui-editor.css";
 import "tui-color-picker/dist/tui-color-picker.css";
 import "@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css";
 import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
-import { useAppDispatch } from "app/hooks";
-import { setPostContent, setPostFileList, setPostFiles } from "slices/postSlice";
-import { useSelector } from "react-redux";
-import { rootState } from "app/store";
 import { getImgUrlApi } from "apis/api/posts";
+import { useAuthStore } from "stores/authStore";
+import { useShallow } from "zustand/react/shallow";
+import { usePostActions } from "stores/postStore";
 
 const PostWriteContents = () => {
-  const dispatch = useAppDispatch();
-
-  const { accessToken, githubId } = useSelector((state: rootState) => state.auth);
+  const [accessToken, githubId] = useAuthStore(useShallow((state) => [state.accessToken, state.githubId]));
+  const { setPostContentAction, setPostFileListAction, setPostFileAction } = usePostActions();
 
   const [fileList] = useState([]);
   const [files] = useState([]);
@@ -22,8 +20,8 @@ const PostWriteContents = () => {
   const editorRef = useRef<Editor>();
 
   const contentChange = () => {
-    dispatch(setPostContent(editorRef.current?.getInstance().getMarkdown()));
-    // dispatch(setPostFileList(fileList));
+    setPostContentAction(editorRef.current?.getInstance().getMarkdown());
+    setPostFileListAction(fileList);
   };
 
   return (
@@ -60,10 +58,10 @@ const PostWriteContents = () => {
             const newFile = { name: file.name, url: imageUrl };
 
             fileList.push(newFile);
-            dispatch(setPostFileList([...fileList]));
+            setPostFileListAction([...fileList]);
 
             files.push(blob);
-            dispatch(setPostFiles([...files]));
+            setPostFileAction([...files]);
 
             callback(imageUrl);
             return false;

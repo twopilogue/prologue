@@ -5,8 +5,6 @@ import Text from "components/Text";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import SyncAltIcon from "@mui/icons-material/SyncAlt";
 import Tooltip, { TooltipProps } from "@mui/material/Tooltip";
-import { useDispatch, useSelector } from "react-redux";
-import { rootState } from "app/store";
 import {
   Box,
   ButtonBase,
@@ -19,10 +17,11 @@ import {
   keyframes,
 } from "@mui/material";
 import "moment/locale/ko";
-import { dashboardActions } from "slices/dashboardSlice";
 import { useAuthStore } from "stores/authStore";
 import { getBuildTime, getChangeState, getRepoSize, getTotalPostCount } from "apis/api/dashboard";
 import { putBuild } from "apis/api/blog";
+import { useShallow } from "zustand/react/shallow";
+import { useDashboardActions, useDashboardStore } from "stores/dashboardStore";
 
 const CustomTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -86,12 +85,14 @@ function CircularProgressWithLabel(props: CircularProgressProps & { value: numbe
 }
 
 function DashboardInfo(props: { buildState: boolean; setBuildState: (state: boolean) => void }) {
-  const dispatch = useDispatch();
-  const accessToken = useAuthStore((state) => state.accessToken);
-  const githubId = useAuthStore((state) => state.githubId);
-  const template = useAuthStore((state) => state.template);
-  // const { accessToken, githubId, template } = useSelector((state: rootState) => state.auth);
-  const { totalPost, repoSize, buildTime } = useSelector((state: rootState) => state.dashboard);
+  const [accessToken, githubId, template] = useAuthStore(
+    useShallow((state) => [state.accessToken, state.githubId, state.template]),
+  );
+  const [totalPost, repoSize, buildTime] = useDashboardStore(
+    useShallow((state) => [state.totalPost, state.repoSize, state.buildTime]),
+  );
+
+  const { setBuildTimeAction, setBlogInfoAction } = useDashboardActions();
 
   const [changeState, setChangeState] = useState<boolean>();
   const [buildTimer, setBuildTimer] = useState("");
@@ -150,7 +151,7 @@ function DashboardInfo(props: { buildState: boolean; setBuildState: (state: bool
   const getBlogInfo = async () => {
     const total = await getTotalPostCount(accessToken, githubId);
     const size = await getRepoSize(accessToken, githubId, template);
-    dispatch(dashboardActions.blogInfo({ totalPost: String(total), repoSize: String(size) }));
+    setBlogInfoAction({ totalPost: total, repoSize: size });
   };
 
   useEffect(() => {
@@ -176,7 +177,7 @@ function DashboardInfo(props: { buildState: boolean; setBuildState: (state: bool
     if (buildTimer.includes("초")) return;
 
     const buildTime = await getBuildTime(accessToken, githubId);
-    dispatch(dashboardActions.buildTime({ buildTime: moment(buildTime, "YYYYMMDDHHmmss").format("YYYY MM/DD HH:mm") }));
+    setBuildTimeAction(moment(buildTime, "YYYYMMDDHHmmss").format("YYYY MM/DD HH:mm"));
     setnewBuildTime({
       year: moment(buildTime, "YYYYMMDDHHmmss").format("YYYY"),
       day: moment(buildTime, "YYYYMMDDHHmmss").format("MM/DD HH:mm"),

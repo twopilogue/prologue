@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { UserInfoConfig } from "apis/Api";
+import { UserInfoConfig } from "interfaces/auth.interface";
 
 interface authConfig {
   accessToken: string;

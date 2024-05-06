@@ -1,29 +1,32 @@
 import { useEffect, useState } from "react";
-import styles from "features/post/PostWrite.module.css";
+import styles from "features/post_before/Post.module.css";
 import Text from "components/Text";
 import Button from "components/Button";
 import MeetingRoomOutlinedIcon from "@mui/icons-material/MeetingRoomOutlined";
 import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
-import PostWriteTitle from "../features/post/PostWriteTitle";
+import PostWriteTitle from "../features/post_before/PostWriteTitle";
 import { useSelector } from "react-redux";
 import { rootState } from "app/store";
 import { useNavigate, useParams } from "react-router-dom";
-import PostViewerContents from "features/post/PostViewerContents";
+import PostViewerContents from "features/post_before/PostViewerContents";
 import { useAppDispatch, useAppSelector } from "app/hooks";
-import {
-  resetPostFileList,
-  selectPostCategory,
-  selectPostContent,
-  selectPostDescription,
-  selectPostEditList,
-  selectPostFileList,
-  selectPostFiles,
-  selectPostTagList,
-  selectPostTitle,
-} from "slices/postSlice";
+// import {
+//   resetPostFileList,
+//   selectPostCategory,
+//   selectPostContent,
+//   selectPostDescription,
+//   selectPostEditList,
+//   selectPostFileList,
+//   selectPostFiles,
+//   selectPostTagList,
+//   selectPostTitle,
+// } from "slices/postSlice";
 import Modal from "components/Modal";
 import { deletePostApi, getPostDetailApi, modifyPostApi } from "apis/api/posts";
+import { useAuthStore } from "stores/authStore";
+import { useShallow } from "zustand/react/shallow";
+import { usePostActions, usePostStore } from "stores/postStore";
 
 interface modifyDetailPostRequestProps {
   accessToken: string;
@@ -35,15 +38,21 @@ interface modifyDetailPostRequestProps {
 }
 
 const PostEditPage = () => {
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const [accessToken, githubId, blogType] = useAuthStore(
+    useShallow((state) => [state.accessToken, state.githubId, state.blogType]),
+  );
+  const editList = usePostStore((state) => state.editList);
+  // const [postList, postIndex, postIsLast, editList] = usePostStore(
+  //   useShallow((state) => [state.postList, state.postIndex, state.postIsLast, state.editList]),
+  // );
 
-  const { accessToken, githubId, blogType } = useSelector((state: rootState) => state.auth);
   const { directory } = useParams();
 
   // const [loading, setLoading] = useState(false);
   const [contentData, setContentData] = useState("");
-  const [saveData] = useState(useAppSelector(selectPostEditList));
+  const [saveData] = useState(editList);
   const [savedFileList, setSavedFileList] = useState([]);
   const [loadingModalOpen, setLoadingModalOpen] = useState(false);
   const [cancelModalOpen, setCancelModalOpen] = useState(false);
@@ -51,13 +60,19 @@ const PostEditPage = () => {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
 
-  const title = useAppSelector(selectPostTitle);
-  const description = useAppSelector(selectPostDescription);
-  const category = useAppSelector(selectPostCategory);
-  const tagList = useAppSelector(selectPostTagList);
-  const content = useAppSelector(selectPostContent);
-  const fileList = useAppSelector(selectPostFileList);
-  const files = useAppSelector(selectPostFiles);
+  // const title = useAppSelector(selectPostTitle);
+  // const description = useAppSelector(selectPostDescription);
+  // const category = useAppSelector(selectPostCategory);
+  // const tagList = useAppSelector(selectPostTagList);
+  // const content = useAppSelector(selectPostContent);
+  // const fileList = useAppSelector(selectPostFileList);
+  // const files = useAppSelector(selectPostFiles);
+
+  const [{ title, description, category, tagList, content, fileList, files }] = usePostStore(
+    useShallow((state) => [state.post]),
+  );
+  const { setPostListAction, setPostIndexAction, setPostIsLastAction, setPostEditListAction, resetPostFileListAction } =
+    usePostActions();
 
   const getPostDetail = async () => {
     const res = await getPostDetailApi(accessToken, githubId, directory);
@@ -139,7 +154,7 @@ const PostEditPage = () => {
     setUploadModalOpen(true);
     navigate("/post");
 
-    dispatch(resetPostFileList());
+    resetPostFileListAction();
   };
 
   const deletePost = async () => {
@@ -151,7 +166,7 @@ const PostEditPage = () => {
     setUploadModalOpen(true);
     navigate("/post");
 
-    dispatch(resetPostFileList());
+    resetPostFileListAction();
   };
 
   const showCancelModal = () => {
@@ -190,10 +205,10 @@ const PostEditPage = () => {
 
       <div style={{ display: "flex", marginTop: "1%" }}>
         <PostWriteTitle
-          savedTitle={saveData.title}
-          savedDescription={saveData.description}
-          savedCategory={saveData.category}
-          savedTag={saveData.tag}
+        // savedTitle={saveData.title}
+        // savedDescription={saveData.description}
+        // savedCategory={saveData.category}
+        // savedTag={saveData.tag}
         />
         <PostViewerContents content={contentData} />
       </div>
@@ -205,7 +220,7 @@ const PostEditPage = () => {
           twoButtonCancle={() => setCancelModalOpen(false)}
           twoButtonConfirm={() => {
             navigate("/post");
-            dispatch(resetPostFileList());
+            resetPostFileListAction();
           }}
         />
       )}

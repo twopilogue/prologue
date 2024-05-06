@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { rootState } from "app/store";
+import { useDispatch } from "react-redux";
 import styles from "features/setting/Setting.module.css";
 import Text from "components/Text";
 import ButtonStyled from "components/Button";
@@ -14,6 +13,8 @@ import { toJSON } from "cssjson";
 import Modal from "components/Modal";
 import { getDetailApi, modifyDetailApi } from "apis/api/setting";
 import { getDetailService } from "apis/services/setting";
+import { useAuthStore } from "stores/authStore";
+import { useShallow } from "zustand/react/shallow";
 
 export interface DetailConfig {
   css: string;
@@ -25,13 +26,14 @@ export interface DetailConfig {
 const DetailSettingPage = () => {
   const [titleImg, setTitleImg] = useState(null);
   const [logoImg, setLogoImg] = useState(null);
-  const { githubId, accessToken } = useSelector((state: rootState) => state.auth);
   const colors: colorsConfig = useAppSelector(selectColors);
   const [originColors, setOriginColors] = useState(null);
   const [saveModalOpen, setSaveModalOpen] = useState<boolean>(false);
   const [loadingModalOpen, setLoadingModalOpen] = useState<boolean>(false);
   const [finModalOpen, setFinModalOpen] = useState<boolean>(false);
   const [resetModalOpen, setResetModalOpen] = useState<boolean>(false);
+
+  const [accessToken, githubId] = useAuthStore(useShallow((state) => [state.accessToken, state.githubId]));
 
   const formData = new FormData();
   const dispatch = useDispatch();

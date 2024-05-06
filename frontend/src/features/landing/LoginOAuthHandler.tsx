@@ -7,17 +7,15 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 import landingMainImg1 from "assets/landing/landingMainImg1.png";
 import { Paper } from "@mui/material";
 import waveSvg from "assets/landing/wave.svg";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { authActions } from "slices/authSlice";
 import { getAuthFile, getLogin, setSecretRepo } from "apis/api/auth";
 import { getUserInfo } from "apis/services/auth";
-import { setAuthFile, setBlogType, setLogin, setTemplate } from "stores/authStore";
 import { getRepoList } from "apis/api/blog";
+import { useAuthActions } from "stores/authStore";
 
 const LoginOAuthHandler = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { setAuthFileAction, setBlogTypeAction, setLoginAction, setTemplateAction } = useAuthActions();
 
   const code = new URLSearchParams(location.search).get("code");
 
@@ -28,8 +26,7 @@ const LoginOAuthHandler = () => {
   const getAccessToken = async () => {
     const rawUserInfo = await getLogin(code);
     const { accessToken, githubId, githubImage } = getUserInfo(rawUserInfo);
-    // dispatch(authActions.login({ accessToken, githubId, githubImage }));
-    setLogin(accessToken, githubId, githubImage); // zustand
+    setLoginAction(accessToken, githubId, githubImage); // zustand
 
     // 깃허브 블로그 개설여부
     const checkRepo = await getRepoList(accessToken, githubId);
@@ -37,17 +34,14 @@ const LoginOAuthHandler = () => {
       // 서비스 인증 파일 존재 여부
       const res = await getAuthFile(accessToken, githubId);
       if (res.checkAuthFile) {
-        // dispatch(authActions.blogType({ blogType: res.blogType }));
-        // dispatch(authActions.authFile({ authFile: true }));
-        // dispatch(authActions.template({ template: res.template }));
-        setBlogType(res.blogType);
-        setAuthFile(true);
-        setTemplate(res.template);
+        setBlogTypeAction(res.blogType);
+        setAuthFileAction(true);
+        setTemplateAction(res.template);
 
         const statusCode = await setSecretRepo(accessToken, githubId);
         if (statusCode === 200) navigate("/dashboard");
       } else {
-        dispatch(authActions.authFile({ authFile: false }));
+        setAuthFileAction(false);
         navigate("/create/reset");
       }
     } else navigate("/create");

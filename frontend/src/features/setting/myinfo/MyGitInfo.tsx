@@ -4,11 +4,11 @@ import ButtonStyled from "components/Button";
 import { useDispatch } from "react-redux";
 import { authActions } from "slices/authSlice";
 import { useNavigate } from "react-router-dom";
-import { useAppSelector } from "app/hooks";
-import { rootState } from "app/store";
+import { useAuthStore } from "stores/authStore";
+import { useShallow } from "zustand/react/shallow";
 
 const MyGitInfo = () => {
-  const { githubId, githubImage } = useAppSelector((state: rootState) => state.auth);
+  const [githubImage, githubId] = useAuthStore(useShallow((state) => [state.githubImage, state.githubId]));
 
   const dispatch = useDispatch();
   const navigator = useNavigate();
