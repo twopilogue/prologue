@@ -1,45 +1,31 @@
 import { ChangeEvent, KeyboardEvent, useEffect, useState } from "react";
-import styles from "features/post_before/PostWrite.module.css";
+import styles from "styles/PostWrite.module.css";
 import Text from "components/Text";
 import Input from "components/Input";
 import Tag from "components/Tag";
-import { useAppDispatch } from "app/hooks";
-import { setPostCategory, setPostDescription, setPostTagList } from "slices/postSlice";
 import { getCategoryApi } from "apis/api/setting";
-import { usePostActions } from "stores/postStore";
+import { usePostActions, usePostStore } from "stores/postStore";
 import { useAuthStore } from "stores/authStore";
 import { useShallow } from "zustand/react/shallow";
 
-interface PostWriteTitleProps {
-  savedTitle: string;
-  savedDescription: string;
-  savedCategory: string;
-  savedTag: string[];
-}
-
-const PostWriteTitle = ({ savedTitle, savedDescription, savedCategory, savedTag }: PostWriteTitleProps) => {
-  const dispatch = useAppDispatch();
+const PostInfo = () => {
   const [accessToken, githubId, blogType] = useAuthStore(
     useShallow((state) => [state.accessToken, state.githubId, state.blogType]),
   );
-  const { setPostTitleAction } = usePostActions();
-  const [title, setTitle] = useState(savedTitle);
-  const [description, setDescription] = useState(savedDescription);
-  const [category, setCategory] = useState(savedCategory);
+  const editPost = usePostStore((state) => state.editPost);
+  const { title, description, category, tagList } = editPost;
+  const { setPostTitleAction, setPostDescriptionAction, setPostCategoryAction, setPostTagListAction } =
+    usePostActions();
+
   const [categoryList, setCategoryList] = useState([]);
   const [tag, setTag] = useState("");
-  const [tagList, setTagList] = useState(savedTag);
-
-  // const { accessToken, githubId, blogType } = useSelector((state: rootState) => state.auth);
 
   const descriptionChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setDescription(event.target.value);
-    dispatch(setPostDescription(event.target.value));
+    setPostDescriptionAction(event.target.value);
   };
 
   const categoryChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    setCategory(event.target.value);
-    dispatch(setPostCategory(event.target.value));
+    setPostCategoryAction(event.target.value);
   };
 
   const getCategoryList = async () => {
@@ -57,9 +43,8 @@ const PostWriteTitle = ({ savedTitle, savedDescription, savedCategory, savedTag 
         setTag(tag.replace(english, " "));
       }
 
-      const newTagList = [...tagList];
-      newTagList.push(tag);
-      setTagList(newTagList);
+      const newTagList = [...editPost.tagList, tag];
+      setPostTagListAction(newTagList);
       setTag("");
     }
   };
@@ -68,6 +53,7 @@ const PostWriteTitle = ({ savedTitle, savedDescription, savedCategory, savedTag 
     setTag(event.target.value);
   };
 
+  // 추후 수정 (태그 삭제 기능)
   // const deletePostTag = (event: any) => {
   //   console.log("삭제");
   //   const deleteTag = event.target.label;
@@ -79,10 +65,6 @@ const PostWriteTitle = ({ savedTitle, savedDescription, savedCategory, savedTag 
   useEffect(() => {
     getCategoryList();
   }, []);
-
-  useEffect(() => {
-    dispatch(setPostTagList(tagList));
-  }, [tagList]);
 
   return (
     <div className={styles.postWriteTitle}>
@@ -140,11 +122,4 @@ const PostWriteTitle = ({ savedTitle, savedDescription, savedCategory, savedTag 
   );
 };
 
-export default PostWriteTitle;
-
-PostWriteTitle.defaultProps = {
-  savedTitle: "",
-  savedDescription: "",
-  savedCategory: "",
-  savedTag: [],
-};
+export default PostInfo;

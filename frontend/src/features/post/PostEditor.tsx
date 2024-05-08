@@ -1,5 +1,5 @@
-import { useRef, useState } from "react";
-import styles from "features/post_before/PostWrite.module.css";
+import { useEffect, useRef, useState } from "react";
+import styles from "styles/PostWrite.module.css";
 import { Editor } from "@toast-ui/react-editor";
 import "@toast-ui/editor/dist/toastui-editor.css";
 import "tui-color-picker/dist/tui-color-picker.css";
@@ -8,10 +8,11 @@ import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
 import { getImgUrlApi } from "apis/api/posts";
 import { useAuthStore } from "stores/authStore";
 import { useShallow } from "zustand/react/shallow";
-import { usePostActions } from "stores/postStore";
+import { usePostActions, usePostStore } from "stores/postStore";
 
 const PostWriteContents = () => {
   const [accessToken, githubId] = useAuthStore(useShallow((state) => [state.accessToken, state.githubId]));
+  const editPost = usePostStore((state) => state.editPost);
   const { setPostContentAction, setPostFileListAction, setPostFileAction } = usePostActions();
 
   const [fileList] = useState([]);
@@ -23,6 +24,9 @@ const PostWriteContents = () => {
     setPostContentAction(editorRef.current?.getInstance().getMarkdown());
     setPostFileListAction(fileList);
   };
+  useEffect(() => {
+    console.log(editPost);
+  }, []);
 
   return (
     <div className={styles.postWriteContents}>
@@ -32,7 +36,7 @@ const PostWriteContents = () => {
       <Editor
         usageStatistics={false}
         ref={editorRef}
-        initialValue=""
+        initialValue={editPost.content}
         previewStyle="vertical"
         height="100%"
         initialEditType="markdown"
@@ -45,8 +49,8 @@ const PostWriteContents = () => {
             const file: any = blob;
 
             const tempImageUploadRequest = {
-              accessToken: accessToken,
-              githubId: githubId,
+              accessToken,
+              githubId,
             };
             formData.append(
               "tempImageUploadRequest",

@@ -66,7 +66,7 @@ const MyInfoPage = () => {
       {saveModalOpen && (
         <Modal
           text={`작성한 정보를 저장하시겠습니까?`}
-          twoButtonCancle={() => setSaveModalOpen(false)}
+          twoButtonCancel={() => setSaveModalOpen(false)}
           twoButtonConfirm={sendBlogInfo}
         />
       )}

@@ -11,14 +11,6 @@ export interface PostListConfig {
   imgUrl: string;
 }
 
-export interface PostDetailConfig {
-  content: string;
-  image: {
-    name: string;
-    url: string;
-  }[];
-}
-
 interface editListConfig {
   title: string;
   description: string;

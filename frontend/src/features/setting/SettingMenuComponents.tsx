@@ -1,7 +1,7 @@
 import DetailSettingPage from "pages/DetailSettingPage";
 import MyInfoPage from "pages/MyInfoPage";
 import CategoryPage from "pages/CategoryPage";
-import PageSettingPage from "pages/PageSettingPage";
+import PageSettingPage from "pages/post/PageSettingPage";
 import LayoutSettingPage from "pages/LayoutSettingPage";
 
 export const blogTabs = [

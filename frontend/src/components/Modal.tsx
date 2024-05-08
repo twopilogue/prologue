@@ -9,7 +9,7 @@ interface Props {
   oneButtonLabel?: string;
   oneButtonSet?: () => void;
   twoButtonConfirm?: () => void;
-  twoButtonCancle?: () => void;
+  twoButtonCancel?: () => void;
   saveButtonClose?: () => void;
   loding?: boolean;
   save?: boolean;
@@ -27,7 +27,7 @@ function Modal({
   oneButtonLabel,
   oneButtonSet,
   twoButtonConfirm,
-  twoButtonCancle,
+  twoButtonCancel,
   saveButtonClose,
   loding,
   save,
@@ -70,7 +70,7 @@ function Modal({
                 <Button label={oneButtonLabel} onClick={oneButtonSet} />
               ) : (
                 <Stack direction="row" spacing={2}>
-                  <Button label="취소" color="sky" onClick={twoButtonCancle} />
+                  <Button label="취소" color="sky" onClick={twoButtonCancel} />
                   <Button label="확인" onClick={twoButtonConfirm} />
                 </Stack>
               )}

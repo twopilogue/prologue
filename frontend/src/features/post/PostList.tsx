@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import styles from "features/post_before/Post.module.css";
-import PostListCard from "../post_before/PostListCard";
+import styles from "styles/Post.module.css";
+import PostListCard from "./PostListCard";
 import { useNavigate } from "react-router-dom";
 import { CircularProgress } from "@mui/material";
-import { getPostListApi } from "apis/api/posts";
+import { getPostDetailApi, getPostListApi } from "apis/api/posts";
 import { PostListConfig, usePostActions, usePostStore } from "stores/postStore";
-import { useShallow } from "zustand/react/shallow";
 import { useAuthStore } from "stores/authStore";
+import { useShallow } from "zustand/react/shallow";
 
 interface PostListProps {
   category: string;
@@ -18,7 +18,8 @@ const PostList = ({ category }: PostListProps) => {
   const [postList, postIndex, postIsLast] = usePostStore(
     useShallow((state) => [state.postList, state.postIndex, state.postIsLast]),
   );
-  const { setPostListAction, setPostIndexAction, setPostIsLastAction, setPostEditListAction } = usePostActions();
+  const { setEditPostAction, setPostListAction, setPostIndexAction, setPostIsLastAction, setPostIsEditAction } =
+    usePostActions();
   const [loading, setLoading] = useState(false);
 
   const getPostList = async () => {
@@ -27,22 +28,28 @@ const PostList = ({ category }: PostListProps) => {
     const res = await getPostListApi(accessToken, githubId, postIndex, category);
     const { Post: posts, index, isLast } = res;
 
-    if (index !== -1) setPostListAction([...postList, ...posts]);
-    else setPostListAction(posts);
+    // 글 불러오는 기능 추후 추가
+    // if (index !== -1) setPostListAction([...postList, posts]);
+    setPostListAction(posts);
     setPostIndexAction(index);
     setPostIsLastAction(isLast);
 
     setLoading(false);
   };
 
-  const moveToPostDetail = (post: PostListConfig) => {
+  const moveToPostDetail = async (post: PostListConfig) => {
+    const res = await getPostDetailApi(accessToken, githubId, post.directory);
+    const { content, images } = res;
     const postInfo = {
       title: post.title,
       description: post.description,
       category: post.category,
-      tag: post.tag,
+      tagList: post.tag,
+      content,
+      images,
     };
-    setPostEditListAction(postInfo);
+    setEditPostAction(postInfo);
+    setPostIsEditAction(true);
     navigate("/post/edit/" + post.directory);
   };
 

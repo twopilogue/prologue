@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
-import styles from "features/post_before/Post.module.css";
-import PageEditPage from "./NotUsed/PageEditPage";
+import styles from "styles/Post.module.css";
+import PageEditPage from "../NotUsed/PageEditPage";
 
 const PageRouterPage = () => {
   return (

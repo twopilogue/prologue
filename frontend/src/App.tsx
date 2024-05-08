@@ -5,10 +5,10 @@ import Landing from "pages/LandingPage";
 import Create from "pages/CreatePage";
 import Dashboard from "pages/DashboardPage";
 import SettingPage from "pages/SettingPage";
-import PostRouterPage from "pages/PostRouterPage";
+import PostRouterPage from "features/post/PostRouter";
 import BlogReset from "pages/BlogResetPage";
 import GatsbyLayout from "pages/GatsbyLayoutPage";
-import PageRouterPage from "pages/PageRouterPage";
+import PageRouterPage from "pages/post/PageRouterPage";
 import LoginOAuthHandler from "features/landing/LoginOAuthHandler";
 import AuthRoute from "./AuthRoute";
 

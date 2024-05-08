@@ -1,16 +1,16 @@
+import styles from "styles/Post.module.css";
 import { useEffect, useState } from "react";
-import styles from "features/post_before/Post.module.css";
 import Text from "components/Text";
 import ButtonStyled from "components/Button";
 import PostCategory from "features/post/PostCategory";
 import PostList from "features/post/PostList";
 import { useNavigate } from "react-router-dom";
-import { usePostActions } from "stores/postStore";
+import { initialState, usePostActions } from "stores/postStore";
 
 const PostManagementPage = () => {
   const navigate = useNavigate();
   const [category, setCategory] = useState("전체보기");
-  const { resetPostListAction, resetPostIndexAction } = usePostActions();
+  const { setEditPostAction, setPostIsEditAction, resetPostListAction, resetPostIndexAction } = usePostActions();
 
   useEffect(() => {
     resetPostListAction();
@@ -30,6 +30,8 @@ const PostManagementPage = () => {
           width="11vw"
           onClick={() => {
             navigate("/post/write");
+            setEditPostAction(initialState.editPost);
+            setPostIsEditAction(false);
           }}
         />
       </div>

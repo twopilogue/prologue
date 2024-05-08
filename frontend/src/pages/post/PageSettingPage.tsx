@@ -81,7 +81,7 @@ const PageSettingPage = () => {
       {saveModalOpen && (
         <Modal
           text={`작성한 페이지 정보를 저장하시겠습니까?`}
-          twoButtonCancle={() => setSaveModalOpen(false)}
+          twoButtonCancel={() => setSaveModalOpen(false)}
           twoButtonConfirm={savePageList}
         />
       )}

@@ -4,7 +4,7 @@ import "@toast-ui/editor/dist/toastui-editor.css";
 import "tui-color-picker/dist/tui-color-picker.css";
 import "@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css";
 import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
-import styles from "features/post_before/PostWrite.module.css";
+import styles from "styles/PostWrite.module.css";
 import { getImgUrlApi } from "apis/api/posts";
 import { useAuthStore } from "stores/authStore";
 import { useShallow } from "zustand/react/shallow";
@@ -46,9 +46,10 @@ const PostViewerContents = ({ content }: PostViewerContentsProps) => {
               const file: any = blob;
 
               const tempImageUploadRequest = {
-                accessToken: accessToken,
-                githubId: githubId,
+                accessToken,
+                githubId,
               };
+
               formData.append(
                 "tempImageUploadRequest",
                 new Blob([JSON.stringify(tempImageUploadRequest)], { type: "application/json" }),

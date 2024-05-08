@@ -1,11 +1,12 @@
 import { AxiosRequestConfig } from "axios";
 import Axios from "./JsonAxios";
+import MultipartAxios from "./MultipartAxios";
 import api from "./BaseUrl";
 import { BlogInfoConfig } from "slices/settingSlice";
 import { DetailConfig } from "pages/DetailSettingPage";
-import { ModifiedPageConfig } from "pages/PageSettingPage";
-import { PostDetailConfig, PostListConfig } from "slices/postSlice";
+import { ModifiedPageConfig } from "pages/post/PageSettingPage";
 import { UserInfoConfig } from "interfaces/auth.interface";
+import { PostListConfig } from "stores/postStore";
 
 type ServerResponse = {
   message?: string; // 메시지
@@ -16,6 +17,14 @@ interface NewPostConfig {
   date: string;
   directory: string;
   title: string;
+}
+
+export interface PostDetailResponse {
+  content: string;
+  images: {
+    name: string;
+    url: string;
+  }[];
 }
 
 export interface PageConfig {
@@ -100,10 +109,12 @@ export const settingApi = {
 };
 
 export const postApi = {
-  writePost: (data: { data: FormData }) => Post(api.posts.writePost(), data),
+  // writePost: (data: { data: FormData }) => Post(api.posts.writePost(), data),
+  writePost: (data: { data: FormData }) => MultipartAxios.post(api.posts.writePost(), data),
   getPost: (accessToken: string, githubId: string, directory: string) =>
-    Get<PostDetailConfig>(api.posts.getPostDetail(accessToken, githubId, directory)),
-  putPost: (data: { data: FormData }) => Put(api.posts.modifyPost(), data),
+    Get<PostDetailResponse>(api.posts.getPostDetail(accessToken, githubId, directory)),
+  // putPost: (data: { data: FormData }) => Put(api.posts.modifyPost(), data),
+  putPost: async (data: { data: FormData }) => await MultipartAxios.put(api.posts.modifyPost(), { data }),
   deletePost: (data: { accessToken: string; githubId: string; directory: string }) =>
     Delete(api.posts.deletePost(), data),
   getPostList: (accessToken: string, githubId: string, index: number, category: string) =>
