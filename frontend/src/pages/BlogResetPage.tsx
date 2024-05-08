@@ -101,7 +101,7 @@ function BlogResetPage() {
       {repositoryModalOpen && (
         <Modal
           buttonNum={2}
-          twoButtonCancle={() => setRepositoryModalOpen(false)}
+          twoButtonCancel={() => setRepositoryModalOpen(false)}
           twoButtonConfirm={deleteRepository}
           text={`Repository 초기화를 선택했습니다.\ngithub.io 데이터들이 모두 삭제됩니다.`}
         />
@@ -109,7 +109,7 @@ function BlogResetPage() {
       {ManageModalOpen && (
         <Modal
           buttonNum={2}
-          twoButtonCancle={() => setManageModalOpen(false)}
+          twoButtonCancel={() => setManageModalOpen(false)}
           twoButtonConfirm={() => console.log("게시글만 관리 확인 클릭")}
           text={`게시글만 관리를 선택했습니다.\n게시글 탐색이 안 될 경우 지원이 불가합니다.`}
         />

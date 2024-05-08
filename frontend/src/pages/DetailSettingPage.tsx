@@ -157,7 +157,7 @@ const DetailSettingPage = () => {
       {saveModalOpen && (
         <Modal
           text={`변경된 디자인을 저장하시겠습니까?`}
-          twoButtonCancle={() => setSaveModalOpen(false)}
+          twoButtonCancel={() => setSaveModalOpen(false)}
           twoButtonConfirm={handleOnSave}
         />
       )}
@@ -166,7 +166,7 @@ const DetailSettingPage = () => {
       {resetModalOpen && (
         <Modal
           text={`기존 설정으로 돌아갑니다.\n\n계속하시겠습니까?`}
-          twoButtonCancle={() => setResetModalOpen(false)}
+          twoButtonCancel={() => setResetModalOpen(false)}
           twoButtonConfirm={onReset}
         />
       )}

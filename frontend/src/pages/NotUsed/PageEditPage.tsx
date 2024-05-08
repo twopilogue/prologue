@@ -123,14 +123,14 @@ const PageEditPage = () => {
       {cancelModalOpen && (
         <Modal
           text={`정말 페이지 설정으로 돌아가시겠습니까?\n수정 중인 페이지 내용은 사라집니다.`}
-          twoButtonCancle={() => setCancelModalOpen(false)}
+          twoButtonCancel={() => setCancelModalOpen(false)}
           twoButtonConfirm={() => navigate(-1)}
         />
       )}
       {saveModalOpen && (
         <Modal
           text={`페이지 수정을 완료하시겠습니까?`}
-          twoButtonCancle={() => setSaveModalOpen(false)}
+          twoButtonCancel={() => setSaveModalOpen(false)}
           twoButtonConfirm={editPage}
         />
       )}

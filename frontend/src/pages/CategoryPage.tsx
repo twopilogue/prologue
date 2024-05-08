@@ -58,7 +58,7 @@ const CategoryPage = () => {
       {saveModalOpen && (
         <Modal
           text={`작성한 카테고리 정보를 저장하시겠습니까?`}
-          twoButtonCancle={() => setSaveModalOpen(false)}
+          twoButtonCancel={() => setSaveModalOpen(false)}
           twoButtonConfirm={saveCategoryList}
         />
       )}
