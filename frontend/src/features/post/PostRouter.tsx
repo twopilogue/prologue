@@ -1,8 +1,7 @@
 import { Route, Routes } from "react-router-dom";
-import styles from "features/post_before/Post.module.css";
-import PostManagementPage from "pages/PostPage";
-import PostWritePage from "pages/PostWritePage";
-import PostEditPage from "./PostEditPage";
+import styles from "styles/Post.module.css";
+import PostManagementPage from "pages/post/PostPage";
+import PostWritePage from "pages/post/PostWritePage";
 
 const PostRouterPage = () => {
   return (
@@ -10,7 +9,7 @@ const PostRouterPage = () => {
       <Routes>
         <Route path="/" element={<PostManagementPage />} />
         <Route path="/write" element={<PostWritePage />} />
-        <Route path="/edit/:directory" element={<PostEditPage />} />
+        <Route path="/edit/:directory" element={<PostWritePage />} />
       </Routes>
     </div>
   );

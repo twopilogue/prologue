@@ -1,5 +1,5 @@
 import { SyntheticEvent } from "react";
-import styles from "features/post_before/Post.module.css";
+import styles from "styles/Post.module.css";
 import Text from "components/Text";
 
 interface PostListCardProps {
@@ -40,14 +40,16 @@ const PostListCard = ({ title, date, category, description, imgUrl }: PostListCa
         </div>
       </div>
 
-      <div>
-        <img
-          src={imgUrl}
-          alt=""
-          className={styles.postCardImg}
-          onError={(e: SyntheticEvent<HTMLImageElement, Event>) => (e.currentTarget.src = "none")}
-        />
-      </div>
+      {imgUrl !== "No Image" && (
+        <div>
+          <img
+            src={imgUrl}
+            alt=""
+            className={styles.postCardImg}
+            onError={(e: SyntheticEvent<HTMLImageElement, Event>) => (e.currentTarget.src = "none")}
+          />
+        </div>
+      )}
     </div>
   );
 };

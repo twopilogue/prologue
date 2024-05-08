@@ -1,5 +1,5 @@
 import { settingApi } from "apis/Api";
-import { ModifiedPageConfig } from "pages/PageSettingPage";
+import { ModifiedPageConfig } from "pages/post/PageSettingPage";
 
 const getCategoryApi = async (accessToken: string, githubId: string) => {
   const res = await settingApi.getCategory(accessToken, githubId);

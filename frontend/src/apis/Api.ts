@@ -3,7 +3,7 @@ import Axios from "./JsonAxios";
 import api from "./BaseUrl";
 import { BlogInfoConfig } from "slices/settingSlice";
 import { DetailConfig } from "pages/DetailSettingPage";
-import { ModifiedPageConfig } from "pages/PageSettingPage";
+import { ModifiedPageConfig } from "pages/post/PageSettingPage";
 import { PostDetailConfig, PostListConfig } from "slices/postSlice";
 import { UserInfoConfig } from "interfaces/auth.interface";
 

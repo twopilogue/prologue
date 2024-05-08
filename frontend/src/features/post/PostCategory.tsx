@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import styles from "features/post_before/Post.module.css";
+import styles from "styles/Post.module.css";
 import Text from "components/Text";
 import { useAuthStore } from "stores/authStore";
 import { getCategoryApi } from "apis/api/setting";

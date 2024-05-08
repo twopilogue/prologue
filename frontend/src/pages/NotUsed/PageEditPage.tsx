@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import styles from "features/post_before/Post.module.css";
+import styles from "styles/Post.module.css";
 import Text from "components/Text";
 import Button from "components/Button";
 import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";

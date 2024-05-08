@@ -1,4 +1,4 @@
-import styles from "features/post_before/Post.module.css";
+import styles from "styles/Post.module.css";
 
 const PostListImgCard = () => {
   return (
