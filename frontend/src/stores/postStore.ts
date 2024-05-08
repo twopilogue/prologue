@@ -19,22 +19,25 @@ export interface PostDetailConfig extends PostCommonConfig {
   tagList: string[];
   fileList?: any[];
   files?: any[];
-  image?: {
+  images?: {
     name: string;
     url: string;
   }[];
 }
 
-interface PostConfig {
-  post: PostDetailConfig;
+interface State {
+  editPost: PostDetailConfig;
 
   postList: PostListConfig[];
   postIndex: number;
   postIsLast: boolean;
 
-  editList: PostCommonConfig;
+  isEdit: boolean;
+}
 
+interface Action {
   actions: {
+    setEditPostAction: (post: PostDetailConfig) => void;
     setPostTitleAction: (title: string) => void;
     setPostDescriptionAction: (description: string) => void;
     setPostCategoryAction: (category: string) => void;
@@ -49,50 +52,50 @@ interface PostConfig {
     setPostIndexAction: (index: number) => void;
     resetPostIndexAction: () => void;
     setPostIsLastAction: (isLast: boolean) => void;
-    setPostEditListAction: (editList: PostCommonConfig) => void;
+    setPostIsEditAction: (isEdit: boolean) => void;
   };
 }
 
-export const usePostStore = create<PostConfig>()(
+export const initialState: State = {
+  editPost: {
+    title: "",
+    description: "",
+    category: "",
+    tagList: [],
+    content: "",
+    fileList: [],
+    files: [],
+    images: [],
+  },
+
+  postList: [],
+  postIndex: -1,
+  postIsLast: false,
+
+  isEdit: false,
+};
+
+export const usePostStore = create<State & Action>()(
   immer((set) => ({
-    post: {
-      title: "",
-      description: "",
-      category: "",
-      tagList: [],
-      content: "",
-      fileList: [],
-      files: [],
-      image: [],
-    },
-
-    postList: [],
-    postIndex: -1,
-    postIsLast: false,
-
-    editList: {
-      title: "",
-      description: "",
-      category: "",
-      tag: [],
-    },
-
+    ...initialState,
     actions: {
-      setPostTitleAction: (title: string) => set(() => ({ title })),
-      setPostDescriptionAction: (description: string) => set(() => ({ description })),
-      setPostCategoryAction: (category: string) => set(() => ({ category })),
-      setPostTagListAction: (tagList: string[]) => set(() => ({ tagList })),
-      setPostContentAction: (content: string) => set(() => ({ content })),
-      setPostFileListAction: (fileList: any[]) => set(() => ({ fileList })),
+      setEditPostAction: (post: PostDetailConfig) => set(() => ({ editPost: post })),
+      setPostTitleAction: (title: string) => set((state) => ({ editPost: { ...state.editPost, title } })),
+      setPostDescriptionAction: (description: string) =>
+        set((state) => ({ editPost: { ...state.editPost, description } })),
+      setPostCategoryAction: (category: string) => set((state) => ({ editPost: { ...state.editPost, category } })),
+      setPostTagListAction: (tagList: string[]) => set((state) => ({ editPost: { ...state.editPost, tagList } })),
+      setPostContentAction: (content: string) => set((state) => ({ editPost: { ...state.editPost, content } })),
+      setPostFileListAction: (fileList: any[]) => set((state) => ({ editPost: { ...state.editPost, fileList } })),
       resetPostFileListAction: () => set(() => ({ fileList: [] })),
-      setPostFileAction: (files: any[]) => set(() => ({ files })),
+      setPostFileAction: (files: any[]) => set((state) => ({ editPost: { ...state.editPost, files } })),
 
       setPostListAction: (postList: PostListConfig[]) => set(() => ({ postList })),
       resetPostListAction: () => set(() => ({ PostList: [] })),
       setPostIndexAction: (index: number) => set(() => ({ index })),
       resetPostIndexAction: () => set(() => ({ index: -1 })),
       setPostIsLastAction: (isLast: boolean) => set(() => ({ isLast })),
-      setPostEditListAction: (editList: PostCommonConfig) => set(() => ({ editList })),
+      setPostIsEditAction: (isEdit: boolean) => set(() => ({ isEdit })),
     },
   })),
 );
