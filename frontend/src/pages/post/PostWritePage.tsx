@@ -1,4 +1,4 @@
-import styles from "styles/Post.module.css";
+import styles from "styles/PostWrite.module.css";
 import Text from "components/Text";
 import Button from "components/Button";
 import MeetingRoomOutlinedIcon from "@mui/icons-material/MeetingRoomOutlined";
