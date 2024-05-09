@@ -1,7 +1,7 @@
 import Input from "components/Input";
 import Text from "components/Text";
 import { ChangeEvent, Dispatch, SetStateAction, useCallback, useRef, useState } from "react";
-import styles from "../Setting.module.css";
+import styles from "styles/Setting.module.css";
 import ModeIcon from "@mui/icons-material/Mode";
 import { useAppSelector } from "app/hooks";
 import { selectMyInfo, setMyInfo } from "slices/settingSlice";

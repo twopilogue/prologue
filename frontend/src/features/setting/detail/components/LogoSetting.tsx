@@ -1,7 +1,7 @@
 import { ChangeEvent, CSSProperties, Dispatch, MutableRefObject, SetStateAction, useRef } from "react";
 import Text from "components/Text";
 import RadioButton from "components/RadioButton";
-import styles from "../../Setting.module.css";
+import styles from "styles/Setting.module.css";
 import ButtonStyled from "components/Button";
 import { colorsConfig, selectColors, setColors } from "slices/settingSlice";
 import { useAppSelector } from "app/hooks";

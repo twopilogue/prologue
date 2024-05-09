@@ -2,7 +2,7 @@ import { useAppSelector } from "app/hooks";
 import { useEffect, useState, useCallback } from "react";
 import { selectClickedLayoutIdx } from "slices/settingSlice";
 import ComponentSelector from "../layout/ComponentSelector";
-import styles from "../Setting.module.css";
+import styles from "styles/Setting.module.css";
 import "../../../../node_modules/react-grid-layout/css/styles.css";
 import Text from "components/Text";
 import LayoutCustom from "./LayoutCustom";
@@ -46,7 +46,7 @@ const LayoutContainer = () => {
       </div>
       <div className={isCust ? `` : `${styles.layoutSelectOneContainer}`}>
         <div className={isCust ? `${styles.layoutSelectContainer}` : `${styles.layoutSelectContainerOne}`}>
-          {isCust ? <ComponentSelector /> : <></>}
+          {isCust && <ComponentSelector />}
           <div
             ref={layoutContainer}
             style={{

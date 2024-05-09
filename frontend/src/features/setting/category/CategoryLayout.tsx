@@ -1,8 +1,4 @@
-import { useState, useCallback, ChangeEvent, useEffect } from "react";
-import { Layout } from "react-grid-layout";
-import GridLayout from "react-grid-layout";
-import styles from "../Setting.module.css";
-// import "../../../../node_modules/react-grid-layout/css/styles.css";
+import styles from "styles/Setting.module.css";
 import Text from "components/Text";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import CategoryLayoutItem from "./CategoryLayoutItem";

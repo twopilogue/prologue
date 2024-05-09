@@ -1,6 +1,6 @@
 import { ChangeEvent, useCallback, useState } from "react";
 import Text from "components/Text";
-import styles from "../Setting.module.css";
+import styles from "styles/Setting.module.css";
 import GridLayout, { Layout } from "react-grid-layout";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import {

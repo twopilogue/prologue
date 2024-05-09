@@ -1,5 +1,5 @@
 import { useState } from "react";
-import styles from "features/setting/Setting.module.css";
+import styles from "styles/Setting.module.css";
 import Text from "components/Text";
 import PageLayout from "features/setting/page/PageLayout";
 import { PageConfig, selectPageList, selectPageLayoutList, selectPageDeleList } from "slices/settingSlice";

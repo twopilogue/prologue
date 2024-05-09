@@ -1,4 +1,4 @@
-import styles from "../Setting.module.css";
+import styles from "styles/Setting.module.css";
 import Text from "components/Text";
 import MenuIcon from "@mui/icons-material/Menu";
 import { KeyConfig, editList } from "slices/settingSlice";

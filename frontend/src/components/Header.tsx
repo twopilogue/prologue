@@ -6,7 +6,7 @@ import { GitHub, Logout, KeyboardArrowUp, KeyboardArrowDown } from "@mui/icons-m
 import Text from "./Text";
 import Logo from "assets/Logo.svg";
 import styles from "./css/Header.module.css";
-import palette from "../styles/colorPalette";
+import palette from "styles/colorPalette";
 import { authLogin } from "apis/api/auth";
 import { useAuthActions, useAuthStore } from "stores/authStore";
 import { useShallow } from "zustand/react/shallow";

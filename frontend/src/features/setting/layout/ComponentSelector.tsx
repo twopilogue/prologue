@@ -1,5 +1,5 @@
 import { useState } from "react";
-import styles from "../Setting.module.css";
+import styles from "styles/Setting.module.css";
 import SwitchButton from "components/SwitchButton";
 import Text from "components/Text";
 import { useDispatch } from "react-redux";

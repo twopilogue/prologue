@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import styles from "features/setting/Setting.module.css";
+import styles from "styles/Setting.module.css";
 import Text from "components/Text";
 import ButtonStyled from "components/Button";
 import ReplayIcon from "@mui/icons-material/Replay";

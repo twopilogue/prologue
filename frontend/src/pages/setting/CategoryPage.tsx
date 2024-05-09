@@ -1,18 +1,18 @@
 import CategoryLayout from "features/setting/category/CategoryLayout";
 import { useState } from "react";
-import { selectCategoryList, selectCategoryLayoutList } from "slices/settingSlice";
 import ButtonStyled from "components/Button";
-import styles from "features/setting/Setting.module.css";
+import styles from "styles/Setting.module.css";
 import Modal from "components/Modal";
-import { useAppSelector } from "app/hooks";
 import { modifyCategoryApi } from "apis/api/setting";
 import { useAuthStore } from "stores/authStore";
 import { useShallow } from "zustand/react/shallow";
+import { useSettingStore } from "stores/settingStore";
 
 const CategoryPage = () => {
   const [accessToken, githubId] = useAuthStore(useShallow((state) => [state.accessToken, state.githubId]));
-  const categoryList = useAppSelector(selectCategoryList);
-  const layoutList = useAppSelector(selectCategoryLayoutList);
+  const [layoutList, categoryList] = useSettingStore(
+    useShallow((state) => [state.categoryLayoutList, state.categoryList]),
+  );
   const [saveModalOpen, setSaveModalOpen] = useState<boolean>(false);
   const [loadingModalOpen, setLoadingModalOpen] = useState<boolean>(false);
   const [finModalOpen, setFinModalOpen] = useState<boolean>(false);

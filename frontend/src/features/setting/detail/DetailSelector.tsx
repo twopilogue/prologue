@@ -1,5 +1,5 @@
 import { Dispatch, MutableRefObject, SetStateAction, useState } from "react";
-import styles from "../Setting.module.css";
+import styles from "styles/Setting.module.css";
 import TitleSetting from "./components/TitleSetting";
 import LogoSetting from "./components/LogoSetting";
 import PageSetting from "./components/PageSetting";

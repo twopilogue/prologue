@@ -15,7 +15,7 @@ import {
   setUserComponentList,
   setUserCheckList,
 } from "slices/settingSlice";
-import styles from "../Setting.module.css";
+import styles from "styles/Setting.module.css";
 import DragHandleIcon from "@mui/icons-material/DragHandle";
 import Text from "components/Text";
 

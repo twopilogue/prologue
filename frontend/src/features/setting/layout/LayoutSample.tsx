@@ -3,7 +3,7 @@ import { useAppSelector } from "app/hooks";
 
 import GridLayout from "react-grid-layout";
 import { ComponentConfig, selectClickedLayoutIdx } from "slices/settingSlice";
-import styles from "../Setting.module.css";
+import styles from "styles/Setting.module.css";
 import "../../../../node_modules/react-grid-layout/css/styles.css";
 import Text from "components/Text";
 import DefaultLayoutStyles from "./DefaultLayoutStyles";

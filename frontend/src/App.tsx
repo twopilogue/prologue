@@ -4,7 +4,7 @@ import Header from "components/Header";
 import Landing from "pages/LandingPage";
 import Create from "pages/CreatePage";
 import Dashboard from "pages/DashboardPage";
-import SettingPage from "pages/SettingPage";
+import SettingPage from "pages/setting/SettingPage";
 import PostRouterPage from "features/post/PostRouter";
 import BlogReset from "pages/BlogResetPage";
 import GatsbyLayout from "pages/GatsbyLayoutPage";

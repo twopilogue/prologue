@@ -17,7 +17,7 @@ import {
   setUserComponentLayoutList,
   setUserComponentList,
 } from "slices/settingSlice";
-import styles from "../features/setting/Setting.module.css";
+import styles from "styles/Setting.module.css";
 import { getLayoutApi, modifyLayoutApi } from "apis/api/setting";
 import { useShallow } from "zustand/react/shallow";
 import { useAuthStore } from "stores/authStore";

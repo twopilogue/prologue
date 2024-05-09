@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { initialState, setClickedLayoutIdx } from "slices/settingSlice";
-import styles from "../Setting.module.css";
+import styles from "styles/Setting.module.css";
 import LayoutSelectorItem from "./../layout/LayoutSelectorItem";
 import DefaultLayoutStyles, { defaultLayoutConfig } from "./DefaultLayoutStyles";
 

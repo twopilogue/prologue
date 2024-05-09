@@ -1,4 +1,4 @@
-import { DetailConfig } from "pages/DetailSettingPage";
+import { DetailConfig } from "pages/setting/DetailSettingPage";
 import { BlogInfoConfig } from "slices/settingSlice";
 
 const getBlogInfoService = async (data: BlogInfoConfig) => {

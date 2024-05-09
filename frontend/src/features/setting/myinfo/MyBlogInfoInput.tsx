@@ -1,5 +1,5 @@
 import { ChangeEvent, useState } from "react";
-import styles from "../Setting.module.css";
+import styles from "styles/Setting.module.css";
 import Text from "components/Text";
 import Input from "components/Input";
 import SelectInput from "features/setting/SelectInput";

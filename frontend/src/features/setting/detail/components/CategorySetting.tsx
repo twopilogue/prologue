@@ -1,5 +1,5 @@
 import Text from "components/Text";
-import styles from "../../Setting.module.css";
+import styles from "styles/Setting.module.css";
 import { SketchPicker } from "react-color";
 import { useAppSelector } from "app/hooks";
 import { colorsConfig, getTextColor, selectColors, setColors } from "slices/settingSlice";

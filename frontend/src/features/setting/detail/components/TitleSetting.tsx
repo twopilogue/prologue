@@ -1,7 +1,7 @@
 import { ChangeEvent, Dispatch, SetStateAction, useRef, useState } from "react";
 import Text from "components/Text";
 import RadioButton from "components/RadioButton";
-import styles from "../../Setting.module.css";
+import styles from "styles/Setting.module.css";
 import Input from "components/Input";
 import { SketchPicker } from "react-color";
 import ButtonStyled from "components/Button";

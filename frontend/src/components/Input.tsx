@@ -1,6 +1,6 @@
 import { FormControl, FormHelperText, OutlinedInput } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import palette from "../styles/colorPalette";
+import palette from "styles/colorPalette";
 import { ChangeEventHandler, KeyboardEventHandler } from "react";
 
 interface inputInfo {

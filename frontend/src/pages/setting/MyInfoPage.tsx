@@ -1,29 +1,28 @@
 import { useState } from "react";
-import styles from "features/setting/Setting.module.css";
+import styles from "styles/Setting.module.css";
 import MyGitInfo from "features/setting/myinfo/MyGitInfo";
 import MyInfoInput from "features/setting/myinfo/MyInfoInput";
 import MyBlogInfoInput from "features/setting/myinfo/MyBlogInfoInput";
 import ButtonStyled from "components/Button";
 import Modal from "components/Modal";
-import { useAppSelector } from "app/hooks";
-import { selectMyBlogInfo, selectMyInfo } from "slices/settingSlice";
-import { modifyBlogApi } from "apis/api/setting";
 import { useAuthStore } from "stores/authStore";
 import { useShallow } from "zustand/react/shallow";
+import { useSettingStore } from "stores/settingStore";
+import Axios from "apis/MultipartAxios";
+import api from "apis/BaseUrl";
 
 const MyInfoPage = () => {
   const [accessToken, githubId] = useAuthStore(useShallow((state) => [state.accessToken, state.githubId]));
+  const [myInfo, myBlogInfo] = useSettingStore(useShallow((state) => [state.myInfo, state.myBlogInfo]));
   const [newPic, setNewPic] = useState<Blob>(null);
-  const myBlogInfo = useAppSelector(selectMyBlogInfo);
-  const myInfo = useAppSelector(selectMyInfo);
   const [saveModalOpen, setSaveModalOpen] = useState<boolean>(false);
   const [loadingModalOpen, setLoadingModalOpen] = useState<boolean>(false);
   const [finModalOpen, setFinModalOpen] = useState<boolean>(false);
 
   const handleOnEdit = () => {
     const tmpPayload = {
-      accessToken: accessToken,
-      githubId: githubId,
+      accessToken,
+      githubId,
       title: myBlogInfo.title,
       summary: myInfo.summary,
       nickName: myInfo.nickName,
@@ -42,8 +41,8 @@ const MyInfoPage = () => {
 
     formData.append("imageFile", newPic);
     formData.append("modifyBlogSettingRequest", new Blob([JSON.stringify(result)], { type: "application/json" }));
-
-    await modifyBlogApi(formData);
+    // await modifyBlogApi(formData); // 추후 수정
+    await Axios.put(api.setting.modifyBlog(), formData);
     setLoadingModalOpen(false);
     setFinModalOpen(true);
   };

@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { setClickedLayoutIdx } from "slices/settingSlice";
-import styles from "../Setting.module.css";
+import styles from "styles/Setting.module.css";
 import { layoutsConfig } from "./LayoutSelector";
 import { Dispatch, SetStateAction } from "react";
 

@@ -1,63 +1,55 @@
 import { useEffect } from "react";
-import TabMenu from "../features/setting/TabMenu";
+import TabMenu from "../../features/setting/TabMenu";
 import {
-  editList,
-  KeyConfig,
   PageConfig,
-  setBlogSettingInfo,
   setCategoryCnt,
   setCategoryList,
   setIsEditCategory,
   setIsEditPage,
-  setMyBlogInfo,
-  setMyInfo,
   setPageCnt,
   setPageList,
 } from "slices/settingSlice";
-
 import { useDispatch } from "react-redux";
 import { useAuthStore } from "stores/authStore";
 import { getBlogInfoApi, getCategoryApi, getPageApi } from "apis/api/setting";
 import { getBlogInfoService } from "apis/services/setting";
+import { useShallow } from "zustand/react/shallow";
+import { useSettingActions } from "stores/settingStore";
+import { EditListConfig, KeyConfig } from "interfaces/setting.interface";
 
 const SettingPage = () => {
   const dispatch = useDispatch();
-  const accessToken = useAuthStore((state) => state.accessToken);
-  const githubId = useAuthStore((state) => state.githubId);
-  const blogType = useAuthStore((state) => state.blogType);
+  const [accessToken, githubId, blogType] = useAuthStore(
+    useShallow((state) => [state.accessToken, state.githubId, state.blogType]),
+  );
+  const { setMyInfoAction, setMyBlogInfoAction, setCategoryListAction, setCategoryCntAction, setIsEditCategoryAction } =
+    useSettingActions();
 
   const getBlogInfo = async () => {
     const res = await getBlogInfoApi(accessToken, githubId);
     const { userInfo, blogInfo } = await getBlogInfoService(res);
-    dispatch(setBlogSettingInfo(res));
-    dispatch(setMyInfo(userInfo));
-    dispatch(setMyBlogInfo(blogInfo));
+    setMyInfoAction(userInfo);
+    setMyBlogInfoAction(blogInfo);
   };
 
   const getCategory = async () => {
     const category = await getCategoryApi(accessToken, githubId);
     const tmpCategoryList: KeyConfig[] = [];
+    const tmpisEditCategoryList: EditListConfig[] = [];
     category.map((c, i) => {
-      tmpCategoryList.push({ key: c, id: i });
+      const item = { key: c, id: i };
+      tmpCategoryList.push(item);
+      tmpisEditCategoryList.push({ ...item, editable: false });
     });
-    dispatch(setCategoryList(tmpCategoryList));
-    dispatch(setCategoryCnt(category.length));
-
-    if (tmpCategoryList.length > 0) {
-      dispatch(
-        setIsEditCategory(
-          tmpCategoryList.map((it) => {
-            return { key: it.key, id: it.id, editable: false };
-          }),
-        ),
-      );
-    }
+    setCategoryListAction(tmpCategoryList);
+    setCategoryCntAction(category.length);
+    setIsEditCategoryAction(tmpisEditCategoryList);
   };
 
   const getPage = async () => {
     const pages = await getPageApi(accessToken, githubId);
     const tmpPageList: PageConfig[] = [];
-    const tmpIsEdit: editList[] = [];
+    const tmpIsEdit: EditListConfig[] = [];
 
     pages.map((it, i) => {
       tmpPageList.push({ label: it.label, posts: it.posts, id: i, type: "unchanging" });
