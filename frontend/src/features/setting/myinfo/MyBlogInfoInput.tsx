@@ -3,16 +3,8 @@ import styles from "styles/Setting.module.css";
 import Text from "components/Text";
 import Input from "components/Input";
 import SelectInput from "features/setting/SelectInput";
-import { selectMyBlogInfo, setMyBlogInfo } from "slices/settingSlice";
 import ButtonStyled from "components/Button";
-import { useDispatch } from "react-redux";
-import { useAppSelector } from "app/hooks";
-
-// interface Props {
-//   // myBlogInfo: myBlogInfoProps;
-//   // setMyBlogInfo: Dispatch<SetStateAction<myBlogInfoProps>>;
-//   // setSocialList: Dispatch<SetStateAction<object>>;
-// }
+import { useSettingActions, useSettingStore } from "stores/settingStore";
 
 export interface linkConfig {
   site: string;
@@ -20,8 +12,9 @@ export interface linkConfig {
 }
 
 const MyBlogInfoInput = () => {
-  const dispatch = useDispatch();
-  const myBlogInfo = useAppSelector(selectMyBlogInfo);
+  const myBlogInfo = useSettingStore((state) => state.myBlogInfo);
+  const { title, description, social } = myBlogInfo;
+  const { setMyBlogInfoAction } = useSettingActions();
   const [emailCheck, setEmailCheck] = useState<boolean>(false);
   const [emailMsg, setEmailMsg] = useState<string>("이메일을 입력하세요. Ex) ssafy@ssafy.com");
   const [link, setLink] = useState<linkConfig>({
@@ -29,11 +22,21 @@ const MyBlogInfoInput = () => {
     url: "",
   });
 
+  const onChangeTitle = (e: ChangeEvent<HTMLInputElement>) => {
+    console.log(e.target.value);
+    setMyBlogInfoAction({ ...myBlogInfo, title: e.target.value });
+  };
+
+  const onChangeDescription = (e: ChangeEvent<HTMLInputElement>) => {
+    console.log(e.target.value);
+    setMyBlogInfoAction({ ...myBlogInfo, description: e.target.value });
+  };
+
   const addSocial = () => {
     if (!link.site || !link.url || (link.site === "email" && !emailCheck)) {
       return;
     }
-    dispatch(setMyBlogInfo({ ...myBlogInfo, social: { ...myBlogInfo.social, [link.site]: link.url } }));
+    setMyBlogInfoAction({ ...myBlogInfo, social: { ...social, [link.site]: link.url } });
     setLink({ ...link, url: "" });
   };
 
@@ -64,18 +67,7 @@ const MyBlogInfoInput = () => {
           <div className={styles.inputTag}>
             <Text value="블로그명" type="text" />
             <div style={{ width: "45vw" }}>
-              <Input
-                value={myBlogInfo.title}
-                placeholder="블로그명을 입력하세요."
-                onChange={(e) => {
-                  dispatch(
-                    setMyBlogInfo({
-                      ...myBlogInfo,
-                      title: e.target.value,
-                    }),
-                  );
-                }}
-              />
+              <Input value={title} placeholder="블로그명을 입력하세요." onChange={onChangeTitle} />
             </div>
           </div>
         </div>
@@ -84,18 +76,11 @@ const MyBlogInfoInput = () => {
             <Text value="블로그 소개" type="text" />
             <div style={{ width: "45vw" }}>
               <Input
-                value={myBlogInfo.description}
+                value={description}
                 placeholder="블로그 소개글을 입력하세요."
                 multiline
                 rows={4}
-                onChange={(e) => {
-                  dispatch(
-                    setMyBlogInfo({
-                      ...myBlogInfo,
-                      description: e.target.value,
-                    }),
-                  );
-                }}
+                onChange={onChangeDescription}
               />
             </div>
           </div>
@@ -132,9 +117,9 @@ const MyBlogInfoInput = () => {
           <div className={styles.inputTag}>
             <div></div>
             <div style={{ marginRight: "10px" }}>
-              {myBlogInfo.social ? (
+              {social ? (
                 <>
-                  {Object.entries(myBlogInfo.social).map(([key, value], index: number) =>
+                  {Object.entries(social).map(([key, value], index: number) =>
                     value ? (
                       <div className={styles.linkBox} key={index}>
                         <div className={styles.linkBoxSite}>

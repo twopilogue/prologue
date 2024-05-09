@@ -3,22 +3,27 @@ import Text from "components/Text";
 import { ChangeEvent, Dispatch, SetStateAction, useCallback, useRef, useState } from "react";
 import styles from "styles/Setting.module.css";
 import ModeIcon from "@mui/icons-material/Mode";
-import { useAppSelector } from "app/hooks";
-import { selectMyInfo, setMyInfo } from "slices/settingSlice";
 import { Avatar } from "@mui/material";
-import { useDispatch } from "react-redux";
+import { useSettingActions, useSettingStore } from "stores/settingStore";
 
 interface Props {
-  // myInfo: myInfoProps;
-  // setMyInfo: Dispatch<SetStateAction<myInfoProps>>;
   setNewPic: Dispatch<SetStateAction<Blob>>;
 }
 
 const MemberInfoInput = ({ setNewPic }: Props) => {
-  const dispatch = useDispatch();
-  const inputRef = useRef<HTMLInputElement | null>(null);
+  const myInfo = useSettingStore((state) => state.myInfo);
+  const { nickName, summary, profileImg } = myInfo;
+  const { setMyInfoAction } = useSettingActions();
   const [imgPreview, setImgPreview] = useState(null);
-  const myInfo = useAppSelector(selectMyInfo);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  const onChangeNickname = (e: ChangeEvent<HTMLInputElement>) => {
+    setMyInfoAction({ ...myInfo, nickName: e.target.value });
+  };
+
+  const onChangeSummary = (e: ChangeEvent<HTMLInputElement>) => {
+    setMyInfoAction({ ...myInfo, summary: e.target.value });
+  };
 
   const onUploadImage = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) {
@@ -48,36 +53,18 @@ const MemberInfoInput = ({ setNewPic }: Props) => {
           <div className={styles.textMargin}>
             <div className={styles.inputTag}>
               <Text value="닉네임" type="text" />
-              <Input
-                value={myInfo.nickName}
-                placeholder="닉네임을 입력하세요."
-                onChange={(e) => {
-                  dispatch(
-                    setMyInfo({
-                      ...myInfo,
-                      nickName: e.target.value,
-                    }),
-                  );
-                }}
-              />
+              <Input value={nickName} placeholder="닉네임을 입력하세요." onChange={onChangeNickname} />
             </div>
           </div>
           <div className={styles.textMargin}>
             <div className={styles.inputTag}>
               <Text value="내 소개" type="text" />
               <Input
-                value={myInfo.summary}
+                value={summary}
                 placeholder="나를 소개하는 글을 입력하세요."
                 multiline
                 rows={8}
-                onChange={(e) => {
-                  dispatch(
-                    setMyInfo({
-                      ...myInfo,
-                      summary: e.target.value,
-                    }),
-                  );
-                }}
+                onChange={onChangeSummary}
               />
             </div>
           </div>
@@ -90,9 +77,8 @@ const MemberInfoInput = ({ setNewPic }: Props) => {
               <Avatar
                 sx={{ width: 220, height: 220 }}
                 alt="blogImg"
-                src={myInfo.profileImg && !imgPreview ? myInfo.profileImg : imgPreview}
+                src={profileImg && !imgPreview ? profileImg : imgPreview}
               />
-
               <input type="file" style={{ display: "none" }} ref={inputRef} onChange={onUploadImage} />
               <div className={styles.profile_editBtn} onClick={handleImageUpload}>
                 <ModeIcon className={styles.profile_editBtn_icon} />

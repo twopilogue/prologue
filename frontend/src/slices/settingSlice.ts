@@ -1,23 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { rootState } from "../app/store";
 import { Layout } from "react-grid-layout";
-
-export interface myInfoProps {
-  nickName: string;
-  summary: string;
-  profileImg: string | FormData;
-}
-
-export interface myBlogInfoProps {
-  title: string;
-  description: string;
-  social: object;
-}
-
-export interface KeyConfig {
-  key: string;
-  id: number;
-}
+import {
+  ComponentCheckConfig,
+  KeyConfig,
+  MyBlogInfoConfig,
+  MyInfoConfig,
+  EditListConfig as editList,
+} from "interfaces/setting.interface";
 
 export interface PageConfig {
   id: number;
@@ -32,22 +22,8 @@ export interface ComponentConfig {
   id: string;
 }
 
-export interface editList {
-  key: string;
-  id: number;
-  editable: boolean;
-}
-
-export interface ComponentCheckConfig {
-  [logo: string]: boolean;
-  profile?: boolean;
-  category?: boolean;
-  page?: boolean;
-  title?: boolean;
-  contents: boolean;
-}
-
 export interface BlogInfoConfig {
+  // -> MyInfoConfig & MyBlogInfoConfig로 변경
   nickName: string;
   summary: string;
   profileImg: string | FormData;
@@ -89,8 +65,8 @@ export interface colorsConfig {
 }
 
 interface LayoutConfig {
-  myInfo: myInfoProps;
-  myBlogInfo: myBlogInfoProps;
+  myInfo: MyInfoConfig;
+  myBlogInfo: MyBlogInfoConfig;
 
   categoryLayoutList: Layout[];
   categoryList: KeyConfig[];
