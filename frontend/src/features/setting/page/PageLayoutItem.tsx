@@ -1,12 +1,13 @@
 import { ChangeEvent } from "react";
 import Text from "components/Text";
 import styles from "styles/Setting.module.css";
-import { PageConfig, editList } from "slices/settingSlice";
+import { PageConfig } from "slices/settingSlice";
 import MenuIcon from "@mui/icons-material/Menu";
+import { EditListConfig } from "interfaces/setting.interface";
 
 interface Props {
   item: PageConfig;
-  isEdit: editList[];
+  isEdit: EditListConfig[];
   newName: string;
   onChangeEdit: (e: ChangeEvent<HTMLInputElement>) => void;
   handleSave: (item: PageConfig) => void;

@@ -1,11 +1,11 @@
 import styles from "styles/Setting.module.css";
 import Text from "components/Text";
 import MenuIcon from "@mui/icons-material/Menu";
-import { KeyConfig, editList } from "slices/settingSlice";
 import { ChangeEvent } from "react";
+import { EditListConfig, KeyConfig } from "interfaces/setting.interface";
 
 interface Props {
-  isEdit: editList[];
+  isEdit: EditListConfig[];
   item: KeyConfig;
   newName: string;
   onChangeEdit: (e: ChangeEvent<HTMLInputElement>) => void;

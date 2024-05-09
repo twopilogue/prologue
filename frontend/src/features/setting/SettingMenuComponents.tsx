@@ -21,14 +21,15 @@ export const blogTabs = [
       </div>
     ),
   },
-  {
-    label: "페이지 설정",
-    Component: (
-      <div>
-        <PageSettingPage />
-      </div>
-    ),
-  },
+  // 임의 삭제
+  // {
+  //   label: "페이지 설정",
+  //   Component: (
+  //     <div>
+  //       <PageSettingPage />
+  //     </div>
+  //   ),
+  // },
 ];
 
 export const nonUserBlogTabs = [
