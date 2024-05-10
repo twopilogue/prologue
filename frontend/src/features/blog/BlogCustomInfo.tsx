@@ -14,7 +14,6 @@ import { dashboardActions } from "slices/dashboardSlice";
 import axios from "axios";
 import moment from "moment";
 import { authActions } from "slices/authSlice";
-import { modifyBlogApi } from "apis/api/setting";
 import { useAuthStore } from "stores/authStore";
 import { useShallow } from "zustand/react/shallow";
 
@@ -56,8 +55,7 @@ function BlogCustomInfo(props: { template: string }) {
     formData.append("modifyBlogSettingRequest", new Blob([JSON.stringify(modified)], { type: "application/json" }));
     formData.append("imageFile", isInfo.profile_image);
 
-    //axios 보내기
-    await modifyBlogApi(formData);
+    await Axios.put(api.setting.modifyBlog(), formData);
     triggerStart();
   };
 
