@@ -3,35 +3,32 @@ import BlogLayoutSetting from "features/blog/blogCreate/BlogLayoutSetting";
 import BlogStepper from "features/blog/blogCreate/BlogStepper";
 import { Stack } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { authActions } from "slices/authSlice";
 import BlogCustomInfo from "features/blog/BlogCustomInfo";
 import BlogLoding from "features/blog/BlogLoding";
 import { useState } from "react";
 import { putAuthFile, setSecretRepo } from "apis/api/auth";
 import { selectTemplate, setBuildType } from "apis/api/blog";
-import { useAuthStore } from "stores/authStore";
+import { useAuthActions, useAuthStore } from "stores/authStore";
+import { useShallow } from "zustand/react/shallow";
 
 const CreatePage = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { state } = useLocation();
 
-  const accessToken = useAuthStore((state) => state.accessToken);
-  const githubId = useAuthStore((state) => state.githubId);
-
+  const [accessToken, githubId] = useAuthStore(useShallow((state) => [state.accessToken, state.githubId]));
   const [isStepNumber, setStepNumber] = useState(state === null ? 0 : state.setStepNumber);
-
   const [isThemplate] = useState(state === null ? "prologue-template" : state.setTemplate);
   const [radioValue, setRadioValue] = useState("CustomLayout");
   const [lodingView, openLodingView] = useState(false);
 
+  const { setBlogTypeAction } = useAuthActions();
+
   const layoutSetting = async () => {
     if (radioValue === "CustomLayout") {
-      dispatch(authActions.blogType({ blogType: 0 }));
+      setBlogTypeAction(0);
       chooseTemplate();
     } else if (radioValue === "GatsbyLayout") {
-      dispatch(authActions.blogType({ blogType: 1 }));
+      setBlogTypeAction(1);
       navigate("/create/gatsby");
     }
   };
@@ -39,17 +36,17 @@ const CreatePage = () => {
   const chooseTemplate = async () => {
     openLodingView(true);
     const statusCode = await selectTemplate(accessToken, githubId, "prologue-template");
-    if (statusCode === 200) makeSecretRepo();
+    if (statusCode === 200) setTimeout(() => [makeSecretRepo()], 2000);
   };
 
   const makeSecretRepo = async () => {
     const statusCode = await setSecretRepo(accessToken, githubId);
-    if (statusCode === 200) changeBuildType();
+    if (statusCode === 200) setTimeout(() => [changeBuildType()], 2000);
   };
 
   const changeBuildType = async () => {
     const statusCode = await setBuildType(accessToken, githubId);
-    if (statusCode === 200) setAuthFile();
+    if (statusCode === 200) setTimeout(() => [setAuthFile()], 2000);
   };
 
   // 인증 파일 생성
