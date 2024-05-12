@@ -14,6 +14,7 @@ import { useShallow } from "zustand/react/shallow";
 import { useNavigate, useParams } from "react-router-dom";
 import { deletePostApi } from "apis/api/posts";
 import Modal from "components/Modal";
+import PostTempModal from "features/post/PostTempModal";
 import Axios from "apis/MultipartAxios";
 import api from "apis/BaseUrl";
 
@@ -49,6 +50,9 @@ const PostWritePage = () => {
   const [saveModalOpen, setSaveModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
+
+  const [autoTempTime, setAutoTempTime] = useState("07:03:30");
+  const [tempModalOpen, setTempModalOpen] = useState(false);
 
   const handleSave = async () => {
     if (title == "") {
@@ -188,11 +192,15 @@ const PostWritePage = () => {
         </div>
 
         <div>
-          <Button label="돌아가기" color="sky" icon={<MeetingRoomOutlinedIcon />} onClick={showCancelModal} />
-          <Button label="임시저장" color="gray" icon={<ListIcon />} onClick={showSaveModal} />
-          <Button label="작성완료" icon={<CheckOutlinedIcon />} onClick={showSaveModal} />
-
-          {isEdit === "수정" && <Button label="삭제하기" icon={<CloseOutlinedIcon />} onClick={showDeleteModal} />}
+          <div>
+            <Button label="돌아가기" color="sky" icon={<MeetingRoomOutlinedIcon />} onClick={showCancelModal} />
+            {isEdit === "수정" && <Button label="삭제하기" icon={<CloseOutlinedIcon />} onClick={showDeleteModal} />}
+          </div>
+          <div>
+            <Text value={`자동 저장 완료 ${autoTempTime}`} color="dark_gray" type="caption" />
+            <Button label="임시저장" color="gray" icon={<ListIcon />} onClick={() => setTempModalOpen(true)} />
+            <Button label="작성완료" icon={<CheckOutlinedIcon />} onClick={showSaveModal} />
+          </div>
         </div>
       </div>
 
@@ -225,6 +233,7 @@ const PostWritePage = () => {
         />
       )}
       {uploadModalOpen && <Modal saveButtonClose={() => setUploadModalOpen(false)} save />}
+      {tempModalOpen && <PostTempModal open={tempModalOpen} onClose={() => setTempModalOpen(false)} />}
     </div>
   );
 };
