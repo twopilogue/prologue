@@ -1,72 +1,35 @@
 import { Fragment } from "react";
-import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { Layout } from "react-grid-layout";
-import GridLayout from "react-grid-layout";
+import GridLayout, { Layout } from "react-grid-layout";
 import { useAppSelector } from "app/hooks";
-import {
-  ComponentConfig,
-  selectUserCheckList,
-  selectUserComponentLayoutList,
-  selectOrigin,
-  selectUserComponentList,
-  selectComponentCreated,
-  setUserComponentLayoutList,
-  setUserComponentList,
-  setUserCheckList,
-} from "slices/settingSlice";
+import { selectComponentCreated } from "slices/settingSlice";
 import styles from "styles/Setting.module.css";
 import DragHandleIcon from "@mui/icons-material/DragHandle";
 import Text from "components/Text";
+import { useSettingActions, useSettingStore } from "stores/settingStore";
+import { useShallow } from "zustand/react/shallow";
 
 const LayoutCustom = (layoutWidth: any) => {
-  const dispatch = useDispatch();
-  const userComponentList = useAppSelector(selectUserComponentList);
-  const userLayoutList = useAppSelector(selectUserComponentLayoutList);
-  const origin = useAppSelector(selectOrigin);
-  const userCheckList = useAppSelector(selectUserCheckList);
+  const [userLayoutList, userCompList, userCompCheck] = useSettingStore(
+    useShallow((state) => [state.userCompLayoutList, state.userCompList, state.userCompCheck]),
+  );
+  const { setUserCompLayoutListAction } = useSettingActions();
   const componentCreated = useAppSelector(selectComponentCreated);
-  const [tmpLayoutList, setTmpLayoutList] = useState<Layout[]>([]);
   const width = layoutWidth["layoutWidth"];
 
   const handleLayoutChange = (layouts: Layout[]) => {
     if (componentCreated) {
       const tmp: Layout[] = [];
       layouts.map((it) => {
-        it.static
-          ? tmp.push({ i: it.i, x: it.x, y: it.y, w: it.w, h: it.h, static: true })
-          : tmp.push({ i: it.i, x: it.x, y: it.y, w: it.w, h: it.h });
+        it.static ? tmp.push({ ...it, static: true }) : tmp.push(it);
       });
-      dispatch(setUserComponentLayoutList(tmp));
+      setUserCompLayoutListAction(tmp);
     }
   };
-
-  const saveCurrentLayout = () => {
-    // const newHeight = (document.querySelector(".react-grid-layout") as HTMLElement).offsetHeight;
-  };
-
-  const getLayout = () => {
-    return componentCreated ? userLayoutList : tmpLayoutList;
-  };
-
-  useEffect(() => {
-    setTmpLayoutList(userLayoutList);
-  }, [componentCreated]);
-
-  useEffect(() => {
-    return () => {
-      if (userComponentList.length > 0) {
-        dispatch(setUserComponentLayoutList(origin.originComponentLayoutList));
-        dispatch(setUserComponentList(origin.originComponentList));
-        dispatch(setUserCheckList(origin.originCheckList));
-      }
-    };
-  }, [componentCreated]);
 
   return (
     <>
       <GridLayout
-        layout={getLayout()}
+        layout={userLayoutList}
         cols={6}
         rowHeight={50}
         width={width - 80}
@@ -74,13 +37,12 @@ const LayoutCustom = (layoutWidth: any) => {
         // verticalCompact={false}
         // preventCollision={true} // If true, grid items won't change position when being dragged over.
         onLayoutChange={handleLayoutChange}
-        onDragStart={saveCurrentLayout}
         isDraggable={true}
         isResizable={false}
       >
-        {userComponentList.map((item: ComponentConfig) => {
+        {userCompList.map((item) => {
           {
-            return userCheckList[item.id] ? (
+            return userCompCheck[item.id] ? (
               <div className={styles.layout_colored} key={item.key}>
                 {item.key != "타이틀" && item.key != "글 목록" ? (
                   <div className={styles.icon}>

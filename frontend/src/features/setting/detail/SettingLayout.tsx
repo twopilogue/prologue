@@ -1,54 +1,44 @@
 import { useEffect, useState } from "react";
 import styles from "styles/Setting.module.css";
 import GridLayout from "react-grid-layout";
-import { useAppSelector } from "app/hooks";
-import {
-  colorsConfig,
-  ComponentConfig,
-  selectClickedLayoutIdx,
-  selectColors,
-  setClickedComp,
-  selectUserComponentList,
-  selectUserComponentLayoutList,
-  setClickedLayoutIdx,
-} from "slices/settingSlice";
 import { useGettingWidth } from "../layout/LayoutContainer";
 import Text from "components/Text";
-import { useDispatch } from "react-redux";
 import DefaultLayoutStyles from "../layout/DefaultLayoutStyles";
+import { useSettingActions, useSettingStore } from "stores/settingStore";
 
 // 세부 레이아웃 설정 컴포넌트
 const SettingLayout = () => {
-  const componentList = useAppSelector(selectUserComponentList);
-  const layoutList = useAppSelector(selectUserComponentLayoutList);
+  const [userCompLayoutList, userCompList, clickedLayoutIdx, colorList] = useSettingStore((state) => [
+    state.userCompLayoutList,
+    state.userCompList,
+    state.clickedLayoutIdx,
+    state.colorList,
+  ]);
+  const { setClickedLayoutIdxAction, setClickedCompAction } = useSettingActions();
   const [isCust, setIsCust] = useState<boolean>(false);
-  const clickedIdx = useAppSelector(selectClickedLayoutIdx);
   const [layoutWidth, layoutContainer] = useGettingWidth();
-  const colors: colorsConfig = useAppSelector(selectColors);
   const DefaultLayoutList = DefaultLayoutStyles();
 
-  const dispatch = useDispatch();
-
   const styleInfo: any = {
-    title: { backgroundColor: `${colors.title.background}`, color: `${colors.title.text}` },
-    page: { backgroundColor: `${colors.page.background}`, color: `${colors.page.text}` },
-    logo: { backgroundColor: `${colors.logo.background}`, color: `${colors.logo.text}` },
-    contents: { backgroundColor: `${colors.contents.background}`, color: `${colors.contents.text}` },
-    category: { backgroundColor: `${colors.category.background}`, color: `${colors.category.text}` },
-    profile: { backgroundColor: `${colors.profile.background}`, color: `${colors.profile.text}` },
+    title: { backgroundColor: `${colorList.title.background}`, color: `${colorList.title.text}` },
+    page: { backgroundColor: `${colorList.page.background}`, color: `${colorList.page.text}` },
+    logo: { backgroundColor: `${colorList.logo.background}`, color: `${colorList.logo.text}` },
+    contents: { backgroundColor: `${colorList.contents.background}`, color: `${colorList.contents.text}` },
+    category: { backgroundColor: `${colorList.category.background}`, color: `${colorList.category.text}` },
+    profile: { backgroundColor: `${colorList.profile.background}`, color: `${colorList.profile.text}` },
   };
 
   const handleClick = (item: string) => {
-    dispatch(setClickedComp(item));
+    setClickedCompAction(item);
   };
 
   useEffect(() => {
-    DefaultLayoutList[clickedIdx].id === 0 ? setIsCust(true) : setIsCust(false);
-  }, [clickedIdx]);
+    DefaultLayoutList[clickedLayoutIdx].id === 0 ? setIsCust(true) : setIsCust(false);
+  }, [clickedLayoutIdx]);
 
   useEffect(() => {
     return () => {
-      dispatch(setClickedLayoutIdx(0));
+      setClickedLayoutIdxAction(0);
     };
   }, []);
 
@@ -65,7 +55,7 @@ const SettingLayout = () => {
         }}
       >
         <GridLayout
-          layout={layoutList}
+          layout={userCompLayoutList}
           cols={6}
           rowHeight={50}
           width={layoutWidth - 20}
@@ -74,9 +64,9 @@ const SettingLayout = () => {
           isDraggable={false}
           isResizable={false}
         >
-          {componentList.map((item: ComponentConfig) => {
+          {userCompList.map((item) => {
             {
-              return DefaultLayoutList[clickedIdx].checkList[item.id] ? (
+              return DefaultLayoutList[clickedLayoutIdx].checkList[item.id] ? (
                 <div
                   className={styles.layout_nonColored}
                   style={styleInfo[item.id]}

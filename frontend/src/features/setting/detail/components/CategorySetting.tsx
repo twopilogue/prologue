@@ -1,18 +1,17 @@
 import Text from "components/Text";
 import styles from "styles/Setting.module.css";
 import { SketchPicker } from "react-color";
-import { useAppSelector } from "app/hooks";
-import { colorsConfig, getTextColor, selectColors, setColors } from "slices/settingSlice";
-import { useDispatch } from "react-redux";
 import { detailItemUnfolded } from "./LogoSetting";
+import { useSettingActions, useSettingStore } from "stores/settingStore";
+import getTextColor from "utils/getTextColor";
 
 const CategorySetting = () => {
-  const colors: colorsConfig = useAppSelector(selectColors);
-  const dispatch = useDispatch();
+  const colorList = useSettingStore((state) => state.colorList);
+  const { setColorListAction } = useSettingActions();
 
   const handleChangeComplete = (color: string) => {
     const textColor = getTextColor(color);
-    dispatch(setColors({ ...colors, category: { background: color, text: textColor } }));
+    setColorListAction({ ...colorList, category: { background: color, text: textColor } });
   };
 
   return (
@@ -27,7 +26,7 @@ const CategorySetting = () => {
           </div>
           <div style={detailItemUnfolded}>
             <SketchPicker
-              color={colors.category.background}
+              color={colorList.category.background}
               onChangeComplete={(color) => handleChangeComplete(color.hex)}
             />
           </div>

@@ -3,11 +3,10 @@ import styles from "styles/Setting.module.css";
 import TitleSetting from "./components/TitleSetting";
 import LogoSetting from "./components/LogoSetting";
 import PageSetting from "./components/PageSetting";
-import { useAppSelector } from "app/hooks";
-import { selectClickedComp } from "slices/settingSlice";
 import CategorySetting from "./components/CategorySetting";
 import ProfileSetting from "./components/ProfileSetting";
 import ContentsSetting from "./components/ContentsSetting";
+import { useSettingStore } from "stores/settingStore";
 
 export const controlImgRef = (type: MutableRefObject<HTMLInputElement>) => {
   if (!type.current) return;
@@ -27,7 +26,7 @@ interface ComponentConfig {
 
 const DetailSelector = ({ logoImg, titleImg, setLogoImg, setTitleImg }: Props) => {
   const [logoType, setLogoType] = useState("logoText");
-  const clicked: string = useAppSelector(selectClickedComp);
+  const clicked = useSettingStore((state) => state.clickedComp);
   const components: ComponentConfig = {
     profile: <ProfileSetting />,
     page: <PageSetting />,

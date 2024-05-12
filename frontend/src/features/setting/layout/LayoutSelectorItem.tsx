@@ -1,8 +1,7 @@
-import { useDispatch } from "react-redux";
-import { setClickedLayoutIdx } from "slices/settingSlice";
 import styles from "styles/Setting.module.css";
 import { layoutsConfig } from "./LayoutSelector";
 import { Dispatch, SetStateAction } from "react";
+import { useSettingActions } from "stores/settingStore";
 
 interface Props {
   index: number;
@@ -11,7 +10,7 @@ interface Props {
 }
 
 const LayoutSelectorItem = ({ index, layoutList, setLayoutList }: Props) => {
-  const dispatch = useDispatch();
+  const { setClickedLayoutIdxAction } = useSettingActions();
 
   const handleClicked = (i: number) => {
     setLayoutList(
@@ -19,7 +18,7 @@ const LayoutSelectorItem = ({ index, layoutList, setLayoutList }: Props) => {
         return it.idx === i ? { idx: it.idx, isClicked: true } : { idx: it.idx, isClicked: false };
       }),
     );
-    dispatch(setClickedLayoutIdx(index));
+    setClickedLayoutIdxAction(index);
   };
 
   return (

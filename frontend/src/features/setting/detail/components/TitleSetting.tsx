@@ -6,11 +6,10 @@ import Input from "components/Input";
 import { SketchPicker } from "react-color";
 import ButtonStyled from "components/Button";
 import { controlImgRef } from "../DetailSelector";
-import { useAppSelector } from "app/hooks";
-import { colorsConfig, getTextColor, selectColors, setColors } from "slices/settingSlice";
-import { useDispatch } from "react-redux";
 import { RadioGroup } from "@mui/material";
 import { detailItemFolded, detailItemUnfolded } from "./LogoSetting";
+import { useSettingActions, useSettingStore } from "stores/settingStore";
+import getTextColor from "utils/getTextColor";
 
 interface TitleSettingProps {
   titleImg: File;
@@ -18,22 +17,22 @@ interface TitleSettingProps {
 }
 
 const TitleSetting = ({ titleImg, setTitleImg }: TitleSettingProps) => {
+  const colorList = useSettingStore((state) => state.colorList);
+  const { setColorListAction } = useSettingActions();
   const titleImgRef = useRef<HTMLInputElement | null>(null);
-  const colors: colorsConfig = useAppSelector(selectColors);
   const [radioValue, setRadioValue] = useState("titleColor");
   const detailItemColor = useRef<any>();
   const detailItemImg = useRef<any>();
-  const dispatch = useDispatch();
   const maxLength = 15;
 
   const radioChange = (event: ChangeEvent<HTMLInputElement>) => {
     setRadioValue((event.target as HTMLInputElement).value);
-    dispatch(setColors({ ...colors, title: { ...colors.title, type: radioValue } }));
+    // setColorListAction({ ...colorList, title: { ...colorList.title, type: radioValue } });
   };
 
   const handleChangeComplete = (color: string) => {
     const textColor = getTextColor(color);
-    dispatch(setColors({ ...colors, title: { ...colors.title, background: color, text: textColor } }));
+    setColorListAction({ ...colorList, title: { ...colorList.title, background: color, text: textColor } });
   };
 
   const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
@@ -50,14 +49,14 @@ const TitleSetting = ({ titleImg, setTitleImg }: TitleSettingProps) => {
   //     e.target.value = 0;
   //   }
 
-  //   dispatch(setColors({ ...colors, title: { ...colors.title, titleHeight: e.target.value } }));
+  //   dispatch(setColors({ ...colorList, title: { ...colorList.title, titleHeight: e.target.value } }));
   // };
 
   const handleTitleText = (e: string) => {
     if (e.length > maxLength) {
       e = e.substring(0, maxLength);
     }
-    dispatch(setColors({ ...colors, title: { ...colors.title, titleText: e } }));
+    setColorListAction({ ...colorList, title: { ...colorList.title, titleText: e } });
   };
 
   const changeLogoHeight = (e: ChangeEvent<HTMLInputElement>) => {
@@ -89,7 +88,7 @@ const TitleSetting = ({ titleImg, setTitleImg }: TitleSettingProps) => {
               <div style={{ width: "7vw", marginRight: "10px" }}>
                 <Input
                   placeholder="숫자 입력"
-                  value={colors.title.titleHeight}
+                  value={colorList.title.titleHeight}
                   onChange={(e) => handleTitleHeight(e)}
                 />
               </div>
@@ -112,7 +111,7 @@ const TitleSetting = ({ titleImg, setTitleImg }: TitleSettingProps) => {
         <div style={{ margin: "0 10px 10px 10px" }}>
           <Input
             placeholder="텍스트 입력"
-            value={colors.title.titleText}
+            value={colorList.title.titleText}
             onChange={(e) => handleTitleText(e.target.value)}
           />
         </div>
@@ -130,7 +129,7 @@ const TitleSetting = ({ titleImg, setTitleImg }: TitleSettingProps) => {
           </RadioGroup>
           <div ref={detailItemColor} style={detailItemUnfolded}>
             <SketchPicker
-              color={colors.title.background}
+              color={colorList.title.background}
               onChangeComplete={(color) => handleChangeComplete(color.hex)}
             />
           </div>

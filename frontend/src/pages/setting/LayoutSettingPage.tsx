@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useAppSelector } from "app/hooks";
 import ButtonStyled from "components/Button";
 import Modal from "components/Modal";
 import Text from "components/Text";
@@ -7,27 +6,17 @@ import DefaultLayoutStyles from "features/setting/layout/DefaultLayoutStyles";
 import LayoutContainer from "features/setting/layout/LayoutContainer";
 import LayoutSelector from "features/setting/layout/LayoutSelector";
 import { Layout } from "react-grid-layout";
-import { useDispatch } from "react-redux";
-import {
-  ComponentConfig,
-  selectClickedLayoutIdx,
-  setComponentCreated,
-  setOrigin,
-  setUserCheckList,
-  setUserComponentLayoutList,
-  setUserComponentList,
-} from "slices/settingSlice";
 import styles from "styles/Setting.module.css";
 import { getLayoutApi, modifyLayoutApi } from "apis/api/setting";
 import { useShallow } from "zustand/react/shallow";
 import { useAuthStore } from "stores/authStore";
+import { useSettingActions, useSettingStore } from "stores/settingStore";
 import { ComponentConfig } from "interfaces/setting.interface";
 
 const LayoutSettingPage = () => {
-  const dispatch = useDispatch();
   const [accessToken, githubId] = useAuthStore(useShallow((state) => [state.accessToken, state.githubId]));
-
-  const clickedIdx = useAppSelector(selectClickedLayoutIdx);
+  const { setUserCompLayoutListAction, setUserCompListAction, setUserCompCheckAction } = useSettingActions();
+  const clickedIdx = useSettingStore((state) => state.clickedLayoutIdx);
   const DefaultLayoutList = DefaultLayoutStyles();
   const [saveModalOpen, setSaveModalOpen] = useState<boolean>(false);
   const [loadingModalOpen, setLoadingModalOpen] = useState<boolean>(false);
@@ -35,7 +24,7 @@ const LayoutSettingPage = () => {
 
   const getUserLayout = async () => {
     const res = await getLayoutApi(accessToken, githubId);
-    const layout = JSON.parse(res);
+    const { layout, checkList } = JSON.parse(res);
     const userComponents: ComponentConfig[] = [];
     layout.map((it: Layout) => {
       if (it.i === "블로그 로고") userComponents.push({ key: "블로그 로고", id: "logo" });
@@ -45,17 +34,10 @@ const LayoutSettingPage = () => {
       else if (it.i === "타이틀") userComponents.push({ key: "타이틀", id: "title" });
       else if (it.i === "글 목록") userComponents.push({ key: "글 목록", id: "contents" });
     });
-    dispatch(setUserComponentLayoutList(layout));
-    dispatch(setUserComponentList(userComponents));
-    // dispatch(setUserCheckList(response.checkList)); // checklist가 뭐지
-    dispatch(
-      setOrigin({
-        originComponentLayoutList: layout,
-        originComponentList: userComponents,
-        // originCheckList: response.checkList,
-      }),
-    );
-    dispatch(setComponentCreated(true));
+
+    setUserCompLayoutListAction(layout);
+    setUserCompListAction(userComponents);
+    setUserCompCheckAction(checkList);
   };
 
   const handleOnSave = async () => {

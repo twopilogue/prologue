@@ -1,14 +1,6 @@
 import { useEffect } from "react";
 import TabMenu from "../../features/setting/TabMenu";
-import {
-  PageConfig,
-  setCategoryCnt,
-  setCategoryList,
-  setIsEditCategory,
-  setIsEditPage,
-  setPageCnt,
-  setPageList,
-} from "slices/settingSlice";
+import { PageConfig, setIsEditPage, setPageCnt, setPageList } from "slices/settingSlice";
 import { useDispatch } from "react-redux";
 import { useAuthStore } from "stores/authStore";
 import { getBlogInfoApi, getCategoryApi, getPageApi } from "apis/api/setting";
@@ -46,6 +38,7 @@ const SettingPage = () => {
     setIsEditCategoryAction(tmpisEditCategoryList);
   };
 
+  // 추후 수정
   const getPage = async () => {
     const pages = await getPageApi(accessToken, githubId);
     const tmpPageList: PageConfig[] = [];
