@@ -4,6 +4,7 @@ import Button from "components/Button";
 import MeetingRoomOutlinedIcon from "@mui/icons-material/MeetingRoomOutlined";
 import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+import ListIcon from "@mui/icons-material/List";
 import { usePostActions, usePostStore } from "stores/postStore";
 import PostInfo from "features/post/PostInfo";
 import PostEditor from "features/post/PostEditor";
@@ -179,30 +180,23 @@ const PostWritePage = () => {
   const showDeleteModal = () => setDeleteModalOpen(true);
 
   return (
-    <div className={styles.postWrite}>
-      <div className={styles.textBox}>
-        <Text value={`게시글 ${isEdit}`} type="groupTitle" bold />
-        <br /> <br />
-        <Text value={`간편하게 깃허브 블로그 게시글을 ${isEdit}해보세요.`} type="caption" color="dark_gray" />
-        <div className={styles.postWriteButtons}>
-          <Button
-            label="돌아가기"
-            color="sky"
-            width="10vw"
-            icon={<MeetingRoomOutlinedIcon />}
-            onClick={showCancelModal}
-          />
-          &nbsp; &nbsp; &nbsp;
-          <Button label="작성완료" width="10vw" icon={<CheckOutlinedIcon />} onClick={showSaveModal} />
+    <div className={styles.container}>
+      <div className={styles.title}>
+        <div>
+          <Text value={`게시글 ${isEdit}`} type="groupTitle" bold />
+          <Text value={`간편하게 깃허브 블로그 게시글을 ${isEdit}해보세요.`} type="caption" color="dark_gray" />
         </div>
-        {isEdit === "수정" && (
-          <div className={styles.postDeleteButton}>
-            <Button label="삭제하기" width="10vw" icon={<CloseOutlinedIcon />} onClick={showDeleteModal} />
-          </div>
-        )}
+
+        <div>
+          <Button label="돌아가기" color="sky" icon={<MeetingRoomOutlinedIcon />} onClick={showCancelModal} />
+          <Button label="임시저장" color="gray" icon={<ListIcon />} onClick={showSaveModal} />
+          <Button label="작성완료" icon={<CheckOutlinedIcon />} onClick={showSaveModal} />
+
+          {isEdit === "수정" && <Button label="삭제하기" icon={<CloseOutlinedIcon />} onClick={showDeleteModal} />}
+        </div>
       </div>
 
-      <div style={{ display: "flex", marginTop: "1%" }}>
+      <div className={styles.contents}>
         <PostInfo />
         <PostEditor />
       </div>
