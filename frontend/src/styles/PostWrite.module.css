@@ -7,16 +7,9 @@
   box-sizing: border-box;
 }
 
-.postContainer {
-  width: 83vw;
-  height: 100%;
-  margin: 0 auto;
-}
-
 .title {
   display: flex;
   width: 100%;
-  justify-content: space-between;
   padding: 0 5em 1em 5em;
   box-sizing: border-box;
 }
@@ -24,14 +17,21 @@
 .title > div:nth-child(1) {
   display: flex;
   flex-direction: column;
+  width: 30%;
   gap: 0.7em;
 }
 
 .title > div:nth-child(2) {
   display: flex;
-  justify-content: center;
+  width: 100%;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.title > div:nth-child(2) > div {
+  display: flex;
+  align-items: center;
   gap: 1em;
-  height: 2.5em;
 }
 
 .contents {
@@ -39,11 +39,6 @@
   height: 100%;
   margin: 0 1em;
   gap: 1em;
-}
-
-.postContents {
-  display: grid;
-  grid-template-columns: 2fr 8fr;
 }
 
 .info {

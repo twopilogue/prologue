@@ -1,4 +1,4 @@
-import styles from "styles/PostWrite.module.css";
+import styles from "styles/Post.module.css";
 import { useEffect, useState } from "react";
 import Text from "components/Text";
 import Button from "components/Button";
@@ -18,8 +18,8 @@ const PostPage = () => {
   }, []);
 
   return (
-    <div className={styles.postContainer}>
-      <div className={styles.title} style={{ padding: "0 0 1em 0" }}>
+    <div className={styles.postListContainer}>
+      <div className={styles.postListTitle} style={{ padding: "0 0 1em 0" }}>
         <div>
           <Text value="게시글 관리" type="groupTitle" bold />
           <Text value="깃허브 블로그 게시글을 한 눈에 관리가 가능합니다." type="caption" color="dark_gray" />
@@ -35,7 +35,7 @@ const PostPage = () => {
           />
         </div>
       </div>
-      <div className={styles.postContents}>
+      <div className={styles.postListContents}>
         <PostCategory setCategory={setCategory} />
         <PostList category={category} />
       </div>
