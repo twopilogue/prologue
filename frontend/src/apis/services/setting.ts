@@ -1,7 +1,7 @@
+import { MyBlogInfoConfig, MyInfoConfig } from "interfaces/setting.interface";
 import { DetailConfig } from "pages/setting/DetailSettingPage";
-import { BlogInfoConfig } from "slices/settingSlice";
 
-const getBlogInfoService = async (data: BlogInfoConfig) => {
+const getBlogInfoService = async (data: MyInfoConfig & MyBlogInfoConfig) => {
   const { nickName, summary, profileImg, title, description, social } = data;
   const userInfo = {
     nickName,

@@ -21,6 +21,7 @@ import styles from "styles/Setting.module.css";
 import { getLayoutApi, modifyLayoutApi } from "apis/api/setting";
 import { useShallow } from "zustand/react/shallow";
 import { useAuthStore } from "stores/authStore";
+import { ComponentConfig } from "interfaces/setting.interface";
 
 const LayoutSettingPage = () => {
   const dispatch = useDispatch();

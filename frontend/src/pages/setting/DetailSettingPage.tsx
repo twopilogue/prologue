@@ -15,6 +15,7 @@ import { getDetailApi, modifyDetailApi } from "apis/api/setting";
 import { getDetailService } from "apis/services/setting";
 import { useAuthStore } from "stores/authStore";
 import { useShallow } from "zustand/react/shallow";
+import { ColorsConfig } from "interfaces/setting.interface";
 
 export interface DetailConfig {
   css: string;
@@ -26,7 +27,7 @@ export interface DetailConfig {
 const DetailSettingPage = () => {
   const [titleImg, setTitleImg] = useState(null);
   const [logoImg, setLogoImg] = useState(null);
-  const colors: colorsConfig = useAppSelector(selectColors);
+  const colors: ColorsConfig = useAppSelector(selectColors);
   const [originColors, setOriginColors] = useState(null);
   const [saveModalOpen, setSaveModalOpen] = useState<boolean>(false);
   const [loadingModalOpen, setLoadingModalOpen] = useState<boolean>(false);

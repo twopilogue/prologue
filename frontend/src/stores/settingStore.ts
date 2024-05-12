@@ -1,8 +1,15 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
-import { KeyConfig, MyBlogInfoConfig, MyInfoConfig, EditListConfig } from "interfaces/setting.interface";
+import {
+  KeyConfig,
+  MyBlogInfoConfig,
+  MyInfoConfig,
+  EditListConfig,
+  ComponentCheckConfig,
+  ComponentConfig,
+  ColorsConfig,
+} from "interfaces/setting.interface";
 import { Layout } from "react-grid-layout";
-import { ComponentConfig } from "slices/settingSlice";
 
 interface State {
   // info

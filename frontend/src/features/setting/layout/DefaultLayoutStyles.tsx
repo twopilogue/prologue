@@ -1,5 +1,4 @@
-import { useAppSelector } from "app/hooks";
-import { ComponentCheckConfig } from "interfaces/setting.interface";
+import { ComponentCheckConfig, ComponentConfig } from "interfaces/setting.interface";
 import { Layout } from "react-grid-layout";
 import {
   ComponentConfig,

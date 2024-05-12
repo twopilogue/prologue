@@ -1,6 +1,6 @@
-import { colorsConfig } from "slices/settingSlice";
+import { ColorsConfig } from "interfaces/setting.interface";
 
-export const DetailSettingStyles = (styles: colorsConfig) => {
+export const DetailSettingStyles = (styles: ColorsConfig) => {
   const result = `
   .category {
     background-color: ${styles.category.background};

@@ -2,7 +2,9 @@ import { createSlice } from "@reduxjs/toolkit";
 import { rootState } from "../app/store";
 import { Layout } from "react-grid-layout";
 import {
+  ColorsConfig,
   ComponentCheckConfig,
+  ComponentConfig,
   KeyConfig,
   MyBlogInfoConfig,
   MyInfoConfig,
@@ -17,11 +19,6 @@ export interface PageConfig {
   oldName?: string;
 }
 
-export interface ComponentConfig {
-  key: string;
-  id: string;
-}
-
 export interface BlogInfoConfig {
   // -> MyInfoConfig & MyBlogInfoConfig로 변경
   nickName: string;
@@ -30,38 +27,6 @@ export interface BlogInfoConfig {
   title: string;
   description: string;
   social: object;
-}
-
-export interface colorsConfig {
-  title: {
-    background: string;
-    text: string;
-    titleHeight: number;
-    type: boolean; // 이미지 or 색
-    titleText: string;
-  };
-  category: {
-    background: string;
-    text: string;
-  };
-  page: {
-    background: string;
-    text: string;
-    sort: string;
-  };
-  profile: {
-    background: string;
-    text: string;
-  };
-  contents: {
-    background: string;
-    text: string;
-  };
-  logo: {
-    background: string;
-    text: string;
-    logoText: string;
-  };
 }
 
 interface LayoutConfig {
@@ -96,7 +61,7 @@ interface LayoutConfig {
 
   blogSettingInfo: BlogInfoConfig;
 
-  colorList: colorsConfig;
+  colorList: ColorsConfig;
 
   clickedComp: string;
   clickedLayoutIdx: number;
@@ -360,15 +325,3 @@ export const selectClickedLayoutIdx = (state: rootState) => state.setting.clicke
 export const selectComponentCreated = (state: rootState) => state.setting.componentCreated;
 
 export default settingSlice.reducer;
-
-/* 배경색 기준 텍스트 컬러 설정 */
-export const getTextColor = (hexColor: string) => {
-  const color = hexColor.slice(1); // # 제거
-  const rgb = parseInt(color, 16); // 10진수 변환
-  const r = (rgb >> 16) & 0xff;
-  const g = (rgb >> 8) & 0xff;
-  const b = (rgb >> 0) & 0xff;
-  const luma = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-
-  return luma < 127.5 ? "#ffffff" : "#000000";
-};

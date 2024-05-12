@@ -2,11 +2,11 @@ import { AxiosRequestConfig } from "axios";
 import Axios from "./JsonAxios";
 import MultipartAxios from "./MultipartAxios";
 import api from "./BaseUrl";
-import { BlogInfoConfig } from "slices/settingSlice";
 import { DetailConfig } from "pages/setting/DetailSettingPage";
 import { ModifiedPageConfig } from "pages/post/PageSettingPage";
 import { UserInfoConfig } from "interfaces/auth.interface";
 import { PostListConfig } from "stores/postStore";
+import { MyBlogInfoConfig, MyInfoConfig } from "interfaces/setting.interface";
 
 type ServerResponse = {
   message?: string; // 메시지
@@ -92,7 +92,8 @@ export const settingApi = {
     Get<{ category: string[] }>(api.setting.getCategory(accessToken, githubId)),
   putCategory: (data: { accessToken: string; githubId: string; category: string[] }) =>
     Put(api.setting.modifyCategory(), data),
-  getBlog: (accessToken: string, githubId: string) => Get<BlogInfoConfig>(api.setting.getBlog(accessToken, githubId)),
+  getBlog: (accessToken: string, githubId: string) =>
+    Get<MyInfoConfig & MyBlogInfoConfig>(api.setting.getBlog(accessToken, githubId)),
   putBlog: (data: { data: FormData }) => Put(api.setting.modifyBlog(), data),
   getLayout: (accessToken: string, githubId: string) =>
     Get<{ layout: string }>(api.setting.getLayout(accessToken, githubId)),
