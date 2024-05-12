@@ -1,20 +1,20 @@
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import styles from "features/setting/Setting.module.css";
+import styles from "styles/Setting.module.css";
 import Text from "components/Text";
 import ButtonStyled from "components/Button";
 import ReplayIcon from "@mui/icons-material/Replay";
-import { useAppSelector } from "app/hooks";
-import { colorsConfig, initialState, selectColors, setClickedComp, setColors } from "slices/settingSlice";
 import { DetailSettingStyles } from "features/setting/detail/DetailSettingStyles";
 import SettingLayout from "features/setting/detail/SettingLayout";
 import DetailSelector from "features/setting/detail/DetailSelector";
 import { toJSON } from "cssjson";
 import Modal from "components/Modal";
-import { getDetailApi, modifyDetailApi } from "apis/api/setting";
+import { getDetailApi } from "apis/api/setting";
 import { getDetailService } from "apis/services/setting";
 import { useAuthStore } from "stores/authStore";
 import { useShallow } from "zustand/react/shallow";
+import { initialState, useSettingActions, useSettingStore } from "stores/settingStore";
+import Axios from "apis/MultipartAxios";
+import api from "apis/BaseUrl";
 
 export interface DetailConfig {
   css: string;
@@ -26,7 +26,6 @@ export interface DetailConfig {
 const DetailSettingPage = () => {
   const [titleImg, setTitleImg] = useState(null);
   const [logoImg, setLogoImg] = useState(null);
-  const colors: colorsConfig = useAppSelector(selectColors);
   const [originColors, setOriginColors] = useState(null);
   const [saveModalOpen, setSaveModalOpen] = useState<boolean>(false);
   const [loadingModalOpen, setLoadingModalOpen] = useState<boolean>(false);
@@ -34,9 +33,11 @@ const DetailSettingPage = () => {
   const [resetModalOpen, setResetModalOpen] = useState<boolean>(false);
 
   const [accessToken, githubId] = useAuthStore(useShallow((state) => [state.accessToken, state.githubId]));
+  const colorList = useSettingStore((state) => state.colorList);
+  const { setColorListAction, setClickedCompAction } = useSettingActions();
 
   const formData = new FormData();
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const getDetailSetting = async () => {
     const data = await getDetailApi(accessToken, githubId);
@@ -78,7 +79,7 @@ const DetailSettingPage = () => {
           logoText,
         },
       };
-      dispatch(setColors(colors));
+      setColorListAction(colors);
       setOriginColors(colors);
     }
   };
@@ -87,13 +88,13 @@ const DetailSettingPage = () => {
     setSaveModalOpen(false);
     setLoadingModalOpen(true);
     // 디테일 세팅
-    const modified = DetailSettingStyles(colors);
+    const modified = DetailSettingStyles(colorList);
     const result = {
       accessToken: accessToken,
       githubId: githubId,
       css: modified,
-      logoText: colors.logo.logoText,
-      titleText: colors.title.titleText,
+      logoText: colorList.logo.logoText,
+      titleText: colorList.title.titleText,
       titleColor: true,
     };
 
@@ -105,14 +106,14 @@ const DetailSettingPage = () => {
   };
 
   const sendDetailSetting = async (formData: FormData) => {
-    await modifyDetailApi(formData);
+    await Axios.put(api.setting.modifyDetail(), formData);
     setLoadingModalOpen(false);
     setFinModalOpen(true);
   };
 
   const onReset = () => {
-    dispatch(setColors(originColors));
-    dispatch(setClickedComp(initialState.clickedComp));
+    setColorListAction(originColors);
+    setClickedCompAction(initialState.clickedComp);
     setResetModalOpen(false);
   };
 
@@ -123,8 +124,8 @@ const DetailSettingPage = () => {
   // 언마운트 시 초기화 실행
   useEffect(() => {
     return () => {
-      dispatch(setClickedComp(initialState.clickedComp));
-      dispatch(setColors(initialState.colorList));
+      setClickedCompAction(initialState.clickedComp);
+      setColorListAction(initialState.colorList);
     };
   }, []);
 

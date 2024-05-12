@@ -1,13 +1,11 @@
 import { ChangeEvent, CSSProperties, Dispatch, MutableRefObject, SetStateAction, useRef } from "react";
 import Text from "components/Text";
 import RadioButton from "components/RadioButton";
-import styles from "../../Setting.module.css";
+import styles from "styles/Setting.module.css";
 import ButtonStyled from "components/Button";
-import { colorsConfig, selectColors, setColors } from "slices/settingSlice";
-import { useAppSelector } from "app/hooks";
-import { useDispatch } from "react-redux";
 import Input from "components/Input";
 import { RadioGroup } from "@mui/material";
+import { useSettingActions, useSettingStore } from "stores/settingStore";
 
 interface LogoSettingProps {
   logoImg: File;
@@ -28,9 +26,9 @@ export const detailItemUnfolded: CSSProperties = {
 };
 
 const LogoSetting = ({ logoImg, setLogoImg, logoType, setLogoType }: LogoSettingProps) => {
+  const colorList = useSettingStore((state) => state.colorList);
+  const { setColorListAction } = useSettingActions();
   const logoImgRef = useRef<HTMLInputElement | null>(null);
-  const colors: colorsConfig = useAppSelector(selectColors);
-  const dispatch = useDispatch();
   const detailItemText = useRef<any>();
   const detailItemImg = useRef<any>();
   const maxTextLength = 10;
@@ -57,7 +55,7 @@ const LogoSetting = ({ logoImg, setLogoImg, logoType, setLogoType }: LogoSetting
     if (e.length > maxTextLength) {
       e = e.substring(0, maxTextLength);
     }
-    dispatch(setColors({ ...colors, logo: { ...colors.logo, logoText: e } }));
+    setColorListAction({ ...colorList, logo: { ...colorList.logo, logoText: e } });
   };
 
   const controlImgRef = (type: MutableRefObject<HTMLInputElement>) => {
@@ -92,7 +90,7 @@ const LogoSetting = ({ logoImg, setLogoImg, logoType, setLogoType }: LogoSetting
         <div ref={detailItemText} style={detailItemUnfolded}>
           <Input
             placeholder="텍스트 입력"
-            value={colors.logo.logoText}
+            value={colorList.logo.logoText}
             onChange={(e) => handleLogoText(e.target.value)}
           />
         </div>

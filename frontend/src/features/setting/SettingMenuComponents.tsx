@@ -1,8 +1,8 @@
-import DetailSettingPage from "pages/DetailSettingPage";
-import MyInfoPage from "pages/MyInfoPage";
-import CategoryPage from "pages/CategoryPage";
-import PageSettingPage from "pages/post/PageSettingPage";
-import LayoutSettingPage from "pages/LayoutSettingPage";
+import DetailSettingPage from "pages/setting/DetailSettingPage";
+import MyInfoPage from "pages/setting/MyInfoPage";
+import CategoryPage from "pages/setting/CategoryPage";
+// import PageSettingPage from "pages/post/PageSettingPage"; // 임의 삭제
+import LayoutSettingPage from "pages/setting/LayoutSettingPage";
 
 export const blogTabs = [
   {
@@ -21,14 +21,15 @@ export const blogTabs = [
       </div>
     ),
   },
-  {
-    label: "페이지 설정",
-    Component: (
-      <div>
-        <PageSettingPage />
-      </div>
-    ),
-  },
+  // 임의 삭제
+  // {
+  //   label: "페이지 설정",
+  //   Component: (
+  //     <div>
+  //       <PageSettingPage />
+  //     </div>
+  //   ),
+  // },
 ];
 
 export const nonUserBlogTabs = [

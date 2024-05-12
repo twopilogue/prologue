@@ -1,12 +1,11 @@
-import { useAppSelector } from "app/hooks";
 import { useEffect, useState, useCallback } from "react";
-import { selectClickedLayoutIdx } from "slices/settingSlice";
 import ComponentSelector from "../layout/ComponentSelector";
-import styles from "../Setting.module.css";
+import styles from "styles/Setting.module.css";
 import "../../../../node_modules/react-grid-layout/css/styles.css";
 import Text from "components/Text";
 import LayoutCustom from "./LayoutCustom";
 import LayoutSample from "./LayoutSample";
+import { useSettingStore } from "stores/settingStore";
 
 export const useGettingWidth = () => {
   const [layoutWidth, setLayoutWidth] = useState(null);
@@ -24,7 +23,7 @@ export const useGettingWidth = () => {
 };
 
 const LayoutContainer = () => {
-  const clickedIdx = useAppSelector(selectClickedLayoutIdx);
+  const clickedIdx = useSettingStore((state) => state.clickedLayoutIdx);
   const [isCust, setIsCust] = useState<boolean>(false);
   const [layoutWidth, layoutContainer] = useGettingWidth();
 
@@ -46,7 +45,7 @@ const LayoutContainer = () => {
       </div>
       <div className={isCust ? `` : `${styles.layoutSelectOneContainer}`}>
         <div className={isCust ? `${styles.layoutSelectContainer}` : `${styles.layoutSelectContainerOne}`}>
-          {isCust ? <ComponentSelector /> : <></>}
+          {isCust && <ComponentSelector />}
           <div
             ref={layoutContainer}
             style={{

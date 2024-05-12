@@ -1,5 +1,5 @@
 import { ReactElement } from "react";
-import palette from "../styles/colorPalette";
+import palette from "styles/colorPalette";
 import Button from "@mui/material/Button";
 
 interface Props {

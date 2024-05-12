@@ -2,7 +2,7 @@ import { styled } from "@mui/material/styles";
 import { useRadioGroup } from "@mui/material/RadioGroup";
 import FormControlLabel, { FormControlLabelProps } from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
-import palette from "../styles/colorPalette";
+import palette from "styles/colorPalette";
 
 interface StyledFormControlLabelProps extends FormControlLabelProps {
   checked: boolean;

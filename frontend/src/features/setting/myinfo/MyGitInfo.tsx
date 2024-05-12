@@ -1,20 +1,17 @@
 import Text from "components/Text";
-import styles from "../Setting.module.css";
+import styles from "styles/Setting.module.css";
 import ButtonStyled from "components/Button";
-import { useDispatch } from "react-redux";
-import { authActions } from "slices/authSlice";
 import { useNavigate } from "react-router-dom";
-import { useAuthStore } from "stores/authStore";
+import { useAuthActions, useAuthStore } from "stores/authStore";
 import { useShallow } from "zustand/react/shallow";
 
 const MyGitInfo = () => {
-  const [githubImage, githubId] = useAuthStore(useShallow((state) => [state.githubImage, state.githubId]));
-
-  const dispatch = useDispatch();
   const navigator = useNavigate();
+  const [githubImage, githubId] = useAuthStore(useShallow((state) => [state.githubImage, state.githubId]));
+  const { setLogoutAction } = useAuthActions();
 
   const logout = () => {
-    dispatch(authActions.logout());
+    setLogoutAction();
     navigator("/");
   };
 

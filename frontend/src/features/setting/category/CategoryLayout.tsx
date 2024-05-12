@@ -1,26 +1,12 @@
-import { useState, useCallback, ChangeEvent, useEffect } from "react";
-import { Layout } from "react-grid-layout";
-import GridLayout from "react-grid-layout";
-import styles from "../Setting.module.css";
-// import "../../../../node_modules/react-grid-layout/css/styles.css";
+import { useState, useCallback, ChangeEvent } from "react";
+import GridLayout, { Layout } from "react-grid-layout";
+import styles from "styles/Setting.module.css";
 import Text from "components/Text";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import CategoryLayoutItem from "./CategoryLayoutItem";
-
-import {
-  KeyConfig,
-  editList,
-  selectCategoryCnt,
-  selectCategoryLayoutList,
-  selectCategoryList,
-  selectIsEditCategory,
-  setCategoryCnt,
-  setCategoryLayoutList,
-  setCategoryList,
-  setIsEditCategory,
-} from "slices/settingSlice";
-import { useAppSelector } from "app/hooks";
-import { useDispatch } from "react-redux";
+import { useShallow } from "zustand/react/shallow";
+import { KeyConfig } from "interfaces/setting.interface";
+import { useSettingActions, useSettingStore } from "stores/settingStore";
 
 const useGettingWidth = () => {
   const [gridWidth, setGridWidth] = useState(null);
@@ -33,57 +19,47 @@ const useGettingWidth = () => {
 };
 
 const CategoryLayout = () => {
-  const dispatch = useDispatch();
   const [newName, setNewName] = useState<string>("");
-  const categoryList: KeyConfig[] = useAppSelector(selectCategoryList);
-  const layoutList = useAppSelector(selectCategoryLayoutList);
-  const isEdit = useAppSelector(selectIsEditCategory);
-  const categoryCnt = useAppSelector(selectCategoryCnt);
+  const [layoutList, categoryList, isEdit, categoryCnt] = useSettingStore(
+    useShallow((state) => [state.categoryLayoutList, state.categoryList, state.isEditCategory, state.categoryCnt]),
+  );
+  const { setCategoryLayoutListAction, setCategoryListAction, setCategoryCntAction, setIsEditCategoryAction } =
+    useSettingActions();
   const [gridWidth, gridAddRef] = useGettingWidth();
 
   const addBox = () => {
     const categoryName: string = "새 카테고리 " + (categoryCnt + 1).toString();
-    dispatch(setCategoryList(categoryList.concat({ key: categoryName, id: categoryCnt })));
-    dispatch(setIsEditCategory(isEdit.concat({ key: categoryName, id: categoryCnt, editable: false })));
-    dispatch(setCategoryCnt(categoryCnt + 1));
+    setCategoryListAction([...categoryList, { key: categoryName, id: categoryCnt }]);
+    setIsEditCategoryAction([...isEdit, { key: categoryName, id: categoryCnt, editable: false }]);
+    setCategoryCntAction(categoryCnt - 1);
   };
 
   const handleEdit = (item: KeyConfig) => {
     setNewName(item.key); // 이름으로 placeholder
-    dispatch(
-      setIsEditCategory(
-        isEdit.map((it: editList) => {
-          return it.id === item.id
-            ? { key: it.key, id: it.id, editable: true }
-            : { key: it.key, id: it.id, editable: false };
-        }),
-      ),
+    setIsEditCategoryAction(
+      isEdit.map((it) => {
+        return it.id === item.id ? { ...it, editable: true } : { ...it };
+      }),
     );
   };
 
   const handleDele = (id: number) => {
-    dispatch(setCategoryList(categoryList.filter((it) => it.id !== id)));
-    // set LayoutList( LayoutList.filter((it) => it.y !== item));
-    dispatch(setCategoryCnt(categoryCnt - 1));
-    dispatch(setIsEditCategory(isEdit.filter((it) => it.id !== id)));
+    setCategoryListAction(categoryList.filter((it) => it.id !== id));
+    setIsEditCategoryAction(isEdit.filter((it) => it.id !== id));
+    setCategoryCntAction(categoryCnt - 1);
   };
 
   const handleSave = (id: number) => {
-    dispatch(
-      setCategoryList(
-        categoryList.map((it) => {
-          return it.id === id ? { key: newName, id: it.id } : { key: it.key, id: it.id };
-        }),
-      ),
+    setCategoryListAction(
+      categoryList.map((it) => {
+        return it.id === id ? { ...it, key: newName } : { ...it };
+      }),
     );
-    dispatch(
-      setIsEditCategory(
-        isEdit.map((it: editList) => {
-          return it.id === id
-            ? { key: newName, id: it.id, editable: false }
-            : { key: it.key, id: it.id, editable: false };
-        }),
-      ),
+
+    setIsEditCategoryAction(
+      isEdit.map((it) => {
+        return it.id === id ? { ...it, key: newName, editable: false } : { ...it };
+      }),
     );
   };
 
@@ -96,20 +72,8 @@ const CategoryLayout = () => {
     layouts.map((it: Layout) => {
       return tmpList.push({ i: it.i, x: it.x, y: it.y, w: it.w, h: it.h, static: it.static });
     });
-    dispatch(setCategoryLayoutList(tmpList));
+    setCategoryLayoutListAction(tmpList);
   };
-
-  useEffect(() => {
-    if (categoryList) {
-      dispatch(
-        setIsEditCategory(
-          categoryList.map((it) => {
-            return { key: it.key, id: it.id, editable: false };
-          }),
-        ),
-      );
-    }
-  }, []);
 
   return (
     <div>

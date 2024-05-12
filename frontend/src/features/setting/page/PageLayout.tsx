@@ -1,6 +1,6 @@
 import { ChangeEvent, useCallback, useState } from "react";
 import Text from "components/Text";
-import styles from "../Setting.module.css";
+import styles from "styles/Setting.module.css";
 import GridLayout, { Layout } from "react-grid-layout";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import {
@@ -15,11 +15,11 @@ import {
   setPageLayoutList,
   setPageDeleList,
   PageConfig,
-  editList,
 } from "slices/settingSlice";
 import PageLayoutItem from "./PageLayoutItem";
 import { useAppSelector } from "app/hooks";
 import { useDispatch } from "react-redux";
+import { EditListConfig } from "interfaces/setting.interface";
 
 const useGettingWidth = () => {
   const [gridWidth, setGridWidth] = useState(null);
@@ -65,7 +65,7 @@ const PageLayout = () => {
     setNewName(item.label); // 이름으로 placeholder
     dispatch(
       setIsEditPage(
-        isEdit.map((it: editList) => {
+        isEdit.map((it: EditListConfig) => {
           return it.id === item.id
             ? { key: it.key, id: it.id, editable: true }
             : { key: it.key, id: it.id, editable: false };
@@ -99,7 +99,7 @@ const PageLayout = () => {
     );
     dispatch(
       setIsEditPage(
-        isEdit.map((it: editList) => {
+        isEdit.map((it: EditListConfig) => {
           return it.id === item.id
             ? { key: newName, id: it.id, editable: false }
             : { key: it.key, id: it.id, editable: false };

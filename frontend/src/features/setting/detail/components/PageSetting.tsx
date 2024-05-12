@@ -1,26 +1,24 @@
 import { ChangeEvent, useState } from "react";
 import Text from "components/Text";
 import RadioButton from "components/RadioButton";
-import styles from "../../Setting.module.css";
+import styles from "styles/Setting.module.css";
 import { SketchPicker } from "react-color";
-import { useAppSelector } from "app/hooks";
-import { colorsConfig, selectColors, setColors } from "slices/settingSlice";
-import { useDispatch } from "react-redux";
 import { RadioGroup } from "@mui/material";
 import { detailItemUnfolded } from "./LogoSetting";
+import { useSettingActions, useSettingStore } from "stores/settingStore";
 
 const PageSetting = () => {
-  const colors: colorsConfig = useAppSelector(selectColors);
+  const colorList = useSettingStore((state) => state.colorList);
+  const { setColorListAction } = useSettingActions();
   const [checkOrder, setCheckOrder] = useState("flex-start");
-  const dispatch = useDispatch();
 
   const orderChange = (e: ChangeEvent<HTMLInputElement>) => {
     setCheckOrder((e.target as HTMLInputElement).value);
-    dispatch(setColors({ ...colors, page: { ...colors.page, sort: (e.target as HTMLInputElement).value } }));
+    setColorListAction({ ...colorList, page: { ...colorList.page, sort: (e.target as HTMLInputElement).value } });
   };
 
   const handleChangeComplete = (color: string) => {
-    dispatch(setColors({ ...colors, page: { ...colors.page, background: color } }));
+    setColorListAction({ ...colorList, page: { ...colorList.page, background: color } });
   };
 
   return (
@@ -49,7 +47,7 @@ const PageSetting = () => {
           <div style={detailItemUnfolded}>
             <SketchPicker
               width="200px"
-              color={colors.page.background}
+              color={colorList.page.background}
               onChangeComplete={(color) => handleChangeComplete(color.hex)}
             />
           </div>

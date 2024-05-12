@@ -1,18 +1,16 @@
 import Text from "components/Text";
-import styles from "../../Setting.module.css";
+import styles from "styles/Setting.module.css";
 import { SketchPicker } from "react-color";
-import { useDispatch } from "react-redux";
-import { colorsConfig, getTextColor, selectColors, setColors } from "slices/settingSlice";
-import { useAppSelector } from "app/hooks";
 import { detailItemUnfolded } from "./LogoSetting";
+import { useSettingActions, useSettingStore } from "stores/settingStore";
+import getTextColor from "utils/getTextColor";
 
 const ProfileSetting = () => {
-  const dispatch = useDispatch();
-  const colors: colorsConfig = useAppSelector(selectColors);
-
+  const colorList = useSettingStore((state) => state.colorList);
+  const { setColorListAction } = useSettingActions();
   const handleChangeComplete = (color: string) => {
     const textColor = getTextColor(color);
-    dispatch(setColors({ ...colors, profile: { background: color, text: textColor } }));
+    setColorListAction({ ...colorList, profile: { background: color, text: textColor } });
   };
   return (
     <div>
@@ -26,7 +24,7 @@ const ProfileSetting = () => {
           </div>
           <div style={detailItemUnfolded}>
             <SketchPicker
-              color={colors.profile.background}
+              color={colorList.profile.background}
               onChangeComplete={(color) => handleChangeComplete(color.hex)}
             />
           </div>

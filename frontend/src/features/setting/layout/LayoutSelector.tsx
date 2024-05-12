@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { initialState, setClickedLayoutIdx } from "slices/settingSlice";
-import styles from "../Setting.module.css";
+import styles from "styles/Setting.module.css";
 import LayoutSelectorItem from "./../layout/LayoutSelectorItem";
 import DefaultLayoutStyles, { defaultLayoutConfig } from "./DefaultLayoutStyles";
+import { initialState, useSettingActions } from "stores/settingStore";
 
 export interface layoutsConfig {
   idx: number;
@@ -20,10 +20,11 @@ const LayoutSelector = () => {
     { idx: 6, isClicked: false },
   ]);
   const DefaultLayouts = DefaultLayoutStyles();
+  const { setClickedLayoutIdxAction } = useSettingActions();
 
   useEffect(() => {
     return () => {
-      setClickedLayoutIdx(initialState.clickedLayoutIdx);
+      setClickedLayoutIdxAction(initialState.clickedLayoutIdx);
     };
   }, []);
 

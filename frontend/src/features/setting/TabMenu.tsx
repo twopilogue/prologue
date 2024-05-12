@@ -6,8 +6,7 @@ import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import SideMenu from "./SideMenu";
 import { blogTabs, layoutTabs, nonUserBlogTabs } from "./SettingMenuComponents";
-import { useAppSelector } from "app/hooks";
-import { rootState } from "app/store";
+import { useAuthStore } from "stores/authStore";
 
 export interface TabPanelProps {
   children?: ReactNode;
@@ -79,7 +78,7 @@ export const TabPanel = styled((props: TabPanelProps) => {
 });
 
 const TabMenu = () => {
-  const { blogType } = useAppSelector((state: rootState) => state.auth);
+  const blogType = useAuthStore((state) => state.blogType);
   const [value, setValue] = useState(0);
 
   const handleChange = (event: SyntheticEvent, newValue: number) => {

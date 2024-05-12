@@ -1,12 +1,7 @@
-import { useAppSelector } from "app/hooks";
+import { ComponentCheckConfig, ComponentConfig } from "interfaces/setting.interface";
 import { Layout } from "react-grid-layout";
-import {
-  ComponentCheckConfig,
-  ComponentConfig,
-  selectUserCheckList,
-  selectUserComponentLayoutList,
-  selectUserComponentList,
-} from "slices/settingSlice";
+import { useSettingStore } from "stores/settingStore";
+import { useShallow } from "zustand/react/shallow";
 
 export interface defaultLayoutConfig {
   id: number;
@@ -31,10 +26,9 @@ export const sortJSON = (data: any) => {
 };
 
 const DefaultLayoutStyles = () => {
-  const custLayout = useAppSelector(selectUserComponentLayoutList);
-  const custList = useAppSelector(selectUserComponentList);
-  const custCheckList = useAppSelector(selectUserCheckList);
-  // const [passComponents, setPassComponent] = useState("");
+  const [userLayoutList, userCompList, userCompCheck] = useSettingStore(
+    useShallow((state) => [state.userCompLayoutList, state.userCompList, state.userCompCheck]),
+  );
 
   const sortLayout = () => {
     const layoutObject: layoutObjectConfig = {
@@ -42,16 +36,16 @@ const DefaultLayoutStyles = () => {
       b: [],
       c: [],
     };
-    for (let i = 0; i < custLayout.length; i++) {
-      switch (custLayout[i].x) {
+    for (let i = 0; i < userLayoutList.length; i++) {
+      switch (userLayoutList[i].x) {
         case 0:
-          layoutObject.a.push(custLayout[i]);
+          layoutObject.a.push(userLayoutList[i]);
           break;
         case 1:
-          layoutObject.b.push(custLayout[i]);
+          layoutObject.b.push(userLayoutList[i]);
           break;
         default:
-          layoutObject.c.push(custLayout[i]);
+          layoutObject.c.push(userLayoutList[i]);
       }
     }
     const sortedLayoutObject: any = new Object();
@@ -106,9 +100,9 @@ const DefaultLayoutStyles = () => {
     {
       // 사용자 설정 테마
       id: 0,
-      layout: custLayout,
-      components: custList,
-      checkList: custCheckList,
+      layout: userLayoutList,
+      components: userCompList,
+      checkList: userCompCheck,
       struct: createDiv(),
     },
     {
