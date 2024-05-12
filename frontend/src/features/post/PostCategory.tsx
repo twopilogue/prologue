@@ -37,7 +37,7 @@ const PostCategoryList = ({ setCategory }: PostCategoryListProps) => {
   }, []);
 
   return (
-    <div className={styles.postCategoryList}>
+    <div className={styles.categoryList}>
       <div className={styles.textCategories}>
         <Text value="Categories" type="groupTitle" bold />
       </div>

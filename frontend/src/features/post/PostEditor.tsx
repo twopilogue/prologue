@@ -26,7 +26,7 @@ const PostWriteContents = () => {
   };
 
   return (
-    <div className={styles.postWriteContents}>
+    <div className={styles.editor}>
       {/* <Text value="내용" type="text" />
       <div style={{ marginTop: "1%" }}></div> */}
 

@@ -67,7 +67,7 @@ const PostInfo = () => {
   }, []);
 
   return (
-    <div className={styles.postWriteTitle}>
+    <div className={styles.info}>
       <Text value="제목" type="text" />
       <div style={{ marginTop: "1%" }}>
         <Input placeholder="제목을 입력해주세요" onChange={(e) => setPostTitleAction(e.target.value)} value={title} />
@@ -84,7 +84,7 @@ const PostInfo = () => {
         <Text value="설명은 필수 입력값입니다." type="caption" color="red" />
       </div>
       <br /> <br /> <br />
-      <div className={blogType == 0 ? `${styles.showSelectBox}` : `${styles.hideSelectBox}`} style={{ width: "15vw" }}>
+      <div className={blogType == 0 ? `${styles.showSelectBox}` : `${styles.hideSelectBox}`}>
         <Text value="카테고리" type="text" /> <br />
         <div style={{ marginTop: "1%" }}>
           <select className={styles.categoryBox} name="cateogry" value={category} onChange={categoryChange}>

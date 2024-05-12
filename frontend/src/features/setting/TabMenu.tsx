@@ -86,7 +86,7 @@ const TabMenu = () => {
   };
 
   return (
-    <Box sx={{ width: "100%" }}>
+    <Box sx={{ width: "83vw", margin: "0 auto" }}>
       <Box sx={{ bgcolor: "#fff" }}>
         <StyledTabs value={value} onChange={handleChange}>
           <StyledTab label="블로그 설정" />

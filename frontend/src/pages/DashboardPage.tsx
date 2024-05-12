@@ -46,7 +46,7 @@ const DashboardPage = () => {
   }, []);
 
   return (
-    <Box sx={{ mt: 3, minHeight: "88vh" }}>
+    <Box sx={{ minHeight: "88vh", width: "83vw", m: "24px auto" }}>
       <Grid container spacing={2} columns={11}>
         <Grid item xs={3}>
           <DashboardCalendar />

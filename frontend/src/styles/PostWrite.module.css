@@ -1,37 +1,61 @@
-/* PostWrite */
-.postWrite {
+.container {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 1em;
+  box-sizing: border-box;
 }
 
-.textBox {
-  transform: translate(-7%);
+.postContainer {
+  width: 83vw;
+  height: 100%;
+  margin: 0 auto;
 }
 
-.postWriteButtons {
-  position: absolute;
-  top: 90%;
-  left: 32%;
-  transform: translate(-32%, -90%);
+.title {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  padding: 0 5em 1em 5em;
+  box-sizing: border-box;
 }
 
-.postDeleteButton {
-  position: absolute;
-  top: 90%;
-  right: 0;
-  transform: translate(115%, -90%);
+.title > div:nth-child(1) {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7em;
 }
 
-/* PostWriteTitle */
-.postWriteTitle {
-  position: absolute;
-  left: -7%;
+.title > div:nth-child(2) {
+  display: flex;
+  justify-content: center;
+  gap: 1em;
+  height: 2.5em;
+}
+
+.contents {
+  display: flex;
+  height: 100%;
+  margin: 0 1em;
+  gap: 1em;
+}
+
+.postContents {
+  display: grid;
+  grid-template-columns: 2fr 8fr;
+}
+
+.info {
+  width: 20em;
+  padding: 1em 2em;
+  box-sizing: border-box;
   border: 1px solid #a2a5dc;
-  width: 17vw;
-  height: 75vh;
-  padding: 1%;
+  border-radius: 10px;
 }
 
-.showSelectBox {
+.contents > .toastui-editor-defaultUI {
+  box-sizing: border-box;
 }
 
 .hideSelectBox {
@@ -39,7 +63,7 @@
 }
 
 .categoryBox {
-  width: 115%;
+  width: 100%;
   height: 4vh;
   padding: 2%;
   border-radius: 5px;
@@ -55,29 +79,6 @@
   width: 100%;
 }
 
-/* PostWriteContents */
-.postWriteContents {
-  position: absolute;
-  right: -7%;
-  /* border: 1px solid #a2a5dc; */
-  /* width: 73vw;
-  height: 75vh; */
-  width: 75vw;
-  height: 78vh;
-  /* padding: 1%; */
-}
-
-.postEditor {
+.editor {
   width: 100%;
-  height: 100%;
-}
-
-/* PageViewerContents */
-.pageWriteContents {
-  position: absolute;
-  border: 1px solid #a2a5dc;
-  left: -7%;
-  width: 112%;
-  height: 75vh;
-  padding: 1%;
 }
