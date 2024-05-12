@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import styles from "features/dashboard/Dashboard.module.css";
+import styles from "styles/Dashboard.module.css";
 import Text from "components/Text";
 import { Link } from "@mui/material";
 import { useAuthStore } from "stores/authStore";

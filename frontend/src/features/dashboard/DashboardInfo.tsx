@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import moment from "moment";
-import styles from "features/dashboard/Dashboard.module.css";
+import styles from "styles/Dashboard.module.css";
 import Text from "components/Text";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import SyncAltIcon from "@mui/icons-material/SyncAlt";

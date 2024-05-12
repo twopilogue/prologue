@@ -1,4 +1,4 @@
-import styles from "features/dashboard/Dashboard.module.css";
+import styles from "styles/Dashboard.module.css";
 import { Avatar, Box, Stack } from "@mui/material";
 import Text from "components/Text";
 import Calendar from "./Calendar";

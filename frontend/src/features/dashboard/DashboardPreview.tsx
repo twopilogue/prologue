@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import styles from "features/dashboard/Dashboard.module.css";
+import styles from "styles/Dashboard.module.css";
 import Text from "components/Text";
 import IconButton from "@mui/material/IconButton";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
