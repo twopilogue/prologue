@@ -1,12 +1,15 @@
 package com.b208.prologue.api.service;
 
 import com.b208.prologue.api.request.DashBoardPostRequest;
-import com.b208.prologue.api.response.github.*;
+import com.b208.prologue.api.response.github.GetFileNameResponse;
+import com.b208.prologue.api.response.github.GetRepositorySizeResponse;
+import com.b208.prologue.api.response.github.PostGetListResponse;
 import com.b208.prologue.common.Base64Converter;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -26,6 +29,12 @@ public class DashBoardServiceImpl implements DashBoardService {
     private final WebClient webClient;
     private final Base64Converter base64Converter;
     private final PostServiceImpl postService;
+    private static String path;
+
+    @Value("${template.path}")
+    private void setTemplatePath(String path) {
+        this.path = path;
+    }
 
     @Override
     public List<DashBoardPostRequest> getList(String encodedAccessToken, String githubId) throws Exception {
@@ -137,9 +146,9 @@ public class DashBoardServiceImpl implements DashBoardService {
                 .retrieve()
                 .bodyToMono(GetRepositorySizeResponse.class).block();
 
-        if(getRepositorySizeResponse.getSize() == 0.0) {
+        if (getRepositorySizeResponse.getSize() == 0.0) {
             GetRepositorySizeResponse tempBlogSize = webClient.get()
-                    .uri("/repos/team-epilogue/" + template)
+                    .uri("/repos/" + path + "/" + template)
                     .accept(MediaType.APPLICATION_JSON)
                     .headers(h -> h.setBearerAuth(accessToken))
                     .retrieve()
