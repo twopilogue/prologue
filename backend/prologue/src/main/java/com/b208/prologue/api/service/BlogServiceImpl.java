@@ -1,17 +1,16 @@
 package com.b208.prologue.api.service;
 
 import com.b208.prologue.api.request.github.*;
-import com.b208.prologue.api.response.github.*;
+import com.b208.prologue.api.response.github.GetShaResponse;
+import com.b208.prologue.api.response.github.RepositoryListResponse;
 import com.b208.prologue.common.Base64Converter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.Date;
 
 @Service
@@ -20,6 +19,12 @@ public class BlogServiceImpl implements BlogService {
 
     private final WebClient webClient;
     private final Base64Converter base64Converter;
+    private static String path;
+
+    @Value("${template.path}")
+    private void setTemplatePath(String path) {
+        this.path = path;
+    }
 
     @Override
     public void updateDeployBranch(String encodedAccessToken, String githubId) throws Exception {
@@ -77,7 +82,7 @@ public class BlogServiceImpl implements BlogService {
 
         CreateRepositoryRequest createRepositoryRequest = new CreateRepositoryRequest(githubId + ".github.io");
         webClient.post()
-                .uri("/repos/team-epilogue/" + template + "/generate")
+                .uri("/repos/" + path + "/" + template + "/generate")
                 .accept(MediaType.APPLICATION_JSON)
                 .headers(h -> h.setBearerAuth(accessToken))
                 .body(Mono.just(createRepositoryRequest), CreateRepositoryRequest.class)
