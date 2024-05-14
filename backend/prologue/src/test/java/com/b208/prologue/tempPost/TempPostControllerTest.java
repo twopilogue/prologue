@@ -1,6 +1,8 @@
 package com.b208.prologue.tempPost;
 
 import com.b208.prologue.api.controller.TempPostController;
+import com.b208.prologue.api.exception.TempPostException;
+import com.b208.prologue.api.request.ModifyTempPostRequest;
 import com.b208.prologue.api.request.SaveTempPostRequest;
 import com.b208.prologue.api.service.TempPostServiceImpl;
 import com.google.gson.Gson;
@@ -110,7 +112,7 @@ class TempPostControllerTest {
         @Test
         void 임시저장게시글없음() throws Exception {
             //given
-            doReturn(null).when(tempPostService).getTempPost(githubId, tempPostId);
+            doThrow(new TempPostException()).when(tempPostService).getTempPost(githubId, tempPostId);
 
             //when
             final ResultActions resultActions = mockMvc.perform(
@@ -133,6 +135,84 @@ class TempPostControllerTest {
                     MockMvcRequestBuilders.get(url)
                             .param("githubId", githubId)
                             .param("tempPostId", String.valueOf(tempPostId))
+            );
+
+            //then
+            resultActions.andExpect(status().isOk());
+        }
+    }
+
+    @Nested
+    class 임시저장게시글_수정 {
+        final ModifyTempPostRequest modifyTempPostRequest = ModifyTempPostRequest.builder()
+                .githubId(githubId)
+                .tempPostId(0L)
+                .title("abc")
+                .build();
+
+        @Test
+        void 실패_깃허브ID없음() throws Exception {
+            //given
+            final ModifyTempPostRequest modifyTempPostRequest = ModifyTempPostRequest.builder()
+                    .tempPostId(0L)
+                    .title("abc")
+                    .build();
+
+            //when
+            final ResultActions resultActions = mockMvc.perform(
+                    MockMvcRequestBuilders.put(url)
+                            .content(gson.toJson(modifyTempPostRequest))
+                            .contentType(MediaType.APPLICATION_JSON)
+            );
+
+            //then
+            resultActions.andExpect(status().isBadRequest());
+        }
+
+        @Test
+        void 실패_임시저장게시글ID없음() throws Exception {
+            //given
+            final ModifyTempPostRequest modifyTempPostRequest = ModifyTempPostRequest.builder()
+                    .githubId(githubId)
+                    .title("abc")
+                    .build();
+
+            //when
+            final ResultActions resultActions = mockMvc.perform(
+                    MockMvcRequestBuilders.put(url)
+                            .content(gson.toJson(modifyTempPostRequest))
+                            .contentType(MediaType.APPLICATION_JSON)
+            );
+
+            //then
+            resultActions.andExpect(status().isBadRequest());
+        }
+
+        @Test
+        void 실패_임시저장게시글없음() throws Exception {
+            //given
+            doThrow(new TempPostException()).when(tempPostService).modifyTempPost(modifyTempPostRequest);
+
+            //when
+            final ResultActions resultActions = mockMvc.perform(
+                    MockMvcRequestBuilders.put(url)
+                            .content(gson.toJson(modifyTempPostRequest))
+                            .contentType(MediaType.APPLICATION_JSON)
+            );
+
+            //then
+            resultActions.andExpect(status().isBadRequest());
+        }
+
+        @Test
+        void 성공() throws Exception {
+            //given
+
+            //when
+            final ResultActions resultActions = mockMvc.perform(
+                    MockMvcRequestBuilders.post(url)
+                            .content(gson.toJson(modifyTempPostRequest))
+                            .contentType(MediaType.APPLICATION_JSON)
             );
 
             //then
