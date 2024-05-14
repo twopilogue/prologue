@@ -1,5 +1,6 @@
 package com.b208.prologue.api.controller;
 
+import com.b208.prologue.api.request.ModifyTempPostRequest;
 import com.b208.prologue.api.request.SaveTempPostRequest;
 import com.b208.prologue.api.response.BaseResponseBody;
 import com.b208.prologue.api.response.GetTempPostResponse;
@@ -24,10 +25,10 @@ public class TempPostController {
     private final TempPostService tempPostService;
 
     @GetMapping("")
-    @ApiOperation(value = "임시 저장 게시물 조회", notes = "임시 저장 게시물 불러오기")
+    @ApiOperation(value = "임시 저장 게시글 조회", notes = "임시 저장 게시글 불러오기")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "임시 저장 게시물 조회 성공", response = GetTempPostResponse.class),
-            @ApiResponse(code = 400, message = "임시 저장 게시물 조회 실패", response = BaseResponseBody.class),
+            @ApiResponse(code = 200, message = "임시 저장 게시글 조회 성공", response = GetTempPostResponse.class),
+            @ApiResponse(code = 400, message = "임시 저장 게시글 조회 실패", response = BaseResponseBody.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
     public ResponseEntity<? extends BaseResponseBody> getTempPost(@RequestParam String githubId,
@@ -35,11 +36,11 @@ public class TempPostController {
         try {
             Map<String, Object> result = tempPostService.getTempPost(githubId, tempPostId);
             if (result == null)
-                return ResponseEntity.status(400).body(BaseResponseBody.of(400, "임시 저장 게시물 조회에 실패헸습니다."));
-            return ResponseEntity.status(200).body(GetTempPostResponse.of(result, 200, "임시 저장 게시물 조회 성공했습니다."));
+                return ResponseEntity.status(400).body(BaseResponseBody.of(400, "임시 저장 게시글 조회에 실패헸습니다."));
+            return ResponseEntity.status(200).body(GetTempPostResponse.of(result, 200, "임시 저장 게시글 조회 성공했습니다."));
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "임시 저장 게시물 조회에 실패헸습니다."));
+            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "임시 저장 게시글 조회에 실패헸습니다."));
         }
     }
 
@@ -57,6 +58,23 @@ public class TempPostController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "게시글 임시 저장에 실패헸습니다."));
+        }
+    }
+
+    @PutMapping("")
+    @ApiOperation(value = "임시 저장 게시글 수정", notes = "임시 저장한 게시글을 수정한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "임시 저장 게시글 수정 성공", response = BaseResponseBody.class),
+            @ApiResponse(code = 400, message = "임시 저장 게시글 수정 실패", response = BaseResponseBody.class),
+            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<? extends BaseResponseBody> modifyTempPost(@Valid @RequestBody ModifyTempPostRequest modifyTempPostRequest) {
+        try {
+            tempPostService.modifyTempPost(modifyTempPostRequest);
+            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "임시 저장 게시글 수정에 성공했습니다."));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "임시 저장 게시글 수정에 실패헸습니다."));
         }
     }
 
