@@ -3,7 +3,7 @@ import palette from "styles/colorPalette";
 import Button from "@mui/material/Button";
 
 interface Props {
-  label: string;
+  label: string | JSX.Element;
   color?: "blue" | "sky" | "gray";
   width?: string;
   icon?: ReactElement;

@@ -166,7 +166,18 @@
   top: 1.2em;
 }
 
-.temp_button {
+.temp__button {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.temp__button > div {
+  border-left: 1px solid #a4a4a4;
+  height: 1em;
+}
+
+.temp__button--save {
   display: flex;
   justify-content: center;
   gap: 1em;

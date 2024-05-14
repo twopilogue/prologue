@@ -8,7 +8,7 @@ import ListIcon from "@mui/icons-material/List";
 import { usePostActions, usePostStore } from "stores/postStore";
 import PostInfo from "features/post/PostInfo";
 import PostEditor from "features/post/PostEditor";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuthStore } from "stores/authStore";
 import { useShallow } from "zustand/react/shallow";
 import { useNavigate, useParams } from "react-router-dom";
@@ -53,6 +53,8 @@ const PostWritePage = () => {
 
   const [autoTempTime, setAutoTempTime] = useState("07:03:30");
   const [tempModalOpen, setTempModalOpen] = useState(false);
+  const [isAutoTempExist, setIsAutoTempExist] = useState(true);
+  const [tempListCnt, setTempListCnt] = useState(0);
 
   const handleSave = async () => {
     if (title == "") {
@@ -183,6 +185,27 @@ const PostWritePage = () => {
   const showCancelModal = () => setCancelModalOpen(true);
   const showDeleteModal = () => setDeleteModalOpen(true);
 
+  useEffect(() => {
+    if (isAutoTempExist) {
+      const result = setTimeout(() => {
+        confirm(`${autoTempTime}에 저장된 글이 있습니다.\n이어서 작성하시겠습니까?`);
+      }, 1000);
+      return () => {
+        clearTimeout(result);
+      };
+    }
+  }, []);
+
+  const tempButton = () => {
+    return (
+      <div className={styles.temp__button}>
+        <Text value="임시저장" />
+        <div></div>
+        <Text value={tempListCnt.toString()} />
+      </div>
+    );
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.title}>
@@ -198,7 +221,7 @@ const PostWritePage = () => {
           </div>
           <div>
             <Text value={`자동 저장 완료 ${autoTempTime}`} color="dark_gray" type="caption" />
-            <Button label="임시저장" color="gray" icon={<ListIcon />} onClick={() => setTempModalOpen(true)} />
+            <Button label={tempButton()} color="gray" icon={<ListIcon />} onClick={() => setTempModalOpen(true)} />
             <Button label="작성완료" icon={<CheckOutlinedIcon />} onClick={showSaveModal} />
           </div>
         </div>
