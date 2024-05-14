@@ -14,8 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class TempPostServiceTest {
@@ -79,6 +78,19 @@ class TempPostServiceTest {
             assertThat(result).isNotNull();
             assertThat(result.get("title")).isEqualTo(tempPost.getTitle());
         }
+    }
+
+    @Test
+    void 임시저장게시글_삭제() throws Exception {
+        //given
+
+        //when
+        tempPostService.deleteTempPost(githubId, tempPostId);
+
+        //then
+
+        //verify
+        verify(tempPostRepository, times(1)).deleteByTempPostIdAndGithubId(any(Long.class), any(String.class));
     }
 
 }
