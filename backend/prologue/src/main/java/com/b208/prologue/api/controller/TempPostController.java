@@ -4,6 +4,7 @@ import com.b208.prologue.api.request.ModifyTempPostRequest;
 import com.b208.prologue.api.request.SaveTempPostRequest;
 import com.b208.prologue.api.response.BaseResponseBody;
 import com.b208.prologue.api.response.GetTempPostResponse;
+import com.b208.prologue.api.response.CountTempPostsResponse;
 import com.b208.prologue.api.response.SaveTempPostResponse;
 import com.b208.prologue.api.service.TempPostService;
 import io.swagger.annotations.ApiOperation;
@@ -93,6 +94,23 @@ public class TempPostController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "임시 저장 게시글 삭제를 실패헸습니다."));
+        }
+    }
+
+    @GetMapping("/count")
+    @ApiOperation(value = "임시 저장 게시글 수 조회", notes = "임시 저장 게시글 수 조회")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "임시 저장 게시글 수 조회 성공", response = CountTempPostsResponse.class),
+            @ApiResponse(code = 400, message = "임시 저장 게시글 수 조회 실패", response = BaseResponseBody.class),
+            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<? extends BaseResponseBody> countTempPosts(@RequestParam String githubId) {
+        try {
+            int count = tempPostService.countTempPosts(githubId);
+            return ResponseEntity.status(200).body(CountTempPostsResponse.of(count, 200, "임시 저장 게시글 수 조회 성공했습니다."));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "임시 저장 게시글 수 조회에 실패헸습니다."));
         }
     }
 }

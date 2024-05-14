@@ -66,4 +66,37 @@ class TempPostRepositoryTest {
         assertThat(tempPost).isNull();
     }
 
+    @Nested
+    class 임시저장게시글_수_조회 {
+        @Test
+        void 임시저장게시글없음() {
+            //given
+
+            //when
+            final int count = tempPostRepository.countByGithubId(githubId);
+
+            //then
+            assertThat(count).isZero();
+        }
+
+        @Test
+        void 임시저장게시글있음_2개() {
+            //given
+            tempPostRepository.save(TempPost.builder()
+                    .title("abc")
+                    .githubId(githubId)
+                    .build());
+            tempPostRepository.save(TempPost.builder()
+                    .title("123")
+                    .githubId(githubId)
+                    .build());
+
+            //when
+            final int count = tempPostRepository.countByGithubId(githubId);
+
+            //then
+            assertThat(count).isEqualTo(2);
+        }
+    }
+
 }

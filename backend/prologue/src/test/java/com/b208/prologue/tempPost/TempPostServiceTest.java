@@ -140,4 +140,15 @@ class TempPostServiceTest {
         verify(tempPostRepository, times(1)).deleteByTempPostIdAndGithubId(any(Long.class), any(String.class));
     }
 
+    @Test
+    void 임시저장게시글_수_조회() throws Exception {
+        //given
+        doReturn(3).when(tempPostRepository).countByGithubId(any(String.class));
+
+        //when
+        int count = tempPostService.countTempPosts(githubId);
+
+        //then
+        assertThat(count).isEqualTo(3);
+    }
 }
