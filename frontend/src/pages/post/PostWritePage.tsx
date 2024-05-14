@@ -186,7 +186,7 @@ const PostWritePage = () => {
   const showDeleteModal = () => setDeleteModalOpen(true);
 
   useEffect(() => {
-    if (isAutoTempExist) {
+    if (isAutoTempExist && isEdit === "작성") {
       const result = setTimeout(() => {
         confirm(`${autoTempTime}에 저장된 글이 있습니다.\n이어서 작성하시겠습니까?`);
       }, 1000);
@@ -220,8 +220,12 @@ const PostWritePage = () => {
             {isEdit === "수정" && <Button label="삭제하기" icon={<CloseOutlinedIcon />} onClick={showDeleteModal} />}
           </div>
           <div>
-            <Text value={`자동 저장 완료 ${autoTempTime}`} color="dark_gray" type="caption" />
-            <Button label={tempButton()} color="gray" icon={<ListIcon />} onClick={() => setTempModalOpen(true)} />
+            {isEdit === "작성" && (
+              <>
+                <Text value={`자동 저장 완료 ${autoTempTime}`} color="dark_gray" type="caption" />
+                <Button label={tempButton()} color="gray" icon={<ListIcon />} onClick={() => setTempModalOpen(true)} />
+              </>
+            )}
             <Button label="작성완료" icon={<CheckOutlinedIcon />} onClick={showSaveModal} />
           </div>
         </div>
