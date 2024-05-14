@@ -1,7 +1,9 @@
 package com.b208.prologue.api.service;
 
 import com.b208.prologue.api.entity.TempPost;
+import com.b208.prologue.api.exception.TempPostException;
 import com.b208.prologue.api.repository.TempPostRepository;
+import com.b208.prologue.api.request.ModifyTempPostRequest;
 import com.b208.prologue.api.request.SaveTempPostRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,10 +19,10 @@ public class TempPostServiceImpl implements TempPostService {
     private final TempPostRepository tempPostRepository;
 
     @Override
-    public Map<String, Object> getTempPost(final String githubId, final Long tempPostId) throws Exception {
+    public Map<String, Object> getTempPost(final String githubId, final Long tempPostId) throws TempPostException {
         final TempPost tempPost = tempPostRepository.findByTempPostIdAndGithubId(tempPostId, githubId);
 
-        if (tempPost == null) return null;
+        if (tempPost == null) throw new TempPostException();
 
         Map<String, Object> result = new HashMap<>();
         result.put("tempPostId", tempPost.getTempPostId());
@@ -46,6 +48,26 @@ public class TempPostServiceImpl implements TempPostService {
                 .build();
 
         return tempPostRepository.save(tempPost).getTempPostId();
+    }
+
+    @Override
+    @Transactional
+    public void modifyTempPost(final ModifyTempPostRequest modifyTempPostRequest) throws TempPostException {
+        final TempPost tempPost = tempPostRepository.findByTempPostIdAndGithubId(modifyTempPostRequest.getTempPostId(), modifyTempPostRequest.getGithubId());
+
+        if (tempPost == null) throw new TempPostException();
+
+        final TempPost modifyTempPost = TempPost.builder()
+                .tempPostId(modifyTempPostRequest.getTempPostId())
+                .githubId(modifyTempPostRequest.getGithubId())
+                .title(modifyTempPostRequest.getTitle())
+                .description(modifyTempPostRequest.getDescription())
+                .category(modifyTempPostRequest.getCategory())
+                .tags(modifyTempPostRequest.getTags())
+                .content(modifyTempPostRequest.getContent())
+                .build();
+
+        tempPostRepository.save(modifyTempPost);
     }
 
     @Override
