@@ -255,4 +255,38 @@ class TempPostControllerTest {
         }
     }
 
+    @Nested
+    class 임시저장게시글_수_조회 {
+
+        @Test
+        void 실패() throws Exception {
+            //given
+            doThrow(new Exception()).when(tempPostService).countTempPosts(githubId);
+
+            //when
+            final ResultActions resultActions = mockMvc.perform(
+                    MockMvcRequestBuilders.get(url + "/count")
+                            .param("githubId", githubId)
+            );
+
+            //then
+            resultActions.andExpect(status().isBadRequest());
+        }
+
+        @Test
+        void 성공() throws Exception {
+            //given
+            doReturn(127).when(tempPostService).countTempPosts(githubId);
+
+            //when
+            final ResultActions resultActions = mockMvc.perform(
+                    MockMvcRequestBuilders.get(url + "/count")
+                            .param("githubId", githubId)
+            );
+
+            //then
+            resultActions.andExpect(status().isOk());
+        }
+    }
+
 }
