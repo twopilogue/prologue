@@ -7,4 +7,5 @@ import java.util.Map;
 public interface TempPostService {
     Map<String, Object> getTempPost(final String githubId, final Long tempPostId) throws Exception;
     Long saveTempPost(final SaveTempPostRequest saveTempPostRequest) throws Exception;
+    void deleteTempPost(final String githubId, final Long tempPostId) throws Exception;
 }

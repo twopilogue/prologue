@@ -50,4 +50,20 @@ class TempPostRepositoryTest {
         }
     }
 
+    @Test
+    void 임시저장게시글_삭제() {
+        //given
+        final TempPost saveTempPost = tempPostRepository.save(TempPost.builder()
+                .title("abc")
+                .githubId(githubId)
+                .build());
+
+        //when
+        tempPostRepository.deleteByTempPostIdAndGithubId(saveTempPost.getTempPostId(), githubId);
+        final TempPost tempPost = tempPostRepository.findByTempPostIdAndGithubId(saveTempPost.getTempPostId(), githubId);
+
+        //then
+        assertThat(tempPost).isNull();
+    }
+
 }

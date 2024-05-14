@@ -140,4 +140,39 @@ class TempPostControllerTest {
         }
     }
 
+    @Nested
+    class 임시저장게시글_삭제 {
+
+        @Test
+        void 실패() throws Exception {
+            //given
+            doThrow(new Exception()).when(tempPostService).deleteTempPost(githubId, tempPostId);
+
+            //when
+            final ResultActions resultActions = mockMvc.perform(
+                    MockMvcRequestBuilders.delete(url)
+                            .param("githubId", githubId)
+                            .param("tempPostId", String.valueOf(tempPostId))
+            );
+
+            //then
+            resultActions.andExpect(status().isBadRequest());
+        }
+
+        @Test
+        void 성공() throws Exception {
+            //given
+
+            //when
+            final ResultActions resultActions = mockMvc.perform(
+                    MockMvcRequestBuilders.delete(url)
+                            .param("githubId", githubId)
+                            .param("tempPostId", String.valueOf(tempPostId))
+            );
+
+            //then
+            resultActions.andExpect(status().isOk());
+        }
+    }
+
 }
