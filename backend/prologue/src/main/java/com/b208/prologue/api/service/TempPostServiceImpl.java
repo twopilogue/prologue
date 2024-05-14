@@ -75,5 +75,10 @@ public class TempPostServiceImpl implements TempPostService {
     public void deleteTempPost(final String githubId, final Long tempPostId) throws Exception {
         tempPostRepository.deleteByTempPostIdAndGithubId(tempPostId, githubId);
     }
+
+    @Override
+    public int countTempPosts(final String githubId) throws Exception {
+        return tempPostRepository.countByGithubId(githubId);
+    }
 }
 

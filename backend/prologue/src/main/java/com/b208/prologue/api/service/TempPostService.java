@@ -10,4 +10,5 @@ public interface TempPostService {
     Long saveTempPost(final SaveTempPostRequest saveTempPostRequest) throws Exception;
     void modifyTempPost(final ModifyTempPostRequest modifyTempPostRequest) throws Exception;
     void deleteTempPost(final String githubId, final Long tempPostId) throws Exception;
+    int countTempPosts(final String githubId) throws Exception;
 }
