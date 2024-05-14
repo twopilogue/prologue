@@ -59,4 +59,22 @@ public class TempPostController {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "게시글 임시 저장에 실패헸습니다."));
         }
     }
+
+    @DeleteMapping("")
+    @ApiOperation(value = "임시 저장 게시글 삭제", notes = "임시 저장 게시물 삭제하기")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "임시 저장 게시글 삭제 성공", response = BaseResponseBody.class),
+            @ApiResponse(code = 400, message = "임시 저장 게시글 삭제 실패", response = BaseResponseBody.class),
+            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<? extends BaseResponseBody> deleteTempPost(@RequestParam String githubId,
+                                                                     @RequestParam Long tempPostId) {
+        try {
+            tempPostService.deleteTempPost(githubId, tempPostId);
+            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "임시 저장 게시글 삭제에 성공했습니다."));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "임시 저장 게시글 삭제를 실패헸습니다."));
+        }
+    }
 }
