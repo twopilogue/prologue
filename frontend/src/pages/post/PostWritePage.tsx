@@ -4,15 +4,17 @@ import Button from "components/Button";
 import MeetingRoomOutlinedIcon from "@mui/icons-material/MeetingRoomOutlined";
 import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+import ListIcon from "@mui/icons-material/List";
 import { usePostActions, usePostStore } from "stores/postStore";
 import PostInfo from "features/post/PostInfo";
 import PostEditor from "features/post/PostEditor";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuthStore } from "stores/authStore";
 import { useShallow } from "zustand/react/shallow";
 import { useNavigate, useParams } from "react-router-dom";
 import { deletePostApi } from "apis/api/posts";
 import Modal from "components/Modal";
+import PostTempModal from "features/post/PostTempModal";
 import Axios from "apis/MultipartAxios";
 import api from "apis/BaseUrl";
 
@@ -48,6 +50,11 @@ const PostWritePage = () => {
   const [saveModalOpen, setSaveModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
+
+  const [autoTempTime, setAutoTempTime] = useState("07:03:30");
+  const [tempModalOpen, setTempModalOpen] = useState(false);
+  const [isAutoTempExist, setIsAutoTempExist] = useState(true);
+  const [tempListCnt, setTempListCnt] = useState(0);
 
   const handleSave = async () => {
     if (title == "") {
@@ -178,31 +185,53 @@ const PostWritePage = () => {
   const showCancelModal = () => setCancelModalOpen(true);
   const showDeleteModal = () => setDeleteModalOpen(true);
 
+  useEffect(() => {
+    if (isAutoTempExist && isEdit === "작성") {
+      const result = setTimeout(() => {
+        confirm(`${autoTempTime}에 저장된 글이 있습니다.\n이어서 작성하시겠습니까?`);
+      }, 1000);
+      return () => {
+        clearTimeout(result);
+      };
+    }
+  }, []);
+
+  const tempButton = () => {
+    return (
+      <div className={styles.temp__button}>
+        <Text value="임시저장" />
+        <div></div>
+        <Text value={tempListCnt.toString()} />
+      </div>
+    );
+  };
+
   return (
-    <div className={styles.postWrite}>
-      <div className={styles.textBox}>
-        <Text value={`게시글 ${isEdit}`} type="groupTitle" bold />
-        <br /> <br />
-        <Text value={`간편하게 깃허브 블로그 게시글을 ${isEdit}해보세요.`} type="caption" color="dark_gray" />
-        <div className={styles.postWriteButtons}>
-          <Button
-            label="돌아가기"
-            color="sky"
-            width="10vw"
-            icon={<MeetingRoomOutlinedIcon />}
-            onClick={showCancelModal}
-          />
-          &nbsp; &nbsp; &nbsp;
-          <Button label="작성완료" width="10vw" icon={<CheckOutlinedIcon />} onClick={showSaveModal} />
+    <div className={styles.container}>
+      <div className={styles.title}>
+        <div>
+          <Text value={`게시글 ${isEdit}`} type="groupTitle" bold />
+          <Text value={`간편하게 깃허브 블로그 게시글을 ${isEdit}해보세요.`} type="caption" color="dark_gray" />
         </div>
-        {isEdit === "수정" && (
-          <div className={styles.postDeleteButton}>
-            <Button label="삭제하기" width="10vw" icon={<CloseOutlinedIcon />} onClick={showDeleteModal} />
+
+        <div>
+          <div>
+            <Button label="돌아가기" color="sky" icon={<MeetingRoomOutlinedIcon />} onClick={showCancelModal} />
+            {isEdit === "수정" && <Button label="삭제하기" icon={<CloseOutlinedIcon />} onClick={showDeleteModal} />}
           </div>
-        )}
+          <div>
+            {isEdit === "작성" && (
+              <>
+                <Text value={`자동 저장 완료 ${autoTempTime}`} color="dark_gray" type="caption" />
+                <Button label={tempButton()} color="gray" icon={<ListIcon />} onClick={() => setTempModalOpen(true)} />
+              </>
+            )}
+            <Button label="작성완료" icon={<CheckOutlinedIcon />} onClick={showSaveModal} />
+          </div>
+        </div>
       </div>
 
-      <div style={{ display: "flex", marginTop: "1%" }}>
+      <div className={styles.contents}>
         <PostInfo />
         <PostEditor />
       </div>
@@ -231,6 +260,7 @@ const PostWritePage = () => {
         />
       )}
       {uploadModalOpen && <Modal saveButtonClose={() => setUploadModalOpen(false)} save />}
+      {tempModalOpen && <PostTempModal open={tempModalOpen} onClose={() => setTempModalOpen(false)} />}
     </div>
   );
 };

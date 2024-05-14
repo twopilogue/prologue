@@ -1,49 +1,62 @@
 /* PostRouterPage */
 .postRouterPage {
+  height: calc(100% - 10vh);
   margin-top: 5vh;
   margin-bottom: 5vh;
-  position: relative;
 }
 
-/* PostPage */
-.postPageButtons {
-  position: absolute;
-  top: 20%;
-  right: 0;
+.postListContainer {
+  width: 83vw;
+  height: 100%;
+  margin: 0 auto;
+}
+
+.postListTitle {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 0 5em 1em 5em;
+  box-sizing: border-box;
+}
+
+.postListTitle > div:nth-child(1) {
+  display: flex;
+  flex-direction: column;
+  width: 30%;
+  gap: 0.7em;
+}
+
+.postListContents {
+  display: grid;
+  grid-template-columns: 2fr 8fr;
 }
 
 /* PostCategoryList */
-.postCategoryList {
-  position: absolute;
-  left: 0;
-  width: 14vw;
-  height: 70vh;
+.categoryList {
+  width: 100%;
+  height: 75vh;
+  padding: 0.5em;
+  box-sizing: border-box;
   background-color: #d6e5f3;
-  padding: 1%;
 }
 
 .textCategories {
-  position: absolute;
-  width: 13.5vw;
+  width: 100%;
   height: 5.5vh;
   line-height: 5vh;
   background-color: #f1f8ff;
   text-align: center;
-  top: 2%;
-  left: 50%;
-  transform: translate(-50%, -2%);
-  padding: 0.5%;
+  padding: 0.5em;
+  box-sizing: border-box;
 }
 
 .myCategoryList {
-  position: absolute;
-  width: 13.5vw;
-  height: 62.5vh;
+  width: 100%;
+  height: 67.5vh;
   background-color: #ffffff;
-  top: 77%;
-  left: 50%;
-  transform: translate(-50%, -76%);
-  padding: 0.5%;
+  padding: 0.5em;
+  box-sizing: border-box;
 }
 
 .categoryName {
@@ -51,6 +64,7 @@
   color: #a4a4a4;
   margin: 0;
   padding: 6% 0 6% 0;
+  box-sizing: border-box;
   border-bottom: 0.5px solid lightgray;
 }
 
@@ -72,12 +86,10 @@
 
 /* PostList */
 .postList {
-  position: absolute;
-  right: 0;
-  width: 65vw;
-  height: 70vh;
+  height: 75vh;
   background-color: #d6e5f3;
-  padding: 1%;
+  padding: 0.5em;
+  box-sizing: border-box;
 }
 
 .postSettings {
@@ -91,15 +103,7 @@
 .postDataList {
   width: 99%;
   height: 100%;
-  padding-left: 0.5%;
-  padding-right: 0.5%;
-  /* display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  flex-wrap: wrap;
-  align-content: flex-start;
-  overflow-y: auto;
-  gap: 2%; */
+  padding: 0 0.5%;
   overflow: scroll;
 }
 
@@ -134,8 +138,8 @@
   width: 62vw;
   height: 17vh;
   background-color: #ffffff;
-  padding: 2%;
-  margin-top: 1%;
+  padding: 1em;
+  margin-bottom: 0.5em;
 }
 
 .postTitle {

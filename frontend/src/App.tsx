@@ -1,5 +1,4 @@
 import { Route, Routes, useLocation } from "react-router-dom";
-import "./App.css";
 import Header from "components/Header";
 import Landing from "pages/LandingPage";
 import Create from "pages/CreatePage";
@@ -37,7 +36,7 @@ function App() {
       <Header />
       <div
         style={{
-          width: !["/login", "/"].includes(location.pathname) && "83vw",
+          height: "calc(100vh - 47px)",
           margin: "0 auto",
           paddingTop: !["/login", "/"].includes(location.pathname) && "47px",
         }}

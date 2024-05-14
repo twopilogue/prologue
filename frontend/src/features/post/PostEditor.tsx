@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import styles from "styles/PostWrite.module.css";
 import { Editor } from "@toast-ui/react-editor";
 import "@toast-ui/editor/dist/toastui-editor.css";
@@ -24,12 +24,9 @@ const PostWriteContents = () => {
     setPostContentAction(editorRef.current?.getInstance().getMarkdown());
     setPostFileListAction(fileList);
   };
-  useEffect(() => {
-    console.log(editPost);
-  }, []);
 
   return (
-    <div className={styles.postWriteContents}>
+    <div className={styles.editor}>
       {/* <Text value="내용" type="text" />
       <div style={{ marginTop: "1%" }}></div> */}
 
