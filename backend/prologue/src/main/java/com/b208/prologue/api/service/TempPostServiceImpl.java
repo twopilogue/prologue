@@ -5,6 +5,7 @@ import com.b208.prologue.api.repository.TempPostRepository;
 import com.b208.prologue.api.request.SaveTempPostRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +17,7 @@ public class TempPostServiceImpl implements TempPostService {
     private final TempPostRepository tempPostRepository;
 
     @Override
-    public Map<String, Object> getTempPost(final String githubId, final Long tempPostId) throws Exception{
+    public Map<String, Object> getTempPost(final String githubId, final Long tempPostId) throws Exception {
         final TempPost tempPost = tempPostRepository.findByTempPostIdAndGithubId(tempPostId, githubId);
 
         if (tempPost == null) return null;
@@ -34,7 +35,7 @@ public class TempPostServiceImpl implements TempPostService {
     }
 
     @Override
-    public Long saveTempPost(final SaveTempPostRequest saveTempPostRequest) throws Exception{
+    public Long saveTempPost(final SaveTempPostRequest saveTempPostRequest) throws Exception {
         final TempPost tempPost = TempPost.builder()
                 .githubId(saveTempPostRequest.getGithubId())
                 .title(saveTempPostRequest.getTitle())
@@ -45,6 +46,12 @@ public class TempPostServiceImpl implements TempPostService {
                 .build();
 
         return tempPostRepository.save(tempPost).getTempPostId();
+    }
+
+    @Override
+    @Transactional
+    public void deleteTempPost(final String githubId, final Long tempPostId) throws Exception {
+        tempPostRepository.deleteByTempPostIdAndGithubId(tempPostId, githubId);
     }
 }
 
