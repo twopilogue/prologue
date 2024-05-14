@@ -1,7 +1,9 @@
 package com.b208.prologue.tempPost;
 
 import com.b208.prologue.api.controller.TempPostController;
+import com.b208.prologue.api.request.SaveTempPostRequest;
 import com.b208.prologue.api.service.TempPostServiceImpl;
+import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -9,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -17,6 +20,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.HashMap;
 
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
@@ -30,18 +34,78 @@ class TempPostControllerTest {
 
     private static final String githubId = "test**";
     private static final Long tempPostId = 0L;
+    private static final String url = "/api/temp-posts";
 
     private MockMvc mockMvc;
+    private Gson gson;
 
     @BeforeEach
     void init() {
+        gson = new Gson();
         mockMvc = MockMvcBuilders.standaloneSetup(tempPostController)
                 .build();
     }
 
     @Nested
+    class 게시글_임시저장 {
+        final SaveTempPostRequest saveTempPostRequest = SaveTempPostRequest.builder()
+                .githubId(githubId)
+                .title("abc")
+                .build();
+
+        @Test
+        void 실패_깃허브ID없음() throws Exception {
+            //given
+            final SaveTempPostRequest saveTempPostRequest = SaveTempPostRequest.builder()
+                    .title("abc")
+                    .build();
+
+            //when
+            final ResultActions resultActions = mockMvc.perform(
+                    MockMvcRequestBuilders.post(url)
+                            .content(gson.toJson(saveTempPostRequest))
+                            .contentType(MediaType.APPLICATION_JSON)
+            );
+
+            //then
+            resultActions.andExpect(status().isBadRequest());
+        }
+
+        @Test
+        void 실패() throws Exception {
+            //given
+            doThrow(new Exception()).when(tempPostService).saveTempPost(saveTempPostRequest);
+
+            //when
+            final ResultActions resultActions = mockMvc.perform(
+                    MockMvcRequestBuilders.post(url)
+                            .content(gson.toJson(saveTempPostRequest))
+                            .contentType(MediaType.APPLICATION_JSON)
+            );
+
+            //then
+            resultActions.andExpect(status().isBadRequest());
+        }
+
+        @Test
+        void 성공() throws Exception {
+            //given
+            doReturn(0L).when(tempPostService).saveTempPost(saveTempPostRequest);
+
+            //when
+            final ResultActions resultActions = mockMvc.perform(
+                    MockMvcRequestBuilders.post(url)
+                            .content(gson.toJson(saveTempPostRequest))
+                            .contentType(MediaType.APPLICATION_JSON)
+            );
+
+            //then
+            resultActions.andExpect(status().isOk());
+        }
+    }
+
+    @Nested
     class 임시저장게시글_조회 {
-        final String url = "/api/temp-posts";
 
         @Test
         void 임시저장게시글없음() throws Exception {
