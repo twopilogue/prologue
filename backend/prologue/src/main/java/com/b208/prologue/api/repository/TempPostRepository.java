@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface TempPostRepository extends JpaRepository<TempPost, Long> {
     TempPost findByTempPostIdAndGithubId(final Long tempPostId, final String githubId);
     void deleteByTempPostIdAndGithubId(final Long tempPostId, final String githubId);
+    int countByGithubId(final String githubId);
 }
