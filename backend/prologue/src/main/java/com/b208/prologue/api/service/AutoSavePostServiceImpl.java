@@ -7,6 +7,9 @@ import com.b208.prologue.api.request.AutoSavePostRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 @RequiredArgsConstructor
 public class AutoSavePostServiceImpl implements AutoSavePostService {
@@ -37,5 +40,21 @@ public class AutoSavePostServiceImpl implements AutoSavePostService {
         if (autoSavePost == null) throw new AutoSavePostException();
         return String.valueOf(autoSavePost.getUpdateTime());
     }
+
+    @Override
+    public Map<String, Object> getAutoSavePost(final String githubId) throws AutoSavePostException {
+        final AutoSavePost autoSavePost = autoSavePostRepository.findByGithubId(githubId);
+        if (autoSavePost == null) throw new AutoSavePostException();
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("title", autoSavePost.getTitle());
+        result.put("description", autoSavePost.getDescription());
+        result.put("category", autoSavePost.getCategory());
+        result.put("tags", autoSavePost.getTags());
+        result.put("content", autoSavePost.getContent());
+        result.put("updatedAt", autoSavePost.getUpdateTime());
+        return result;
+    }
+
 }
 
