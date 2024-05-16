@@ -59,4 +59,34 @@ class AutoSavePostRepositoryTest {
         }
     }
 
+    @Nested
+    class 자동저장게시글_존재여부_확인 {
+
+        @Test
+        void 게시글없음() {
+            //given
+
+            //when
+            final boolean exist = autoSavePostRepository.existsByGithubId(githubId);
+
+            //then
+            assertThat(exist).isFalse();
+        }
+
+        @Test
+        void 게시글있음() {
+            //given
+            autoSavePostRepository.save(AutoSavePost.builder()
+                    .title("abc")
+                    .githubId(githubId)
+                    .build());
+
+            //when
+            final boolean exist = autoSavePostRepository.existsByGithubId(githubId);
+
+            //then
+            assertThat(exist).isTrue();
+        }
+    }
+
 }
