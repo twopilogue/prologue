@@ -89,4 +89,21 @@ class AutoSavePostRepositoryTest {
         }
     }
 
+
+    @Test
+    void 자동저장게시글_삭제() {
+        //given
+        autoSavePostRepository.save(AutoSavePost.builder()
+                .title("abc")
+                .githubId(githubId)
+                .build());
+
+        //when
+        autoSavePostRepository.deleteByGithubId(githubId);
+        final AutoSavePost autoSavePost = autoSavePostRepository.findByGithubId(githubId);
+
+        //then
+        assertThat(autoSavePost).isNull();
+    }
+
 }
