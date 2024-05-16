@@ -4,6 +4,7 @@ import com.b208.prologue.api.controller.TempPostController;
 import com.b208.prologue.api.exception.TempPostException;
 import com.b208.prologue.api.request.ModifyTempPostRequest;
 import com.b208.prologue.api.request.SaveTempPostRequest;
+import com.b208.prologue.api.response.TempPostsResponse;
 import com.b208.prologue.api.service.TempPostServiceImpl;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +20,9 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
@@ -281,6 +284,41 @@ class TempPostControllerTest {
             //when
             final ResultActions resultActions = mockMvc.perform(
                     MockMvcRequestBuilders.get(url + "/count")
+                            .param("githubId", githubId)
+            );
+
+            //then
+            resultActions.andExpect(status().isOk());
+        }
+    }
+
+    @Nested
+    class 임시저장게시글_목록_조회 {
+
+        @Test
+        void 실패() throws Exception {
+            //given
+            doThrow(new Exception()).when(tempPostService).getTempPosts(githubId);
+
+            //when
+            final ResultActions resultActions = mockMvc.perform(
+                    MockMvcRequestBuilders.get(url + "/list")
+                            .param("githubId", githubId)
+            );
+
+            //then
+            resultActions.andExpect(status().isBadRequest());
+        }
+
+        @Test
+        void 성공() throws Exception {
+            //given
+            List<TempPostsResponse> tempPosts = new ArrayList<>();
+            doReturn(tempPosts).when(tempPostService).getTempPosts(githubId);
+
+            //when
+            final ResultActions resultActions = mockMvc.perform(
+                    MockMvcRequestBuilders.get(url + "/list")
                             .param("githubId", githubId)
             );
 

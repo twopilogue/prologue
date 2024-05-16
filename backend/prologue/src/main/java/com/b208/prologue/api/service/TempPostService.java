@@ -2,7 +2,9 @@ package com.b208.prologue.api.service;
 
 import com.b208.prologue.api.request.ModifyTempPostRequest;
 import com.b208.prologue.api.request.SaveTempPostRequest;
+import com.b208.prologue.api.response.TempPostsResponse;
 
+import java.util.List;
 import java.util.Map;
 
 public interface TempPostService {
@@ -11,4 +13,5 @@ public interface TempPostService {
     void modifyTempPost(final ModifyTempPostRequest modifyTempPostRequest) throws Exception;
     void deleteTempPost(final String githubId, final Long tempPostId) throws Exception;
     int countTempPosts(final String githubId) throws Exception;
+    List<TempPostsResponse> getTempPosts(final String githubId) throws Exception;
 }

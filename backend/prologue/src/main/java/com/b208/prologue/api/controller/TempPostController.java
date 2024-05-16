@@ -2,10 +2,7 @@ package com.b208.prologue.api.controller;
 
 import com.b208.prologue.api.request.ModifyTempPostRequest;
 import com.b208.prologue.api.request.SaveTempPostRequest;
-import com.b208.prologue.api.response.BaseResponseBody;
-import com.b208.prologue.api.response.GetTempPostResponse;
-import com.b208.prologue.api.response.CountTempPostsResponse;
-import com.b208.prologue.api.response.SaveTempPostResponse;
+import com.b208.prologue.api.response.*;
 import com.b208.prologue.api.service.TempPostService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -15,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Map;
 
 @CrossOrigin("*")
@@ -111,6 +109,23 @@ public class TempPostController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "임시 저장 게시글 수 조회에 실패헸습니다."));
+        }
+    }
+
+    @GetMapping("/list")
+    @ApiOperation(value = "임시 저장 게시글 목록 조회", notes = "임시 저장 게시글 목록 조회")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "임시 저장 게시글 목록 조회 성공", response = GetTempPostsResponse.class),
+            @ApiResponse(code = 400, message = "임시 저장 게시글 목록 조회 실패", response = BaseResponseBody.class),
+            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<? extends BaseResponseBody> getTempPosts(@RequestParam String githubId) {
+        try {
+            List<TempPostsResponse> tempPosts = tempPostService.getTempPosts(githubId);
+            return ResponseEntity.status(200).body(GetTempPostsResponse.of(tempPosts, 200, "임시 저장 게시글 목록 조회 성공했습니다."));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "임시 저장 게시글 목록 조회에 실패헸습니다."));
         }
     }
 }
