@@ -93,7 +93,7 @@ public class TempPostServiceImpl implements TempPostService {
                     .tempPostId(tempPost.getTempPostId())
                     .title(tempPost.getTitle())
                     .summary((tempPost.getContent() == null || tempPost.getContent().length() < 150) ? tempPost.getContent() : tempPost.getContent().substring(0, 150))
-                    .updatedAt(String.valueOf(tempPost.getUpdateTime()))
+                    .updatedAt(tempPost.getUpdateTime())
                     .build());
         }
         return tempPosts;
