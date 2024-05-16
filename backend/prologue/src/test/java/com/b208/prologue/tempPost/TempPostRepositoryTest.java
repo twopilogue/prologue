@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
@@ -96,6 +98,39 @@ class TempPostRepositoryTest {
 
             //then
             assertThat(count).isEqualTo(2);
+        }
+    }
+
+    @Nested
+    class 임시저장게시글_목록_조회 {
+        @Test
+        void 임시저장게시글없음() {
+            //given
+
+            //when
+            final List<TempPost> list = tempPostRepository.findAllByGithubId(githubId);
+
+            //then
+            assertThat(list).isNotNull().isEmpty();
+        }
+
+        @Test
+        void 임시저장게시글있음_2개() {
+            //given
+            tempPostRepository.save(TempPost.builder()
+                    .title("abc")
+                    .githubId(githubId)
+                    .build());
+            tempPostRepository.save(TempPost.builder()
+                    .title("123")
+                    .githubId(githubId)
+                    .build());
+
+            //when
+            final List<TempPost> list = tempPostRepository.findAllByGithubId(githubId);
+
+            //then
+            assertThat(list).hasSize(2);
         }
     }
 
