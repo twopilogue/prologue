@@ -17,6 +17,10 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -135,6 +139,7 @@ class AutoSavePostControllerTest {
         void 성공() throws Exception {
             //given
             doReturn(true).when(autoSavePostService).checkAutoSavePost(githubId);
+            doReturn(String.valueOf(LocalDateTime.now())).when(autoSavePostService).getUpdatedTime(githubId);
 
             //when
             final ResultActions resultActions = mockMvc.perform(

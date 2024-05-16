@@ -47,8 +47,9 @@ public class AutoSavePostController {
     })
     public ResponseEntity<? extends BaseResponseBody> checkAutoSavePost(@RequestParam String githubId) {
         try {
-            boolean exist = autoSavePostService.checkAutoSavePost(githubId);
-            return ResponseEntity.status(200).body(CheckAutoSavePostsResponse.of(exist, 200, "자동 저장 게시글 존재 여부 확인에 성공했습니다."));
+            final boolean exist = autoSavePostService.checkAutoSavePost(githubId);
+            final String updatedAt = exist ? autoSavePostService.getUpdatedTime(githubId) : null;
+            return ResponseEntity.status(200).body(CheckAutoSavePostsResponse.of(exist, updatedAt, 200, "자동 저장 게시글 존재 여부 확인에 성공했습니다."));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "자동 저장 게시글 존재 여부 확인에 실패헸습니다."));
