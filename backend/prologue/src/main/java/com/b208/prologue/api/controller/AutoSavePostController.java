@@ -2,6 +2,7 @@ package com.b208.prologue.api.controller;
 
 import com.b208.prologue.api.request.AutoSavePostRequest;
 import com.b208.prologue.api.response.BaseResponseBody;
+import com.b208.prologue.api.response.CheckAutoSavePostsResponse;
 import com.b208.prologue.api.service.AutoSavePostService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -34,6 +35,23 @@ public class AutoSavePostController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "게시글 자동 저장에 실패헸습니다."));
+        }
+    }
+
+    @GetMapping("/exist")
+    @ApiOperation(value = "자동 저장 게시글 존재 여부 확인", notes = "자동 저장 게시글 존재 여부 확인하기")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "자동 저장 게시글 존재 여부 확인 성공", response = CheckAutoSavePostsResponse.class),
+            @ApiResponse(code = 400, message = "자동 저장 게시글 존재 여부 확인 실패", response = BaseResponseBody.class),
+            @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<? extends BaseResponseBody> checkAutoSavePost(@RequestParam String githubId) {
+        try {
+            boolean exist = autoSavePostService.checkAutoSavePost(githubId);
+            return ResponseEntity.status(200).body(CheckAutoSavePostsResponse.of(exist, 200, "자동 저장 게시글 존재 여부 확인에 성공했습니다."));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "자동 저장 게시글 존재 여부 확인에 실패헸습니다."));
         }
     }
 }
