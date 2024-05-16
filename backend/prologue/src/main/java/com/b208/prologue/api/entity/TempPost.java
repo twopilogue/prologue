@@ -29,7 +29,7 @@ public class TempPost {
     @Column
     private String title;
 
-    @Column
+    @Column(length = 1000)
     private String description;
 
     @Column
@@ -38,7 +38,7 @@ public class TempPost {
     @ElementCollection(fetch = FetchType.LAZY)
     private List<String> tags;
 
-    @Column
+    @Column(length = 10000)
     private String content;
 
     @CreatedDate
