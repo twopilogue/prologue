@@ -56,5 +56,10 @@ public class AutoSavePostServiceImpl implements AutoSavePostService {
         return result;
     }
 
+    @Override
+    public void deleteAutoSavePost(final String githubId) throws Exception {
+        autoSavePostRepository.deleteByGithubId(githubId);
+    }
+
 }
 
