@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface AutoSavePostRepository extends JpaRepository<AutoSavePost, String> {
     AutoSavePost findByGithubId(final String githubId);
     boolean existsByGithubId(final String githubId);
+    void deleteByGithubId(final String githubId);
 }
