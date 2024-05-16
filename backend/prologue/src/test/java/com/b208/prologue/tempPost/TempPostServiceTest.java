@@ -5,6 +5,7 @@ import com.b208.prologue.api.exception.TempPostException;
 import com.b208.prologue.api.repository.TempPostRepository;
 import com.b208.prologue.api.request.ModifyTempPostRequest;
 import com.b208.prologue.api.request.SaveTempPostRequest;
+import com.b208.prologue.api.response.TempPostsResponse;
 import com.b208.prologue.api.service.TempPostServiceImpl;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -13,6 +14,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -150,5 +153,26 @@ class TempPostServiceTest {
 
         //then
         assertThat(count).isEqualTo(3);
+    }
+
+    @Test
+    void 임시저장게시글_목록_조회() throws Exception {
+        //given
+        final List<TempPost> tempPostList = new ArrayList<>();
+        tempPostList.add(TempPost.builder()
+                .title("abc")
+                .githubId(githubId)
+                .build());
+        tempPostList.add(TempPost.builder()
+                .title("123")
+                .githubId(githubId)
+                .build());
+        doReturn(tempPostList).when(tempPostRepository).findAllByGithubId(any(String.class));
+
+        //when
+        List<TempPostsResponse> list = tempPostService.getTempPosts(githubId);
+
+        //then
+        assertThat(list).hasSize(2);
     }
 }
