@@ -131,4 +131,17 @@ class AutoSavePostServiceTest {
         }
     }
 
+    @Test
+    void 자동저장게시글_삭제() throws Exception {
+        //given
+
+        //when
+        autoSavePostService.deleteAutoSavePost(githubId);
+
+        //then
+
+        //verify
+        verify(autoSavePostRepository, times(1)).deleteByGithubId(any(String.class));
+    }
+
 }

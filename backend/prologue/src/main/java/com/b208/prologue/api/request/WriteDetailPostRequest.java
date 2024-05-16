@@ -34,4 +34,7 @@ public class WriteDetailPostRequest {
     @ApiModelProperty(name = "이미지 url, 상대경로", example = "이미지 url, 상대경로")
     List<ImageResponse> images;
 
+    @ApiModelProperty(name = "임시 저장 게시글 아이디", example = "0L")
+    Long tempPostId;
+
 }
