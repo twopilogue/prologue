@@ -2,14 +2,15 @@ package com.b208.prologue.api.controller;
 
 import com.b208.prologue.api.request.*;
 import com.b208.prologue.api.response.*;
-import com.b208.prologue.api.response.github.GetRepoContentResponse;
+import com.b208.prologue.api.service.AutoSavePostService;
 import com.b208.prologue.api.service.PostService;
+import com.b208.prologue.api.service.TempPostService;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,6 +25,8 @@ import java.util.Map;
 public class PostsController {
 
     private final PostService postService;
+    private final TempPostService tempPostService;
+    private final AutoSavePostService autoSavePostService;
 
     @GetMapping("/list")
     @ApiOperation(value = "게시물 목록 조회", notes = "게시물 목록 조회를 위해 Git 통신")
@@ -63,6 +66,7 @@ public class PostsController {
     }
 
     @PostMapping("")
+    @Transactional
     @ApiOperation(value = "GitHub 게시글 작성", notes = "GitHub 블로그 게시글을 작성한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "게시글 작성 성공", response = BaseResponseBody.class),
@@ -72,6 +76,10 @@ public class PostsController {
     public ResponseEntity<? extends BaseResponseBody> writeDetailPost(@Valid @RequestPart WriteDetailPostRequest writeDetailPostRequest, @RequestPart(required = false) List<MultipartFile> files) {
 
         try {
+            if (writeDetailPostRequest.getTempPostId() != null) {
+                tempPostService.deleteTempPost(writeDetailPostRequest.getGithubId(), writeDetailPostRequest.getTempPostId());
+            }
+            autoSavePostService.deleteAutoSavePost(writeDetailPostRequest.getGithubId());
             postService.insertDetailPost(writeDetailPostRequest.getAccessToken(), writeDetailPostRequest.getGithubId(), writeDetailPostRequest.getBlogType(),
                     writeDetailPostRequest.getContent(), writeDetailPostRequest.getImages(), files);
             return ResponseEntity.status(200).body(BaseResponseBody.of(200, "게시글 작성에 성공하였습니다."));
