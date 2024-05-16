@@ -5,11 +5,14 @@ import com.b208.prologue.api.exception.TempPostException;
 import com.b208.prologue.api.repository.TempPostRepository;
 import com.b208.prologue.api.request.ModifyTempPostRequest;
 import com.b208.prologue.api.request.SaveTempPostRequest;
+import com.b208.prologue.api.response.TempPostsResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -79,6 +82,21 @@ public class TempPostServiceImpl implements TempPostService {
     @Override
     public int countTempPosts(final String githubId) throws Exception {
         return tempPostRepository.countByGithubId(githubId);
+    }
+
+    @Override
+    public List<TempPostsResponse> getTempPosts(final String githubId) throws Exception {
+        List<TempPost> tempPostList = tempPostRepository.findAllByGithubId(githubId);
+        List<TempPostsResponse> tempPosts = new ArrayList<>();
+        for (TempPost tempPost : tempPostList) {
+            tempPosts.add(TempPostsResponse.builder()
+                    .tempPostId(tempPost.getTempPostId())
+                    .title(tempPost.getTitle())
+                    .summary((tempPost.getContent() == null || tempPost.getContent().length() < 150) ? tempPost.getContent() : tempPost.getContent().substring(0, 150))
+                    .updatedAt(String.valueOf(tempPost.getUpdateTime()))
+                    .build());
+        }
+        return tempPosts;
     }
 }
 
