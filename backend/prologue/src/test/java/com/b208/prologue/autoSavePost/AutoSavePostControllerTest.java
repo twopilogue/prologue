@@ -17,6 +17,11 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -92,6 +97,54 @@ class AutoSavePostControllerTest {
                     MockMvcRequestBuilders.post(url)
                             .content(gson.toJson(autoSavePostRequest))
                             .contentType(MediaType.APPLICATION_JSON)
+            );
+
+            //then
+            resultActions.andExpect(status().isOk());
+        }
+    }
+
+    @Nested
+    class 자동저장게시글_존재여부_확인 {
+
+        @Test
+        void 실패_깃허브ID없음() throws Exception {
+            //given
+
+            //when
+            final ResultActions resultActions = mockMvc.perform(
+                    MockMvcRequestBuilders.get(url + "/exist")
+            );
+
+            //then
+            resultActions.andExpect(status().isBadRequest());
+        }
+
+        @Test
+        void 실패() throws Exception {
+            //given
+            doThrow(new Exception()).when(autoSavePostService).checkAutoSavePost(githubId);
+
+            //when
+            final ResultActions resultActions = mockMvc.perform(
+                    MockMvcRequestBuilders.get(url + "/exist")
+                            .param("githubId", githubId)
+            );
+
+            //then
+            resultActions.andExpect(status().isBadRequest());
+        }
+
+        @Test
+        void 성공() throws Exception {
+            //given
+            doReturn(true).when(autoSavePostService).checkAutoSavePost(githubId);
+            doReturn(String.valueOf(LocalDateTime.now())).when(autoSavePostService).getUpdatedTime(githubId);
+
+            //when
+            final ResultActions resultActions = mockMvc.perform(
+                    MockMvcRequestBuilders.get(url + "/exist")
+                            .param("githubId", githubId)
             );
 
             //then
