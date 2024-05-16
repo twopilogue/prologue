@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -62,6 +63,41 @@ class AutoSavePostServiceTest {
     }
 
     @Nested
+    class 자동저장게시글_조회 {
+        @Test
+        void 자동저장게시글_존재안함() throws Exception {
+            //given
+            doReturn(null).when(autoSavePostRepository).findByGithubId(githubId);
+
+            //when
+            assertThrows(AutoSavePostException.class, () -> autoSavePostService.getAutoSavePost(githubId));
+
+            //then
+
+            //verify
+            verify(autoSavePostRepository, times(1)).findByGithubId(any(String.class));
+        }
+
+        @Test
+        void 자동저장게시글_존재함() throws Exception {
+            //given
+            final AutoSavePost autoSavePost = AutoSavePost.builder()
+                    .githubId(githubId)
+                    .title("abc")
+                    .updateTime(LocalDateTime.now())
+                    .build();
+            doReturn(autoSavePost).when(autoSavePostRepository).findByGithubId(githubId);
+
+            //when
+            final Map<String, Object> result = autoSavePostService.getAutoSavePost(githubId);
+
+            //then
+            assertThat(result).isNotNull();
+            assertThat((String) result.get("title")).isEqualTo("abc");
+        }
+    }
+
+    @Nested
     class 자동저장게시글_시간조회 {
         @Test
         void 자동저장게시글_존재안함() throws Exception {
@@ -69,7 +105,7 @@ class AutoSavePostServiceTest {
             doReturn(null).when(autoSavePostRepository).findByGithubId(githubId);
 
             //when
-            final AutoSavePostException result = assertThrows(AutoSavePostException.class, () -> autoSavePostService.getUpdatedTime(githubId));
+            assertThrows(AutoSavePostException.class, () -> autoSavePostService.getUpdatedTime(githubId));
 
             //then
 
