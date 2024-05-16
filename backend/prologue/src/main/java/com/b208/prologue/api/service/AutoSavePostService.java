@@ -4,4 +4,5 @@ import com.b208.prologue.api.request.AutoSavePostRequest;
 
 public interface AutoSavePostService {
     void autoSavePost(final AutoSavePostRequest autoSavePostRequest) throws Exception;
+    boolean checkAutoSavePost(final String githubId) throws Exception;
 }

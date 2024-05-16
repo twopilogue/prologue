@@ -24,5 +24,10 @@ public class AutoSavePostServiceImpl implements AutoSavePostService {
                 .build();
         autoSavePostRepository.save(autoSavePost);
     }
+
+    @Override
+    public boolean checkAutoSavePost(final String githubId) throws Exception {
+        return autoSavePostRepository.existsByGithubId(githubId);
+    }
 }
 
