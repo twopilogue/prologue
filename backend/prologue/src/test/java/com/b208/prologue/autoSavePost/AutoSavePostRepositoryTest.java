@@ -8,6 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
@@ -91,7 +95,7 @@ class AutoSavePostRepositoryTest {
 
 
     @Test
-    void 자동저장게시글_삭제() {
+    void 자동저장게시글_깃허브ID_기준_삭제() {
         //given
         autoSavePostRepository.save(AutoSavePost.builder()
                 .title("abc")
@@ -106,4 +110,48 @@ class AutoSavePostRepositoryTest {
         assertThat(autoSavePost).isNull();
     }
 
+    @Nested
+    class 자동저장게시글_날짜_기준삭제 {
+        @Test
+        void 삭제할게시글없음() {
+            //given
+            final LocalDateTime today = LocalDate.now().atTime(0, 0);
+            autoSavePostRepository.save(AutoSavePost.builder()
+                    .title("abc")
+                    .githubId(githubId)
+                    .build());
+            autoSavePostRepository.save(AutoSavePost.builder()
+                    .title("abc")
+                    .githubId("abc")
+                    .build());
+
+            //when
+            autoSavePostRepository.deleteByUpdateTimeBefore(today);
+            final List<AutoSavePost> list = autoSavePostRepository.findAll();
+
+            //then
+            assertThat(list).hasSize(2);
+        }
+
+        @Test
+        void 삭제할게시글2개() {
+            //given
+            final LocalDateTime today = LocalDate.now().atTime(0, 0);
+            autoSavePostRepository.save(AutoSavePost.builder()
+                    .title("abc")
+                    .githubId(githubId)
+                    .build());
+            autoSavePostRepository.save(AutoSavePost.builder()
+                    .title("abc")
+                    .githubId("abc")
+                    .build());
+
+            //when
+            autoSavePostRepository.deleteByUpdateTimeBefore(today.plusDays(1));
+            final List<AutoSavePost> list = autoSavePostRepository.findAll();
+
+            //then
+            assertThat(list).hasSize(0);
+        }
+    }
 }
