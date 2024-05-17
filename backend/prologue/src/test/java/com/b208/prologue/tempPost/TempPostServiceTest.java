@@ -14,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -131,7 +132,7 @@ class TempPostServiceTest {
     }
 
     @Test
-    void 임시저장게시글_삭제() throws Exception {
+    void 임시저장게시글_깃허브ID와TempPostID_기준_삭제() throws Exception {
         //given
 
         //when
@@ -174,5 +175,18 @@ class TempPostServiceTest {
 
         //then
         assertThat(list).hasSize(2);
+    }
+
+    @Test
+    void 임시저장게시글_날짜_기준삭제() throws Exception {
+        //given
+
+        //when
+        tempPostService.deleteInvalidDateTempPost();
+
+        //then
+
+        //verify
+        verify(tempPostRepository, times(1)).deleteByUpdateTimeBefore(any(LocalDateTime.class));
     }
 }

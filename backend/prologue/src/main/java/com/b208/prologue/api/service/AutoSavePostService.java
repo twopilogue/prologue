@@ -11,4 +11,5 @@ public interface AutoSavePostService {
     String getUpdatedTime(final String githubId) throws AutoSavePostException;
     Map<String, Object> getAutoSavePost(final String githubId) throws AutoSavePostException;
     void deleteAutoSavePost(final String githubId) throws Exception;
+    void deleteInvalidDateAutoSavePost();
 }

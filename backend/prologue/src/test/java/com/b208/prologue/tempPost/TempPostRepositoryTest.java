@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -53,7 +55,7 @@ class TempPostRepositoryTest {
     }
 
     @Test
-    void 임시저장게시글_삭제() {
+    void 임시저장게시글_깃허브ID와TempPostID_기준_삭제() {
         //given
         final TempPost saveTempPost = tempPostRepository.save(TempPost.builder()
                 .title("abc")
@@ -134,4 +136,48 @@ class TempPostRepositoryTest {
         }
     }
 
+    @Nested
+    class 임시저장게시글_날짜_기준삭제 {
+        @Test
+        void 삭제할게시글없음() {
+            //given
+            final LocalDateTime today = LocalDate.now().atTime(0, 0);
+            tempPostRepository.save(TempPost.builder()
+                    .title("abc")
+                    .githubId(githubId)
+                    .build());
+            tempPostRepository.save(TempPost.builder()
+                    .title("abc")
+                    .githubId(githubId)
+                    .build());
+
+            //when
+            tempPostRepository.deleteByUpdateTimeBefore(today);
+            final List<TempPost> list = tempPostRepository.findAll();
+
+            //then
+            assertThat(list).hasSize(2);
+        }
+
+        @Test
+        void 삭제할게시글2개() {
+            //given
+            final LocalDateTime today = LocalDate.now().atTime(0, 0);
+            tempPostRepository.save(TempPost.builder()
+                    .title("abc")
+                    .githubId(githubId)
+                    .build());
+            tempPostRepository.save(TempPost.builder()
+                    .title("abc")
+                    .githubId(githubId)
+                    .build());
+
+            //when
+            tempPostRepository.deleteByUpdateTimeBefore(today.plusDays(1));
+            final List<TempPost> list = tempPostRepository.findAll();
+
+            //then
+            assertThat(list).hasSize(0);
+        }
+    }
 }
