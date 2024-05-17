@@ -14,4 +14,5 @@ public interface TempPostService {
     void deleteTempPost(final String githubId, final Long tempPostId) throws Exception;
     int countTempPosts(final String githubId) throws Exception;
     List<TempPostsResponse> getTempPosts(final String githubId) throws Exception;
+    void deleteInvalidDateTempPost();
 }

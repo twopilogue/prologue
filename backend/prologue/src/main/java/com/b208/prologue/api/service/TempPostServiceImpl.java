@@ -10,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -98,5 +101,12 @@ public class TempPostServiceImpl implements TempPostService {
         }
         return tempPosts;
     }
+
+    @Override
+    public void deleteInvalidDateTempPost() {
+        final LocalDateTime today = LocalDate.now().atTime(LocalTime.MIN);
+        tempPostRepository.deleteByUpdateTimeBefore(today.minusDays(10));
+    }
+
 }
 
