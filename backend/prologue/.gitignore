@@ -38,6 +38,7 @@ out/
 
 src/main/resources/application.properties
 src/main/resources/deploy.yaml
+src/test/resources/application.properties
 
 **/.DS_Store
 .DS_Store
