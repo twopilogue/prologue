@@ -24,7 +24,7 @@ public class AutoSavePost {
     @Column
     private String title;
 
-    @Column(length = 1000)
+    @Column(name = "representation", length = 1000)
     private String description;
 
     @Column
