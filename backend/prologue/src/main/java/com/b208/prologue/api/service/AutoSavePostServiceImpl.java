@@ -7,6 +7,9 @@ import com.b208.prologue.api.request.AutoSavePostRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -59,6 +62,12 @@ public class AutoSavePostServiceImpl implements AutoSavePostService {
     @Override
     public void deleteAutoSavePost(final String githubId) throws Exception {
         autoSavePostRepository.deleteByGithubId(githubId);
+    }
+
+    @Override
+    public void deleteInvalidDateAutoSavePost() {
+        final LocalDateTime today = LocalDate.now().atTime(LocalTime.MIN);
+        autoSavePostRepository.deleteByUpdateTimeBefore(today.minusDays(2));
     }
 
 }
