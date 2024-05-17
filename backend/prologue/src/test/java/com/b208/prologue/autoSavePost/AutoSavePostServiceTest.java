@@ -132,7 +132,7 @@ class AutoSavePostServiceTest {
     }
 
     @Test
-    void 자동저장게시글_삭제() throws Exception {
+    void 자동저장게시글_깃허브ID_기준_삭제() throws Exception {
         //given
 
         //when
@@ -142,6 +142,19 @@ class AutoSavePostServiceTest {
 
         //verify
         verify(autoSavePostRepository, times(1)).deleteByGithubId(any(String.class));
+    }
+
+    @Test
+    void 자동저장게시글_날짜_기준_삭제() throws Exception {
+        //given
+
+        //when
+        autoSavePostService.deleteInvalidDateAutoSavePost();
+
+        //then
+
+        //verify
+        verify(autoSavePostRepository, times(1)).deleteByUpdateTimeBefore(any(LocalDateTime.class));
     }
 
 }
