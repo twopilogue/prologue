@@ -1,5 +1,6 @@
 package com.b208.prologue.api.entity;
 
+import com.b208.prologue.common.StringListConverter;
 import lombok.*;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -30,7 +31,8 @@ public class AutoSavePost {
     @Column
     private String category;
 
-    @ElementCollection(fetch = FetchType.LAZY)
+    @Convert(converter = StringListConverter.class)
+    @Column(length = 1000)
     private List<String> tags;
 
     @Column(length = 10000)
