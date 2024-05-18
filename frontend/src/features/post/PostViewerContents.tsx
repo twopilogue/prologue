@@ -14,6 +14,7 @@ interface PostViewerContentsProps {
   content: string;
 }
 
+// 추후 삭제 예정.
 const PostViewerContents = ({ content }: PostViewerContentsProps) => {
   const [accessToken, githubId] = useAuthStore(useShallow((state) => [state.accessToken, state.githubId]));
   const { setPostContentAction, setPostFileListAction, setPostFileAction } = usePostActions();

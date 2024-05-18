@@ -14,10 +14,12 @@ import { useShallow } from "zustand/react/shallow";
 import { useNavigate, useParams } from "react-router-dom";
 import { deletePostApi } from "apis/api/posts";
 import { getTempListCnt } from "apis/api/temp";
+import { getAutoExist, getAutoPost } from "apis/api/auto";
 import Modal from "components/Modal";
 import PostTempModal from "features/post/PostTempModal";
 import Axios from "apis/MultipartAxios";
 import api from "apis/BaseUrl";
+import dayjs from "dayjs";
 
 interface writeDetailPostRequestProps {
   accessToken: string;
@@ -44,7 +46,7 @@ const PostWritePage = () => {
   const isEdit = usePostStore((state) => state.isEdit) ? "수정" : "작성";
   const editPost = usePostStore((state) => state.editPost);
   const { title, description, category, content, tagList, images: fileList, files = [] } = editPost;
-  const { resetPostFileListAction } = usePostActions();
+  const { resetPostFileListAction, setEditPostAction } = usePostActions();
 
   const [loadingModalOpen, setLoadingModalOpen] = useState(false);
   const [cancelModalOpen, setCancelModalOpen] = useState(false);
@@ -52,14 +54,43 @@ const PostWritePage = () => {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
 
-  const [autoTempTime, setAutoTempTime] = useState("07:03:30");
   const [tempModalOpen, setTempModalOpen] = useState(false);
-  const [isAutoTempExist, setIsAutoTempExist] = useState(true);
   const [tempListCnt, setTempListCnt] = useState(0);
+  const [autoTempTime, setAutoTempTime] = useState("");
 
   const getTempListCount = async () => {
     const res = await getTempListCnt(githubId);
     setTempListCnt(res);
+  };
+
+  const getIsAutoExist = async () => {
+    const res = await getAutoExist(githubId);
+    const { isExist, updatedAt } = res;
+
+    if (isExist && isEdit === "작성") {
+      setAutoTempTime(dayjs(updatedAt).format("YYYY.MM.DD.HH:mm").toString());
+      const result = setTimeout(() => {
+        const res = confirm(
+          `${dayjs(updatedAt).format("YYYY.MM.DD. HH:mm")}에 저장된 글이 있습니다.\n이어서 작성하시겠습니까?`,
+        );
+        if (res) getAutoPostDetail();
+      }, 1000);
+      return () => {
+        clearTimeout(result);
+      };
+    }
+  };
+
+  const getAutoPostDetail = async () => {
+    const res = await getAutoPost(githubId);
+    const { title, description, category, tags, content } = res;
+    setEditPostAction({
+      title,
+      description,
+      category,
+      tagList: tags,
+      content,
+    });
   };
 
   const handleSave = async () => {
@@ -190,15 +221,7 @@ const PostWritePage = () => {
 
   useEffect(() => {
     getTempListCount();
-
-    if (isAutoTempExist && isEdit === "작성") {
-      const result = setTimeout(() => {
-        confirm(`${autoTempTime}에 저장된 글이 있습니다.\n이어서 작성하시겠습니까?`);
-      }, 1000);
-      return () => {
-        clearTimeout(result);
-      };
-    }
+    getIsAutoExist();
   }, []);
 
   const tempButton = () => {
