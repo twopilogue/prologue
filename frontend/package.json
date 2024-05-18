@@ -16,6 +16,7 @@
     "axios": "^1.1.3",
     "canvas-confetti": "^1.6.0",
     "cssjson": "^2.1.3",
+    "dayjs": "^1.11.11",
     "eslint-config-prettier": "^9.1.0",
     "moment": "^2.29.4",
     "patch-package": "^6.5.0",
