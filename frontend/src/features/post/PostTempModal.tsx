@@ -6,9 +6,10 @@ import Tooltip from "components/Tooltip";
 import { Drawer } from "@mui/material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { useAuthStore } from "stores/authStore";
-import { getTempList } from "apis/api/temp";
+import { getTempList, getTempPost } from "apis/api/temp";
 import { TempPostConfig } from "interfaces/post.interface";
 import dayjs from "dayjs";
+import { usePostActions } from "stores/postStore";
 
 interface Props {
   open: boolean;
@@ -23,6 +24,8 @@ const stringToDate = (date: string) => {
 const PostTempModal = ({ open, onClose }: Props) => {
   const githubId = useAuthStore((state) => state.githubId);
   const [tempList, setTempList] = useState<TempPostConfig[]>([]);
+  const { setEditPostAction } = usePostActions();
+
   const getTempLists = async () => {
     const res = await getTempList(githubId);
     setTempList(res);
@@ -30,6 +33,19 @@ const PostTempModal = ({ open, onClose }: Props) => {
 
   const saveTempItem = () => {
     console.log("save");
+  };
+
+  const setEditPost = async (id: number) => {
+    const res = await getTempPost(githubId, id);
+    const { title, description, category, tags, content } = res;
+    setEditPostAction({
+      title,
+      description,
+      category,
+      tagList: tags,
+      content,
+    });
+    onClose();
   };
 
   useEffect(() => {
@@ -50,7 +66,9 @@ const PostTempModal = ({ open, onClose }: Props) => {
                 <div key={i}>
                   <Text value={stringToDate(item.updatedAt)} type="caption" />
                   <div>
-                    <Text value={item.title} type="caption" />
+                    <div onClick={() => setEditPost(item.tempPostId)}>
+                      <Text value={item.title} type="caption" />
+                    </div>
                     <DeleteOutlineIcon className={styles["delete"]} />
                     <div className={styles["tooltip"]}>
                       <Tooltip>{item.summary === "" ? "[ 내용 없음 ]" : item.summary}</Tooltip>

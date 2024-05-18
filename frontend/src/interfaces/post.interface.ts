@@ -4,3 +4,11 @@ export interface TempPostConfig {
   summary: string;
   updatedAt: string;
 }
+
+export interface TempPostDetailConfig extends TempPostConfig {
+  description: string;
+  tags: string[];
+  content: string;
+  createdAt: string;
+  category: string;
+}
