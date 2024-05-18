@@ -10,4 +10,9 @@ const getTempList = async (githubId: string) => {
   return res.data.data;
 };
 
-export { getTempListCnt, getTempList };
+const getTempPost = async (githubId: string, tempPostId: number) => {
+  const res = await tempApi.getTempPost(githubId, tempPostId);
+  return res.data;
+};
+
+export { getTempListCnt, getTempList, getTempPost };

@@ -7,7 +7,7 @@ import { ModifiedPageConfig } from "pages/PageSettingPage";
 import { UserInfoConfig } from "interfaces/auth.interface";
 import { PostListConfig } from "stores/postStore";
 import { MyBlogInfoConfig, MyInfoConfig } from "interfaces/setting.interface";
-import { TempPostConfig } from "interfaces/post.interface";
+import { TempPostConfig, TempPostDetailConfig } from "interfaces/post.interface";
 
 type ServerResponse = {
   message?: string; // 메시지
@@ -136,4 +136,6 @@ export const postApi = {
 export const tempApi = {
   getTempListCnt: (githubId: string) => Get<{ count: number }>(api.temp.getTempListCnt(githubId)),
   getTempList: (githubId: string) => Get<{ data: TempPostConfig[] }>(api.temp.getTempList(githubId)),
+  getTempPost: (githubId: string, tempPostId: number) =>
+    Get<TempPostDetailConfig>(api.temp.getTempPost(githubId, tempPostId)),
 };

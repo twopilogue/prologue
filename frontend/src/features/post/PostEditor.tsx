@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "styles/PostWrite.module.css";
 import { Editor } from "@toast-ui/react-editor";
 import "@toast-ui/editor/dist/toastui-editor.css";
@@ -10,9 +10,9 @@ import { useAuthStore } from "stores/authStore";
 import { useShallow } from "zustand/react/shallow";
 import { usePostActions, usePostStore } from "stores/postStore";
 
-const PostWriteContents = () => {
+const PostEditor = () => {
   const [accessToken, githubId] = useAuthStore(useShallow((state) => [state.accessToken, state.githubId]));
-  const editPost = usePostStore((state) => state.editPost);
+  const editPost = usePostStore(useShallow((state) => state.editPost));
   const { setPostContentAction, setPostFileListAction, setPostFileAction } = usePostActions();
 
   const [fileList] = useState([]);
@@ -24,6 +24,10 @@ const PostWriteContents = () => {
     setPostContentAction(editorRef.current?.getInstance().getMarkdown());
     setPostFileListAction(fileList);
   };
+
+  useEffect(() => {
+    editorRef.current.getInstance().setMarkdown(editPost.content);
+  }, [editPost]);
 
   return (
     <div className={styles.editor}>
@@ -73,4 +77,4 @@ const PostWriteContents = () => {
   );
 };
 
-export default PostWriteContents;
+export default PostEditor;
