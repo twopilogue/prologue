@@ -7,7 +7,7 @@ import SettingPage from "pages/setting/SettingPage";
 import PostRouterPage from "features/post/PostRouter";
 import BlogReset from "pages/BlogResetPage";
 import GatsbyLayout from "pages/GatsbyLayoutPage";
-import PageRouterPage from "pages/post/PageRouterPage";
+import PageRouterPage from "pages/PageRouterPage";
 import LoginOAuthHandler from "features/landing/LoginOAuthHandler";
 import AuthRoute from "./AuthRoute";
 

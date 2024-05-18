@@ -13,6 +13,7 @@ import { useAuthStore } from "stores/authStore";
 import { useShallow } from "zustand/react/shallow";
 import { useNavigate, useParams } from "react-router-dom";
 import { deletePostApi } from "apis/api/posts";
+import { getTempListCnt } from "apis/api/temp";
 import Modal from "components/Modal";
 import PostTempModal from "features/post/PostTempModal";
 import Axios from "apis/MultipartAxios";
@@ -56,6 +57,11 @@ const PostWritePage = () => {
   const [isAutoTempExist, setIsAutoTempExist] = useState(true);
   const [tempListCnt, setTempListCnt] = useState(0);
 
+  const getTempListCount = async () => {
+    const res = await getTempListCnt(githubId);
+    setTempListCnt(res);
+  };
+
   const handleSave = async () => {
     if (title == "") {
       setSaveModalOpen(false);
@@ -75,8 +81,6 @@ const PostWritePage = () => {
 
     if (title != "" && description != "" && content != "") {
       const formData = new FormData();
-      console.log(fileList);
-      console.log(files);
       for (let i = 0; i < files.length; i++) {
         formData.append("files", files[i]);
       }
@@ -95,7 +99,6 @@ const PostWritePage = () => {
         "\n---\n";
 
       if (isEdit === "수정") {
-        console.log("isEdit: ", isEdit);
         const tmpArray = [];
 
         if (fileList.length) {
@@ -186,6 +189,8 @@ const PostWritePage = () => {
   const showDeleteModal = () => setDeleteModalOpen(true);
 
   useEffect(() => {
+    getTempListCount();
+
     if (isAutoTempExist && isEdit === "작성") {
       const result = setTimeout(() => {
         confirm(`${autoTempTime}에 저장된 글이 있습니다.\n이어서 작성하시겠습니까?`);

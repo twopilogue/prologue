@@ -6,7 +6,9 @@ const AUTH = "auth/";
 const BLOG = "blog/";
 const DASHBOARD = "dashboard/";
 const SETTING = "setting/";
-const POSTS = "posts";
+const POSTS = "posts/";
+const TEMP = "temp-posts/";
+const AUTO = "auto-post/";
 
 interface apiInterface {
   auth: {
@@ -55,6 +57,18 @@ interface apiInterface {
     getPostList: (accessToken: string, githubId: string, index: number, category: string) => string;
     getPage: (accessToken: string, githubId: string, pageName: string) => string;
     modifyPage: () => string;
+  };
+  temp: {
+    getTempListCnt: (githubId: string) => string;
+    getTempList: (githubId: string) => string;
+    getTempPost: (githubId: string, tempPostId: number) => string;
+    writeTempPost: () => string;
+    deleteTempPost: (githubId: string, tempPostId: number) => string;
+  };
+  auto: {
+    saveAutoPost: () => string;
+    getAutoPost: (githubId: string) => string;
+    getIsAutoPost: (githubId: string) => string;
   };
 }
 
@@ -135,6 +149,20 @@ const api: apiInterface = {
     getPage: (accessToken: string, githubId: string, pageName: string) =>
       HOST + POSTS + "/pages?accessToken=" + accessToken + "&githubId=" + githubId + "&pageName=" + pageName,
     modifyPage: () => HOST + POSTS + "/pages",
+  },
+  temp: {
+    getTempListCnt: (githubId: string) => HOST + TEMP + "/count?githubId=" + githubId,
+    getTempList: (githubId: string) => HOST + TEMP + "/list?githubId=" + githubId,
+    getTempPost: (githubId: string, tempPostId: number) =>
+      HOST + TEMP + "?githubId=" + githubId + "&tempPostId=" + tempPostId,
+    writeTempPost: () => HOST + TEMP,
+    deleteTempPost: (githubId: string, tempPostId: number) =>
+      HOST + TEMP + "?githubId=" + githubId + "&tempPostId=" + tempPostId,
+  },
+  auto: {
+    saveAutoPost: () => HOST + AUTO,
+    getAutoPost: (githubId: string) => HOST + AUTO + "?githubId=" + githubId,
+    getIsAutoPost: (githubId: string) => HOST + AUTO + "/exist?githubId=" + githubId,
   },
 };
 

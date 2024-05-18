@@ -1,28 +1,41 @@
+import { useEffect, useState } from "react";
 import styles from "styles/PostWrite.module.css";
 import Text from "components/Text";
 import Button from "components/Button";
 import Tooltip from "components/Tooltip";
 import { Drawer } from "@mui/material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import { useAuthStore } from "stores/authStore";
+import { getTempList } from "apis/api/temp";
+import { TempPostConfig } from "interfaces/post.interface";
+import dayjs from "dayjs";
 
 interface Props {
   open: boolean;
   onClose: () => void;
 }
 
+const stringToDate = (date: string) => {
+  const typedDate = new Date(date);
+  return dayjs(typedDate).format("YYYY-MM-DD");
+};
+
 const PostTempModal = ({ open, onClose }: Props) => {
-  const tempList = [
-    { date: "2024.01.01", title: "제목 없음", content: "" },
-    { date: "2024.01.01", title: "hi~ hihihi", content: "" },
-    { date: "2024.01.01", title: "[Algorithm] 비트마스킹 (Bitmasking)", content: "asdfasdfasdf" },
-    { date: "2024.01.01", title: "[Prologue] 프롤로그 개선기 #1. 환경 개선", content: "asdfasdfasdf" },
-    { date: "2024.01.01", title: "[Prologue] 프롤로그 개선기 #1. 환경 개선", content: "asdfasdfasdf" },
-    { date: "2024.01.01", title: "[Prologue] 프롤로그 개선기 #1. 환경 개선", content: "asdfasdfasdf" },
-    { date: "2024.01.01", title: "[Prologue] 프롤로그 개선기 #1. 환경 개선", content: "asdfasdfasdf" },
-    { date: "2024.01.01", title: "[Prologue] 프롤로그 개선기 #1. 환경 개선", content: "asdfasdfasdf" },
-    { date: "2024.01.01", title: "[Prologue] 프롤로그 개선기 #1. 환경 개선", content: "asdfasdfasdf" },
-    { date: "2024.01.01", title: "[Prologue] 프롤로그 개선기 #1. 환경 개선", content: "asdfasdfasdf" },
-  ];
+  const githubId = useAuthStore((state) => state.githubId);
+  const [tempList, setTempList] = useState<TempPostConfig[]>([]);
+  const getTempLists = async () => {
+    const res = await getTempList(githubId);
+    setTempList(res);
+  };
+
+  const saveTempItem = () => {
+    console.log("save");
+  };
+
+  useEffect(() => {
+    getTempLists();
+  }, []);
+
   return (
     <Drawer anchor="bottom" open={open} onClose={onClose}>
       <div className={styles.temp__container}>
@@ -35,12 +48,12 @@ const PostTempModal = ({ open, onClose }: Props) => {
             {tempList.map((item, i) => {
               return (
                 <div key={i}>
-                  <Text value={item.date} type="caption" />
+                  <Text value={stringToDate(item.updatedAt)} type="caption" />
                   <div>
                     <Text value={item.title} type="caption" />
                     <DeleteOutlineIcon className={styles["delete"]} />
                     <div className={styles["tooltip"]}>
-                      <Tooltip>{item.content === "" ? "[ 내용 없음 ]" : item.content}</Tooltip>
+                      <Tooltip>{item.summary === "" ? "[ 내용 없음 ]" : item.summary}</Tooltip>
                     </div>
                   </div>
                 </div>
@@ -49,7 +62,7 @@ const PostTempModal = ({ open, onClose }: Props) => {
           </div>
           <div className={styles["temp__button--save"]}>
             <Button color="gray" label="취소" onClick={onClose} />
-            <Button color="blue" label="임시저장" />
+            <Button color="blue" label="임시저장" onClick={saveTempItem} />
           </div>
         </div>
       </div>
