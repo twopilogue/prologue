@@ -145,6 +145,7 @@ export const tempApi = {
     tags: string[];
     content: string;
   }) => Post<{ tempPostId: number }>(api.temp.writeTempPost(), data),
+  deleteTempPost: (githubId: string, tempPostId: number) => Delete(api.temp.deleteTempPost(githubId, tempPostId)),
 };
 
 export const autoApi = {

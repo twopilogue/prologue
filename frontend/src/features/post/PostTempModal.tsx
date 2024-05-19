@@ -6,7 +6,7 @@ import Tooltip from "components/Tooltip";
 import { Drawer } from "@mui/material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { useAuthStore } from "stores/authStore";
-import { getTempList, getTempPost, writeTempPost } from "apis/api/temp";
+import { deleteTempPost, getTempList, getTempPost, writeTempPost } from "apis/api/temp";
 import { TempPostConfig } from "interfaces/post.interface";
 import dayjs from "dayjs";
 import { usePostActions, usePostStore } from "stores/postStore";
@@ -44,7 +44,13 @@ const PostTempModal = ({ open, onClose }: Props) => {
       content,
     };
     await writeTempPost(data);
-    getTempLists();
+  const handleDelete = async (id: number) => {
+    const res = confirm("임시저장 글을 정말 삭제하시겠습니까?");
+    if (res) {
+      await deleteTempPost(githubId, id);
+      getTempLists();
+      setTempListCnt(tempListCnt - 1);
+    }
   };
 
   const setEditPost = async (id: number) => {
@@ -81,7 +87,7 @@ const PostTempModal = ({ open, onClose }: Props) => {
                     <div onClick={() => setEditPost(item.tempPostId)}>
                       <Text value={item.title} type="caption" />
                     </div>
-                    <DeleteOutlineIcon className={styles["delete"]} />
+                    <DeleteOutlineIcon className={styles["delete"]} onClick={() => handleDelete(item.tempPostId)} />
                     <div className={styles["tooltip"]}>
                       <Tooltip>{item.summary === "" ? "[ 내용 없음 ]" : item.summary}</Tooltip>
                     </div>
