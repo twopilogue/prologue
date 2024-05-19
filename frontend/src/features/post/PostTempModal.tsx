@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import styles from "styles/PostWrite.module.css";
 import Text from "components/Text";
 import Button from "components/Button";
@@ -15,6 +15,8 @@ import { useShallow } from "zustand/react/shallow";
 interface Props {
   open: boolean;
   onClose: () => void;
+  tempListCnt: number;
+  setTempListCnt: Dispatch<SetStateAction<number>>;
 }
 
 const stringToDate = (date: string) => {
@@ -22,7 +24,7 @@ const stringToDate = (date: string) => {
   return dayjs(typedDate).format("YYYY-MM-DD");
 };
 
-const PostTempModal = ({ open, onClose }: Props) => {
+const PostTempModal = ({ open, onClose, tempListCnt, setTempListCnt }: Props) => {
   const githubId = useAuthStore((state) => state.githubId);
   const editPost = usePostStore(useShallow((state) => state.editPost));
   const [tempList, setTempList] = useState<TempPostConfig[]>([]);
@@ -33,8 +35,9 @@ const PostTempModal = ({ open, onClose }: Props) => {
     setTempList(res);
   };
 
-  const saveTempItem = async () => {
+  const handleSave = async () => {
     const { title, description, category, tagList, content } = editPost;
+    if (title === "" || description === "" || content === "") return;
     const data = {
       githubId,
       title,
@@ -44,6 +47,10 @@ const PostTempModal = ({ open, onClose }: Props) => {
       content,
     };
     await writeTempPost(data);
+    setTempListCnt(tempListCnt + 1);
+    onClose();
+  };
+
   const handleDelete = async (id: number) => {
     const res = confirm("임시저장 글을 정말 삭제하시겠습니까?");
     if (res) {
@@ -98,7 +105,7 @@ const PostTempModal = ({ open, onClose }: Props) => {
           </div>
           <div className={styles["temp__button--save"]}>
             <Button color="gray" label="취소" onClick={onClose} />
-            <Button color="blue" label="임시저장" onClick={saveTempItem} />
+            <Button color="blue" label="임시저장" onClick={handleSave} />
           </div>
         </div>
       </div>

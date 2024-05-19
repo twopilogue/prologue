@@ -288,7 +288,14 @@ const PostWritePage = () => {
         />
       )}
       {uploadModalOpen && <Modal saveButtonClose={() => setUploadModalOpen(false)} save />}
-      {tempModalOpen && <PostTempModal open={tempModalOpen} onClose={() => setTempModalOpen(false)} />}
+      {tempModalOpen && (
+        <PostTempModal
+          open={tempModalOpen}
+          onClose={() => setTempModalOpen(false)}
+          tempListCnt={tempListCnt}
+          setTempListCnt={setTempListCnt}
+        />
+      )}
     </div>
   );
 };
