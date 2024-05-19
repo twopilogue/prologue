@@ -15,4 +15,15 @@ const getTempPost = async (githubId: string, tempPostId: number) => {
   return res.data;
 };
 
-export { getTempListCnt, getTempList, getTempPost };
+const writeTempPost = async (data: {
+  githubId: string;
+  title: string;
+  description: string;
+  category: string;
+  tags: string[];
+  content: string;
+}) => {
+  await tempApi.writeTempPost(data);
+};
+
+export { getTempListCnt, getTempList, getTempPost, writeTempPost };

@@ -138,6 +138,14 @@ export const tempApi = {
   getTempList: (githubId: string) => Get<{ data: TempPostConfig[] }>(api.temp.getTempList(githubId)),
   getTempPost: (githubId: string, tempPostId: number) =>
     Get<TempPostDetailConfig>(api.temp.getTempPost(githubId, tempPostId)),
+  writeTempPost: (data: {
+    githubId: string;
+    title: string;
+    description: string;
+    category: string;
+    tags: string[];
+    content: string;
+  }) => Post<{ tempPostId: number }>(api.temp.writeTempPost(), data),
 };
 
 export const autoApi = {
