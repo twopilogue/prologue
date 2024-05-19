@@ -9,6 +9,7 @@ import { useAuthStore } from "stores/authStore";
 import { getTempList, getTempPost, writeTempPost } from "apis/api/temp";
 import { TempPostConfig } from "interfaces/post.interface";
 import dayjs from "dayjs";
+import { usePostActions, usePostStore } from "stores/postStore";
 import { useShallow } from "zustand/react/shallow";
 
 interface Props {

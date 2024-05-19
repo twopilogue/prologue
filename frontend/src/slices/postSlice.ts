@@ -1,15 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { rootState } from "app/store";
-
-export interface PostListConfig {
-  title: string;
-  date: string;
-  description: string;
-  category: string;
-  tag: string[];
-  directory: string;
-  imgUrl: string;
-}
+import { PostListConfig } from "interfaces/post.interface";
 
 interface editListConfig {
   title: string;
