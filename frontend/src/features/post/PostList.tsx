@@ -4,9 +4,10 @@ import PostListCard from "./PostListCard";
 import { useNavigate } from "react-router-dom";
 import { CircularProgress } from "@mui/material";
 import { getPostDetailApi, getPostListApi } from "apis/api/posts";
-import { PostListConfig, usePostActions, usePostStore } from "stores/postStore";
+import { usePostActions, usePostStore } from "stores/postStore";
 import { useAuthStore } from "stores/authStore";
 import { useShallow } from "zustand/react/shallow";
+import { PostListConfig } from "interfaces/post.interface";
 
 interface PostListProps {
   category: string;

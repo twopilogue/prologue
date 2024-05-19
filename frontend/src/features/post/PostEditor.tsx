@@ -27,7 +27,7 @@ const PostEditor = () => {
 
   useEffect(() => {
     editorRef.current.getInstance().setMarkdown(editPost.content);
-  }, [editPost]);
+  }, [editPost.content]);
 
   return (
     <div className={styles.editor}>

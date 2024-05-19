@@ -5,9 +5,8 @@ import api from "./BaseUrl";
 import { DetailConfig } from "pages/setting/DetailSettingPage";
 import { ModifiedPageConfig } from "pages/PageSettingPage";
 import { UserInfoConfig } from "interfaces/auth.interface";
-import { PostListConfig } from "stores/postStore";
 import { MyBlogInfoConfig, MyInfoConfig } from "interfaces/setting.interface";
-import { TempPostConfig, TempPostDetailConfig } from "interfaces/post.interface";
+import { PostListConfig, TempPostConfig, TempPostDetailConfig } from "interfaces/post.interface";
 
 type ServerResponse = {
   message?: string; // 메시지
@@ -138,6 +137,14 @@ export const tempApi = {
   getTempList: (githubId: string) => Get<{ data: TempPostConfig[] }>(api.temp.getTempList(githubId)),
   getTempPost: (githubId: string, tempPostId: number) =>
     Get<TempPostDetailConfig>(api.temp.getTempPost(githubId, tempPostId)),
+  writeTempPost: (data: {
+    githubId: string;
+    title: string;
+    description: string;
+    category: string;
+    tags: string[];
+    content: string;
+  }) => Post<{ tempPostId: number }>(api.temp.writeTempPost(), data),
 };
 
 export const autoApi = {

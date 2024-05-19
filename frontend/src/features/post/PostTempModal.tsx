@@ -6,10 +6,11 @@ import Tooltip from "components/Tooltip";
 import { Drawer } from "@mui/material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { useAuthStore } from "stores/authStore";
-import { getTempList, getTempPost } from "apis/api/temp";
+import { getTempList, getTempPost, writeTempPost } from "apis/api/temp";
 import { TempPostConfig } from "interfaces/post.interface";
 import dayjs from "dayjs";
-import { usePostActions } from "stores/postStore";
+import { usePostActions, usePostStore } from "stores/postStore";
+import { useShallow } from "zustand/react/shallow";
 
 interface Props {
   open: boolean;
@@ -23,6 +24,7 @@ const stringToDate = (date: string) => {
 
 const PostTempModal = ({ open, onClose }: Props) => {
   const githubId = useAuthStore((state) => state.githubId);
+  const editPost = usePostStore(useShallow((state) => state.editPost));
   const [tempList, setTempList] = useState<TempPostConfig[]>([]);
   const { setEditPostAction } = usePostActions();
 
@@ -31,8 +33,18 @@ const PostTempModal = ({ open, onClose }: Props) => {
     setTempList(res);
   };
 
-  const saveTempItem = () => {
-    console.log("save");
+  const saveTempItem = async () => {
+    const { title, description, category, tagList, content } = editPost;
+    const data = {
+      githubId,
+      title,
+      description,
+      category,
+      tags: tagList,
+      content,
+    };
+    await writeTempPost(data);
+    getTempLists();
   };
 
   const setEditPost = async (id: number) => {
