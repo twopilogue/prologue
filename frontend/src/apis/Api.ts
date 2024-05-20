@@ -151,4 +151,12 @@ export const tempApi = {
 export const autoApi = {
   getAutoExist: (githubId: string) => Get<{ isExist: boolean; updatedAt: string }>(api.auto.getIsAutoPost(githubId)),
   getAutoPost: (githubId: string) => Get<TempPostDetailConfig>(api.auto.getAutoPost(githubId)),
+  writeAutoPost: (data: {
+    githubId: string;
+    title: string;
+    description: string;
+    category: string;
+    tags: string[];
+    content: string;
+  }) => Post(api.auto.saveAutoPost(), data),
 };
