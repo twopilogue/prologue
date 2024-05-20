@@ -218,6 +218,19 @@ const PostWritePage = () => {
     resetPostFileListAction();
   };
 
+  const setAutoSave = async () => {
+    const data = {
+      githubId,
+      title,
+      description,
+      category,
+      tags: tagList,
+      content,
+    };
+    await writeAutoPost(data);
+    setAutoTempTime(dayjs(new Date()).format("YYYY-MM-DD HH:mm:ss"));
+  };
+
   const showSaveModal = () => setSaveModalOpen(true);
   const showCancelModal = () => setCancelModalOpen(true);
   const showDeleteModal = () => setDeleteModalOpen(true);

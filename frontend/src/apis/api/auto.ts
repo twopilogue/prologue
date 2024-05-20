@@ -10,4 +10,15 @@ const getAutoPost = async (githubId: string) => {
   return res.data;
 };
 
-export { getAutoExist, getAutoPost };
+const writeAutoPost = async (data: {
+  githubId: string;
+  title: string;
+  description: string;
+  category: string;
+  tags: string[];
+  content: string;
+}) => {
+  await autoApi.writeAutoPost(data);
+};
+
+export { getAutoExist, getAutoPost, writeAutoPost };
