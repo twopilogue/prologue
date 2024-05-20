@@ -10,6 +10,7 @@ interface State {
   postIsLast: boolean;
 
   isEdit: boolean;
+  tempId: null | number;
 }
 
 interface Action {
@@ -30,6 +31,7 @@ interface Action {
     resetPostIndexAction: () => void;
     setPostIsLastAction: (isLast: boolean) => void;
     setPostIsEditAction: (isEdit: boolean) => void;
+    setTempIdAction: (tempId: number) => void;
   };
 }
 
@@ -50,6 +52,7 @@ export const initialState: State = {
   postIsLast: false,
 
   isEdit: false,
+  tempId: null,
 };
 
 export const usePostStore = create<State & Action>()(
@@ -73,6 +76,7 @@ export const usePostStore = create<State & Action>()(
       resetPostIndexAction: () => set(() => ({ index: -1 })),
       setPostIsLastAction: (isLast: boolean) => set(() => ({ isLast })),
       setPostIsEditAction: (isEdit: boolean) => set(() => ({ isEdit })),
+      setTempIdAction: (tempId: number) => set(() => ({ tempId })),
     },
   })),
 );

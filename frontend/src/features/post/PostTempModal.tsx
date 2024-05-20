@@ -28,7 +28,7 @@ const PostTempModal = ({ open, onClose, tempListCnt, setTempListCnt }: Props) =>
   const githubId = useAuthStore((state) => state.githubId);
   const editPost = usePostStore(useShallow((state) => state.editPost));
   const [tempList, setTempList] = useState<TempPostConfig[]>([]);
-  const { setEditPostAction } = usePostActions();
+  const { setEditPostAction, setTempIdAction } = usePostActions();
 
   const getTempLists = async () => {
     const res = await getTempList(githubId);
@@ -70,6 +70,7 @@ const PostTempModal = ({ open, onClose, tempListCnt, setTempListCnt }: Props) =>
       tagList: tags,
       content,
     });
+    setTempIdAction(id);
     onClose();
   };
 

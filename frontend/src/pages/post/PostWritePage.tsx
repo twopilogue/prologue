@@ -27,6 +27,7 @@ interface writeDetailPostRequestProps {
   content: string;
   images: any[];
   blogType: number;
+  tempPostId: null | number;
 }
 interface modifyDetailPostRequestProps {
   accessToken: string;
@@ -43,6 +44,7 @@ const PostWritePage = () => {
   const [accessToken, githubId, blogType] = useAuthStore(
     useShallow((state) => [state.accessToken, state.githubId, state.blogType]),
   );
+  const tempId = usePostStore((state) => state.tempId);
   const isEdit = usePostStore((state) => state.isEdit) ? "수정" : "작성";
   const editPost = usePostStore((state) => state.editPost);
   const { title, description, category, content, tagList, images: fileList, files = [] } = editPost;
@@ -173,9 +175,10 @@ const PostWritePage = () => {
           content: frontMatter + content,
           images: [],
           blogType,
+          tempPostId: tempId,
         };
 
-        if (fileList.length) {
+        if (fileList && fileList.length) {
           for (let i = 0; i < fileList.length; i++) {
             const tmp = {
               url: fileList[i].url,
