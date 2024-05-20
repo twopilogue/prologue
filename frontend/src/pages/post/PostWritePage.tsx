@@ -5,6 +5,7 @@ import MeetingRoomOutlinedIcon from "@mui/icons-material/MeetingRoomOutlined";
 import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import ListIcon from "@mui/icons-material/List";
+import useInterval from "utils/useInterval";
 import { usePostActions, usePostStore } from "stores/postStore";
 import PostInfo from "features/post/PostInfo";
 import PostEditor from "features/post/PostEditor";
@@ -14,7 +15,7 @@ import { useShallow } from "zustand/react/shallow";
 import { useNavigate, useParams } from "react-router-dom";
 import { deletePostApi } from "apis/api/posts";
 import { getTempListCnt } from "apis/api/temp";
-import { getAutoExist, getAutoPost } from "apis/api/auto";
+import { getAutoExist, getAutoPost, writeAutoPost } from "apis/api/auto";
 import Modal from "components/Modal";
 import PostTempModal from "features/post/PostTempModal";
 import Axios from "apis/MultipartAxios";
@@ -59,6 +60,8 @@ const PostWritePage = () => {
   const [tempModalOpen, setTempModalOpen] = useState(false);
   const [tempListCnt, setTempListCnt] = useState(0);
   const [autoTempTime, setAutoTempTime] = useState("");
+
+  const [autoTimer, setAutoTimer] = useState(0);
 
   const getTempListCount = async () => {
     const res = await getTempListCnt(githubId);
@@ -231,6 +234,12 @@ const PostWritePage = () => {
     setAutoTempTime(dayjs(new Date()).format("YYYY-MM-DD HH:mm:ss"));
   };
 
+  // 10초마다 한 번씩 동작.
+  useInterval(() => {
+    setAutoSave();
+    setAutoTimer(autoTimer + 1);
+  }, 10000);
+
   const showSaveModal = () => setSaveModalOpen(true);
   const showCancelModal = () => setCancelModalOpen(true);
   const showDeleteModal = () => setDeleteModalOpen(true);
@@ -266,7 +275,7 @@ const PostWritePage = () => {
           <div>
             {isEdit === "작성" && (
               <>
-                <Text value={`자동 저장 완료 ${autoTempTime}`} color="dark_gray" type="caption" />
+                {autoTimer > 0 && <Text value={`자동 저장 완료 ${autoTempTime}`} color="dark_gray" type="caption" />}
                 <Button label={tempButton()} color="gray" icon={<ListIcon />} onClick={() => setTempModalOpen(true)} />
               </>
             )}
