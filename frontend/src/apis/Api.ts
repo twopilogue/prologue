@@ -145,6 +145,15 @@ export const tempApi = {
     tags: string[];
     content: string;
   }) => Post<{ tempPostId: number }>(api.temp.writeTempPost(), data),
+  putTempPost: (data: {
+    githubId: string;
+    tempPostId: number;
+    title: string;
+    description: string;
+    category: string;
+    tags: string[];
+    content: string;
+  }) => Put(api.temp.putTempPost(), data),
   deleteTempPost: (githubId: string, tempPostId: number) => Delete(api.temp.deleteTempPost(githubId, tempPostId)),
 };
 

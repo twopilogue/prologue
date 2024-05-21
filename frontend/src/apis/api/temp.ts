@@ -26,8 +26,20 @@ const writeTempPost = async (data: {
   await tempApi.writeTempPost(data);
 };
 
+const putTempPost = async (data: {
+  githubId: string;
+  tempPostId: number;
+  title: string;
+  description: string;
+  category: string;
+  tags: string[];
+  content: string;
+}) => {
+  await tempApi.putTempPost(data);
+};
+
 const deleteTempPost = async (githubId: string, tempPostId: number) => {
   await tempApi.deleteTempPost(githubId, tempPostId);
 };
 
-export { getTempListCnt, getTempList, getTempPost, writeTempPost, deleteTempPost };
+export { getTempListCnt, getTempList, getTempPost, writeTempPost, putTempPost, deleteTempPost };
