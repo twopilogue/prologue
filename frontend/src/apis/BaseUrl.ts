@@ -63,6 +63,7 @@ interface apiInterface {
     getTempList: (githubId: string) => string;
     getTempPost: (githubId: string, tempPostId: number) => string;
     writeTempPost: () => string;
+    putTempPost: () => string;
     deleteTempPost: (githubId: string, tempPostId: number) => string;
   };
   auto: {
@@ -156,6 +157,7 @@ const api: apiInterface = {
     getTempPost: (githubId: string, tempPostId: number) =>
       HOST + TEMP + "?githubId=" + githubId + "&tempPostId=" + tempPostId,
     writeTempPost: () => HOST + TEMP,
+    putTempPost: () => HOST + TEMP,
     deleteTempPost: (githubId: string, tempPostId: number) =>
       HOST + TEMP + "?githubId=" + githubId + "&tempPostId=" + tempPostId,
   },

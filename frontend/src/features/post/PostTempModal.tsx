@@ -6,7 +6,7 @@ import Tooltip from "components/Tooltip";
 import { Drawer } from "@mui/material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { useAuthStore } from "stores/authStore";
-import { deleteTempPost, getTempList, getTempPost, writeTempPost } from "apis/api/temp";
+import { deleteTempPost, getTempList, getTempPost, putTempPost, writeTempPost } from "apis/api/temp";
 import { TempPostConfig } from "interfaces/post.interface";
 import dayjs from "dayjs";
 import { usePostActions, usePostStore } from "stores/postStore";
@@ -27,6 +27,7 @@ const stringToDate = (date: string) => {
 const PostTempModal = ({ open, onClose, tempListCnt, setTempListCnt }: Props) => {
   const githubId = useAuthStore((state) => state.githubId);
   const editPost = usePostStore(useShallow((state) => state.editPost));
+  const tempId = usePostStore((state) => state.tempId);
   const [tempList, setTempList] = useState<TempPostConfig[]>([]);
   const { setEditPostAction, setTempIdAction } = usePostActions();
 
@@ -38,16 +39,31 @@ const PostTempModal = ({ open, onClose, tempListCnt, setTempListCnt }: Props) =>
   const handleSave = async () => {
     const { title, description, category, tagList, content } = editPost;
     if (title === "" || description === "" || content === "") return;
-    const data = {
-      githubId,
-      title,
-      description,
-      category,
-      tags: tagList,
-      content,
-    };
-    await writeTempPost(data);
-    setTempListCnt(tempListCnt + 1);
+    // 새 임시저장 작성
+    if (tempId === null) {
+      const data = {
+        githubId,
+        title,
+        description,
+        category,
+        tags: tagList,
+        content,
+      };
+      await writeTempPost(data);
+      setTempListCnt(tempListCnt + 1);
+    } else {
+      // 기존 임시저장 수정
+      const data = {
+        githubId,
+        tempPostId: tempId,
+        title,
+        description,
+        category,
+        tags: tagList,
+        content,
+      };
+      await putTempPost(data);
+    }
     onClose();
   };
 
