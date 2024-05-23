@@ -1,0 +1,40 @@
+name: Deploy to Amazon S3
+
+on:
+  push:
+    paths: "frontend/**"
+    branches: ["develop"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 16.15.0
+
+      - name: make .env
+        run: |
+          cd ./frontend
+          touch ./.env
+          echo "${{ secrets.ENV }}" > ./.env
+
+      - name: Install Dependencies
+        run: cd ./frontend && npm install
+
+      - name: Build
+        run: cd ./frontend && npm run build
+
+      - uses: awact/s3-action@master
+        with:
+          args: --acl public-read --follow-symlinks --delete
+        env:
+          SOURCE_DIR: "./frontend/build"
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
