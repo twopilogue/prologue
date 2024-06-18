@@ -1,7 +1,5 @@
 import { Fragment } from "react";
 import GridLayout, { Layout } from "react-grid-layout";
-import { useAppSelector } from "app/hooks";
-import { selectComponentCreated } from "slices/settingSlice";
 import styles from "styles/Setting.module.css";
 import DragHandleIcon from "@mui/icons-material/DragHandle";
 import Text from "components/Text";
@@ -9,11 +7,11 @@ import { useSettingActions, useSettingStore } from "stores/settingStore";
 import { useShallow } from "zustand/react/shallow";
 
 const LayoutCustom = (layoutWidth: any) => {
-  const [userLayoutList, userCompList, userCompCheck] = useSettingStore(
-    useShallow((state) => [state.userCompLayoutList, state.userCompList, state.userCompCheck]),
+  const [userLayoutList, userCompList, userCompCheck, componentCreated] = useSettingStore(
+    useShallow((state) => [state.userCompLayoutList, state.userCompList, state.userCompCheck, state.componentCreated]),
   );
   const { setUserCompLayoutListAction } = useSettingActions();
-  const componentCreated = useAppSelector(selectComponentCreated);
+
   const width = layoutWidth["layoutWidth"];
 
   const handleLayoutChange = (layouts: Layout[]) => {
