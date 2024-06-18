@@ -7,7 +7,6 @@ import SettingPage from "pages/setting/SettingPage";
 import PostRouterPage from "features/post/PostRouter";
 import BlogReset from "pages/BlogResetPage";
 import GatsbyLayout from "pages/GatsbyLayoutPage";
-import PageRouterPage from "pages/PageRouterPage";
 import LoginOAuthHandler from "features/landing/LoginOAuthHandler";
 import AuthRoute from "./AuthRoute";
 
@@ -51,7 +50,6 @@ function App() {
           <Route path="/dashboard" element={<AuthRoute component={<Dashboard />} />} />
           <Route path="/setting" element={<AuthRoute component={<SettingPage />} />} />
           <Route path="/post/*" element={<AuthRoute component={<PostRouterPage />} />} />
-          <Route path="/page/*" element={<AuthRoute component={<PageRouterPage />} />} />
 
           <Route path="*" element={<Landing />} />
         </Routes>

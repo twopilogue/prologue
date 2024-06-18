@@ -3,7 +3,6 @@ import Axios from "./JsonAxios";
 import MultipartAxios from "./MultipartAxios";
 import api from "./BaseUrl";
 import { DetailConfig } from "pages/setting/DetailSettingPage";
-import { ModifiedPageConfig } from "pages/PageSettingPage";
 import { UserInfoConfig } from "interfaces/auth.interface";
 import { MyBlogInfoConfig, MyInfoConfig } from "interfaces/setting.interface";
 import { PostListConfig, TempPostConfig, TempPostDetailConfig } from "interfaces/post.interface";
@@ -99,12 +98,6 @@ export const settingApi = {
     Get<{ layout: string }>(api.setting.getLayout(accessToken, githubId)),
   putLayout: (data: { accessToken: string; githubId: string; layout: string; layoutJson: string }) =>
     Put(api.setting.modifyLayout(), data),
-  getPage: (accessToken: string, githubId: string) =>
-    Get<{
-      pages: PageConfig[];
-    }>(api.setting.getPage(accessToken, githubId)),
-  putPage: (data: { accessToken: string; githubId: string; pages: ModifiedPageConfig[] }) =>
-    Put(api.setting.modifyPage(), data),
   getDetail: (accessToken: string, githubId: string) => Get<DetailConfig>(api.setting.getDetail(accessToken, githubId)),
   putDetail: (data: { data: FormData }) => Put(api.setting.modifyDetail(), data),
 };

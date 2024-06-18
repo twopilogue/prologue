@@ -1,16 +1,13 @@
 import { useEffect } from "react";
 import TabMenu from "../../features/setting/TabMenu";
-import { PageConfig, setIsEditPage, setPageCnt, setPageList } from "slices/settingSlice";
-import { useDispatch } from "react-redux";
 import { useAuthStore } from "stores/authStore";
-import { getBlogInfoApi, getCategoryApi, getPageApi } from "apis/api/setting";
+import { getBlogInfoApi, getCategoryApi } from "apis/api/setting";
 import { getBlogInfoService } from "apis/services/setting";
 import { useShallow } from "zustand/react/shallow";
 import { useSettingActions } from "stores/settingStore";
 import { EditListConfig, KeyConfig } from "interfaces/setting.interface";
 
 const SettingPage = () => {
-  const dispatch = useDispatch();
   const [accessToken, githubId, blogType] = useAuthStore(
     useShallow((state) => [state.accessToken, state.githubId, state.blogType]),
   );
@@ -38,27 +35,10 @@ const SettingPage = () => {
     setIsEditCategoryAction(tmpisEditCategoryList);
   };
 
-  // 추후 수정
-  const getPage = async () => {
-    const pages = await getPageApi(accessToken, githubId);
-    const tmpPageList: PageConfig[] = [];
-    const tmpIsEdit: EditListConfig[] = [];
-
-    pages.map((it, i) => {
-      tmpPageList.push({ label: it.label, posts: it.posts, id: i, type: "unchanging" });
-      tmpIsEdit.push({ key: it.label, id: i, editable: false });
-    });
-
-    dispatch(setPageList(tmpPageList));
-    dispatch(setIsEditPage(tmpIsEdit));
-    dispatch(setPageCnt(pages.length));
-  };
-
   useEffect(() => {
     getBlogInfo();
     if (blogType !== 1) {
       getCategory();
-      getPage();
     }
   }, []);
 
