@@ -7,15 +7,16 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 import landingMainImg1 from "assets/landing/landingMainImg1.png";
 import { Paper } from "@mui/material";
 import waveSvg from "assets/landing/wave.svg";
-import { useNavigate } from "react-router-dom";
 import { getAuthFile, getLogin, setSecretRepo } from "apis/api/auth";
 import { getUserInfo } from "apis/services/auth";
-import { getRepoList } from "apis/api/blog";
 import { useAuthActions } from "stores/authStore";
+import { getRepoList } from "apis/api/blog";
+import { useNavigate } from "react-router-dom";
 
 const LoginOAuthHandler = () => {
   const navigate = useNavigate();
-  const { setAuthFileAction, setBlogTypeAction, setLoginAction, setTemplateAction } = useAuthActions();
+  const { setLoginAction } = useAuthActions();
+  const { setAuthFileAction, setBlogTypeAction, setTemplateAction } = useAuthActions();
 
   const code = new URLSearchParams(location.search).get("code");
 
@@ -26,8 +27,11 @@ const LoginOAuthHandler = () => {
   const getAccessToken = async () => {
     const rawUserInfo = await getLogin(code);
     const { accessToken, githubId, githubImage } = getUserInfo(rawUserInfo);
-    setLoginAction(accessToken, githubId, githubImage); // zustand
+    setLoginAction(accessToken, githubId, githubImage);
+    getRepoInfo(accessToken, githubId);
+  };
 
+  const getRepoInfo = async (accessToken: string, githubId: string) => {
     // 깃허브 블로그 개설여부
     const checkRepo = await getRepoList(accessToken, githubId);
     if (checkRepo) {

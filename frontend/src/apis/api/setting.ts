@@ -1,5 +1,4 @@
 import { settingApi } from "apis/Api";
-import { ModifiedPageConfig } from "pages/PageSettingPage";
 
 const getCategoryApi = async (accessToken: string, githubId: string) => {
   const res = await settingApi.getCategory(accessToken, githubId);
@@ -18,15 +17,6 @@ const getBlogInfoApi = async (accessToken: string, githubId: string) => {
 
 const modifyBlogApi = async (data: FormData) => {
   await settingApi.putBlog({ data });
-};
-
-const getPageApi = async (accessToken: string, githubId: string) => {
-  const res = await settingApi.getPage(accessToken, githubId);
-  return res.data.pages;
-};
-
-const modifyPageApi = async (accessToken: string, githubId: string, pages: ModifiedPageConfig[]) => {
-  await settingApi.putPage({ accessToken, githubId, pages });
 };
 
 const getDetailApi = async (accessToken: string, githubId: string) => {
@@ -52,8 +42,6 @@ export {
   modifyCategoryApi,
   getBlogInfoApi,
   modifyBlogApi,
-  getPageApi,
-  modifyPageApi,
   getDetailApi,
   modifyDetailApi,
   getLayoutApi,

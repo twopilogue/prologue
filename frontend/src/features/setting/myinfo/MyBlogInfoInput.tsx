@@ -23,12 +23,10 @@ const MyBlogInfoInput = () => {
   });
 
   const onChangeTitle = (e: ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.value);
     setMyBlogInfoAction({ ...myBlogInfo, title: e.target.value });
   };
 
   const onChangeDescription = (e: ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.value);
     setMyBlogInfoAction({ ...myBlogInfo, description: e.target.value });
   };
 

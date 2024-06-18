@@ -37,7 +37,6 @@ const DetailSettingPage = () => {
   const { setColorListAction, setClickedCompAction } = useSettingActions();
 
   const formData = new FormData();
-  // const dispatch = useDispatch();
 
   const getDetailSetting = async () => {
     const data = await getDetailApi(accessToken, githubId);

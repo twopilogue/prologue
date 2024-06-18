@@ -33,6 +33,7 @@ interface State {
 
   clickedLayoutIdx: number;
   clickedComp: string;
+  componentCreated: boolean;
 }
 
 interface Action {
@@ -130,6 +131,7 @@ export const initialState: State = {
 
   clickedLayoutIdx: 0,
   clickedComp: "",
+  componentCreated: false,
 };
 
 export const useSettingStore = create<State & Action>()(
@@ -154,6 +156,7 @@ export const useSettingStore = create<State & Action>()(
       setColorListAction: (colorList: ColorsConfig) => set(() => ({ colorList })),
       setClickedLayoutIdxAction: (clickedLayoutIdx: number) => set(() => ({ clickedLayoutIdx })),
       setClickedCompAction: (clickedComp: string) => set(() => ({ clickedComp })),
+      setComponentCreatedAction: (componentCreated: boolean) => set(() => ({ componentCreated })),
     },
   })),
 );

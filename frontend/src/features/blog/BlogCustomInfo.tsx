@@ -9,17 +9,17 @@ import BlogDashboardMoveModal from "./BlogDashboardMoveModal";
 import api from "apis/BaseUrl";
 import Axios from "apis/MultipartAxios";
 import BlogLoding from "features/blog/BlogLoding";
-import { useDispatch } from "react-redux";
-import { dashboardActions } from "slices/dashboardSlice";
 import axios from "axios";
 import moment from "moment";
-import { authActions } from "slices/authSlice";
-import { useAuthStore } from "stores/authStore";
+import { useAuthActions, useAuthStore } from "stores/authStore";
 import { useShallow } from "zustand/react/shallow";
+import { useDashboardActions } from "stores/dashboardStore";
+import { getMonthPosts, getNewPosts } from "apis/api/dashboard";
 
 function BlogCustomInfo(props: { template: string }) {
-  const dispatch = useDispatch();
   const [accessToken, githubId] = useAuthStore(useShallow((state) => [state.accessToken, state.githubId]));
+  const { setTemplateAction } = useAuthActions();
+  const { setMonthPostsAction, setNewPostsAction, setBlogInfoAction, setBuildTimeAction } = useDashboardActions();
   const [imgPreview, setImgPreview] = useState(null);
   const [lodingView, openLodingView] = useState(false);
 
@@ -66,31 +66,21 @@ function BlogCustomInfo(props: { template: string }) {
   }
 
   function getDashboardInfo() {
-    getMonthPosts();
+    getMonthList();
     getNewPost();
     getBlogInfo();
     getNewBuildTime();
   }
 
-  async function getMonthPosts() {
-    await Axios.get(api.dashboard.getMonthPosts(accessToken, githubId)).then((res) => {
-      dispatch(
-        dashboardActions.monthPosts({
-          monthPosts: res.data.dateList,
-        }),
-      );
-    });
+  async function getMonthList() {
+    const dateList = await getMonthPosts(accessToken, githubId);
+    setMonthPostsAction(dateList);
   }
 
-  async function getNewPost() {
-    await Axios.get(api.dashboard.getNewPost(accessToken, githubId)).then((res) => {
-      dispatch(
-        dashboardActions.newPosts({
-          newPosts: res.data.currentPosts,
-        }),
-      );
-    });
-  }
+  const getNewPost = async () => {
+    const newPosts = await getNewPosts(accessToken, githubId);
+    setNewPostsAction(newPosts);
+  };
 
   async function getBlogInfo() {
     await axios
@@ -100,13 +90,11 @@ function BlogCustomInfo(props: { template: string }) {
       ])
       .then(
         axios.spread((res1, res2) => {
-          dispatch(
-            dashboardActions.blogInfo({
-              totalPost: res1.data.total,
-              repoSize: res2.data.size,
-            }),
-          );
-          dispatch(authActions.template({ template: props.template }));
+          setBlogInfoAction({
+            totalPost: res1.data.total,
+            repoSize: res2.data.size,
+          });
+          setTemplateAction(props.template);
           openLodingView(false);
           openSuccessModal(true);
         }),
@@ -116,11 +104,7 @@ function BlogCustomInfo(props: { template: string }) {
   async function getNewBuildTime() {
     await Axios.get(api.dashboard.getNewBuildTime(accessToken, githubId)).then((res) => {
       const value = res.data.latestBuildTime;
-      dispatch(
-        dashboardActions.buildTime({
-          buildTime: moment(value, "YYYYMMDDHHmmss").format("YYYY MM/DD HH:mm"),
-        }),
-      );
+      setBuildTimeAction(moment(value, "YYYYMMDDHHmmss").format("YYYY MM/DD HH:mm"));
     });
   }
 
